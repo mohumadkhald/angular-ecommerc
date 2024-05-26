@@ -1,0 +1,33 @@
+/* In your component's CSS file (e.g., modal-change-pwd.component.css) */
+.btn-cancel {
+  background-color: #dc3545; /* Red background color */
+  color: white; /* White text color */
+}
+
+.btn-send {
+  background-color: #28a745; /* Green background color */
+  color: white; /* White text color */
+}
+
+.mybtn {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.custom-dialog-container {
+  position: absolute;
+  top: -500px;
+  margin: 100px auto;
+  z-index: 100;
+}
+
+
+
+::ng-deep .custom-dialog-container {
+  position: absolute;
+  top: -500px;
+  margin: -400px auto;
+  z-index: 100;
+}

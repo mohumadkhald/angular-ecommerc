@@ -1,0 +1,88 @@
+<div class="container" style="margin-top: 10vh" #container>
+  <div class="form-container sign-up-container">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <h1>Create Account</h1>
+      <div class="social-container">
+        <a href="#" class="social facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social google"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social in"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your email for registration</span>
+      <div style="display: grid; grid-template-columns: auto auto; gap: 10px">
+        <input type="text" placeholder="First Name" formControlName="firstName" />
+        <input type="text" placeholder="Last Name" formControlName="lastName" />
+      </div>
+      <div style="display: grid; grid-template-columns: auto auto; gap: 10px">
+      <div *ngIf="registerForm.controls['firstName'].invalid && (registerForm.controls['firstName'].dirty || registerForm.controls['firstName'].touched)" class="error">
+        <div *ngIf="registerForm.controls['firstName'].errors?.['required']">First Name is required.</div>
+        <div *ngIf="registerForm.controls['firstName'].errors?.['trimmed']">First Name cannot start or end with spaces.</div>
+        <div *ngIf="!registerForm.controls['firstName'].errors?.['trimmed'] && registerForm.controls['firstName'].errors?.['pattern']">First Name must be at least 3 characters long and cannot contain numbers.</div>
+      </div>
+      <div *ngIf="registerForm.controls['lastName'].invalid && (registerForm.controls['lastName'].dirty || registerForm.controls['lastName'].touched)" class="error">
+        <div *ngIf="registerForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
+        <div *ngIf="registerForm.controls['lastName'].errors?.['trimmed']">Last Name cannot start or end with spaces.</div>
+        <div *ngIf="!registerForm.controls['lastName'].errors?.['trimmed'] && registerForm.controls['lastName'].errors?.['pattern']">Last Name must be at least 3 characters long and cannot contain numbers.</div>
+      </div>
+      </div>
+      <input type="email" placeholder="Email" formControlName="email" />
+      <div *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)" class="error">
+        <div *ngIf="registerForm.controls['email'].errors?.['required']">Email is required.</div>
+        <div *ngIf="registerForm.controls['email'].errors?.['pattern']">Email should be valid.</div>
+      </div>
+      <input type="password" placeholder="Password" formControlName="password" />
+      <div *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)" class="error">
+        <div *ngIf="registerForm.controls['password'].errors?.['required']">Password is required.</div>
+        <div *ngIf="registerForm.controls['password'].errors?.['pattern']">Password must contain at least one digit, one lowercase and one uppercase letter, and be at least 8 characters long.</div>
+      </div>
+      <select id="gender" formControlName="gender" required>
+        <option value="" disabled selected>Select your gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <div *ngIf="registerForm.controls['gender'].invalid && (registerForm.controls['gender'].dirty || registerForm.controls['gender'].touched)" class="error">
+        <div *ngIf="registerForm.controls['gender'].errors?.['required']">Gender is required.</div>
+      </div>
+      <button class="btn btn-success mt-3" type="submit" [disabled]="registerForm.invalid">Sign Up</button>
+      <a href="#" class="text-primary tggle" (click)="showSignIn()">Sign In</a>
+    </form>
+  </div>
+
+  <div class="form-container sign-in-container">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <h1>Sign in</h1>
+      <div class="social-container">
+        <a href="#" class="social facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social google"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social in"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your account</span>
+      <input type="email" placeholder="Email" formControlName="email" />
+      <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)" class="error">
+        <div *ngIf="loginForm.controls['email'].errors?.['required']">Email is required.</div>
+        <div *ngIf="loginForm.controls['email'].errors?.['pattern']">Email should be valid.</div>
+      </div>
+      <input type="password" placeholder="Password" formControlName="password" />
+      <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)" class="error">
+        <div *ngIf="loginForm.controls['password'].errors?.['required']">Password is required.</div>
+      </div>
+      <a mat-button (click)="openDialog()">Forgot your password?</a>
+      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Sign In</button>
+      <a href="#" class="text-success tggle" (click)="showSignUp()">Sign Up</a>
+    </form>
+  </div>
+
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        <button class="ghost" (click)="signIn()">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start journey with us</p>
+        <button class="ghost" (click)="signUp()">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</div>

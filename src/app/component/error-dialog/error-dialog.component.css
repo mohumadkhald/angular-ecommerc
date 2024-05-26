@@ -1,0 +1,27 @@
+.custom-dialog-container {
+  position: absolute;
+  top: -500px;
+  margin: 100px auto;
+  z-index: 100;
+}
+
+
+
+::ng-deep .custom-dialog-container {
+  position: absolute;
+  top: -500px;
+  margin: -400px auto;
+  z-index: 100;
+}
+
+.close-button {
+  font-size: 1.5rem;
+  cursor: pointer;
+
+}
+
+
+.close-button.text-light {
+  color: white;
+}
+

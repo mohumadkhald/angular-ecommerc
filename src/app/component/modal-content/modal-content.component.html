@@ -1,0 +1,14 @@
+<h2 class="bg-primary text-center text-light" mat-dialog-title>{{data.name}}</h2>
+<div mat-dialog-content>
+  <p style="margin-top: 5px">What's Your Email?</p>
+  <mat-form-field style="z-index: 10">
+    <input placeholder="Enter Email" matInput [(ngModel)]="email">
+  </mat-form-field>
+</div>
+<p class="text-center bg-danger-subtle text-danger">{{ responseMessage }}</p> <!-- Bind the response message here -->
+<div class="mybtn">
+  <div></div>
+  <button class="btn btn-cancel" (click)="onNoClick()">Cancel</button> <!-- Apply cancel button style -->
+  <button class="btn btn-send" (click)="onOkClick()" >Send Code</button> <!-- Apply send button style -->
+  <div></div>
+</div>
