@@ -1,0 +1,47 @@
+<aside class="sidebar">
+  <div class="categories">
+    <h2>Categories</h2>
+    <ul>
+      <li (click)="toggleSubList('ladies')"> Ladies </li>
+      <li (click)="toggleSubList('mens')"> Mens
+        <ul [ngClass]="{'open': openSubLists['mens']}">
+          <li (click)="toggleSubList('mens-shoes')"> Shoes
+            <ul [ngClass]="{'open': openSubLists['mens-shoes']}">
+              <li> Classic </li>
+              <li (click)="toggleSubList('mens-sport')"> Sport
+                <ul [ngClass]="{'open': openSubLists['mens-sport']}">
+                  <li> Sport 1 </li>
+                  <li> Sport 2 </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li> Trainers </li>
+          <li> Jeans </li>
+          <li> Chinos </li>
+          <li> T-Shirts </li>
+        </ul>
+      </li>
+      <li (click)="toggleSubList('kids')"> Kids </li>
+      <li (click)="toggleSubList('accessories')"> Accessories </li>
+      <li (click)="toggleSubList('sports')"> Sports </li>
+      <li (click)="toggleSubList('brands')"> Brands </li>
+      <li (click)="toggleSubList('electronics')"> Electronics </li>
+      <li (click)="toggleSubList('home-garden')"> Home & Garden </li>
+      <li (click)="toggleSubList('custom-link')"> Custom Link </li>
+    </ul>
+  </div>
+  <div class="filters">
+    <h2>Filter</h2>
+    <div class="availability">
+      <h3>Availability</h3>
+      <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
+      <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
+    </div>
+    <div class="price-range">
+      <h3>Price</h3>
+      <input type="range" min="0" max="1000" step="10" [(ngModel)]="filters.priceRange">
+      <p>Selected Price: {{ filters.priceRange }}</p>
+    </div>
+  </div>
+</aside>
