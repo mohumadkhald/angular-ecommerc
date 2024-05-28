@@ -7,6 +7,7 @@ import {FormsModule} from "@angular/forms";
 import {CategoryService} from "../../category.service";
 import {ProductsService} from "../services/products.service";
 import {Product} from "../interface/product";
+import {ActivatedRoute, RouterLink, RouterLinkActive} from "@angular/router";
 
 @Component({
   selector: 'app-product-list',
@@ -18,7 +19,9 @@ import {Product} from "../interface/product";
     SidebarComponent,
     FormsModule,
     CurrencyPipe,
-    NgClass
+    NgClass,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
@@ -37,16 +40,23 @@ export class ProductListComponent implements OnInit {
   subCategories: any[] = [];
   products: any[] = [];
 
-  constructor(private categoryService: CategoryService, private productService: ProductsService) {
+  constructor(private categoryService: CategoryService, private productService: ProductsService, private route : ActivatedRoute) {
     const storedCategoryName = localStorage.getItem('currentCategoryName');
     if (storedCategoryName) {
       this.currentCategoryName = storedCategoryName;
+      this.openSubLists[this.currentCategoryName] = true;
     }
   }
 
+  subCategoryName : string = ''
   ngOnInit(): void {
     this.loadCategories();
     this.loadSubCategories();
+    this.route.params.subscribe(params => {
+      this.subCategoryName = params['subCategoryName'];
+      // Load products based on sub-category name
+      this.loadProducts(this.subCategoryName);
+    });
   }
 
   loadCategories(): void {
@@ -63,16 +73,24 @@ export class ProductListComponent implements OnInit {
 
 
   loadProducts(subCategoryName: string): void {
+    // Load products based on sub-category name
     this.productService.getProducts(subCategoryName).subscribe(products => {
       this.products = products;
     });
   }
 
+
+  // loadProducts(subCategoryName: string): void {
+  //   this.productService.getProducts(subCategoryName).subscribe(products => {
+  //     this.products = products;
+  //   });
+  // }
+
   currentCategoryName: string = ''; // Property to hold the name of the currently open category
 
   toggleSubList(categoryName: string): void {
     this.openSubLists[categoryName] = !this.openSubLists[categoryName];
-    this.currentCategoryName = this.openSubLists[categoryName] ? categoryName : ''; // Update current category name
+    this.currentCategoryName = this.openSubLists[categoryName] ? categoryName : '';
     // Store current category name in localStorage
     localStorage.setItem('currentCategoryName', this.currentCategoryName);
   }

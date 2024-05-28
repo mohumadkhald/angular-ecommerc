@@ -124,6 +124,10 @@ button:hover {
   background-color: #c03;
 }
 
+.active {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
 
 /* Responsive Styles */
 @media (max-width: 1280px) {

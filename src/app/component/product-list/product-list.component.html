@@ -11,15 +11,16 @@
 
 <div class="store-container">
   <aside class="sidebar">
+
     <div class="categories">
-      <h2>{{ currentCategoryName || 'Categories' }}</h2> <!-- Display current category name if available, otherwise display 'Categories' -->
+      <h4>Home/Store/{{ currentCategoryName.toUpperCase() || 'Categories' }}</h4> <!-- Display current category name if available, otherwise display 'Categories' -->
       <ul>
         <li *ngFor="let category of categories" (click)="toggleSubList(category.categoryTitle)">
-          {{ category.categoryTitle }}
+          {{ category.categoryTitle.toUpperCase() }}
           <ul [ngClass]="{'open': openSubLists[category.categoryTitle]}">
-            <li *ngFor="let subCategory of filterSubCategories(category.categoryId)"
-                (click)="loadProducts(subCategory.name); $event.stopPropagation()">
-              {{ subCategory.name }}
+            <li *ngFor="let subCategory of filterSubCategories(category.categoryId)"  routerLinkActive="active" [routerLink]="['/products', subCategory.name]"
+                (click)="$event.stopPropagation()">
+              {{ subCategory.name.toUpperCase() }}
             </li>
           </ul>
         </li>
