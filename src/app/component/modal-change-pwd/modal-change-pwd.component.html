@@ -26,9 +26,9 @@
         <div *ngIf="!changePwdForm.get('confirmPassword')?.hasError('required') && confirmPasswordBlurred && changePwdForm.errors?.['mismatch']" class="err-msg">
           Passwords do not match
         </div>
+        <p class="text-center mt-2 bg-danger err-msg">{{ responseMessage }}</p>
       </div>
     </div>
-    <p class="text-center bg-danger-subtle err-msg">{{ responseMessage }}</p>
     <div class="mybtn">
       <div></div>
       <button class="btn btn-cancel" (click)="onNoClick()">Cancel</button>

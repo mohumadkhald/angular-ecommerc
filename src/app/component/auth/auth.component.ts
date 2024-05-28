@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import {Component, ElementRef, ViewChild, Renderer2, OnInit} from '@angular/core';
 import { AuthService } from "../../service/auth.service";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import { CommonModule } from '@angular/common';
@@ -7,15 +7,16 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatButtonModule } from '@angular/material/button';
 import { ModalContentComponent } from "../modal-content/modal-content.component";
 import {ErrorDialogComponent} from "../error-dialog/error-dialog.component";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatProgressSpinner],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit{
 
   @ViewChild('container') container!: ElementRef;
   registerForm: FormGroup;
@@ -25,7 +26,8 @@ export class AuthComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private dialog: MatDialog,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private router: Router
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
@@ -64,23 +66,37 @@ export class AuthComponent {
     this.container.nativeElement.classList.add('right-panel-active');
   }
 
-  login() {
-    if (this.loginForm.valid) {
-      const email = this.loginForm.value.email.trim();
-      const password = this.loginForm.value.password.trim();
+  loading: boolean = true;
 
-      this.authService.login(email, password).subscribe(
-        response => {
-          console.log('Login successful', response);
-        },
-        error => {
-          console.error('Login error', error);
-          let msg = Object.values(error.error.errors).join(', ')
-          this.showErrorDialog(msg);
-        }
-      );
-    }
+  ngOnInit(): void {
+
+    // Simulate loading for 2 seconds
+    setTimeout(() => {
+      this.loading = false; // Set loading to false after 2 seconds
+    }, 200);
   }
+
+
+login() {
+  if (this.loginForm.valid) {
+    const email = this.loginForm.value.email.trim();
+    const password = this.loginForm.value.password.trim();
+
+    this.authService.login(email, password).subscribe(
+      response => {
+        console.log('Login successful', response);
+        this.authService.saveToken(response.token);
+        this.router.navigate(['/']);
+      },
+      error => {
+        console.error('Login error', error);
+        let msg = Object.values(error.error.errors).join(', ')
+        this.showErrorDialog(msg);
+      }
+    );
+  }
+}
+
 
   register() {
     if (this.registerForm.valid) {
@@ -93,6 +109,8 @@ export class AuthComponent {
       this.authService.register(firstName, lastName, email, password, gender).subscribe(
         response => {
           console.log('Registration successful', response);
+          this.authService.saveToken(response.token);
+          this.router.navigate(['/']);
         },
         error => {
           console.error('Registration error', error);
@@ -107,7 +125,7 @@ export class AuthComponent {
 
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
-      width: '400px',
+      width: '350px',
       height: '200px',
       data: { message: message },
       panelClass: 'custom-dialog-container'  // Apply the custom class here
@@ -138,8 +156,7 @@ export class AuthComponent {
 
       // Apply new styles to the dialog container
       this.renderer.setStyle(dialogContainer, 'position', 'relative');
-      this.renderer.setStyle(dialogContainer, 'top', '-200px');
-      this.renderer.setStyle(dialogContainer, 'margin', '-200px auto');
+      this.renderer.setStyle(dialogContainer, 'top', '0px');
       this.renderer.setStyle(dialogContainer, 'z-index', '100');
 
       // Show the dialog after applying styles

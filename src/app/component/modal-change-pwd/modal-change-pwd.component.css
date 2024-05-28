@@ -34,7 +34,7 @@ input {
 
 ::ng-deep .custom-dialog-container {
   position: absolute;
-  top: -500px;
+  top: 200px;
   margin: -400px auto;
   z-index: 100;
 }

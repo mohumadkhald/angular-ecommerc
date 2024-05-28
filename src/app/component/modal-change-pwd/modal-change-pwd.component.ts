@@ -40,6 +40,7 @@ export class ModalChangePwdComponent {
     private fb: FormBuilder,
     private http: HttpClient
   ) {
+    this.dialogRef.disableClose = true;
     this.changePwdForm = this.fb.group({
       email: [{ value: data.email, disabled: true }],
       code: ['', Validators.required],

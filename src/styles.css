@@ -1,1 +1,81 @@
-/* You can add global styles to this file, and also import other style files */
+
+* {
+  box-sizing: border-box;
+}
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #817b7b;
+}
+
+/* Reset rounded corners for all elements */
+div,
+input,
+select,
+textarea,
+span,
+img,
+table,
+label,
+td,
+th,
+p,
+a,
+button,
+ul,
+code,
+pre,
+li {
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-radius: 0 !important;
+}
+
+a,
+a:focus,
+a:hover,
+a:active {
+  outline: 0;
+}
+
+/*Fix for Firefox*/
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+}
+
+/* Bootstrap buttons */
+.btn-primary {
+  color: #fff;
+  background-color: #428bca;
+  border: none;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+  color: #fff;
+  background-color: #3379b5;
+  border-color: #2a6496;
+}
+
+.open .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #3379b5;
+  border-color: #2a6496;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-image: none;
+  background-color: #2d6ca2;
+}
+

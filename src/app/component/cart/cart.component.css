@@ -1,0 +1,82 @@
+.loginReq {
+    margin-top: 2vw;
+    width: 90vw;
+    background-color: #ddd;
+    margin-bottom: 5vw;
+}
+
+.loginReqImg {
+    margin-top: 1.5vw;
+    padding-top: 2vw;
+    width: 60vw;
+    float: left;
+}
+
+.loginReqImg img {
+    width: 80%;
+    float: left;
+}
+
+
+.detailsReq {
+    float: left;
+    margin-top: 4vw;
+    width: 26vw;
+    position: relative;
+    right: 5vw;
+
+}
+
+.detailsReq p a {
+
+    text-decoration: none;
+    color: #2953a9;
+}
+
+.detailsReq button {
+    background-color: #4079eb;
+    padding: .5vw;
+    margin-top: .5vw;
+    position: relative;
+    left: -.5vw;
+}
+
+.loginRe {
+    width: 90vw;
+}
+/* Default styles for larger screens */
+.loginReq {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loginReqImg {
+    margin-right: 20px;
+  }
+  
+  .detailsReq {
+    text-align: center;
+  }
+  
+  /* Additional styles for smaller screens using media query */
+  @media (max-width: 768px) {
+    .loginReq {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .loginReqImg {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  }
+  
+  /* Styles for the second div */
+  .loginRe {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  /* Add more media queries as needed for different screen sizes */
+  

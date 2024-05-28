@@ -24,8 +24,7 @@ export class ErrorDialogComponent implements AfterViewInit {
 
       // Apply new styles to the dialog container
       this.renderer.setStyle(dialogContainer, 'position', 'relative');
-      this.renderer.setStyle(dialogContainer, 'top', '-200px');
-      this.renderer.setStyle(dialogContainer, 'margin', '-200px auto');
+      this.renderer.setStyle(dialogContainer, 'top', '20px');
       this.renderer.setStyle(dialogContainer, 'z-index', '100');
 
       // Show the dialog after applying styles

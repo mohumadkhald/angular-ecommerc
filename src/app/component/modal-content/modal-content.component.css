@@ -14,20 +14,58 @@
   grid-template-columns: auto auto auto auto;
   gap: 10px;
   margin-bottom: 15px;
+  margin-top: -5px;
 }
 
-.custom-dialog-container {
-  position: absolute;
-  top: -500px;
-  margin: 100px auto;
-  z-index: 100;
+input {
+  background-color: #eee;
+  border: none;
+}
+.my-inp {
+  margin-left: 20px;
+  width: 250px;
+}
+.err-send {
+  margin-top: -35px;
+}
+/*.custom-dialog-container {*/
+/*  position: absolute;*/
+/*  top: 500px;*/
+/*  margin: 300px auto;*/
+/*  z-index: 100;*/
+/*}*/
+
+
+
+/*::ng-deep .custom-dialog-container {*/
+/*  position: absolute;*/
+/*  margin: -200px auto;*/
+/*  z-index: 100;*/
+/*}*/
+
+
+.btn-cancel:hover {
+  background-color: #e6162a;
+}
+.btn-send:hover {
+  background-color: #034913;
 }
 
-
-
-::ng-deep .custom-dialog-container {
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   position: absolute;
-  top: -500px;
-  margin: -400px auto;
-  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: To cover the whole screen with a translucent background */
+}
+
+.spinner-message {
+  margin-top: 10px;
+  font-size: 16px;
 }

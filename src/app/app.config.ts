@@ -10,7 +10,8 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import {CommonModule, DatePipe} from '@angular/common';
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule, NoopAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
-// import { requestInterceptor } from './request.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AuthInterceptor } from './auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,8 @@ export const appConfig: ApplicationConfig = {
     BrowserAnimationsModule,
     NoopAnimationsModule,
     provideAnimations(),
-    provideHttpClient(withInterceptors([]))
+    provideHttpClient(withInterceptors([
+      AuthInterceptor
+    ])), provideAnimationsAsync()
   ]
 };

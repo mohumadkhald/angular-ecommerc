@@ -45,8 +45,6 @@ a {
 
 button {
   border-radius: 20px;
-  border: 1px solid #ff4b2b;
-  background-color: #ff4b2b;
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
@@ -347,4 +345,23 @@ input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
   background-color: #4a4acd;
   color: white;
 
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: To cover the whole screen with a translucent background */
+}
+
+.spinner-message {
+  margin-top: 10px;
+  font-size: 16px;
 }

@@ -1,4 +1,11 @@
-<div class="container" style="margin-top: 10vh" #container>
+<div *ngIf="loading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+  <div class="spinner-message">Loading, please wait...</div>
+</div>
+
+
+
+<div *ngIf="!loading" class="container" style="margin-top: 10vh" #container>
   <div class="form-container sign-up-container">
     <form [formGroup]="registerForm" (ngSubmit)="register()">
       <h1>Create Account</h1>

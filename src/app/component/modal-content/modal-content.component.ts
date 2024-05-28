@@ -7,6 +7,7 @@ import { MatInputModule } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.component";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-modal-content',
@@ -17,7 +18,8 @@ import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.comp
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatProgressSpinner
   ],
   templateUrl: './modal-content.component.html',
   styleUrls: ['./modal-content.component.css']
@@ -32,23 +34,29 @@ export class ModalContentComponent {
     private http: HttpClient,
     private dialog: MatDialog,
     private renderer: Renderer2 // Inject Renderer2 for styling
-  ) {}
+  ) {
+    this.dialogRef.disableClose = true;
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  loading: boolean = false;
   onOkClick(): void {
     if (this.email) {
+      this.loading = true; // Start the spinner
       const url = `http://localhost:8080/api/auth/send-reset?email=${encodeURIComponent(this.email)}`;
       this.http.post(url, {})
         .subscribe((response: any) => {
           console.log('Reset email sent successfully:', response);
           this.responseMessage = response.message;
+          this.loading = false; // Stop the spinner
           this.dialogRef.close();
           this.openChangePwdModal(this.email);
         }, error => {
           console.error('Error sending reset email:', error);
+          this.loading = false; // Stop the spinner
           if (error && error.error && error.error.message) {
             this.responseMessage = error.error.message;
           } else {
@@ -57,6 +65,7 @@ export class ModalContentComponent {
         });
     }
   }
+
 
   openChangePwdModal(email: string | undefined): void {
     const dialogRef = this.dialog.open(ModalChangePwdComponent, {
@@ -71,8 +80,7 @@ export class ModalContentComponent {
       dialogContainer.style.display = 'none';
       // Apply new styles to the dialog container
       this.renderer.setStyle(dialogContainer, 'position', 'relative');
-      this.renderer.setStyle(dialogContainer, 'top', '-200px');
-      this.renderer.setStyle(dialogContainer, 'margin', '-350px auto');
+      this.renderer.setStyle(dialogContainer, 'top', '20px');
       this.renderer.setStyle(dialogContainer, 'z-index', '100');
       // Show the dialog after applying styles
       dialogContainer.style.display = 'block';
