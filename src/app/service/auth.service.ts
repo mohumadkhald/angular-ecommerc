@@ -1,7 +1,7 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {BehaviorSubject, catchError, Observable, of} from 'rxjs';
+import {catchError, Observable, of} from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
