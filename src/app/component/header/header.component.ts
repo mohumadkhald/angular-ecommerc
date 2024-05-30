@@ -13,7 +13,7 @@ import {AuthService} from "../../service/auth.service";
 
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {UserService} from "../../user.service";
+import {UserService} from "../../service/user.service";
 
 @Component({
   selector: 'app-header',

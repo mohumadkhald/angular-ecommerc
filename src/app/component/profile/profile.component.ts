@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {QuantityService} from "../services/counter.service";
+import {QuantityService} from "../../service/counter.service";
 import {AuthService} from "../../service/auth.service";
 import {Router} from "@angular/router";
 import {error} from "@angular/compiler-cli/src/transformers/util";

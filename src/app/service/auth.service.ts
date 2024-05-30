@@ -9,7 +9,7 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   private tokenKey = 'token';
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'http://ec2-54-167-172-156.compute-1.amazonaws.com:8080/api';
 
   constructor(private http: HttpClient) {}
 

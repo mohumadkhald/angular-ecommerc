@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, Pipe } from '@angular/c
 import { CommonModule, NgClass, NgIf, NgStyle } from '@angular/common';
 import { StarRatingComponent } from "../star-rating/star-rating.component";
 import { Router } from '@angular/router';
-import { CartService } from '../services/cart.service';
+import { CartService } from '../../service/cart.service';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-product-card',
@@ -19,17 +19,17 @@ export class ProductCardComponent implements OnInit {
   constructor(private router: Router,private cartService: CartService) {}
   ngOnInit(): void {
     this.cartItems = this.cartService.getCart();
-    
+
   }
   addToCart(product: any): void {
     this.cartService.addToCart(this.productItem);
   }
   redirectToDetails(id: number) {
-    this.router.navigate([`product/details/${id}`], { 
-     
+    this.router.navigate([`product/details/${id}`], {
+
     });
-    
+
   }
- 
-  
+
+
 }

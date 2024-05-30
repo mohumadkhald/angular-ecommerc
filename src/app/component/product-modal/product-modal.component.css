@@ -1,0 +1,25 @@
+.modal-title {
+  font-size: 2rem; /* Responsive font size */
+}
+.custom-image-zoom .lib-ngx-image-zoom-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.custom-image-zoom .lib-ngx-image-zoom-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+.custom-image-zoom .lib-ngx-image-zoom-container .zoom-box {
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .modal-body {
+    padding: 20px; /* Adjust padding for smaller screens */
+  }
+}

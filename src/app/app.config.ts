@@ -11,7 +11,8 @@ import {CommonModule, DatePipe} from '@angular/common';
 import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule, NoopAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { AuthInterceptor } from './auth.interceptor';
+import { AuthInterceptor } from './utils/auth.interceptor';
+import {NgxImgZoomModule} from "ngx-img-zoom";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     BrowserModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,
+    NgxImgZoomModule,
     provideAnimations(),
     provideHttpClient(withInterceptors([
       AuthInterceptor

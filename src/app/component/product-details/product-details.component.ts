@@ -1,9 +1,9 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
-import { ProductsService } from '../services/products.service';
-import { CartService } from '../services/cart.service';
-import {DiscountPipe} from "../services/discount.pipe";
+import { ProductsService } from '../../service/products.service';
+import { CartService } from '../../service/cart.service';
+import {DiscountPipe} from "../../utils/discount.pipe";
 
 
 @Component({

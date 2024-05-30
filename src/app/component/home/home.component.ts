@@ -1,18 +1,19 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { NgClass, NgFor,NgIf, NgStyle } from '@angular/common';
 import { ProductCardComponent } from '../product-card/product-card.component';
-import { ProductsService } from '../services/products.service';
+import { ProductsService } from '../../service/products.service';
 import {Product} from "../interface/product";
 import {AuthService} from "../../service/auth.service";
 import {Router} from "@angular/router";
-import {UserService} from "../../user.service";
-import {SliderComponent} from "../../slider/slider.component";
+import {UserService} from "../../service/user.service";
+import {ProductModalComponent} from "../product-modal/product-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 @Component({
     standalone: true,
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-  imports: [NgClass, NgStyle, NgFor, NgIf, ProductCardComponent, SliderComponent]
+  imports: [NgClass, NgStyle, NgFor, NgIf, ProductCardComponent]
 })
 export class HomeComponent implements OnInit {
   title = 'Home';
@@ -24,7 +25,8 @@ export class HomeComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private productsService: ProductsService,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -55,5 +57,21 @@ export class HomeComponent implements OnInit {
         console.error('Logout error', error);
       }
     );
+  }
+
+
+  product = {
+    title: 'Cool Green Dress with Red Bell',
+    mainImage: 'assets/pages/img/careers/careers.jpg', // Ensure this is the correct path to your image
+    description: 'Lorem ipsum dolor sit amet...',
+    price: '$47.00',
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Red', 'Green', 'Blue', 'Yellow']
+  };
+
+
+  open() {
+    const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
+    modalRef.componentInstance.product = this.product;
   }
 }

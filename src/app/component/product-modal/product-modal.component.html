@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ product.title }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-6">
+
+
+
+
+
+
+    </div>
+    <div class="col-md-6">
+      <p>{{ product.description }}</p>
+      <p><strong>Price: </strong>{{ product.price }}</p>
+      <div class="form-group">
+        <label for="sizeSelect">Size</label>
+        <select id="sizeSelect" class="form-control" [(ngModel)]="selectedSize">
+          <option *ngFor="let size of product.sizes" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="colorSelect">Color</label>
+        <select id="colorSelect" class="form-control" [(ngModel)]="selectedColor">
+          <option *ngFor="let color of product.colors" [value]="color">{{ color }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+  <button type="button" class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
+</div>

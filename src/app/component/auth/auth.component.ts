@@ -2,7 +2,7 @@ import {Component, ElementRef, ViewChild, Renderer2, OnInit} from '@angular/core
 import { AuthService } from "../../service/auth.service";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import { CommonModule } from '@angular/common';
-import { Router } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatButtonModule } from '@angular/material/button';
 import { ModalContentComponent } from "../modal-content/modal-content.component";
@@ -27,7 +27,8 @@ export class AuthComponent implements OnInit{
     private authService: AuthService,
     private dialog: MatDialog,
     private renderer: Renderer2,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
@@ -64,6 +65,7 @@ export class AuthComponent implements OnInit{
 
   showSignUp() {
     this.container.nativeElement.classList.add('right-panel-active');
+    this.router.navigate(['/register']);
   }
 
   loading: boolean = true;

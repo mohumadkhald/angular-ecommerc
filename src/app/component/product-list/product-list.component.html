@@ -1,54 +1,59 @@
-
-<div class="title-wrapper">
-  <div class="container">
+<div *ngIf="loading" style="margin: 50vh 50vw" class="spinner-container">
+  <mat-spinner></mat-spinner>
+  <div class="spinner-message">Loading, please wait...</div>
+</div>
+<div *ngIf="!loading" >
+  <div class="title-wrapper">
+    <div class="container">
       <div class="container-inner">
-      <h1><span>MEN</span> CATEGORY</h1>
-    <em>Over 4000 Items are available here</em>
+        <h1><span>MEN</span> CATEGORY</h1>
+        <em>Over 4000 Items are available here</em>
+      </div>
     </div>
   </div>
-</div>
+
+  <h4 class="m-3">Home/Store/{{ currentCategoryName.toUpperCase() || 'Categories' }}</h4> <!-- Display current category name if available, otherwise display 'Categories' -->
 
 
-<div class="store-container">
-  <aside class="sidebar">
+  <div class="store-container">
+    <aside class="sidebar mt-3">
 
-    <div class="categories">
-      <h4>Home/Store/{{ currentCategoryName.toUpperCase() || 'Categories' }}</h4> <!-- Display current category name if available, otherwise display 'Categories' -->
-      <ul>
-        <li *ngFor="let category of categories" (click)="toggleSubList(category.categoryTitle)">
-          {{ category.categoryTitle.toUpperCase() }}
-          <ul [ngClass]="{'open': openSubLists[category.categoryTitle]}">
-            <li *ngFor="let subCategory of filterSubCategories(category.categoryId)"  routerLinkActive="active" [routerLink]="['/products', subCategory.name]"
-                (click)="$event.stopPropagation()">
-              {{ subCategory.name.toUpperCase() }}
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-
-
-
-
-    <div class="filters">
-      <h2>Filter</h2>
-      <div class="availability">
-        <h3>Availability</h3>
-        <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
-        <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
+      <div class="categories">
+        <ul>
+          <li *ngFor="let category of categories" (click)="toggleSubList(category.categoryTitle)">
+            {{ category.categoryTitle.toUpperCase() }}
+            <ul [ngClass]="{'open': openSubLists[category.categoryTitle]}">
+              <li *ngFor="let subCategory of filterSubCategories(category.categoryId)"  routerLinkActive="active" [routerLink]="['/products', subCategory.name]"
+                  (click)="$event.stopPropagation()">
+                {{ subCategory.name.toUpperCase() }}
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
-      <div class="price-range">
-        <h3>Price</h3>
-        <input type="range" min="50" max="250" step="10" [(ngModel)]="filters.priceRange">
-        <p>Range: ${{ filters.priceRange }}</p>
+
+
+
+
+      <div class="filters">
+        <h2>Filter</h2>
+        <div class="availability">
+          <h3>Availability</h3>
+          <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
+          <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
+        </div>
+        <div class="price-range">
+          <h3>Price</h3>
+          <input type="range" min="50" max="250" step="10" [(ngModel)]="filters.priceRange">
+          <p>Range: ${{ filters.priceRange }}</p>
+        </div>
       </div>
-    </div>
-  </aside>
+    </aside>
 
 
   <main class="product-list">
     <div class="product" *ngFor="let product of products">
-      <img [src]="product.image" alt="{{ product.productTitle }}">
+      <img src="{{ product.imageUrl }}" alt="{{ product.productTitle }}">
       <a href="#" class="text-start m-2">{{ product.productTitle }}</a>
       <div class="product-info">
         <p>{{ product.price | currency }}</p>
@@ -56,4 +61,6 @@
       </div>
     </div>
   </main>
+</div>
+
 </div>
