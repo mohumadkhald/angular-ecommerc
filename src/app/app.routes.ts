@@ -10,6 +10,7 @@ import {NotfoundComponent} from "./component/notfound/notfound.component";
 import {ProfileComponent} from "./component/profile/profile.component";
 import {noAuthGuard} from "./utils/no-auth.guard";
 import {ProductListComponent} from "./component/product-list/product-list.component";
+import { PageDetailsComponent } from './component/page-details/page-details.component';
 
 
 
@@ -22,7 +23,7 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent,title: "Contact"},
   { path: 'login', component: AuthComponent, data: { action: 'login' } },
   // { path: 'user/login', component: AuthComponent,title: "Authontication", canActivate: [noAuthGuard] },
-  { path: 'product/details/:id',component: ProductDetailsComponent,title: "Product Details"},
+  { path: 'product/details/:id',component: PageDetailsComponent,title: "Product Details"},
   { path: 'cart',component: CartComponent,title: "Cart"},
   { path: 'notfound', component: NotfoundComponent,title: "Not Found"},
   { path: '**', redirectTo: '/notfound' }

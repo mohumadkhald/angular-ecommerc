@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CurrencyPipe, NgClass, NgForOf, NgIf} from "@angular/common";
+import {CurrencyPipe, NgClass, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {ProductCardComponent} from "../product-card/product-card.component";
 
 import {SidebarComponent} from "../sidebar/sidebar.component";
@@ -7,7 +7,7 @@ import {FormsModule} from "@angular/forms";
 import {CategoryService} from "../../service/category.service";
 import {ProductsService} from "../../service/products.service";
 import {Product} from "../interface/product";
-import {ActivatedRoute, RouterLink, RouterLinkActive} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductModalComponent } from '../product-modal/product-modal.component';
@@ -23,6 +23,7 @@ import { ProductModalComponent } from '../product-modal/product-modal.component'
     FormsModule,
     CurrencyPipe,
     NgClass,
+    NgStyle,
     RouterLink,
     RouterLinkActive,
     MatProgressSpinner
@@ -33,6 +34,8 @@ import { ProductModalComponent } from '../product-modal/product-modal.component'
 
 export class ProductListComponent implements OnInit {
   title = 'ProductList';
+  currentSubCategoryImage: any;
+
   openSubLists: { [key: string]: boolean } = {};
   filters = {
     inStock: true,
@@ -43,8 +46,9 @@ export class ProductListComponent implements OnInit {
   categories: any[] = [];
   subCategories: any[] = [];
   products: any[] = [];
-
+  
   constructor(
+      private router: Router,
       private categoryService: CategoryService,
       private productService: ProductsService,
       private route : ActivatedRoute,
@@ -55,10 +59,14 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryName = storedCategoryName;
       this.openSubLists[this.currentCategoryName] = true;
     }
+    const storedImage = localStorage.getItem('currentSubCategoryImage');
+    this.currentSubCategoryImage = storedImage;
   }
 
-  subCategoryName : string = ''
+  subCategoryName: string = '';
   loading: boolean = true;
+  currentCategoryName: string = ''; // Property to hold the name of the currently open category
+  currentCategoryImage: string = ''; // Property to hold the image for the current category
 
   ngOnInit(): void {
     this.loadCategories();
@@ -75,8 +83,6 @@ export class ProductListComponent implements OnInit {
     }, 200);
   }
 
-
-
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe(categories => {
       this.categories = categories;
@@ -89,17 +95,12 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-
   loadProducts(subCategoryName: string): void {
     // Load products based on sub-category name
     this.productService.getProducts(subCategoryName).subscribe(products => {
       this.products = products;
     });
   }
-
-
-
-  currentCategoryName: string = ''; // Property to hold the name of the currently open category
 
   toggleSubList(categoryName: string): void {
     this.openSubLists[categoryName] = !this.openSubLists[categoryName];
@@ -112,10 +113,21 @@ export class ProductListComponent implements OnInit {
     return this.subCategories.filter(sc => sc.categoryId === categoryId);
   }
 
-
   open(product: any) {
     const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
     modalRef.componentInstance.product = product;
   }
+
+  selectSubCategory(event: Event, subCategory: any): void {
+    event.stopPropagation(); // Stop event propagation to prevent dropdown collapse
+    this.subCategoryName = subCategory.name;
+    this.currentSubCategoryImage = subCategory.img || 'default-subcategory-image-url.jpg';
+    this.currentCategoryName = this.categories.find(category => category.categoryId === subCategory.categoryId)?.categoryTitle || 'Category';
+    this.loadProducts(this.subCategoryName);
+    localStorage.setItem('currentSubCategoryImage', this.currentSubCategoryImage);
+  }
   
+  redirectToDetails(id: number) {
+    this.router.navigate([`product/details/${id}`]);
+  }
 }
