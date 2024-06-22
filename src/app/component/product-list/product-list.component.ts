@@ -9,6 +9,8 @@ import {ProductsService} from "../../service/products.service";
 import {Product} from "../interface/product";
 import {ActivatedRoute, RouterLink, RouterLinkActive} from "@angular/router";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProductModalComponent } from '../product-modal/product-modal.component';
 
 @Component({
   selector: 'app-product-list',
@@ -42,7 +44,12 @@ export class ProductListComponent implements OnInit {
   subCategories: any[] = [];
   products: any[] = [];
 
-  constructor(private categoryService: CategoryService, private productService: ProductsService, private route : ActivatedRoute) {
+  constructor(
+      private categoryService: CategoryService,
+      private productService: ProductsService,
+      private route : ActivatedRoute,
+      private modalService: NgbModal
+    ) {
     const storedCategoryName = localStorage.getItem('currentCategoryName');
     if (storedCategoryName) {
       this.currentCategoryName = storedCategoryName;
@@ -92,12 +99,6 @@ export class ProductListComponent implements OnInit {
 
 
 
-  // loadProducts(subCategoryName: string): void {
-  //   this.productService.getProducts(subCategoryName).subscribe(products => {
-  //     this.products = products;
-  //   });
-  // }
-
   currentCategoryName: string = ''; // Property to hold the name of the currently open category
 
   toggleSubList(categoryName: string): void {
@@ -110,4 +111,11 @@ export class ProductListComponent implements OnInit {
   filterSubCategories(categoryId: number): any[] {
     return this.subCategories.filter(sc => sc.categoryId === categoryId);
   }
+
+
+  open(product: any) {
+    const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
+    modalRef.componentInstance.product = product;
+  }
+  
 }

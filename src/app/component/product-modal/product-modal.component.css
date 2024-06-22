@@ -1,3 +1,6 @@
+.model-header {
+  margin-top: 10vh;
+}
 .modal-title {
   font-size: 2rem; /* Responsive font size */
 }

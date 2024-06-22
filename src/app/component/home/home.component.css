@@ -1,0 +1,32 @@
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 2rem 1rem;
+}
+
+.jumbotron h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.jumbotron p {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.feature-box {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.feature-box i {
+    font-size: 4rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.carousel-item img {
+    max-height: 300px; /* Adjust height of the carousel image */
+    object-fit: cover;
+}

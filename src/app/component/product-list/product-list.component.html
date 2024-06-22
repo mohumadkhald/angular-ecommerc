@@ -6,7 +6,7 @@
   <div class="title-wrapper">
     <div class="container">
       <div class="container-inner">
-        <h1><span>MEN</span> CATEGORY</h1>
+        <h1><span>MEN</span> CATEGORY</h1> // currentCategoryName here 
         <em>Over 4000 Items are available here</em>
       </div>
     </div>
@@ -51,16 +51,15 @@
     </aside>
 
 
-  <main class="product-list">
+  <main class="product-list" style="margin-bottom: 30px;">
     <div class="product" *ngFor="let product of products">
       <img src="{{ product.imageUrl }}" alt="{{ product.productTitle }}">
       <a href="#" class="text-start m-2">{{ product.productTitle }}</a>
       <div class="product-info">
         <p>{{ product.price | currency }}</p>
-        <button>Add to Cart</button>
+        <button (click)="open(product)">Add to Cart</button>
       </div>
     </div>
   </main>
 </div>
-
 </div>
