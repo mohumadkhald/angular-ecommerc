@@ -114,7 +114,7 @@ export class ProductListComponent implements OnInit {
   }
 
   open(product: any) {
-    const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg', centered: true });
     modalRef.componentInstance.product = product;
   }
 

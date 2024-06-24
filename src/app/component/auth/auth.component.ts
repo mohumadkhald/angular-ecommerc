@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ModalContentComponent } from "../modal-content/modal-content.component";
 import {ErrorDialogComponent} from "../error-dialog/error-dialog.component";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import { OAuth2Service } from '../../oauth2.service';
 
 @Component({
   selector: 'app-auth',
@@ -28,7 +29,8 @@ export class AuthComponent implements OnInit{
     private dialog: MatDialog,
     private renderer: Renderer2,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private oauth2Service: OAuth2Service
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
@@ -65,13 +67,31 @@ export class AuthComponent implements OnInit{
 
   showSignUp() {
     this.container.nativeElement.classList.add('right-panel-active');
-    this.router.navigate(['/register']);
   }
 
   loading: boolean = true;
+  isLogin: boolean = this.authService.isLoggedIn();
 
   ngOnInit(): void {
 
+     // Handle the route parameter or query parameter to extract token and other data
+     this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      const message = params['message'];
+      const role = params['role'];
+      if(token)
+      {
+          this.authService.saveToken(token);
+          this.router.navigate(['/']);
+      }
+      
+
+    });
+
+    if(this.isLogin)
+      {
+        this.router.navigate(['/']);
+      }
     // Simulate loading for 2 seconds
     setTimeout(() => {
       this.loading = false; // Set loading to false after 2 seconds
@@ -169,5 +189,9 @@ login() {
       console.log('The dialog was closed');
       this.isDialogOpen = false;
     });
+  }
+
+  initiateGoogleLogin() {
+    this.oauth2Service.initiateGoogleLogin();
   }
 }

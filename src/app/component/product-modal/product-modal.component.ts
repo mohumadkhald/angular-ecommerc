@@ -5,12 +5,13 @@ import {CommonModule, NgForOf, NgStyle} from "@angular/common";
 import {NgxImgZoomModule, NgxImgZoomService} from "ngx-img-zoom";
 import {NgxImageZoomModule} from "ngx-image-zoom";
 import {BrowserModule} from "@angular/platform-browser";
+import { CartService } from '../../service/cart.service';
 
 @Component({
   selector: 'app-product-modal',
   standalone: true,
   imports: [
-    FormsModule, NgbModule, NgForOf, NgStyle, CommonModule
+  FormsModule, NgbModule, NgForOf, NgStyle, CommonModule
   ],
   templateUrl: './product-modal.component.html',
   styleUrl: './product-modal.component.css'
@@ -27,8 +28,9 @@ export class ProductModalComponent {
   constructor(
     public activeModal: NgbActiveModal,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
-  ) {}
+    private ngZone: NgZone,
+    private cartService:CartService)
+  {}
 
 
 
@@ -39,7 +41,8 @@ export class ProductModalComponent {
   }
 
   addToCart() {
-    console.log(`Added to cart: ${this.product.title}, Size: ${this.selectedSize}, Color: ${this.selectedColor}`);
+    console.log(`Added to cart: ${this.product.productTitle}, Size: ${this.selectedSize}, Color: ${this.selectedColor}`);
+    this.cartService.addToCart(this.product);
     this.activeModal.close();
   }
 

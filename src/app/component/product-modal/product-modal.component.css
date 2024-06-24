@@ -10,8 +10,10 @@
   overflow: hidden;
 }
 
-.custom-image-zoom .lib-ngx-image-zoom-container img {
+img {
   max-width: 100%;
+  max-width: 300px;
+  max-height: 300;
   height: auto;
 }
 
@@ -21,8 +23,21 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 800) {
   .modal-body {
     padding: 20px; /* Adjust padding for smaller screens */
+  }
+  img {
+    max-width: 200px;
+    max-height: 200;
+  }
+}
+@media (max-width: 792px) {
+  .modal-body {
+    padding: 20px; /* Adjust padding for smaller screens */
+  }
+  img {
+    max-width: 250px;
+    max-height: 250;
   }
 }

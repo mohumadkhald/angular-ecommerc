@@ -21,4 +21,9 @@ export class ProductsService {
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
+
+  addProduct(formData: FormData): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}`, formData);
+  }
+
 }

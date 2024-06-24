@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {catchError, Observable, of} from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { error } from '@angular/compiler-cli/src/transformers/util';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ export class AuthService {
   private tokenKey = 'token';
   private baseUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {
+  
+  }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login`, { email, password }).pipe(
@@ -35,8 +39,12 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/users/profile`, { headers }).pipe(
       catchError(error => {
-        console.error('Profile error', error);
-        return of(null); // Return null or handle error appropriately
+        console.log(error.error.message);
+        if(error.error.message == "Token not valid") {
+          localStorage.removeItem("token");
+          this.router.navigate([`/login`])
+        }
+        return of(null);
       })
     );
   }

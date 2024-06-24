@@ -25,7 +25,9 @@ import {UserService} from "../../service/user.service";
 export class HeaderComponent implements OnInit {
   quantity: any = 0;
   username: string = '';
+  img: string = '';
   loading: boolean = true;
+  
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -42,9 +44,18 @@ export class HeaderComponent implements OnInit {
         this.cd.detectChanges();  // Trigger change detection if needed
       }
     });
-
+    this.userService.img$.subscribe(img => {
+      if (img) {
+        this.img = img;
+        this.loading = false;
+        this.cd.detectChanges();  // Trigger change detection if needed
+        console.log(this.img)
+      }
+    });
+    
     if (this.auth()) {
       this.userService.loadProfile().subscribe();
+      console.log(this.userService.loadProfile().subscribe())
     }
   }
 
@@ -52,7 +63,7 @@ export class HeaderComponent implements OnInit {
     this.authService.logout().subscribe(
       response => {
         console.log('Logout successful', response);
-        this.router.navigate(['/user/login']);  // Redirect to login after logout
+        this.router.navigate(['/login']);
       },
       error => {
         console.error('Logout error', error);

@@ -31,7 +31,7 @@ export class CartService implements OnInit {
 
   addToCart(product: any): void {
     const existingItem = this.cart.find(
-      (item) => item.product.id === product.id
+      (item) => item.product.id === product.productId
     );
     if (existingItem) {
       existingItem.quantity++;

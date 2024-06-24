@@ -8,7 +8,11 @@ import {AuthService} from "./auth.service";
 })
 export class UserService {
   private usernameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private imgSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+
   public username$: Observable<string | null> = this.usernameSubject.asObservable();
+  public img$: Observable<string | null> = this.imgSubject.asObservable();
+
   private profileLoaded: boolean = false;
 
   constructor(private authService: AuthService) {}
@@ -20,15 +24,18 @@ export class UserService {
   clearUsername(): void {
     this.usernameSubject.next(null);
   }
+  setImg(imgUrl: any) {
+    this.imgSubject.next(imgUrl);
+  }
+
 
   loadProfile(): Observable<any> {
-    if (this.profileLoaded) {
-      return of(null); // Return an empty observable if the profile is already loaded
-    }
     return this.authService.getProfile().pipe(
       tap(response => {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
+          this.setImg(`${response.imageUrl}`);
+          console.log(response)
           this.profileLoaded = true;
         }
       }),
@@ -39,4 +46,5 @@ export class UserService {
       })
     );
   }
+
 }

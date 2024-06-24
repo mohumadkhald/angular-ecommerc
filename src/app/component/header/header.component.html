@@ -21,7 +21,10 @@
       <ul class="navbar-nav ms-auto d-lg-inline-flex">
         <div class="dropdown mt-1" *ngIf="auth(); else login">
           <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+            <img *ngIf="img !='null'; else noImg" [src]="img" alt="mdo" width="32" height="32" class="rounded-circle">
+            <ng-template #noImg>
+              <img #noImg width="32" height="32" class="rounded-circle" src="https://media.istockphoto.com/id/1317551891/vector/account-avatar-member-person-profle-user-icon-eps-vector.jpg?s=612x612&w=0&k=20&c=wsVtFuxw-tZOIrLIff8gY8b49xNxeGCnXqM8OGJyiS8=">
+            </ng-template>
             <span *ngIf="!loading">
               <span class="ms-2">{{ username }}</span>!
             </span>
