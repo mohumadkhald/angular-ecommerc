@@ -7,7 +7,6 @@ body {
   position: relative;
   overflow: hidden;
   min-height: 280px;
-  background: url("https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg");
   padding-top: 79px;
   width: 100%; /* Ensures the container takes up the full width of its parent */
   background-size: cover; /* Ensures the background image covers the container */

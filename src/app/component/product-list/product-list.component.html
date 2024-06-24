@@ -2,38 +2,36 @@
   <mat-spinner></mat-spinner>
   <div class="spinner-message">Loading, please wait...</div>
 </div>
-<div *ngIf="!loading" >
-  <div class="title-wrapper">
+<div *ngIf="!loading">
+
+  <div class="title-wrapper" [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
     <div class="container">
       <div class="container-inner">
-        <h1><span>MEN</span> CATEGORY</h1> // currentCategoryName here 
-        <em>Over 4000 Items are available here</em>
+        <h1><span>{{ subCategoryName ? subCategoryName.toUpperCase() : currentCategoryName.toUpperCase() || 'MEN' }}</span> CATEGORY</h1>
+        <em>{{ subCategoryName ? 'Over 4000 Items are available here' : 'Over 10 Sub Categories with Different Category' }}</em>
       </div>
     </div>
   </div>
+  
 
-  <h4 class="m-3">Home/Store/{{ currentCategoryName.toUpperCase() || 'Categories' }}</h4> <!-- Display current category name if available, otherwise display 'Categories' -->
-
+  <h4 class="m-3">Home/Store/{{ currentCategoryName.toUpperCase() || 'Categories' }}</h4>
 
   <div class="store-container">
     <aside class="sidebar mt-3">
-
       <div class="categories">
         <ul>
           <li *ngFor="let category of categories" (click)="toggleSubList(category.categoryTitle)">
             {{ category.categoryTitle.toUpperCase() }}
             <ul [ngClass]="{'open': openSubLists[category.categoryTitle]}">
-              <li *ngFor="let subCategory of filterSubCategories(category.categoryId)"  routerLinkActive="active" [routerLink]="['/products', subCategory.name]"
-                  (click)="$event.stopPropagation()">
-                {{ subCategory.name.toUpperCase() }}
+              <li *ngFor="let subCategory of filterSubCategories(category.categoryId)" [ngClass]="{'active': subCategory.name === subCategoryName}">
+                <a [routerLink]="['/products', subCategory.name]" (click)="selectSubCategory($event, subCategory)">
+                  {{ subCategory.name.toUpperCase() }}
+                </a>
               </li>
             </ul>
           </li>
         </ul>
       </div>
-
-
-
 
       <div class="filters">
         <h2>Filter</h2>
@@ -50,16 +48,15 @@
       </div>
     </aside>
 
-
-  <main class="product-list" style="margin-bottom: 30px;">
-    <div class="product" *ngFor="let product of products">
-      <img src="{{ product.imageUrl }}" alt="{{ product.productTitle }}">
-      <a href="#" class="text-start m-2">{{ product.productTitle }}</a>
-      <div class="product-info">
-        <p>{{ product.price | currency }}</p>
-        <button (click)="open(product)">Add to Cart</button>
+    <main class="product-list" style="margin-bottom: 30px;">
+      <div class="product" *ngFor="let product of products">
+        <img [src]="product.imageUrl" [alt]="product.productTitle">
+        <a (click)="redirectToDetails(product.productId)" class="text-start m-2">{{ product.productTitle }}</a>
+        <div class="product-info">
+          <p>{{ product.price | currency }}</p>
+          <button (click)="open(product)">Add to Cart</button>
+        </div>
       </div>
-    </div>
-  </main>
-</div>
+    </main>
+  </div>
 </div>
