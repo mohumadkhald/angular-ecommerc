@@ -12,7 +12,13 @@ export class OAuth2Service {
   constructor(private http: HttpClient, private router: Router) { }
 
   initiateGoogleLogin() {
-    window.location.href = `${this.baseUrl}/login/oauth2/code/google`;
+    window.location.href = `${this.baseUrl}/oauth2/authorization/google`;
   }
+
+
+    initiateFaceLogin() {
+    window.location.href = `${this.baseUrl}/oauth2/authorization/facebook`;
+  }
+
 
 }

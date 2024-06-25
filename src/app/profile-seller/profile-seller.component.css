@@ -25,6 +25,9 @@
   }
   
   @media (max-width: 991.98px) {
+    .card {
+      margin-top: 30px;
+    }
     .offset-lg-1 {
       margin-left: 0;
     }

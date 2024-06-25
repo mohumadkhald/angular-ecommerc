@@ -11,6 +11,7 @@ import {ProfileComponent} from "./component/profile/profile.component";
 import {noAuthGuard} from "./utils/no-auth.guard";
 import {ProductListComponent} from "./component/product-list/product-list.component";
 import { PageDetailsComponent } from './component/page-details/page-details.component';
+import { HeaderComponent } from './component/header/header.component';
 
 
 
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'about', component: AboutComponent,title: "About"},
   { path: 'contact', component: ContactComponent,title: "Contact"},
   { path: 'login', component: AuthComponent, data: { action: 'login' } },
+  { path: 'logout', component: AuthComponent, title: "Logout"},
   // { path: 'user/login', component: AuthComponent,title: "Authontication", canActivate: [noAuthGuard] },
   { path: 'product/details/:id',component: PageDetailsComponent,title: "Product Details"},
   { path: 'cart',component: CartComponent,title: "Cart"},

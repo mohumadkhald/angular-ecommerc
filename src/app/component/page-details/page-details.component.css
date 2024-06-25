@@ -1,6 +1,6 @@
 
 .container {
-    max-width: 1200px;
+    width: 1200px;
     width: 100%;
     padding: 20px;
     display: flex;
@@ -10,9 +10,9 @@
 
 /* Product details container */
 .product-details {
-    max-width: 1200px;
-    margin: 10% auto;
+    margin: 5% auto;
     display: flex;
+    width: 1200px;
     justify-content: space-between;
     align-items: flex-start;
     padding: 20px;
@@ -21,7 +21,7 @@
 }
 
 .product-images {
-    margin-top:5px;
+    margin-top: 5px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -33,6 +33,7 @@
 .product-images img {
     width: 100%;
     height: auto;
+    max-height: 400px;
     object-fit: cover;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -45,13 +46,13 @@
 }
 
 .thumbnail-images {
-    margin-top:1vh;
+    margin-top: 1vh;
     display: flex;
     justify-content: center;
 }
 
 .thumbnail-images img {
-    width: 100px;
+    width: 150px;
     height: auto;
     margin: 0 5px;
     cursor: pointer;
@@ -109,12 +110,31 @@
 .action-buttons button {
     margin-right: 10px;
 }
+@media (min-width: 770px) and ( max-width:1200px) {
+    .thumbnail-images img {
+        flex: 0 0 auto;
+        width: 25%;
+    }
 
+    .product-images {
+        margin-bottom: 20px;
+    }
+
+
+    .action-buttons button {
+        margin-bottom: 10px;
+    }
+}
 @media (max-width: 768px) {
     .product-details {
         flex-direction: column;
         align-items: center;
         margin: 15px;
+    }
+
+    .thumbnail-images img {
+        flex: 0 0 auto;
+        width: 20%;
     }
 
     .product-info {
@@ -146,6 +166,7 @@
 
     .thumbnail-images img {
         flex: 0 0 auto;
+        width: 50%;
     }
 
     .product-info h1 {

@@ -194,4 +194,7 @@ login() {
   initiateGoogleLogin() {
     this.oauth2Service.initiateGoogleLogin();
   }
+  initiateFaceLogin() {
+    this.oauth2Service.initiateFaceLogin();
+  }
 }
