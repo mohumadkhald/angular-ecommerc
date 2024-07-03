@@ -1,5 +1,7 @@
 .model-header {
   margin-top: 10vh;
+  background-color: #007bff;
+  padding: 5px;
 }
 .modal-title {
   font-size: 2rem; /* Responsive font size */
@@ -21,6 +23,11 @@ img {
   border: 2px solid #007bff;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.error-message {
+  display: flex;
+  justify-content: end;
+  margin-top: 5px;
 }
 
 @media (min-width: 800) {

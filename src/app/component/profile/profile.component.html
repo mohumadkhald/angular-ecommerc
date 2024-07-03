@@ -1,4 +1,4 @@
-<div *ngIf="user.role === 'USER'; else sellerTemplate">
+<div *ngIf="user && user != null && user.role === 'USER'; else sellerTemplate">
   <app-profile-user></app-profile-user>
   </div>
 <ng-template #sellerTemplate>

@@ -5,7 +5,7 @@
 
 
 
-<div *ngIf="!loading" class="container" style="margin-top: 10vh" #container>
+<div *ngIf="!loading" class="container" #container>
   <div class="form-container sign-up-container">
     <form [formGroup]="registerForm" (ngSubmit)="register()">
       <h1>Create Account</h1>

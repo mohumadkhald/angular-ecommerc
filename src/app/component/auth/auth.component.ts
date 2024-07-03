@@ -1,14 +1,15 @@
-import {Component, ElementRef, ViewChild, Renderer2, OnInit} from '@angular/core';
-import { AuthService } from "../../service/auth.service";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import { CommonModule } from '@angular/common';
-import {ActivatedRoute, Router} from "@angular/router";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { ActivatedRoute, Router } from "@angular/router";
+import { AuthService } from "../../service/auth.service";
+import { CartService } from '../../service/cart.service';
+import { OAuth2Service } from '../../service/oauth2.service';
+import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
 import { ModalContentComponent } from "../modal-content/modal-content.component";
-import {ErrorDialogComponent} from "../error-dialog/error-dialog.component";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import { OAuth2Service } from '../../oauth2.service';
 
 @Component({
   selector: 'app-auth',
@@ -17,6 +18,7 @@ import { OAuth2Service } from '../../oauth2.service';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
+
 export class AuthComponent implements OnInit{
 
   @ViewChild('container') container!: ElementRef;
@@ -30,7 +32,8 @@ export class AuthComponent implements OnInit{
     private renderer: Renderer2,
     private router: Router,
     private route: ActivatedRoute,
-    private oauth2Service: OAuth2Service
+    private oauth2Service: OAuth2Service,
+    private cartService: CartService
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
@@ -62,12 +65,13 @@ export class AuthComponent implements OnInit{
   }
 
   showSignIn() {
-    this.container.nativeElement.classList.remove('right-panel-active');
+    this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
   }
-
+  
   showSignUp() {
-    this.container.nativeElement.classList.add('right-panel-active');
+    this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
   }
+  
 
   loading: boolean = true;
   isLogin: boolean = this.authService.isLoggedIn();
@@ -82,6 +86,7 @@ export class AuthComponent implements OnInit{
       if(token)
       {
           this.authService.saveToken(token);
+          this.cartService.syncCartFromLocalStorage();
           this.router.navigate(['/']);
       }
       
@@ -107,6 +112,7 @@ login() {
     this.authService.login(email, password).subscribe(
       response => {
         console.log('Login successful', response);
+        this.cartService.syncCartFromLocalStorage();
         this.authService.saveToken(response.token);
         this.router.navigate(['/']);
       },
@@ -150,7 +156,6 @@ login() {
       width: '350px',
       height: '200px',
       data: { message: message },
-      panelClass: 'custom-dialog-container'  // Apply the custom class here
     });
   }
 

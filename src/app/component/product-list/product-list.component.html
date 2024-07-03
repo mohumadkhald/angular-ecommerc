@@ -2,61 +2,56 @@
   <mat-spinner></mat-spinner>
   <div class="spinner-message">Loading, please wait...</div>
 </div>
-<div *ngIf="!loading">
+<div *ngIf="!loading" class="main-container" style="padding-bottom: 100px;">
+  <div class="sidebar">
+    <div class="subCategory">
+      <h2>{{ categoryTitle }}</h2>
+      <ul>
+        <li *ngFor="let subCategory of subCategories">
+          <i class="fa-solid fa-angle-left"></i>
+          <a class="sub-links" routerLinkActive="active_link" [routerLink]="['/categories', categoryTitle, subCategory.name]">{{ subCategory.name | capitalize }}</a>
+        </li>
+      </ul>
+    </div>
 
-  <div class="title-wrapper" [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
-    <div class="container">
-      <div class="container-inner">
-        <h1><span>{{ subCategoryName ? subCategoryName.toUpperCase() : currentCategoryName.toUpperCase() || 'MEN' }}</span> CATEGORY</h1>
-        <em>{{ subCategoryName ? 'Over 4000 Items are available here' : 'Over 10 Sub Categories with Different Category' }}</em>
+    <div class="filters">
+      <h2>Filter</h2>
+      <div class="availability">
+        <h3>Availability</h3>
+        <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
+        <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
+      </div>
+      <div class="price-range">
+        <h3>Price</h3>
+        <input type="range" min="50" max="250" step="10" [(ngModel)]="filters.priceRange">
+        <p>Range: ${{ filters.priceRange }}</p>
       </div>
     </div>
   </div>
-  
 
-  <h4 class="m-3">Home/Store/{{ currentCategoryName.toUpperCase() || 'Categories' }}</h4>
-
-  <div class="store-container">
-    <aside class="sidebar mt-3">
-      <div class="categories">
-        <ul>
-          <li *ngFor="let category of categories" (click)="toggleSubList(category.categoryTitle)">
-            {{ category.categoryTitle.toUpperCase() }}
-            <ul [ngClass]="{'open': openSubLists[category.categoryTitle]}">
-              <li *ngFor="let subCategory of filterSubCategories(category.categoryId)" [ngClass]="{'active': subCategory.name === subCategoryName}">
-                <a [routerLink]="['/products', subCategory.name]" (click)="selectSubCategory($event, subCategory)">
-                  {{ subCategory.name.toUpperCase() }}
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-
-      <div class="filters">
-        <h2>Filter</h2>
-        <div class="availability">
-          <h3>Availability</h3>
-          <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
-          <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
-        </div>
-        <div class="price-range">
-          <h3>Price</h3>
-          <input type="range" min="50" max="250" step="10" [(ngModel)]="filters.priceRange">
-          <p>Range: ${{ filters.priceRange }}</p>
-        </div>
-      </div>
-    </aside>
-
-    <main class="product-list" style="margin-bottom: 30px;">
-      <div class="product" *ngFor="let product of products">
-        <img [src]="product.imageUrl" [alt]="product.productTitle">
-        <a (click)="redirectToDetails(product.productId)" class="text-start m-2">{{ product.productTitle }}</a>
-        <div class="product-info">
-          <p>{{ product.price | currency }}</p>
-          <button (click)="open(product)">Add to Cart</button>
-        </div>
-      </div>
+  <div style="height: 600px; width: 100%;" class="content-wrapper">
+    <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper" [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
+    </div>
+    <main class="product-list" [ngStyle]="{'padding-bottom': subCategoryName ? '100px' : '0px'}">
+      <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>
+
+    <div *ngIf="categoryTitle && !subCategoryName" class="shop-by-category">
+      <h2 style="margin-left: 8.5vw; margin-top: 20px;">Shop by category</h2>
+      <div class="slider-container" style="width: 83vw;">
+        <button class="nav-button left" (click)="scrollLeft(slider)">&#10094;</button>
+        <div style="background-color: rgb(225, 230, 229); padding: 10px; margin: 5px;" class="slider-wrapper" #slider>
+          <div style="margin: 5px;" class="slider">
+            <div style="width: 306px; height: 230px;" class="category-item" *ngFor="let subCategory of subCategories">
+              <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)" style="width: 100%; height: 200px; cursor: pointer" [src]="subCategory.img" [alt]="subCategory.name">
+              <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
+            </div>
+          </div>
+        </div>
+        <button class="nav-button right" (click)="scrollRight(slider)">&#10095;</button>
+      </div>
+    </div>
+    
+    
   </div>
 </div>

@@ -1,9 +1,6 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
-import {CommonModule} from '@angular/common';
-import {MatButtonModule} from "@angular/material/button";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
+import { CommonModule } from '@angular/common';
+import { HttpClient } from "@angular/common/http";
+import { Component, Inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -13,7 +10,11 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
+import { MatButtonModule } from "@angular/material/button";
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-modal-content',
@@ -32,13 +33,16 @@ import {HttpClient} from "@angular/common/http";
 export class ModalChangePwdComponent {
   changePwdForm: FormGroup;
   responseMessage: string = '';
+  successMessage: string = '';
+
   confirmPasswordBlurred: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<ModalChangePwdComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    public toastService: ToastService
   ) {
     this.dialogRef.disableClose = true;
     this.changePwdForm = this.fb.group({
@@ -70,9 +74,12 @@ export class ModalChangePwdComponent {
 
       this.http.post(url, body).subscribe(
         (response: any) => {
-          console.log('Reset email sent successfully:', response);
-          this.responseMessage = response.message;
-          this.dialogRef.close();
+          console.log('Reset Password has successfully:', response);
+          this.toastService.add(response.message);
+          this.successMessage = response.message;
+          setTimeout(() => {
+            this.dialogRef.close();
+          }, 5000);
         },
         error => {
           console.error('Error sending reset email:', error);
@@ -84,7 +91,7 @@ export class ModalChangePwdComponent {
         }
       );
     } else {
-      this.responseMessage = 'Please Check any Error Msg.';
+      this.responseMessage = 'Please Complete Form.';
     }
   }
 
@@ -94,5 +101,13 @@ export class ModalChangePwdComponent {
 
   onConfirmPasswordFocus(): void {
     this.confirmPasswordBlurred = false;
+  }
+
+  removeToast(): void {
+    this.toastService.remove();
+  }
+
+  showToast(): void {
+    this.toastService.add('This is a toast message.');
   }
 }

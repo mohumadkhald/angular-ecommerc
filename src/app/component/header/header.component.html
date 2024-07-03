@@ -1,5 +1,117 @@
-<!-- header.component.html -->
-<nav class="navbar navbar-expand-lg  bg-dark p-1">
+<div class="navbar">
+  <a href="#" class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon Logo" height="30">
+  </a>
+  <div class="search-bar">
+    <select [(ngModel)]="selectedCategory">
+      <option value="all">All</option>
+      <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}</option>
+    </select>
+    <input style="max-width: 400px;" type="text" placeholder="Search Amazon.eg" [(ngModel)]="searchText">
+    <button (click)="goToSearchResult()">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Search_Icon.svg" alt="Search Icon" height="20">
+    </button>
+  </div>  
+  <div class="menu" style="margin-right: 20px;">
+    <a href="#">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="Egypt Flag" class="flag-icon">
+      <select style="background-color: black; color: white;">
+        <option>En</option>
+      </select>
+    </a>
+    <div class="account-lists" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
+      <a style="display: flex; flex-direction: column">
+        <p *ngIf="auth();" style="font-size: small; margin-bottom: 0;">Hello, {{ username }}</p>
+        <p *ngIf="!auth();" style="font-size: small; margin-bottom: 0;">Hello, User</p>
+        <p>Account & Lists</p>
+      </a>
+      <div class="dropdown-menu" *ngIf="menuVisible" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
+        <div class="dropdown-content">
+          <div *ngIf="!auth();" class="dropdown-item"><a routerLink="/login">Login</a></div>
+          <div *ngIf="auth()" class="dropdown-item"><a routerLink="/user/profile">Account</a></div>
+          <div class="dropdown-item"><a href="#">Orders</a></div>
+          <div class="dropdown-item"><a href="#">Recommendations</a></div>
+          <div class="dropdown-item"><a href="#">Browsing History</a></div>
+          <div class="dropdown-item"><a href="#">Watchlist</a></div>
+          <div class="dropdown-item"><a href="#">Video Purchases & Rentals</a></div>
+          <div class="dropdown-item"><a href="#">Kindle Unlimited</a></div>
+          <div class="dropdown-item"><a href="#">Content & Devices</a></div>
+          <div class="dropdown-item"><a href="#">Subscribe & Save Items</a></div>
+          <div class="dropdown-item"><a href="#">Memberships & Subscriptions</a></div>
+          <div class="dropdown-item"><a href="#">Music Library</a></div>
+          <div *ngIf="auth();" class="dropdown-item"><a routerLink="/login" (click)="logout()">Logout</a></div>
+        </div>
+      </div>
+    </div>
+    <a href="#">Orders</a>
+    <a routerLink="cart" class="cart" style="display: flex; flex-direction: row; height: 50px; width: 80px;">
+      <img src="../../../assets/shopping-cart-outline-svgrepo-com.svg" style="color: white;" width="50" alt="Cart Icon">
+      <span style="font-size: small; position: relative; left: -20px; top: -10px;" class="cart-count">{{getCountOfItems()}}</span>
+    </a>
+  </div>
+</div>
+
+<div class="second-navbar">
+  <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]" (click)="saveImg(category.img)" *ngFor="let category of categories">
+    {{ category.categoryTitle }}
+  </a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <nav class="navbar navbar-expand-lg  bg-dark p-1">
   <div class="container-fluid">
     <a class="navbar-brand text-light" routerLink="">Ecommerce</a>
     <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,4 +166,4 @@
       </ul>
     </div>
   </div>
-</nav>
+</nav> -->

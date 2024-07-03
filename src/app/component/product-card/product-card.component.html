@@ -1,16 +1,15 @@
+<div class="product">
+  <img style="cursor: pointer;" [src]="product.imageUrl" (click)="redirectToDetails(product.productId)"
+    [alt]="product.productTitle">
+  <h2 style="cursor: pointer;" (click)="redirectToDetails(product.productId)" class="text-start m-2">{{
+    product.productTitle }}</h2>
+  <div class="product-info">
+    <p>{{ product.price | currency }}</p>
+    <button (click)="open(product)">Add to Cart</button>
+  </div>
+</div>
 
-    <!-- PRODUCT ITEM START -->
-    <div class="col-md-4 col-sm-6 col-xs-12">
-      <div class="product-item">
-        <div class="pi-img-wrapper">
-          <img src="../src/assets/model1.jpg" class="img-responsive" alt="Berry Lace Dress">
-          <div>
-            <a href="../src/assets/model1.jpg" class="btn btn-default fancybox-button">Zoom</a>
-            <a href="#product-pop-up" class="btn btn-default fancybox-fast-view">View</a>
-          </div>
-        </div>
-        <h3><a href="shop-item.html">Berry Lace Dress Berry Lace Dress</a></h3>
-        <div class="pi-price">$29.00</div>
-        <a href="javascript:;" class="btn btn-default add2cart">Add to cart</a>
-      </div>
-    </div>
+<div *ngIf="toastService.toast" class="toast-container">
+  {{ toastService.toast }}
+  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
+</div>

@@ -1,10 +1,9 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, Input, NgZone} from '@angular/core';
-import {NgbActiveModal, NgbModal, NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {FormsModule} from "@angular/forms";
-import {CommonModule, NgForOf, NgStyle} from "@angular/common";
-import {NgxImgZoomModule, NgxImgZoomService} from "ngx-img-zoom";
-import {NgxImageZoomModule} from "ngx-image-zoom";
-import {BrowserModule} from "@angular/platform-browser";
+import { CommonModule, NgForOf, NgStyle } from "@angular/common";
+import { ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
+import { FormsModule } from "@angular/forms";
+import { NgbActiveModal, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { AuthService } from '../../service/auth.service';
+import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 
 @Component({
@@ -21,30 +20,51 @@ export class ProductModalComponent {
   @Input() product: any;
   selectedSize: string = '';
   selectedColor: string = '';
-  scaleRange: number = 1;
-  xValue: number = 0;
-  yValue: number = 0;
+  quantity: number = 0;
+  submitted: boolean = false;
 
   constructor(
     public activeModal: NgbActiveModal,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    private cartService:CartService)
-  {}
+    private cartService: CartService,
+    private authService: AuthService,
+    private cartServerService: CartServerService,
+  ) {}
 
+  ngOnInit(): void {
+    this.cdr.detectChanges();
+  }
 
-
-
+  auth(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   close() {
     this.activeModal.close();
   }
 
   addToCart() {
-    console.log(`Added to cart: ${this.product.productTitle}, Size: ${this.selectedSize}, Color: ${this.selectedColor}`);
-    this.cartService.addToCart(this.product);
-    this.activeModal.close();
-  }
+    this.submitted = true;
 
-  protected readonly Number = Number;
+    if (!this.selectedSize || !this.selectedColor || !this.quantity) {
+      return;
+    }
+
+    const productToAdd = {
+      ...this.product,
+      size: this.selectedSize,
+      color: this.selectedColor,
+      quantity: this.quantity
+    };
+
+    if (!this.auth()) {
+      this.cartService.addToCart(productToAdd);
+    } else {
+      this.cartServerService.addToCart(productToAdd);
+    }
+
+    this.activeModal.close('added');
+  }
 }
+

@@ -1,0 +1,32 @@
+<div class="main-container">
+  <div class="sidebar">
+    <div class="filters">
+      <h2>Filter</h2>
+      <div class="availability">
+        <h3>Availability</h3>
+        <label><input type="checkbox"> In Stock (26)</label>
+        <label><input type="checkbox"> Not Available (3)</label>
+      </div>
+      <div class="price-range">
+        <h3>Price</h3>
+        <input type="range" min="50" max="250" step="10">
+        <p>Range: $</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 600px; width: 100%;" class="content-wrapper">
+    <main class="product-list">
+      <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+    </main>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <button (click)="goToPage(currentPage-1)" [disabled]="currentPage === 0">Previous</button>
+      <button *ngFor="let page of totalPages" (click)="goToPage(page)" [class.active]="page  === currentPage">
+        {{ page }}
+      </button>
+      <button (click)="goToPage(currentPage+1)" [disabled]="currentPage === totalPages.length-1">Next</button>
+    </div>
+  </div>
+</div>

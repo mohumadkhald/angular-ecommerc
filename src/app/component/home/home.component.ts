@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { NgClass, NgFor,NgIf, NgStyle } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { AuthService } from "../../service/auth.service";
+import { ToastService } from '../../service/toast.service';
+import { UserService } from "../../service/user.service";
+import { Product } from "../interface/product";
 import { ProductCardComponent } from '../product-card/product-card.component';
-import { ProductsService } from '../../service/products.service';
-import {Product} from "../interface/product";
-import {AuthService} from "../../service/auth.service";
-import {Router} from "@angular/router";
-import {UserService} from "../../service/user.service";
-import {ProductModalComponent} from "../product-modal/product-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { ProductModalComponent } from "../product-modal/product-modal.component";
 @Component({
     standalone: true,
     selector: 'app-home',
@@ -15,17 +15,21 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     styleUrl: './home.component.css',
   imports: [NgClass, NgStyle, NgFor, NgIf, ProductCardComponent]
 })
+
 export class HomeComponent implements OnInit {
   title = 'Home';
   products!: Product[];
   private username!: string;
+  private modalRef?: NgbModalRef;
+  private closeTimeoutId?: number;
 
   constructor(
     private router: Router,
     private cd: ChangeDetectorRef,
     private authService: AuthService,
     private userService: UserService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +62,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-
   product = {
     title: 'Cool Green Dress with Red Bell',
     mainImage: 'assets/pages/img/careers/careers.jpg', // Ensure this is the correct path to your image
@@ -68,9 +71,40 @@ export class HomeComponent implements OnInit {
     colors: ['Red', 'Green', 'Blue', 'Yellow']
   };
 
-
   open() {
-    const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
-    modalRef.componentInstance.product = this.product;
+    if (this.closeTimeoutId) {
+      clearTimeout(this.closeTimeoutId);
+      this.closeTimeoutId = undefined;
+    }
+    if (!this.modalRef) {
+      this.modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
+      this.modalRef.componentInstance.product = this.product;
+      // Listen to the mouseleave event on the modal content
+      this.modalRef.result.finally(() => this.modalRef = undefined);
+      const modalElement = document.querySelector('.modal-content');
+      if (modalElement) {
+        modalElement.addEventListener('mouseleave', () => this.close());
+      }
+    }
   }
+
+  close() {
+    this.closeTimeoutId = window.setTimeout(() => {
+      if (this.modalRef) {
+        this.modalRef.close();
+        this.modalRef = undefined;
+      }
+    }, 3000); // Adjust the delay as needed
+  }
+
+  showToast() {
+    this.toastService.add('This is a toast message.');
+  }
+  
+  removeToast() {
+    this.toastService.remove();
+  }
+  
+
+
 }

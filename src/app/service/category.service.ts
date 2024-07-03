@@ -6,6 +6,12 @@ import {map, Observable} from "rxjs";
   providedIn: 'root'
 })
 export class CategoryService {
+  getSubCategoriesByCategoryTitle(categoryTitle: string) {
+    return this.http.get<any>(`http://localhost:8080/api/sub-categories/find/${categoryTitle}`)
+     .pipe(map(response => response.collection)
+    );
+
+  }
 
   constructor(private http: HttpClient) { }
 

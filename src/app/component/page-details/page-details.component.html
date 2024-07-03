@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="productItem && productItem != null" class="container">
     <div class="product-details">
         <div class="product-images">
             <img [src]="productItem.imageUrl" alt="Product Image">

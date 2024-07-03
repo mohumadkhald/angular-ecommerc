@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { ProfileSellerComponent } from '../../profile-seller/profile-seller.component';
-import { ProfileUserComponent } from '../../profile-user/profile-user.component';
 import { AuthService } from '../../service/auth.service';
+import { ProfileSellerComponent } from '../profile-seller/profile-seller.component';
+import { ProfileUserComponent } from '../profile-user/profile-user.component';
 
 
 @Component({

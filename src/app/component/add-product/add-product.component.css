@@ -1,0 +1,61 @@
+/* Styles for the modal container */
+.modal-header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+.modal-title {
+  text-align: center;
+  margin-left: 15vw;
+}
+.modal-body {
+  padding: 20px;
+}
+
+/* Form styling */
+form {
+  max-width: 100%; /* Allow form to take full width */
+  margin: auto;
+}
+
+/* Label styling */
+label {
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Input field styling */
+select,
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Submit button styling */
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  margin-top: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%; /* Full width for better alignment */
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  display: flex;
+  justify-content: end;
+  margin-top: -5px;
+}

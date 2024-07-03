@@ -4,7 +4,6 @@ import {HomeComponent} from "./component/home/home.component";
 import {authGuardGuard} from "./utils/auth-guard.guard";
 import {AboutComponent} from "./component/about/about.component";
 import {ContactComponent} from "./component/contact/contact.component";
-import {ProductDetailsComponent} from "./component/product-details/product-details.component";
 import {CartComponent} from "./component/cart/cart.component";
 import {NotfoundComponent} from "./component/notfound/notfound.component";
 import {ProfileComponent} from "./component/profile/profile.component";
@@ -12,17 +11,28 @@ import {noAuthGuard} from "./utils/no-auth.guard";
 import {ProductListComponent} from "./component/product-list/product-list.component";
 import { PageDetailsComponent } from './component/page-details/page-details.component';
 import { HeaderComponent } from './component/header/header.component';
+import { ResultSearchComponent } from './component/result-search/result-search.component';
 
 
 
 export const routes: Routes = [
   { path: '', component: HomeComponent ,title: "Home"},
   { path: 'products', component: ProductListComponent ,title: "Products"},
-  { path: 'products/:subCategoryName', component: ProductListComponent },
+  { path: 'categories/:categoryTitle/:subCategoryName', component: ProductListComponent,
+    data: {title: 'Sub_Category: :subCategoryName'}
+  },
+  { path: 'categories/:categoryTitle', component: ProductListComponent,
+    data: {title: 'Category: :categoryTitle'}
+  },
+  { path: 'categories/search/:categoryTitle/:productName', component: ResultSearchComponent,
+    data: {title: 'Sub_Category: :subCategoryName'}
+  },
   { path:'user/profile',component:ProfileComponent,title: "Profile", canActivate: [authGuardGuard] },
   { path: 'about', component: AboutComponent,title: "About"},
   { path: 'contact', component: ContactComponent,title: "Contact"},
   { path: 'login', component: AuthComponent, data: { action: 'login' } },
+  { path: 'register', component: AuthComponent, data: { action: 'register' } },
+
   { path: 'logout', component: AuthComponent, title: "Logout"},
   // { path: 'user/login', component: AuthComponent,title: "Authontication", canActivate: [noAuthGuard] },
   { path: 'product/details/:id',component: PageDetailsComponent,title: "Product Details"},

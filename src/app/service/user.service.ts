@@ -35,12 +35,29 @@ export class UserService {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
           this.setImg(`${response.imageUrl}`);
-          console.log(response)
           this.profileLoaded = true;
         }
       }),
       catchError(error => {
-        console.error('Profile error', error);
+        this.clearUsername();
+        return of(null);
+      })
+    );
+  }
+  updateProfile(user: any)
+  {
+    return this.authService.updateProfile(user).pipe(
+      tap(response => {
+        if (response) {
+          console.log(response)
+          // this.setUsername(`${response.firstName} ${response.lastName}`);
+          // this.setImg(`${response.imageUrl}`);
+          // console.log(response)
+          // this.profileLoaded = true;
+        }
+      }),
+      catchError(error => {
+        console.log('Profile error', error);
         this.clearUsername();
         return of(null);
       })

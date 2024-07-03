@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import {
   provideRouter,
   withComponentInputBinding,
@@ -13,9 +13,13 @@ import {BrowserAnimationsModule, NoopAnimationsModule, provideAnimations} from "
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AuthInterceptor } from './utils/auth.interceptor';
 import {NgxImgZoomModule} from "ngx-img-zoom";
+import { provideToastr } from 'ngx-toastr';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimations(), // required animations providers
+    provideToastr(),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideHttpClient(withFetch()),
     DatePipe,
@@ -27,6 +31,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withInterceptors([
       AuthInterceptor
-    ])), provideAnimationsAsync()
+    ])), provideAnimationsAsync(), provideAnimationsAsync(),
   ]
 };

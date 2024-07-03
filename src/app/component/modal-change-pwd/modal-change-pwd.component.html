@@ -1,5 +1,7 @@
 <div class="bg-primary custom-class">
   <h2 class="bg-primary text-center text-light" mat-dialog-title>{{data.name}}</h2>
+  <p *ngIf="!successMessage" class="text-center bg-success text-light p-2">The Code Sent To Email Address</p>
+  <p *ngIf="successMessage" class="text-center mt-2 success-msg">{{ successMessage }}</p>
   <form [formGroup]="changePwdForm">
     <div mat-dialog-content>
       <div>
@@ -26,7 +28,7 @@
         <div *ngIf="!changePwdForm.get('confirmPassword')?.hasError('required') && confirmPasswordBlurred && changePwdForm.errors?.['mismatch']" class="err-msg">
           Passwords do not match
         </div>
-        <p class="text-center mt-2 bg-danger err-msg">{{ responseMessage }}</p>
+        <p *ngIf="responseMessage" class="text-center mt-2 bg-danger err-msg">{{ responseMessage }}</p>
       </div>
     </div>
     <div class="mybtn">
@@ -37,3 +39,10 @@
     </div>
   </form>
 </div>
+
+
+
+<!-- <div *ngIf="toastService.toast" class="toast-container">
+  {{ toastService.toast }}
+  <button class="exit-toast" (click)="removeToast()">X</button>
+</div> -->

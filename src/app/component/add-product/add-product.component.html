@@ -1,0 +1,100 @@
+<div class="modal-header">
+  <h2 class="modal-title" style="margin-top: 10px;">Add New Product</h2>
+  <button class="btn btn-close bg-danger text-light" style="margin-right: 5px;" (click)="onClose()"></button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <!-- Product Title -->
+        <div class="col-md-6">
+          <label>Product Title:</label>
+          <input type="text" placeholder="Enter Product Title" formControlName="productTitle" />
+          <div class="error-message" *ngIf="productForm.get('productTitle').invalid && (productForm.get('productTitle').dirty || productForm.get('productTitle').touched)">
+            <small class="text-danger" *ngIf="productForm.get('productTitle').errors.required">Product Title is required.</small>
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="col-md-6">
+          <label>Quantity:</label>
+          <input type="number" placeholder="Enter Product Quantity" formControlName="quantity" />
+          <div class="error-message" *ngIf="productForm.get('quantity').invalid && (productForm.get('quantity').dirty || productForm.get('quantity').touched)">
+            <small class="text-danger" *ngIf="productForm.get('quantity').errors.required">Quantity is required.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Size -->
+        <div class="col-md-6">
+          <label>Size:</label>
+          <select class="form-control" id="size" formControlName="size">
+            <option value="" disabled selected>Select Size</option>
+            <option value="SMALL">Small</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LARGE">Large</option>
+            <option value="EXTRA_LARGE">Extra Large</option>
+          </select>
+          <div class="error-message" *ngIf="productForm.get('size').invalid && (productForm.get('size').dirty || productForm.get('size').touched)">
+            <small class="text-danger" *ngIf="productForm.get('size').errors.required">Size is required.</small>
+          </div>
+        </div>
+
+        <!-- Color -->
+        <div class="col-md-6">
+          <label>Color:</label>
+          <select class="form-control" id="color" formControlName="color">
+            <option value="" disabled selected>Select Color</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+          </select>
+          <div class="error-message" *ngIf="productForm.get('color').invalid && (productForm.get('color').dirty || productForm.get('color').touched)">
+            <small class="text-danger" *ngIf="productForm.get('color').errors.required">Color is required.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Price -->
+        <div class="col-md-6">
+          <label>Price:</label>
+          <input type="number" placeholder="Enter Product Price" formControlName="price" />
+          <div class="error-message" *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)">
+            <small class="text-danger" *ngIf="productForm.get('price').errors.required">Price is required.</small>
+          </div>
+        </div>
+
+        <!-- SubCategory ID -->
+        <div class="col-md-6">
+          <label>SubCategory:</label>
+          <select class="form-control" id="subCategoryId" formControlName="subCategoryId">
+            <option value="0" disabled selected>Select SubCategory</option>
+            <option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+              {{ subCategory.name }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="productForm.get('subCategoryId').invalid && (productForm.get('subCategoryId').dirty || productForm.get('subCategoryId').touched)">
+            <small class="text-danger" *ngIf="productForm.get('subCategoryId').errors.required">SubCategory is required.</small>
+            <small class="text-danger" *ngIf="productForm.get('subCategoryId').errors.greaterThanZero">SubCategory is required.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- File Input for Image -->
+        <div class="col-md-6">
+          <label>Product Image:</label>
+          <input type="file" (change)="onFileSelected($event)" />
+          <div class="error-message" *ngIf="!selectedFile && fileTouched">
+            <small class="text-danger">Product image is required.</small>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Add Product</button>
+    </form>
+  </div>
+</div>

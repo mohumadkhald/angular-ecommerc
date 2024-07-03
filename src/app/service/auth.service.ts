@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+
   private tokenKey = 'token';
   private baseUrl = 'http://localhost:8080/api';
 
@@ -47,6 +48,35 @@ export class AuthService {
         return of(null);
       })
     );
+  }
+  updateProfile(user: any) {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.baseUrl}/users/profile`, user, { headers }).pipe(
+      catchError(error => {
+        console.log(error.error.message);
+        if(error.error.message == "Token not valid") {
+          localStorage.removeItem("token");
+          this.router.navigate([`/login`])
+        }
+        return of(null);
+      })
+    );
+  }
+
+
+  changePhoto(image: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', image);
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.patch<any>(`${this.baseUrl}/users/photo`, formData, { headers });
   }
 
   logout(): Observable<any> {

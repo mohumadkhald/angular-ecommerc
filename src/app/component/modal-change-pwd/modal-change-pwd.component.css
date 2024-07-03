@@ -41,4 +41,31 @@ input {
 .err-msg {
   background-color: #dc3545;
   color: white;
+  padding: 5px;
+}
+
+.success-msg {
+  background-color: #10a140;
+  color: white;
+  padding: 10px;
+}
+
+
+
+.toast-container {
+  position: fixed;
+  top: 20%;
+  right: 50%;
+  z-index: 9999;
+  color: white;
+  background-color: black;
+  padding: 20px;
+}
+
+.exit-toast {
+  background-color: red;
+  position: relative;
+  padding: 5px 10px;
+  top: -20px;
+  right: -20px;
 }
