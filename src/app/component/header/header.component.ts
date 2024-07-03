@@ -14,6 +14,7 @@ import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 import { CategoryService } from '../../service/category.service';
 import { UserService } from "../../service/user.service";
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-header',
@@ -51,6 +52,7 @@ saveImg(arg0: string) {
     private categoryService: CategoryService,
     private cartServerService: CartServerService,
     private cartService: CartService,
+    public toastService: ToastService
 
   ) {}
 
@@ -86,6 +88,7 @@ saveImg(arg0: string) {
       },
       error => {
         console.error('Logout error', error);
+        localStorage.removeItem("token")
       }
     );
   }
@@ -97,7 +100,16 @@ saveImg(arg0: string) {
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe(categories => {
       this.categories = categories;
-    });
+    },error => {
+      if (error.status === 403) {
+        localStorage.removeItem("token");
+        this.toastService.add('Your Session has expired Login again');
+        setTimeout(() => {
+          this.router.navigate([`/login`]);
+        }, 3000);
+      }
+    }
+  );
   }
 
   menuVisible = false;
@@ -112,5 +124,13 @@ saveImg(arg0: string) {
         return this.cartServerService.getCountOfItems();
       }
     return this.cartService.getCountOfItems();
+  }
+
+  removeToast(): void {
+    this.toastService.remove();
+  }
+
+  showToast(): void {
+    this.toastService.add('This is a toast message.');
   }
 }

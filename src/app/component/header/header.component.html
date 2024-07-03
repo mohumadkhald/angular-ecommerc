@@ -60,7 +60,10 @@
 
 
 
-
+<div *ngIf="toastService.toast" class="toast-container">
+  {{ toastService.toast }}
+  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
+</div>
 
 
 

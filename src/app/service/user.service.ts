@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import {BehaviorSubject, catchError, Observable, of} from 'rxjs';
 import {tap} from "rxjs/operators";
 import {AuthService} from "./auth.service";
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService implements OnInit {
   private usernameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private imgSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
@@ -15,7 +16,11 @@ export class UserService {
 
   private profileLoaded: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadProfile().subscribe();
+  }
 
   setUsername(username: string): void {
     this.usernameSubject.next(username);
@@ -24,10 +29,10 @@ export class UserService {
   clearUsername(): void {
     this.usernameSubject.next(null);
   }
-  setImg(imgUrl: any) {
+
+  setImg(imgUrl: any): void {
     this.imgSubject.next(imgUrl);
   }
-
 
   loadProfile(): Observable<any> {
     return this.authService.getProfile().pipe(
@@ -39,20 +44,23 @@ export class UserService {
         }
       }),
       catchError(error => {
+        if (error.status === 403) {
+          localStorage.removeItem("token");
+          this.router.navigate([`/login`]);
+        }
         this.clearUsername();
         return of(null);
       })
     );
   }
-  updateProfile(user: any)
-  {
+
+  updateProfile(user: any): Observable<any> {
     return this.authService.updateProfile(user).pipe(
       tap(response => {
         if (response) {
-          console.log(response)
+          console.log(response);
           // this.setUsername(`${response.firstName} ${response.lastName}`);
           // this.setImg(`${response.imageUrl}`);
-          // console.log(response)
           // this.profileLoaded = true;
         }
       }),
@@ -63,5 +71,4 @@ export class UserService {
       })
     );
   }
-
 }

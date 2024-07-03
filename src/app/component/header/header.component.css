@@ -152,7 +152,18 @@ body {
     display: block;
   }
   
-
+  .toast-container {
+    position: fixed;
+    font-size: 32px;
+    top: 40.5%;
+    right: 30.3%;
+    z-index: 9999;
+    color: white;
+    background-color: rgb(185, 38, 19);
+    opacity: .6;
+    padding: 25px;
+  }
+  
 @media screen and (max-width: 768px) {
     .navbar-custom {
         flex-direction: column;

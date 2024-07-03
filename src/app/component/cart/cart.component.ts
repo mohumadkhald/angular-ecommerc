@@ -1,11 +1,12 @@
 // cart.component.ts
 import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 import { CartItem } from '../interface/cat';
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   standalone: true,
@@ -25,6 +26,8 @@ export class CartComponent implements OnInit {
   constructor(private cartService: CartService,
               private authService: AuthService,
               private cartServerService: CartServerService,
+              public toastService: ToastService,
+              private router: Router
     ) {
     this.updateTotalPrice();
   }
@@ -37,7 +40,13 @@ export class CartComponent implements OnInit {
           console.log(this.cartItems1)
         },
         (error) => {
-          console.error('Error fetching cart:', error);
+          if (error.status === 403) {
+            localStorage.removeItem("token");
+            this.toastService.add('Your Session has expired Login again');
+            setTimeout(() => {
+              this.router.navigate([`/login`]);
+            }, 2000);
+          }
         }
       );
     } else {
@@ -110,6 +119,14 @@ export class CartComponent implements OnInit {
 
   auth(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+  removeToast(): void {
+    this.toastService.remove();
+  }
+
+  showToast(): void {
+    this.toastService.add('This is a toast message.');
   }
 
 }

@@ -204,6 +204,26 @@ button:hover {
   gap: 20px; /* Adjust spacing between products */
 }
 
+.toast-container {
+  position: fixed;
+  font-size: 32px;
+  top: 40.5%;
+  right: 30.3%;
+  z-index: 9999;
+  color: white;
+  background-color: rgb(185, 38, 19);
+  opacity: .6;
+  padding: 25px;
+}
+
+.exit-toast {
+  background-color: red;
+  position: relative;
+  padding: 5px 10px;
+  top: -20px;
+  right: -20px;
+}
+
 /* Responsive Styles */
 @media (max-width: 1480px) {
   app-product-card {
@@ -252,6 +272,18 @@ button:hover {
     overflow: hidden;
     max-width: 60%;
   }
+  .toast-container {
+    position: fixed;
+    font-size: 32px;
+    top: 40.5%;
+    right: 20.3%;
+    z-index: 9999;
+    color: white;
+    background-color: rgb(185, 38, 19);
+    opacity: .6;
+    padding: 25px;
+  }
+  
 }
 @media (max-width: 700px) {
   .sidebar {

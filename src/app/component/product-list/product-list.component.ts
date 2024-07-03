@@ -13,6 +13,8 @@ import { ToastService } from '../../service/toast.service';
 import { ProductModalComponent } from '../product-modal/product-modal.component';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { CapitalizePipe } from "../../pipe/capitalize.pipe";
+import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
     selector: 'app-product-list',
@@ -61,7 +63,8 @@ export class ProductListComponent implements OnInit {
     private productService: ProductsService,
     private modalService: NgbModal,
     private titleService: Title,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private dialog: MatDialog,
 
   ) {}
 
@@ -84,13 +87,35 @@ export class ProductListComponent implements OnInit {
     }, 200);
   }
 
+  showErrorDialog(message: string): void {
+    this.dialog.open(ErrorDialogComponent, {
+      width: '350px',
+      height: '200px',
+      data: { message: message },
+    });
+  }
+
   loadSubCategories(): void {
     if (this.categoryTitle) {
-      this.categoryService.getSubCategoriesByCategoryTitle(this.categoryTitle).subscribe(subCategories => {
-        this.subCategories = subCategories;
-      });
+      this.categoryService.getSubCategoriesByCategoryTitle(this.categoryTitle).subscribe(
+        subCategories => {
+          this.subCategories = subCategories;
+        },
+        error => {
+          if (error.status === 403) {
+            localStorage.removeItem("token");
+            this.toastService.add('Your Session has expired Login again');
+            setTimeout(() => {
+              this.router.navigate([`/login`]);
+            }, 3000);
+          } else {
+            console.error('Error loading subcategories:', error);
+          }
+        }
+      );
     }
   }
+  
 
   loadProducts(subCategoryName: any): void {
     if (subCategoryName) {
@@ -112,15 +137,6 @@ export class ProductListComponent implements OnInit {
   open(product: any) {
     const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg', centered: true });
     modalRef.componentInstance.product = product;
-    modalRef.result.then(
-      (result) => {
-        this.toastService.add('Product added successfully to Cart');
-
-      },
-      (reason) => {
-        console.log('Modal dismissed:', reason);
-      }
-    );
   }
 
   selectCategory(event: Event, Category: any): void {
@@ -163,6 +179,12 @@ export class ProductListComponent implements OnInit {
     slider.scrollBy({ left: 955, behavior: 'smooth' }); // Increased scroll amount
   }
 
+  removeToast(): void {
+    this.toastService.remove();
+  }
 
+  showToast(): void {
+    this.toastService.add('This is a toast message.');
+  }
 
 }

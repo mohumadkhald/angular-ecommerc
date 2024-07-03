@@ -49,6 +49,7 @@ export class AuthService {
       })
     );
   }
+  
   updateProfile(user: any) {
     const token = this.getToken();
     const headers = new HttpHeaders({

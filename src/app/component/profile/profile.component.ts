@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { AuthService } from '../../service/auth.service';
 import { ProfileSellerComponent } from '../profile-seller/profile-seller.component';
 import { ProfileUserComponent } from '../profile-user/profile-user.component';
+import { ToastService } from '../../service/toast.service';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { ProfileUserComponent } from '../profile-user/profile-user.component';
 })
 export class ProfileComponent implements OnInit{
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private toastService: ToastService) {}
 
   user:any;
 
@@ -26,9 +27,23 @@ export class ProfileComponent implements OnInit{
           this.user = response;
         },
         error => {
-          console.error('profile error', error);
+          if (error.status === 403) {
+            localStorage.removeItem("token");
+            this.toastService.add('Your Session has expired Login again');
+            setTimeout(() => {
+              this.router.navigate([`/login`]);
+            }, 3000);
+          }
         }
       );
+  }
+
+  removeToast(): void {
+    this.toastService.remove();
+  }
+
+  showToast(): void {
+    this.toastService.add('This is a toast message.');
   }
 
 }
