@@ -8,13 +8,18 @@
   background-color: #28a745; /* Green background color */
   color: white; /* White text color */
 }
+.dialog-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
 
 .mybtn {
   display: grid;
   grid-template-columns: auto auto auto auto;
   gap: 10px;
-  margin-bottom: 15px;
-  margin-top: -5px;
 }
 
 input {

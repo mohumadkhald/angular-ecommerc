@@ -4,18 +4,29 @@
 </div>
 
 <div *ngIf="!loading">
-  <h2 class="bg-primary text-center text-light" mat-dialog-title>{{data.name}}</h2>
+  <h2 class="bg-primary text-center text-light" mat-dialog-title>{{ data.name }}</h2>
   <div mat-dialog-content>
-    <p class="text-center">What's Your Email?</p>
-    <mat-form-field class="my-inp" style="z-index: 10">
-      <input placeholder="Enter Email" matInput [(ngModel)]="email">
-    </mat-form-field>
+    <form [formGroup]="emailForm">
+      <p class="text-center">What's Your Email?</p>
+      <mat-form-field class="my-inp" style="z-index: 10">
+        <input placeholder="Enter Email" matInput formControlName="email">
+      </mat-form-field>
+      <div style="margin-bottom:15px; margin-top: -10px; margin-right: 25px;text-align: end;"
+        *ngIf="submitted && emailForm.get('email')?.invalid" class="text-danger">
+        <div *ngIf="emailForm.get('email')?.errors?.['required']">
+          Email is required.
+        </div>
+        <div *ngIf="emailForm.get('email')?.errors?.['pattern']">
+          Invalid email address.
+        </div>
+      </div>
+    </form>
   </div>
-  <p class="text-center bg-danger-subtle err-send text-danger">{{ responseMessage }}</p> <!-- Bind the response message here -->
+  <p class="text-center bg-danger-subtle err-send text-danger">{{ responseMessage }}</p>
   <div class="mybtn">
     <div></div>
-    <button class="btn btn-cancel" (click)="onNoClick()">Cancel</button> <!-- Apply cancel button style -->
-    <button class="btn btn-send" (click)="onOkClick()" >Send Code</button> <!-- Apply send button style -->
+    <button class="btn btn-cancel" (click)="onNoClick()">Cancel</button>
+    <button class="btn btn-send" (click)="onOkClick()">Send Code</button>
     <div></div>
   </div>
 </div>

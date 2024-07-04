@@ -170,7 +170,7 @@ login() {
 
     const dialogRef = this.dialog.open(ModalContentComponent, {
       width: '350px',
-      height: '250px',
+      height: '270px',
       data: { name: 'Send Reset Password' },
       panelClass: 'custom-dialog-container'  // Apply the custom class here
     });

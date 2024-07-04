@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { FormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.component";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
@@ -19,44 +19,56 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     MatProgressSpinner
   ],
   templateUrl: './modal-content.component.html',
   styleUrls: ['./modal-content.component.css']
 })
 export class ModalContentComponent {
-  email: string | undefined;
+  emailForm: FormGroup;
   responseMessage: string = '';
+  loading: boolean = false;
+  submitted: boolean = false;
+
+  // Regular expression pattern for email validation
+  emailPattern: string = '^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$';
 
   constructor(
     public dialogRef: MatDialogRef<ModalContentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private fb: FormBuilder,
     private http: HttpClient,
     private dialog: MatDialog,
-    private renderer: Renderer2 // Inject Renderer2 for styling
+    private renderer: Renderer2
   ) {
     this.dialogRef.disableClose = true;
+    this.emailForm = this.fb.group({
+      email: ['', [Validators.required, Validators.pattern(this.emailPattern)]]
+    });
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  loading: boolean = false;
   onOkClick(): void {
-    if (this.email) {
-      this.loading = true; // Start the spinner
-      const url = `http://localhost:8080/api/auth/send-reset?email=${encodeURIComponent(this.email)}`;
+    this.submitted = true;
+
+    if (this.emailForm.valid) {
+      this.loading = true;
+      const email = this.emailForm.get('email')?.value;
+      const url = `http://localhost:8080/api/auth/send-reset?email=${encodeURIComponent(email)}`;
       this.http.post(url, {})
         .subscribe((response: any) => {
           console.log('Reset email sent successfully:', response);
           this.responseMessage = response.message;
-          this.loading = false; // Stop the spinner
+          this.loading = false;
           this.dialogRef.close();
-          this.openChangePwdModal(this.email);
+          this.openChangePwdModal(email);
         }, error => {
           console.error('Error sending reset email:', error);
-          this.loading = false; // Stop the spinner
+          this.loading = false;
           if (error && error.error && error.error.message) {
             this.responseMessage = error.error.message;
           } else {
@@ -66,23 +78,19 @@ export class ModalContentComponent {
     }
   }
 
-
-  openChangePwdModal(email: string | undefined): void {
+  openChangePwdModal(email: string): void {
     const dialogRef = this.dialog.open(ModalChangePwdComponent, {
       width: '400px',
       data: { email: email, name: 'Change Password' },
-      panelClass: 'custom-dialog-container'  // Apply the custom class here
+      panelClass: 'custom-dialog-container'
     });
 
     dialogRef.afterOpened().subscribe(() => {
       const dialogContainer = document.querySelector('.cdk-overlay-pane') as HTMLElement;
-      // Hide the dialog initially
       dialogContainer.style.display = 'none';
-      // Apply new styles to the dialog container
       this.renderer.setStyle(dialogContainer, 'position', 'relative');
       this.renderer.setStyle(dialogContainer, 'top', '20px');
       this.renderer.setStyle(dialogContainer, 'z-index', '100');
-      // Show the dialog after applying styles
       dialogContainer.style.display = 'block';
     });
   }
