@@ -1,8 +1,4 @@
-<div class="row">
-  <div class="col-9"></div>
-  <button class="text-bg-danger m-2 col-2 text-light" (click)="onClose()">X</button>
+<button class="close-button text-bg-danger text-white" (click)="onClose()">X</button>
+<div mat-dialog-content class="dialog-content">
+  <p class="message">{{ data.message }}</p>
 </div>
-<div mat-dialog-content class="m-4">
-  <p class="alert alert-danger text-center">{{ data.message }}</p>
-</div>
-

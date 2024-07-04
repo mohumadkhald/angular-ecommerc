@@ -1,12 +1,18 @@
 
-.close-button {
-  font-size: 1.5rem;
-  cursor: pointer;
-
+.cdk-global-overlay-wrapper {
+  backdrop-filter: blur(50px);
+  opacity: .5;
 }
 
-
-.close-button.text-light {
-  color: white;
+.dialog-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
 }
 
+.message {
+  margin: 0;
+  color: red;
+}

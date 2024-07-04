@@ -103,7 +103,6 @@ saveImg(arg0: string) {
     },error => {
       if (error.status === 403) {
         localStorage.removeItem("token");
-        this.toastService.add('Your Session has expired Login again');
         setTimeout(() => {
           this.router.navigate([`/login`]);
         }, 3000);
@@ -126,11 +125,4 @@ saveImg(arg0: string) {
     return this.cartService.getCountOfItems();
   }
 
-  removeToast(): void {
-    this.toastService.remove();
-  }
-
-  showToast(): void {
-    this.toastService.add('This is a toast message.');
-  }
 }

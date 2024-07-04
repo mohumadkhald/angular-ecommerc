@@ -7,6 +7,8 @@ import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 import { CartItem } from '../interface/cat';
 import { ToastService } from '../../service/toast.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ExpiredSessionDialogComponent } from '../../expired-session-dialog/expired-session-dialog.component';
 
 @Component({
   standalone: true,
@@ -27,7 +29,9 @@ export class CartComponent implements OnInit {
               private authService: AuthService,
               private cartServerService: CartServerService,
               public toastService: ToastService,
-              private router: Router
+              private router: Router,
+              private dialog: MatDialog,
+
     ) {
     this.updateTotalPrice();
   }
@@ -42,10 +46,7 @@ export class CartComponent implements OnInit {
         (error) => {
           if (error.status === 403) {
             localStorage.removeItem("token");
-            this.toastService.add('Your Session has expired Login again');
-            setTimeout(() => {
-              this.router.navigate([`/login`]);
-            }, 2000);
+            this.showExpiredSessionDialog("Your Session Expired");
           }
         }
       );
@@ -53,6 +54,13 @@ export class CartComponent implements OnInit {
       this.cartItems = this.cartService.getCart();
       this.updateTotalPrice();
     }
+  }
+  showExpiredSessionDialog(message: string): void {
+    this.dialog.open(ExpiredSessionDialogComponent, {
+      width: '350px',
+      height: '200px',
+      data: { message: message },
+    });
   }
 
   private updateTotalPrice(): void {

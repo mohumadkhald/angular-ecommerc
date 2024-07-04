@@ -24,3 +24,23 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.cdk-global-overlay-wrapper {
+  backdrop-filter: blur(5px); /* Adjust the blur value as needed */
+}
+
+.expired-session-dialog {
+  position: relative;
+  top: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.5); /* White background with 50% opacity */
+  padding: 5px; /* Optional: Add padding if needed */
+  border-radius: 8px; /* Optional: Add border radius if needed */
+}
+
+.expired-session-dialog .alert {
+  margin: 0;
+  padding: 1rem;
+}
+
+

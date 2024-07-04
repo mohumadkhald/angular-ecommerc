@@ -18,17 +18,6 @@ export class ErrorDialogComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dialogRef.afterOpened().subscribe(() => {
       const dialogContainer = document.querySelector('.cdk-overlay-pane') as HTMLElement;
-
-      // Hide the dialog initially
-      dialogContainer.style.display = 'none';
-
-      // Apply new styles to the dialog container
-      this.renderer.setStyle(dialogContainer, 'position', 'relative');
-      this.renderer.setStyle(dialogContainer, 'top', '20px');
-      this.renderer.setStyle(dialogContainer, 'z-index', '100');
-
-      // Show the dialog after applying styles
-      dialogContainer.style.display = 'block';
     });
   }
 

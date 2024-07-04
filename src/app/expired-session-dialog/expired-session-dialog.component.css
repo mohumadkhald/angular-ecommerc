@@ -1,0 +1,35 @@
+.cdk-global-overlay-wrapper {
+    backdrop-filter: blur(50px);
+    opacity: .5;
+  }
+  
+  .expired-session-dialog {
+    position: relative;
+    top: 20px;
+    z-index: 100;
+  }
+  
+  .expired-session-dialog .alert {
+    margin: 0;
+    padding: 1rem;
+  }
+  
+  .dialog-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem 1rem;
+  }
+  
+  .dialog-buttons a {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .dialog-buttons a:hover {
+    background-color: #0056b3;
+  }
+  

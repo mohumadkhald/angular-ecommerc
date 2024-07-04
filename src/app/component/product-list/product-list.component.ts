@@ -104,10 +104,7 @@ export class ProductListComponent implements OnInit {
         error => {
           if (error.status === 403) {
             localStorage.removeItem("token");
-            this.toastService.add('Your Session has expired Login again');
-            setTimeout(() => {
-              this.router.navigate([`/login`]);
-            }, 3000);
+
           } else {
             console.error('Error loading subcategories:', error);
           }
@@ -177,14 +174,6 @@ export class ProductListComponent implements OnInit {
 
   scrollRight(slider: HTMLElement) {
     slider.scrollBy({ left: 955, behavior: 'smooth' }); // Increased scroll amount
-  }
-
-  removeToast(): void {
-    this.toastService.remove();
-  }
-
-  showToast(): void {
-    this.toastService.add('This is a toast message.');
   }
 
 }
