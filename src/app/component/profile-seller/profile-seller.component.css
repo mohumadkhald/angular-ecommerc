@@ -10,6 +10,7 @@
 }
 
 .card-body img {
+  cursor: pointer;
   border-radius: 15px;
   width: 150px; /* Set fixed width */
   height: 150px; /* Set fixed height */

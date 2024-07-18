@@ -39,5 +39,9 @@ export class ProductsService {
         map(response => response)
       );
   }
+
+  getProductsByCreatedBy(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/find/created-by`).pipe(map(response => response));
+  }
 }
 

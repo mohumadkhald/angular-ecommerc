@@ -14,6 +14,9 @@ export class UserService implements OnInit {
   public username$: Observable<string | null> = this.usernameSubject.asObservable();
   public img$: Observable<string | null> = this.imgSubject.asObservable();
 
+  private roleSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public role$: Observable<any> = this.roleSubject.asObservable();
+  
   private profileLoaded: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -33,6 +36,9 @@ export class UserService implements OnInit {
   setImg(imgUrl: any): void {
     this.imgSubject.next(imgUrl);
   }
+  setRole(role: any): void {
+    this.roleSubject.next(role);
+  }
 
   loadProfile(): Observable<any> {
     return this.authService.getProfile().pipe(
@@ -40,6 +46,7 @@ export class UserService implements OnInit {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
           this.setImg(`${response.imageUrl}`);
+          this.setRole(`${response.role}`)
           this.profileLoaded = true;
         }
       }),
@@ -71,4 +78,6 @@ export class UserService implements OnInit {
       })
     );
   }
+
+  
 }

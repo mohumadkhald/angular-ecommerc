@@ -20,7 +20,7 @@ export class ProductModalComponent {
   @Input() product: any;
   selectedSize: string = '';
   selectedColor: string = '';
-  quantity: number = 0;
+  quantity: number = 1;
   submitted: boolean = false;
 
   constructor(

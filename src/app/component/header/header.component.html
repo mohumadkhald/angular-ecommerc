@@ -1,5 +1,5 @@
 <div class="navbar">
-  <a href="#" class="logo">
+  <a routerLink="/" class="logo">
     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon Logo" height="30">
   </a>
   <div class="search-bar">
@@ -11,10 +11,12 @@
     <button (click)="goToSearchResult()">
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Search_Icon.svg" alt="Search Icon" height="20">
     </button>
-  </div>  
+  </div>
   <div class="menu" style="margin-right: 20px;">
+    <a *ngIf='role=="ADMIN";' routerLink="dashboard">Dashboard</a>
     <a href="#">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="Egypt Flag" class="flag-icon">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="Egypt Flag"
+        class="flag-icon">
       <select style="background-color: black; color: white;">
         <option>En</option>
       </select>
@@ -46,13 +48,15 @@
     <a href="#">Orders</a>
     <a routerLink="cart" class="cart" style="display: flex; flex-direction: row; height: 50px; width: 80px;">
       <img src="../../../assets/shopping-cart-outline-svgrepo-com.svg" style="color: white;" width="50" alt="Cart Icon">
-      <span style="font-size: small; position: relative; left: -20px; top: -10px;" class="cart-count">{{getCountOfItems()}}</span>
+      <span style="font-size: small; position: relative; left: -20px; top: -10px;"
+        class="cart-count">{{getCountOfItems()}}</span>
     </a>
   </div>
 </div>
 
 <div class="second-navbar">
-  <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]" (click)="saveImg(category.img)" *ngFor="let category of categories">
+  <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
+    (click)="saveImg(category.img)" *ngFor="let category of categories">
     {{ category.categoryTitle }}
   </a>
 </div>

@@ -7,15 +7,30 @@ import {ContactComponent} from "./component/contact/contact.component";
 import {CartComponent} from "./component/cart/cart.component";
 import {NotfoundComponent} from "./component/notfound/notfound.component";
 import {ProfileComponent} from "./component/profile/profile.component";
-import {noAuthGuard} from "./utils/no-auth.guard";
 import {ProductListComponent} from "./component/product-list/product-list.component";
 import { PageDetailsComponent } from './component/page-details/page-details.component';
-import { HeaderComponent } from './component/header/header.component';
 import { ResultSearchComponent } from './component/result-search/result-search.component';
+import { CategoriesComponent } from './dashboard/categories/categories.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { OrdersComponent } from './dashboard/orders/orders.component';
+import { ProductsComponent } from './dashboard/products/products.component';
+import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.component';
+import { UsersComponent } from './dashboard/users/users.component';
+import { AdminGuard } from './admin.guard';
+import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
 
 
 
 export const routes: Routes = [
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard], children: [
+    { path: 'users', component: UsersComponent },
+    { path: 'categories', component: CategoriesComponent },
+    { path: 'subcategories', component: SubcategoriesComponent },
+    { path: 'products', component: ProductsComponent },
+    { path: 'cart', component: CartComponent },
+    { path: 'orders', component: OrdersComponent },
+    { path: 'users/:id', component: UsersDetailsComponent}
+  ]},
   { path: '', component: HomeComponent ,title: "Home"},
   { path: 'products', component: ProductListComponent ,title: "Products"},
   { path: 'categories/:categoryTitle/:subCategoryName', component: ProductListComponent,

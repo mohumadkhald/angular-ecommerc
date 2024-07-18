@@ -1,0 +1,10 @@
+.main-table th, .main-table td {
+    vertical-align: middle;
+}
+.btn-sm {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+}
+.table-responsive {
+    margin-bottom: 1rem;
+}

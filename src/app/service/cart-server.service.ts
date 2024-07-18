@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { CartItem } from '../component/interface/cat';
 import { AuthService } from './auth.service';
 
@@ -19,9 +19,17 @@ export class CartServerService implements OnInit {
 
 
   ngOnInit(): void {
-    this.getCart();
+    this.getCart().subscribe();
   }
 
+  private countSubject: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+  public count$: Observable<number | null> = this.countSubject.asObservable();
+
+  setCount(count: number): void {
+    this.countSubject.next(count);
+  }
+
+  
   getCart(): Observable<CartItem[]> {
     const jwtToken = this.authService.getToken();
     
@@ -33,6 +41,7 @@ export class CartServerService implements OnInit {
     return this.http.get<CartItem[]>(this.apiUri, { headers }).pipe(
       tap((res) => {
         this.cartItems = res;
+        this.setCount(this.cartItems.length);
         console.log('Cart data:', this.cartItems);
       })
     );
@@ -52,6 +61,8 @@ export class CartServerService implements OnInit {
     this.http.post<void>(this.apiUri, product, { headers }).subscribe(
       (res) => {
         console.log(res);
+        this.cartItems.length++
+        console.log(this.cartItems.length)
       },
       (error) => {
         console.error('Error adding product to cart:', error);

@@ -1,6 +1,13 @@
-<div *ngIf="user && user != null && user.role === 'USER'; else sellerTemplate">
-  <app-profile-user></app-profile-user>
-  </div>
-<ng-template #sellerTemplate>
-  <app-profile-seller></app-profile-seller>
-</ng-template>
+<div *ngIf="user && user != null">
+  <ng-container *ngIf="user.role === 'ADMIN'; else sellerTemplate">
+    <app-profile-admin></app-profile-admin>
+  </ng-container>
+  <ng-template #sellerTemplate>
+    <ng-container *ngIf="user.role === 'SELLER'; else userTemplate">
+      <app-profile-seller></app-profile-seller>
+    </ng-container>
+  </ng-template>
+  <ng-template #userTemplate>
+    <app-profile-user></app-profile-user>
+  </ng-template>
+</div>

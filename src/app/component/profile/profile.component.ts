@@ -5,6 +5,7 @@ import { AuthService } from '../../service/auth.service';
 import { ProfileSellerComponent } from '../profile-seller/profile-seller.component';
 import { ProfileUserComponent } from '../profile-user/profile-user.component';
 import { ToastService } from '../../service/toast.service';
+import { ProfileAdminComponent } from '../profile-admin/profile-admin.component';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { ToastService } from '../../service/toast.service';
   standalone: true,
   templateUrl: './profile.component.html',
     styleUrl: './profile.component.css',
-    imports: [ProfileSellerComponent, ProfileUserComponent, CommonModule]
+    imports: [ProfileAdminComponent, ProfileSellerComponent, ProfileUserComponent, CommonModule]
 })
 export class ProfileComponent implements OnInit{
 

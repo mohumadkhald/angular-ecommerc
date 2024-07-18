@@ -38,7 +38,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.get(`${this.baseUrl}/users/profile`, { headers }).pipe(
+    return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe(
       catchError(error => {
         console.log(error.error.message);
         if(error.error.message == "Token not valid") {
@@ -56,7 +56,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.put(`${this.baseUrl}/users/profile`, user, { headers }).pipe(
+    return this.http.put(`${this.baseUrl}/auth/profile`, user, { headers }).pipe(
       catchError(error => {
         console.log(error.error.message);
         if(error.error.message == "Token not valid") {
@@ -77,7 +77,7 @@ export class AuthService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.patch<any>(`${this.baseUrl}/users/photo`, formData, { headers });
+    return this.http.patch<any>(`${this.baseUrl}/auth/photo`, formData, { headers });
   }
 
   logout(): Observable<any> {

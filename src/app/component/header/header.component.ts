@@ -40,6 +40,7 @@ saveImg(arg0: string) {
   quantity: any = 0;
   username: string = '';
   img: string = '';
+  role: string = '';
   loading: boolean = true;
   categories: any[] = [];
 
@@ -54,7 +55,9 @@ saveImg(arg0: string) {
     private cartService: CartService,
     public toastService: ToastService
 
-  ) {}
+  ) {
+    this.role = 'USER';
+  }
 
   ngOnInit(): void {
     this.userService.username$.subscribe(username => {
@@ -71,13 +74,22 @@ saveImg(arg0: string) {
         this.cd.detectChanges();  // Trigger change detection if needed
       }
     });
+    this.userService.role$.subscribe(role => {
+      if (role) {
+        this.role = role;
+        localStorage.setItem('role', this.role)
+        this.loading = false;
+        this.cd.detectChanges();  // Trigger change detection if needed
+      }
+    });
     
     if (this.auth()) {
+      this.cartServerService.getCart().subscribe();
+      this.getCountOfItems()
       this.userService.loadProfile().subscribe();
       console.log(this.userService.loadProfile().subscribe())
     }
     this.loadCategories();
-    this.getCountOfItems()
   }
 
   logout() {

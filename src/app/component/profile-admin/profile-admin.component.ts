@@ -1,24 +1,22 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service';
+import { ProductsService } from '../../service/products.service';
 import { ToastService } from '../../service/toast.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
-import { UserService } from '../../service/user.service';
-import { ProductsService } from '../../service/products.service';
+import { CommonModule } from '@angular/common';
 import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 
-
 @Component({
-    selector: 'app-profile-seller',
+    selector: 'app-profile-admin',
     standalone: true,
-    templateUrl: './profile-seller.component.html',
-    styleUrl: './profile-seller.component.css',
+    templateUrl: './profile-admin.component.html',
+    styleUrl: './profile-admin.component.css',
     imports: [CommonModule, CapitalizePipe]
 })
-export class ProfileSellerComponent implements OnInit {
+export class ProfileAdminComponent {
   user: any;
   products: any[] = [];
   visibleProducts: any[] = [];
