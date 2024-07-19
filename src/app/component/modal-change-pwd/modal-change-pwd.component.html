@@ -6,26 +6,34 @@
     <div mat-dialog-content>
       <div>
         <input placeholder="Enter Code" matInput formControlName="code">
-        <div *ngIf="changePwdForm.get('code')?.hasError('required') && changePwdForm.get('code')?.touched" class="err-msg">
+        <div *ngIf="changePwdForm.get('code')?.hasError('required') && changePwdForm.get('code')?.touched"
+          class="err-msg">
           Code is required
         </div>
       </div>
       <div>
         <input placeholder="Enter New Password" matInput type="password" formControlName="password">
-        <div *ngIf="changePwdForm.get('password')?.hasError('required') && changePwdForm.get('password')?.touched" class="err-msg">
+        <div *ngIf="changePwdForm.get('password')?.hasError('required') && changePwdForm.get('password')?.touched"
+          class="err-msg">
           Password is required
         </div>
-        <div *ngIf="changePwdForm.get('password')?.hasError('pattern') && changePwdForm.get('password')?.touched" class="err-msg">
-          Password must contain at least one digit, one lowercase, and one uppercase letter, and be at least 8 characters long
+        <div *ngIf="changePwdForm.get('password')?.hasError('pattern') && changePwdForm.get('password')?.touched"
+          class="err-msg">
+          Password must contain at least one digit, one lowercase, and one uppercase letter, and be at least 8
+          characters long
         </div>
       </div>
       <div>
         <input placeholder="Enter Confirm Password" matInput type="password" formControlName="confirmPassword"
-               (blur)="onConfirmPasswordBlur()" (focus)="onConfirmPasswordFocus()">
-        <div *ngIf="changePwdForm.get('confirmPassword')?.hasError('required') && changePwdForm.get('confirmPassword')?.touched" class="err-msg">
+          (blur)="onConfirmPasswordBlur()" (focus)="onConfirmPasswordFocus()">
+        <div
+          *ngIf="changePwdForm.get('confirmPassword')?.hasError('required') && changePwdForm.get('confirmPassword')?.touched"
+          class="err-msg">
           Confirm Password is required
         </div>
-        <div *ngIf="!changePwdForm.get('confirmPassword')?.hasError('required') && confirmPasswordBlurred && changePwdForm.errors?.['mismatch']" class="err-msg">
+        <div
+          *ngIf="!changePwdForm.get('confirmPassword')?.hasError('required') && confirmPasswordBlurred && changePwdForm.errors?.['mismatch']"
+          class="err-msg">
           Passwords do not match
         </div>
         <p *ngIf="responseMessage" class="text-center mt-2 bg-danger err-msg">{{ responseMessage }}</p>

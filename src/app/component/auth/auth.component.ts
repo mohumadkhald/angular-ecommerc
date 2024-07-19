@@ -10,6 +10,7 @@ import { CartService } from '../../service/cart.service';
 import { OAuth2Service } from '../../service/oauth2.service';
 import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
 import { ModalContentComponent } from "../modal-content/modal-content.component";
+import { SetFirstPasswordComponent } from '../../set-first-password/set-first-password.component';
 
 @Component({
   selector: 'app-auth',
@@ -19,8 +20,7 @@ import { ModalContentComponent } from "../modal-content/modal-content.component"
   styleUrls: ['./auth.component.css']
 })
 
-export class AuthComponent implements OnInit{
-
+export class AuthComponent implements OnInit {
   @ViewChild('container') container!: ElementRef;
   registerForm: FormGroup;
   loginForm: FormGroup;
@@ -67,64 +67,63 @@ export class AuthComponent implements OnInit{
   showSignIn() {
     this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
   }
-  
+
   showSignUp() {
     this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
   }
-  
 
   loading: boolean = true;
   isLogin: boolean = this.authService.isLoggedIn();
 
   ngOnInit(): void {
-
-     // Handle the route parameter or query parameter to extract token and other data
-     this.route.queryParams.subscribe(params => {
+    // Handle the route parameter or query parameter to extract token and other data
+    this.route.queryParams.subscribe(params => {
       const token = params['token'];
       const message = params['message'];
       const role = params['role'];
-      if(token)
-      {
-          this.authService.saveToken(token);
-          this.cartService.syncCartFromLocalStorage();
+      if (token) {
+        this.authService.saveToken(token);
+        this.cartService.syncCartFromLocalStorage();
+        if (params['newUser'] === 'true') {
           this.router.navigate(['/']);
+          localStorage.setItem('firstPwdSet', "false");
+        } else {
+          this.router.navigate(['/']);
+        }
       }
-      
-
     });
 
-    if(this.isLogin)
-      {
-        this.router.navigate(['/']);
-      }
+    if (this.isLogin) {
+      this.router.navigate(['/']);
+    }
+
     // Simulate loading for 2 seconds
     setTimeout(() => {
       this.loading = false; // Set loading to false after 2 seconds
     }, 200);
   }
 
+  login() {
+    if (this.loginForm.valid) {
+      const email = this.loginForm.value.email.trim();
+      const password = this.loginForm.value.password.trim();
 
-login() {
-  if (this.loginForm.valid) {
-    const email = this.loginForm.value.email.trim();
-    const password = this.loginForm.value.password.trim();
-
-    this.authService.login(email, password).subscribe(
-      response => {
-        console.log('Login successful', response);
-        this.cartService.syncCartFromLocalStorage();
-        this.authService.saveToken(response.token);
-        this.router.navigate(['/']);
-      },
-      error => {
-        console.error('Login error', error);
-        let msg = Object.values(error.error.errors).join(', ')
-        this.showErrorDialog(msg);
-      }
-    );
+      this.authService.login(email, password).subscribe(
+        response => {
+          console.log('Login successful', response);
+          this.cartService.syncCartFromLocalStorage();
+          this.authService.saveToken(response.token);
+          localStorage.setItem('firstPwdSet', 'true');
+          this.router.navigate(['/']);
+        },
+        error => {
+          console.error('Login error', error);
+          let msg = Object.values(error.error.errors).join(', ');
+          this.showErrorDialog(msg);
+        }
+      );
+    }
   }
-}
-
 
   register() {
     if (this.registerForm.valid) {
@@ -138,18 +137,17 @@ login() {
         response => {
           console.log('Registration successful', response);
           this.authService.saveToken(response.token);
+          localStorage.setItem('firstPwdSet', 'true');
           this.router.navigate(['/']);
         },
         error => {
           console.error('Registration error', error);
-          let msg = Object.values(error.error.errors).join(', ')
+          let msg = Object.values(error.error.errors).join(', ');
           this.showErrorDialog(msg);
         }
       );
     }
   }
-
-
 
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
@@ -199,6 +197,7 @@ login() {
   initiateGoogleLogin() {
     this.oauth2Service.initiateGoogleLogin();
   }
+
   initiateFaceLogin() {
     this.oauth2Service.initiateFaceLogin();
   }

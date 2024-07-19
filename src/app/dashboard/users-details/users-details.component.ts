@@ -14,7 +14,7 @@ export class UsersDetailsComponent implements OnInit {
 
   @Input() id !: number;
   user: any;
-  token: string = 'your-token-here'; // Replace this with the actual token retrieval logic
+  token: any = localStorage.getItem('token'); // Replace this with the actual token retrieval logic
 
   constructor(
     private route: ActivatedRoute,
@@ -42,5 +42,29 @@ export class UsersDetailsComponent implements OnInit {
         console.error('Error fetching user details', error);
       }
     );
+  }
+
+  toggleAccountNonExpired() {
+    this.user.credential.accountNonExpired = !this.user.credential.accountNonExpired;
+    this.updateUserStatus({ accNonExpire: this.user.credential.accountNonExpired });
+  }
+
+  toggleAccountNonLocked() {
+    this.user.credential.accountNonLocked = !this.user.credential.accountNonLocked;
+    this.updateUserStatus({ accNonLocked: this.user.credential.accountNonLocked });
+  }
+
+  toggleCredentialsNonExpired() {
+    this.user.credential.credentialsNonExpired = !this.user.credential.credentialsNonExpired;
+    this.updateUserStatus({ credentialNonExpire: this.user.credential.credentialsNonExpired });
+  }
+
+  updateUserStatus(params: any) {
+    this.usersService.updateUserStatus(this.user.userId, params, this.token)
+      .subscribe(response => {
+        console.log(response);
+      }, error => {
+        console.error(error);
+      });
   }
 }

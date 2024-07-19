@@ -1,6 +1,6 @@
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { ChangeDetectorRef, Component, OnInit, Renderer2 } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../service/auth.service";
 import { ToastService } from '../../service/toast.service';
@@ -8,6 +8,8 @@ import { UserService } from "../../service/user.service";
 import { Product } from "../interface/product";
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { ProductModalComponent } from "../product-modal/product-modal.component";
+import { SetFirstPasswordComponent } from '../../set-first-password/set-first-password.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
     standalone: true,
     selector: 'app-home',
@@ -29,7 +31,10 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private modalService: NgbModal,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +47,26 @@ export class HomeComponent implements OnInit {
           }
         });
       });
+    }
+    
+    this.route.queryParams.subscribe(params => {
+      const token = params['token'];
+      const message = params['message'];
+      const role = params['role'];
+      if (token) {
+        this.authService.saveToken(token);
+        if (params['newUser'] === 'true') {
+          this.openSetFirstPwd();
+        } else {
+          this.router.navigate(['/']);
+        }
+      }
+    });
+
+    // Check if the user needs to set the first password
+    const firstPwdSet = localStorage.getItem('firstPwdSet');
+    if (firstPwdSet == "false") {
+      this.openSetFirstPwd();
     }
   }
 
@@ -97,6 +122,35 @@ export class HomeComponent implements OnInit {
     }, 3000); // Adjust the delay as needed
   }
 
+  openSetFirstPwd(): void {
+    const dialogRef = this.dialog.open(SetFirstPasswordComponent, {
+      width: '500px',
+      height: '400px',
+      data: { name: 'Set Password For Email Address' },
+      panelClass: 'custom-dialog-container'  // Apply the custom class here
+    });
+
+    dialogRef.afterOpened().subscribe(() => {
+      const dialogContainer = document.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+      // Hide the dialog initially
+      dialogContainer.style.display = 'none';
+
+      // Apply new styles to the dialog container
+      this.renderer.setStyle(dialogContainer, 'position', 'relative');
+      this.renderer.setStyle(dialogContainer, 'top', '0px');
+      this.renderer.setStyle(dialogContainer, 'z-index', '100');
+
+      // Show the dialog after applying styles
+      dialogContainer.style.display = 'block';
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Set flag to indicate that the password has been set
+      localStorage.setItem('firstPwdSet', 'true');
+    });
+  }
+
   showToast() {
     this.toastService.add('This is a toast message.');
   }
@@ -104,7 +158,4 @@ export class HomeComponent implements OnInit {
   removeToast() {
     this.toastService.remove();
   }
-  
-
-
 }

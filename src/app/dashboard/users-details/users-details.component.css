@@ -1,0 +1,35 @@
+/* user-status.component.css */
+.btn-toggle {
+    width: 60px;
+    height: 30px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 15px;
+  }
+  
+  .btn-toggle.active {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  .btn-toggle::before {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background-color: #fff;
+    border-radius: 50%;
+    top: 50%;
+    left: 1px;
+    transform: translateY(-50%);
+    transition: left 0.3s;
+  }
+  
+  .btn-toggle.active::before {
+    left: calc(100% - 29px);
+  }
+  

@@ -32,20 +32,32 @@
                     </ul>
                 </div>
             </div>
+            <!-- user-status.component.html -->
             <div class="mt-4">
                 <h4>Credentials</h4>
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <strong>Account Non Expired:</strong> {{ user.credential.accountNonExpired }}
+                        <strong>Account Non Expired:</strong>
+                        <button type="button" class="btn btn-toggle" [class.active]="user.credential.accountNonExpired"
+                            (click)="toggleAccountNonExpired()">
+                        </button>
                     </li>
                     <li class="list-group-item">
-                        <strong>Account Non Locked:</strong> {{ user.credential.accountNonLocked }}
+                        <strong>Account Non Locked:</strong>
+                        <button type="button" class="btn btn-toggle" [class.active]="user.credential.accountNonLocked"
+                            (click)="toggleAccountNonLocked()">
+                        </button>
                     </li>
                     <li class="list-group-item">
-                        <strong>Credentials Non Expired:</strong> {{ user.credential.credentialsNonExpired }}
+                        <strong>Credentials Non Expired:</strong>
+                        <button type="button" class="btn btn-toggle"
+                            [class.active]="user.credential.credentialsNonExpired"
+                            (click)="toggleCredentialsNonExpired()">
+                        </button>
                     </li>
                 </ul>
             </div>
+
         </div>
     </div>
 </div>

@@ -33,4 +33,11 @@ export class UsersService {
 
     return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers });
   }
+  updateUserStatus(userId: number, params: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.patch<any>(`${this.apiUrl}/status/${userId}`, {}, { headers, params });
+  }
 }
