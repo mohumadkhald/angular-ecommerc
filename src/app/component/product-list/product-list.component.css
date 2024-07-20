@@ -245,25 +245,7 @@ button:hover {
     scroll-behavior: smooth;
     width: 70%;
   }
-  .slider-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    max-width: 60%;
-  }
-  .toast-container {
-    position: fixed;
-    font-size: 32px;
-    top: 40.5%;
-    right: 20.3%;
-    z-index: 9999;
-    color: white;
-    background-color: rgb(185, 38, 19);
-    opacity: .6;
-    padding: 25px;
-  }
+
   
 }
 @media (max-width: 700px) {

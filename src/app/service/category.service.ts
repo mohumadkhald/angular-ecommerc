@@ -17,12 +17,12 @@ export class CategoryService {
   constructor(private http: HttpClient, private router: Router) { }
 
   getAllCategories(): Observable<any[]> {
-    return this.http.get<any>('http://localhost:8080/api/categories/all')
+    return this.http.get<any>('http://localhost:8080/api/categories')
       .pipe(map(response => response.collection));
   }
 
   getAllSubCategories(): Observable<any[]> {
-    return this.http.get<any>('http://localhost:8080/api/sub-categories/all')
+    return this.http.get<any>('http://localhost:8080/api/sub-categories')
       .pipe(map(response => response.collection));
   }
 }

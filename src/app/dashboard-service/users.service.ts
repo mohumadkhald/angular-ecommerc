@@ -11,7 +11,7 @@ export class UsersService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(token: string): Observable<any> {
+  getUsers(token: any): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -33,6 +33,17 @@ export class UsersService {
 
     return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers });
   }
+
+  
+  addUser(user: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post(this.apiUrl, user, { headers });
+  }
+  
   updateUserStatus(userId: number, params: any, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`

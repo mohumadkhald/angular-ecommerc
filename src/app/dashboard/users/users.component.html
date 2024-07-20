@@ -1,7 +1,7 @@
 <h1 class="text-center my-4">Manage Members</h1>
 <div class="container">
     <div class="table-responsive">
-        <a class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Add New Member</a>
+        <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Member</a>
         <table *ngIf="users.length > 0; else noUsers" class="main-table table table-striped table-bordered table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -23,7 +23,8 @@
                     <td>{{ user.date }}</td>
                     <td>{{ user.role }}</td>
                     <td>
-                        <a class="btn btn-primary btn-sm mr-1" (click)="detailsUser(user.id)" style="margin-right: 10px;"><i class="fa fa-circle-info"></i>
+                        <a class="btn btn-primary btn-sm mr-1" (click)="detailsUser(user.id)"
+                            style="margin-right: 10px;"><i class="fa fa-circle-info"></i>
                             Details</a>
                         <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
                             Edit</a>
@@ -37,4 +38,8 @@
             <p>No users found.</p>
         </ng-template>
     </div>
+</div>
+
+<div *ngIf="toastService.toast" class="toast-container">
+    {{ toastService.toast }}
 </div>

@@ -87,40 +87,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  product = {
-    title: 'Cool Green Dress with Red Bell',
-    mainImage: 'assets/pages/img/careers/careers.jpg', // Ensure this is the correct path to your image
-    description: 'Lorem ipsum dolor sit amet...',
-    price: '$47.00',
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Red', 'Green', 'Blue', 'Yellow']
-  };
-
-  open() {
-    if (this.closeTimeoutId) {
-      clearTimeout(this.closeTimeoutId);
-      this.closeTimeoutId = undefined;
-    }
-    if (!this.modalRef) {
-      this.modalRef = this.modalService.open(ProductModalComponent, { size: 'lg' });
-      this.modalRef.componentInstance.product = this.product;
-      // Listen to the mouseleave event on the modal content
-      this.modalRef.result.finally(() => this.modalRef = undefined);
-      const modalElement = document.querySelector('.modal-content');
-      if (modalElement) {
-        modalElement.addEventListener('mouseleave', () => this.close());
-      }
-    }
-  }
-
-  close() {
-    this.closeTimeoutId = window.setTimeout(() => {
-      if (this.modalRef) {
-        this.modalRef.close();
-        this.modalRef = undefined;
-      }
-    }, 3000); // Adjust the delay as needed
-  }
 
   openSetFirstPwd(): void {
     const dialogRef = this.dialog.open(SetFirstPasswordComponent, {
@@ -151,11 +117,4 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  showToast() {
-    this.toastService.add('This is a toast message.');
-  }
-  
-  removeToast() {
-    this.toastService.remove();
-  }
 }

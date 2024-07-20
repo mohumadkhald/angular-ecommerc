@@ -7,7 +7,9 @@
       <option value="all">All</option>
       <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}</option>
     </select>
-    <input style="max-width: 400px;" type="text" placeholder="Search Amazon.eg" [(ngModel)]="searchText">
+    <input style="max-width: 400px;" type="text" placeholder="Search Amazon.eg" [(ngModel)]="searchText"
+      (keydown.enter)="goToSearchResult()">
+
     <button (click)="goToSearchResult()">
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Search_Icon.svg" alt="Search Icon" height="20">
     </button>
@@ -61,13 +63,6 @@
   </a>
 </div>
 
-
-
-
-<div *ngIf="toastService.toast" class="toast-container">
-  {{ toastService.toast }}
-  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
-</div>
 
 
 

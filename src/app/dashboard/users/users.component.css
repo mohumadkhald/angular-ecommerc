@@ -8,3 +8,13 @@
 .table-responsive {
     margin-bottom: 1rem;
 }
+.toast-container {
+    position: fixed;
+    top: 14%;
+    right: 1%;
+    z-index: 9999;
+    color: white;
+    background-color: rgb(61, 106, 29);
+    opacity: .8;
+    padding: 15px;
+}
