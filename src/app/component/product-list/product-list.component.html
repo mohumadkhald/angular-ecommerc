@@ -9,7 +9,8 @@
       <ul>
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
-          <a class="sub-links" routerLinkActive="active_link" [routerLink]="['/categories', categoryTitle, subCategory.name]">{{ subCategory.name | capitalize }}</a>
+          <a class="sub-links" routerLinkActive="active_link"
+            [routerLink]="['/categories', categoryTitle, subCategory.name]">{{ subCategory.name | capitalize }}</a>
         </li>
       </ul>
     </div>
@@ -22,15 +23,28 @@
         <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
       </div>
       <div class="price-range">
-        <h3>Price</h3>
-        <input type="range" min="50" max="250" step="10" [(ngModel)]="filters.priceRange">
-        <p>Range: ${{ filters.priceRange }}</p>
+        <h3 style="margin: 0; margin-top: 10px;">Price</h3>
+        <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
+          [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
+          (maxValueChange)="onPriceRangeChange()">
+        </app-custom-range-slider>
+        <p>Range: ${{ filters.minPrice }} - ${{ filters.maxPrice }}</p>
       </div>
+
     </div>
   </div>
 
   <div style="height: 600px; width: 100%;" class="content-wrapper">
-    <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper" [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
+    <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper"
+      [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
+    </div>
+    <div *ngIf="subCategoryName" class="sort-options">
+      <select id="sort" (change)="onSortChange($event)">
+        <option value="createdAtDesc">Sort By: Featured Products</option>
+        <option value="createdAtAsc">Sort By: Old Products</option>
+        <option value="priceAsc">Price (Low to High)</option>
+        <option value="priceDesc">Price (High to Low)</option>
+      </select>
     </div>
     <main class="product-list" [ngStyle]="{'padding-bottom': subCategoryName ? '100px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
@@ -43,7 +57,8 @@
         <div style="background-color: rgb(225, 230, 229); padding: 10px; margin: 5px;" class="slider-wrapper" #slider>
           <div style="margin: 5px;" class="slider">
             <div style="width: 306px; height: 230px;" class="category-item" *ngFor="let subCategory of subCategories">
-              <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)" style="width: 100%; height: 200px; cursor: pointer" [src]="subCategory.img" [alt]="subCategory.name">
+              <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)"
+                style="width: 100%; height: 200px; cursor: pointer" [src]="subCategory.img" [alt]="subCategory.name">
               <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
             </div>
           </div>

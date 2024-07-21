@@ -5,6 +5,19 @@ body {
   font-size: 18px;
   padding: 0px 10px;
 }
+.sort-options {
+  text-align: right;
+  margin: 0 5px;
+  margin-bottom: 10px;
+}
+
+.sort-options select {
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+}
 
 .title-wrapper {
   margin: 0;

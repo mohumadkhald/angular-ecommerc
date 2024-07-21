@@ -26,7 +26,7 @@
     <div class="account-lists" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
       <a style="display: flex; flex-direction: column">
         <p *ngIf="auth();" style="font-size: small; margin-bottom: 0;">Hello, {{ username }}</p>
-        <p *ngIf="!auth();" style="font-size: small; margin-bottom: 0;">Hello, User</p>
+        <p *ngIf="!auth();" style="font-size: small; margin-bottom: 0;">Hello, Sign In</p>
         <p>Account & Lists</p>
       </a>
       <div class="dropdown-menu" *ngIf="menuVisible" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">

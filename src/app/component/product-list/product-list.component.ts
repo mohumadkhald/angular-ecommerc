@@ -15,6 +15,7 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
 import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-range-slider.component";
 
 @Component({
     selector: 'app-product-list',
@@ -22,19 +23,20 @@ import { MatDialog } from "@angular/material/dialog";
     templateUrl: './product-list.component.html',
     styleUrl: './product-list.component.css',
     imports: [
-        NgForOf,
-        NgIf,
-        ProductCardComponent,
-        SidebarComponent,
-        FormsModule,
-        CurrencyPipe,
-        NgClass,
-        NgStyle,
-        RouterLink,
-        RouterLinkActive,
-        MatProgressSpinner,
-        CapitalizePipe
-    ]
+    NgForOf,
+    NgIf,
+    ProductCardComponent,
+    SidebarComponent,
+    FormsModule,
+    CurrencyPipe,
+    NgClass,
+    NgStyle,
+    RouterLink,
+    RouterLinkActive,
+    MatProgressSpinner,
+    CapitalizePipe,
+    CustomRangeSliderComponent
+]
 })
 
 export class ProductListComponent implements OnInit {
@@ -44,7 +46,9 @@ export class ProductListComponent implements OnInit {
   filters = {
     inStock: true,
     notAvailable: false,
-    priceRange: 250
+    priceRange: 250,
+    minPrice: 0,
+    maxPrice: 25000
   };
 
   categories: any[] = [];
@@ -55,7 +59,7 @@ export class ProductListComponent implements OnInit {
   loading: boolean = true;
   currentCategoryName: string = '';
   currentCategoryImage: any;
-  
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -65,26 +69,23 @@ export class ProductListComponent implements OnInit {
     private titleService: Title,
     public toastService: ToastService,
     private dialog: MatDialog,
-
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to route params to load sub-categories and products initially
     this.route.paramMap.subscribe(paramMap => {
       this.categoryTitle = paramMap.get('categoryTitle');
       this.subCategoryName = paramMap.get('subCategoryName');
       this.loadSubCategories();
-      this.loadProducts(this.subCategoryName);
-      this.currentCategoryImage = localStorage.getItem('imgCat'); // Property to hold the image for the current category
-      // Set initial page title
+      this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+      this.currentCategoryImage = localStorage.getItem('imgCat');
       this.updatePageTitle();
       this.loadSubCategories();
     });
 
-    // Simulate loading delay
     setTimeout(() => {
-      this.loading = false; // Set loading to false after 2 seconds
+      this.loading = false;
     }, 200);
+    this.sortedProducts = [...this.products];
   }
 
   showErrorDialog(message: string): void {
@@ -104,7 +105,6 @@ export class ProductListComponent implements OnInit {
         error => {
           if (error.status === 403) {
             localStorage.removeItem("token");
-
           } else {
             console.error('Error loading subcategories:', error);
           }
@@ -112,11 +112,10 @@ export class ProductListComponent implements OnInit {
       );
     }
   }
-  
 
-  loadProducts(subCategoryName: any): void {
+  loadProducts(subCategoryName: any, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 50, maxPrice: number = 250): void {
     if (subCategoryName) {
-      this.productService.getProducts(subCategoryName).subscribe(products => {
+      this.productService.getProducts(subCategoryName, sortBy, sortDirection, minPrice, maxPrice).subscribe(products => {
         this.products = products;
       });
     } else {
@@ -127,7 +126,6 @@ export class ProductListComponent implements OnInit {
   toggleSubList(categoryName: string): void {
     this.openSubLists[categoryName] = !this.openSubLists[categoryName];
     this.currentCategoryName = this.openSubLists[categoryName] ? categoryName : '';
-    // Store current category name in localStorage
     localStorage.getItem('imgCat');
   }
 
@@ -137,13 +135,11 @@ export class ProductListComponent implements OnInit {
   }
 
   selectCategory(event: Event, Category: any): void {
-    event.stopPropagation(); // Stop event propagation to prevent dropdown collapse
+    event.stopPropagation();
     this.categoryTitle = Category.categoryTitle;
     this.currentCategoryImage = Category.img || 'default-category-image-url.jpg';
     this.currentCategoryName = this.categories.find(category => category.categoryId)?.categoryTitle || 'Category';
     localStorage.setItem('currentCategoryImage', this.currentCategoryImage);
-
-    // Update page title based on selected subcategory
     this.updatePageTitle();
   }
 
@@ -169,11 +165,43 @@ export class ProductListComponent implements OnInit {
   }
 
   scrollLeft(slider: HTMLElement) {
-    slider.scrollBy({ left: -955, behavior: 'smooth' }); // Increased scroll amount
+    slider.scrollBy({ left: -955, behavior: 'smooth' });
   }
 
   scrollRight(slider: HTMLElement) {
-    slider.scrollBy({ left: 955, behavior: 'smooth' }); // Increased scroll amount
+    slider.scrollBy({ left: 955, behavior: 'smooth' });
   }
 
+  sortedProducts: Array<{ name: any, price: any }> = [];
+
+  onSortChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    let sortBy = 'createdAt';
+    let sortDirection = 'desc';
+
+    switch (value) {
+      case 'createdAtAsc':
+        sortBy = 'createdAt';
+        sortDirection = 'asc';
+        break;
+      case 'createdAtDesc':
+        sortBy = 'createdAt';
+        sortDirection = 'desc';
+        break;
+      case 'priceAsc':
+        sortBy = 'price';
+        sortDirection = 'asc';
+        break;
+      case 'priceDesc':
+        sortBy = 'price';
+        sortDirection = 'desc';
+        break;
+    }
+
+    this.loadProducts(this.subCategoryName, sortBy, sortDirection, this.filters.minPrice, this.filters.maxPrice);
+  }
+
+  onPriceRangeChange(): void {
+    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+  }
 }

@@ -16,7 +16,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 
 export class ResultSearchComponent implements OnInit {
   products: Product[] = [];
-  currentPage = 0;
+  currentPage = 1; // Start page count from 1
   totalPages: number[] = [];
 
   constructor(
@@ -29,26 +29,23 @@ export class ResultSearchComponent implements OnInit {
       const categoryName = params.get('categoryTitle') || '';
       const productName = params.get('productName') || '';
       this.getProducts(categoryName, productName);
-      console.log(categoryName)
-      console.log(productName)
-
     });
   }
 
-  getProducts(categoryName: string, productName: string, page: number = 0, size: number = 5): void {
-    this.productService.getProductsByCategoryAndProductName(categoryName, productName, page, size)
+  getProducts(categoryName: string, productName: string, page: number = 0, pageSize: number = 5): void {
+    this.productService.getProductsByCategoryAndProductName(categoryName, productName, page, pageSize)
       .subscribe((response: PaginatedResponse<Product[]>) => {
         this.products = response.content;
-        this.currentPage = response.pageable.pageNumber;
-        this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i);
+        this.currentPage = response.pageable.pageNumber + 1; // Convert from 0-based index to 1-based
+        this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1); // Convert to 1-based
       });
   }
 
   goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages.length) {
+    if (page >= 1 && page <= this.totalPages.length) {
       const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
       const productName = this.route.snapshot.paramMap.get('productName') || '';
-      this.getProducts(categoryName, productName, page);
+      this.getProducts(categoryName, productName, page - 1); // Convert from 1-based to 0-based index
     }
   }
 }

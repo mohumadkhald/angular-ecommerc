@@ -1,0 +1,14 @@
+/* Add your styles here */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .pagination-controls button {
+    margin: 0 5px;
+  }
+  .pagination-controls button.active {
+    font-weight: bold;
+  }
+  

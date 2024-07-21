@@ -11,13 +11,18 @@ export class ProductsService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(subCategoryName: string): Observable<Product[]> {
-    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/product-category/${subCategoryName}`)
-      .pipe(
+  getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number): Observable<Product[]> {
+    return this.http.get<{ content: Product[] }>(`${this.apiUrl}/product-category/${subCategoryName}`, {
+      params: {
+        sortBy: sortBy,
+        sortDirection: sortDirection,
+        minPrice: minPrice.toString(),
+        maxPrice: maxPrice.toString()
+      }
+    }).pipe(
       map(response => response.content)
     );
   }
-
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
@@ -27,14 +32,14 @@ export class ProductsService {
   }
 
   
-  getProductsByCategoryAndProductName(categoryName: string, productName: string, page: number = 0, size: number = 5): Observable<PaginatedResponse<Product[]>> {
+  getProductsByCategoryAndProductName(categoryName: string, productName: string, page: number, pageSize: number): Observable<PaginatedResponse<Product[]>> {
     let params = new HttpParams()
       .set('categoryName', categoryName)
       .set('productName', productName)
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('pageSize', pageSize.toString());
 
-    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/${categoryName}/${productName}?page=${page}`)
+    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/${categoryName}/${productName}?page=${page}&pageSize=${pageSize}`)
       .pipe(
         map(response => response)
       );

@@ -22,11 +22,11 @@
 
     <!-- Pagination Controls -->
     <div class="pagination-controls">
-      <button (click)="goToPage(currentPage-1)" [disabled]="currentPage === 0">Previous</button>
+      <button (click)="goToPage(currentPage-1)" [disabled]="currentPage === 1">Previous</button>
       <button *ngFor="let page of totalPages" (click)="goToPage(page)" [class.active]="page  === currentPage">
         {{ page }}
       </button>
-      <button (click)="goToPage(currentPage+1)" [disabled]="currentPage === totalPages.length-1">Next</button>
+      <button (click)="goToPage(currentPage+1)" [disabled]="currentPage === totalPages.length">Next</button>
     </div>
   </div>
 </div>
