@@ -11,16 +11,18 @@ export class ProductsService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number): Observable<Product[]> {
-    return this.http.get<{ content: Product[] }>(`${this.apiUrl}/product-category/${subCategoryName}`, {
+  getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number): Observable<PaginatedResponse<Product[]>> {
+    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/product-category/${subCategoryName}`, {
       params: {
         sortBy: sortBy,
         sortDirection: sortDirection,
         minPrice: minPrice.toString(),
-        maxPrice: maxPrice.toString()
+        maxPrice: maxPrice.toString(),
+        page: page.toString(),
+        pageSize: pageSize.toString()
       }
     }).pipe(
-      map(response => response.content)
+      map(response => response)
     );
   }
   getProductById(id: number): Observable<Product> {

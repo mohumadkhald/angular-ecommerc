@@ -20,13 +20,7 @@
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>
 
-    <!-- Pagination Controls -->
-    <div class="pagination-controls">
-      <button (click)="goToPage(currentPage-1)" [disabled]="currentPage === 1">Previous</button>
-      <button *ngFor="let page of totalPages" (click)="goToPage(page)" [class.active]="page  === currentPage">
-        {{ page }}
-      </button>
-      <button (click)="goToPage(currentPage+1)" [disabled]="currentPage === totalPages.length">Next</button>
-    </div>
+    <!-- Pagination Component -->
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 </div>

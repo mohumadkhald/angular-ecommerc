@@ -16,6 +16,8 @@ import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-range-slider.component";
+import { PaginatedResponse, Product } from "../interface/product";
+import { PaginationComponent } from "../../pagination/pagination.component";
 
 @Component({
     selector: 'app-product-list',
@@ -35,7 +37,8 @@ import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-ran
     RouterLinkActive,
     MatProgressSpinner,
     CapitalizePipe,
-    CustomRangeSliderComponent
+    CustomRangeSliderComponent,
+    PaginationComponent
 ]
 })
 
@@ -59,6 +62,8 @@ export class ProductListComponent implements OnInit {
   loading: boolean = true;
   currentCategoryName: string = '';
   currentCategoryImage: any;
+  currentPage = 1;
+  totalPages: number[] = [];
 
   constructor(
     private router: Router,
@@ -113,10 +118,13 @@ export class ProductListComponent implements OnInit {
     }
   }
 
-  loadProducts(subCategoryName: any, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 50, maxPrice: number = 250): void {
+  loadProducts(subCategoryName: any, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 50, maxPrice: number = 250, page: number = 0, pageSize: number = 5): void {
     if (subCategoryName) {
-      this.productService.getProducts(subCategoryName, sortBy, sortDirection, minPrice, maxPrice).subscribe(products => {
-        this.products = products;
+      this.productService.getProducts(subCategoryName, sortBy, sortDirection, minPrice, maxPrice, page, pageSize)
+      .subscribe((response: PaginatedResponse<Product[]>) => {
+        this.products = response.content;
+        this.currentPage = response.pageable.pageNumber + 1;
+        this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
       });
     } else {
       this.products = [];
@@ -203,5 +211,11 @@ export class ProductListComponent implements OnInit {
 
   onPriceRangeChange(): void {
     this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+  }
+
+  onPageChange(page: number): void {
+    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
+    const productName = this.route.snapshot.paramMap.get('productName') || '';
+    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice, page-1);
   }
 }

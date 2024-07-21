@@ -49,7 +49,11 @@
     <main class="product-list" [ngStyle]="{'padding-bottom': subCategoryName ? '100px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>
-
+    <!-- Pagination Component -->
+    <app-pagination *ngIf="subCategoryName" [currentPage]="currentPage" [totalPages]="totalPages"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+    
     <div *ngIf="categoryTitle && !subCategoryName" class="shop-by-category">
       <h2 style="margin-left: 8.5vw; margin-top: 20px;">Shop by category</h2>
       <div class="slider-container" style="width: 83vw;">
