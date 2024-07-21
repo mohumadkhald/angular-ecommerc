@@ -34,6 +34,8 @@
                 </tr>
             </tbody>
         </table>
+            <!-- Pagination Component -->
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-pagination>
         <ng-template #noUsers>
             <p>No users found.</p>
         </ng-template>

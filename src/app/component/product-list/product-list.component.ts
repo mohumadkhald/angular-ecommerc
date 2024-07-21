@@ -18,6 +18,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-range-slider.component";
 import { PaginatedResponse, Product } from "../interface/product";
 import { PaginationComponent } from "../../pagination/pagination.component";
+import { SortOptionsComponent } from "../../sort-options/sort-options.component";
 
 @Component({
     selector: 'app-product-list',
@@ -38,7 +39,8 @@ import { PaginationComponent } from "../../pagination/pagination.component";
     MatProgressSpinner,
     CapitalizePipe,
     CustomRangeSliderComponent,
-    PaginationComponent
+    PaginationComponent,
+    SortOptionsComponent
 ]
 })
 
@@ -46,12 +48,18 @@ export class ProductListComponent implements OnInit {
   currentSubCategoryImage: any;
   openSubLists: { [key: string]: boolean } = {};
   @ViewChild('slider') slider!: ElementRef;
+  colorOptions: string[] = [
+    'red', 'yellow', 'blue', 'green'
+  ];
+  
   filters = {
     inStock: true,
     notAvailable: false,
     priceRange: 250,
     minPrice: 0,
-    maxPrice: 25000
+    maxPrice: 25000,
+    colors: [] as string[],
+    sizes: [] as string[]
   };
 
   categories: any[] = [];
@@ -120,7 +128,7 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(subCategoryName: any, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 50, maxPrice: number = 250, page: number = 0, pageSize: number = 5): void {
     if (subCategoryName) {
-      this.productService.getProducts(subCategoryName, sortBy, sortDirection, minPrice, maxPrice, page, pageSize)
+      this.productService.getProducts(subCategoryName, sortBy, sortDirection, minPrice, maxPrice, page, pageSize, this.filters.colors, this.filters.sizes)
       .subscribe((response: PaginatedResponse<Product[]>) => {
         this.products = response.content;
         this.currentPage = response.pageable.pageNumber + 1;
@@ -210,6 +218,32 @@ export class ProductListComponent implements OnInit {
   }
 
   onPriceRangeChange(): void {
+    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+  }
+  
+  onColorChange(color: string, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.filters.colors.push(color);
+    } else {
+      const index = this.filters.colors.indexOf(color);
+      if (index > -1) {
+        this.filters.colors.splice(index, 1);
+      }
+    }
+    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+  }
+  
+  onSizeChange(size: string, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.filters.sizes.push(size);
+    } else {
+      const index = this.filters.sizes.indexOf(size);
+      if (index > -1) {
+        this.filters.sizes.splice(index, 1);
+      }
+    }
     this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
   }
 

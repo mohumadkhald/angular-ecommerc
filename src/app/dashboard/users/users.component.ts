@@ -7,17 +7,20 @@ import { AddUserComponent } from '../add-user/add-user.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../service/toast.service';
 import { DashboardComponent } from '../dashboard.component';
+import { PaginationComponent } from "../../pagination/pagination.component";
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, PaginationComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
 export class UsersComponent implements OnInit {
   users: any[] = [];
-  token: any = ''; // Initialize with an empty string or get from authService
+  token: any = '';
+  currentPage = 1;
+  totalPages: number[] = [];
 
   constructor(
     private router: Router,
@@ -30,13 +33,15 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = this.authService.getToken(); // Get the token
-    this.fetchUsers();
+    this.fetchUsers(this.currentPage-1);
   }
 
-  fetchUsers(): void {
-    this.usersService.getUsers(this.token).subscribe(
+  fetchUsers(page: number = 1, pageSize: number = 10): void {
+    this.usersService.getUsers(this.token, page, pageSize).subscribe(
       (data) => {
-        this.users = data.data; // Assuming data contains the users array
+        this.users = data.content; // Assuming data contains the users array
+        this.currentPage = data.pageable.pageNumber + 1;
+        this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1);
       },
       (error) => {
         console.error('Error fetching users', error);
@@ -78,5 +83,9 @@ export class UsersComponent implements OnInit {
         console.log('Modal dismissed:', reason);
       }
     );
+  }
+
+  onPageChange(page: number): void {
+    this.fetchUsers(page - 1);
   }
 }

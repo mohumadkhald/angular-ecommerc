@@ -129,10 +129,10 @@ export class CartService implements OnInit {
       // Map each item to include productId, color, size, and quantity
       cartItems = cartItems.map((item: { product: { productId: any; color: any; size: any; quantity: any; price: any; }; }) => ({
         productId: item.product.productId,
-        color: item.product.color, // Adjust as per your data structure
-        size: item.product.size,   // Adjust as per your data structure
+        color: item.product.color,
+        size: item.product.size,
         quantity: item.product.quantity,
-        price: item.product.price,  // Adjust as per your data structure
+        price: item.product.price,
       }));
   
       // Get JWT token from AuthService

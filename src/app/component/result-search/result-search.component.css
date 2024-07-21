@@ -37,6 +37,45 @@ body {
     width: 100%;
   }
   
+  .sort-options {
+    margin-top: 10px;
+  }
+  .color-filter {
+    margin-top: 20px;
+  }
+  
+  .color-options {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .color-swatch {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .color-swatch input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .color-indicator {
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 5px;
+  }
+  
+  .color-swatch input:checked + .color-indicator {
+    border: 5px solid #000000; /* Change to desired border color for checked state */
+  }
+  
   .product-list {
     flex: 1;
     display: flex;

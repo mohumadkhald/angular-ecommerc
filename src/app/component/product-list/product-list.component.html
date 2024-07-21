@@ -15,7 +15,7 @@
       </ul>
     </div>
 
-    <div class="filters">
+    <div *ngIf="subCategoryName" class="filters">
       <h2>Filter</h2>
       <div class="availability">
         <h3>Availability</h3>
@@ -30,8 +30,23 @@
         </app-custom-range-slider>
         <p>Range: ${{ filters.minPrice }} - ${{ filters.maxPrice }}</p>
       </div>
-
+      <div class="color-filter">
+        <h3 style="margin: 0 5px;">Color</h3>
+        <div class="color-options">
+          <label *ngFor="let color of colorOptions" class="color-swatch">
+            <input type="checkbox" (change)="onColorChange(color, $event)">
+            <div class="color-indicator" [style.background]="color"></div>
+          </label>
+        </div>
+      </div>
+      
+      <div class="size-filter">
+        <h3 style="margin: 5px 0 5px;">Size</h3>
+        <label><input type="checkbox" (change)="onSizeChange('small', $event)"> Small</label>
+        <label><input type="checkbox" (change)="onSizeChange('medium', $event)"> Medium</label>
+      </div>
     </div>
+
   </div>
 
   <div style="height: 600px; width: 100%;" class="content-wrapper">
@@ -39,12 +54,7 @@
       [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
     </div>
     <div *ngIf="subCategoryName" class="sort-options">
-      <select id="sort" (change)="onSortChange($event)">
-        <option value="createdAtDesc">Sort By: Featured Products</option>
-        <option value="createdAtAsc">Sort By: Old Products</option>
-        <option value="priceAsc">Price (Low to High)</option>
-        <option value="priceDesc">Price (High to Low)</option>
-      </select>
+      <app-sort-options (change)="onSortChange($event)"></app-sort-options>
     </div>
     <main class="product-list" [ngStyle]="{'padding-bottom': subCategoryName ? '100px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
@@ -53,7 +63,7 @@
     <app-pagination *ngIf="subCategoryName" [currentPage]="currentPage" [totalPages]="totalPages"
       (pageChange)="onPageChange($event)">
     </app-pagination>
-    
+
     <div *ngIf="categoryTitle && !subCategoryName" class="shop-by-category">
       <h2 style="margin-left: 8.5vw; margin-top: 20px;">Shop by category</h2>
       <div class="slider-container" style="width: 83vw;">

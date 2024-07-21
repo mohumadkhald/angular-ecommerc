@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,12 +11,14 @@ export class UsersService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(token: any): Observable<any> {
+  getUsers(token: any, page: number, pageSize: number): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<any>(this.apiUrl, { headers });
+    const url = `${this.apiUrl}?page=${page}&pageSize=${pageSize}`;
+
+    return this.http.get<any>(url, { headers });
   }
   deleteUser(userId: number, token: string): Observable<any> {
     const headers = new HttpHeaders({

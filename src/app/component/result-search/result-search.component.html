@@ -4,18 +4,39 @@
       <h2>Filter</h2>
       <div class="availability">
         <h3>Availability</h3>
-        <label><input type="checkbox"> In Stock (26)</label>
-        <label><input type="checkbox"> Not Available (3)</label>
+        <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
+        <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
       </div>
       <div class="price-range">
-        <h3>Price</h3>
-        <input type="range" min="50" max="250" step="10">
-        <p>Range: $</p>
+        <h3 style="margin: 0; margin-top: 10px;">Price</h3>
+        <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
+          [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
+          (maxValueChange)="onPriceRangeChange()">
+        </app-custom-range-slider>
+        <p>Range: ${{ filters.minPrice }} - ${{ filters.maxPrice }}</p>
+      </div>
+      <div class="color-filter">
+        <h3 style="margin: 0 5px;">Color</h3>
+        <div class="color-options">
+          <label *ngFor="let color of colorOptions" class="color-swatch">
+            <input type="checkbox" (change)="onColorChange(color, $event)">
+            <div class="color-indicator" [style.background]="color"></div>
+          </label>
+        </div>
+      </div>
+      
+      <div class="size-filter">
+        <h3 style="margin: 5px 0 5px;">Size</h3>
+        <label><input type="checkbox" (change)="onSizeChange('small', $event)"> Small</label>
+        <label><input type="checkbox" (change)="onSizeChange('medium', $event)"> Medium</label>
       </div>
     </div>
   </div>
 
   <div style="height: 600px; width: 100%;" class="content-wrapper">
+    <div class="sort-options">
+      <app-sort-options (change)="onSortChange($event)"></app-sort-options>
+    </div>
     <main class="product-list">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>

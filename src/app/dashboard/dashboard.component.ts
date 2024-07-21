@@ -40,9 +40,9 @@ export class DashboardComponent implements OnInit {
 
   fetchUserCount() {
     const token = this.authService.getToken(); // Assuming you have a method to get the token
-    this.usersService.getUsers(token).subscribe(users => {
-      this.userCount = users.data.length;
-      console.log('User count:', this.userCount);
+    this.usersService.getUsers(token, 1, 10).subscribe(users => {
+      this.userCount = users.totalElements      ;
+      console.log('User count:', this.userCount, users);
     });
   }
   fetchCategoryCount() {

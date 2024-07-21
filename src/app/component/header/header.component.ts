@@ -5,7 +5,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from "../../service/auth.service";
 
 import { FormsModule } from '@angular/forms';
@@ -45,7 +45,8 @@ export class HeaderComponent implements OnInit {
     private cartServerService: CartServerService,
     private cartService: CartService,
     public toastService: ToastService,
-    private categoryUpdateService: CategoryUpdateService // Inject CategoryUpdateService
+    private categoryUpdateService: CategoryUpdateService, // Inject CategoryUpdateService
+    private route: ActivatedRoute
   ) {
     this.role = 'USER';
   }
@@ -82,6 +83,12 @@ export class HeaderComponent implements OnInit {
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
       this.loadCategories(); // Refresh categories when notified
+    });
+
+    // Retrieve search parameters from the URI
+    this.route.queryParams.subscribe(params => {
+      this.selectedCategory = params['category'] || 'all';
+      this.searchText = params['search'] || '';
     });
   }
 
@@ -133,6 +140,8 @@ export class HeaderComponent implements OnInit {
   goToSearchResult() {
     const categoryTitle = this.selectedCategory || 'all';
     const productName = this.searchText || '';
-    this.router.navigate(['categories/search', categoryTitle, productName]);
+    this.router.navigate(['categories/search', categoryTitle, productName], {
+      queryParams: { category: categoryTitle, search: productName }
+    });
   }
 }
