@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductsService } from '../../service/products.service';
@@ -20,9 +20,8 @@ import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-ran
 export class ResultSearchComponent implements OnInit {
   products: Product[] = [];
   currentPage = 1;
-  totalPages: number[] = [];  colorOptions: string[] = [
-    'red', 'yellow', 'blue', 'green'
-  ];
+  totalPages: number[] = [];
+  colorOptions: string[] = ['red', 'yellow', 'blue', 'green'];
   filters = {
     inStock: true,
     notAvailable: false,
@@ -33,21 +32,53 @@ export class ResultSearchComponent implements OnInit {
     sizes: [] as string[]
   };
   subCategoryName!: string;
+  categoryTitle!: string;
+  productName!: string;
+  sortBy = 'createdAt';
+  sortDirection = 'desc';
+currentSortOption!: string;
 
   constructor(
     private productService: ProductsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const categoryName = params.get('categoryTitle') || '';
-      const productName = params.get('productName') || '';
-      this.getProducts(categoryName, productName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+    this.route.queryParams.subscribe(params => {
+      this.categoryTitle = params['category'] || '';
+      this.productName = params['search'] || '';
+      this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
+      this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
+      this.filters.colors = params['colors'] ? params['colors'].split(',') : [];
+      this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
+      this.sortBy = params['sortBy'] || 'createdAt';
+      this.sortDirection = params['sortDirection'] || 'desc';
+  
+      // Construct currentSortOption from sortBy and sortDirection
+      this.currentSortOption = `${this.sortBy}${this.sortDirection.charAt(0).toUpperCase()}${this.sortDirection.slice(1)}`;
+  
+      console.log('Filters:', this.filters);
+      console.log('Sort By:', this.sortBy);
+      console.log('Sort Direction:', this.sortDirection);
+  
+      this.getProducts(this.categoryTitle, this.productName, this.sortBy, this.sortDirection, this.filters.minPrice, this.filters.maxPrice);
     });
   }
+  
+  
+  getProducts(categoryName: string, productName: string, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 0, maxPrice: number = 25000, page: number = 0, pageSize: number = 5): void {
+    console.log('Fetching products with:', {
+      categoryName,
+      productName,
+      sortBy,
+      sortDirection,
+      minPrice,
+      maxPrice,
+      page,
+      pageSize
+    });
 
-  getProducts(categoryName: string, productName: string, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 0, maxPrice: number = 2500, page: number = 0, pageSize: number = 5): void {
     this.productService.getProductsByCategoryAndProductName(categoryName, productName, sortBy, sortDirection, minPrice, maxPrice, page, pageSize, this.filters.colors, this.filters.sizes)
       .subscribe((response: PaginatedResponse<Product[]>) => {
         this.products = response.content;
@@ -57,46 +88,50 @@ export class ResultSearchComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
-    const productName = this.route.snapshot.paramMap.get('productName') || '';
-    this.getProducts(categoryName, productName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice, page-1);
+    this.updateQueryParams({ page });
+    this.getProducts(this.categoryTitle, this.productName, this.sortBy, this.sortDirection, this.filters.minPrice, this.filters.maxPrice, page - 1);
   }
 
   onSortChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
-    let sortBy = 'createdAt';
-    let sortDirection = 'desc';
-
+    let newSortBy = '';
+    let newSortDirection = '';
+  
     switch (value) {
       case 'createdAtAsc':
-        sortBy = 'createdAt';
-        sortDirection = 'asc';
+        newSortBy = 'createdAt';
+        newSortDirection = 'asc';
         break;
       case 'createdAtDesc':
-        sortBy = 'createdAt';
-        sortDirection = 'desc';
+        newSortBy = 'createdAt';
+        newSortDirection = 'desc';
         break;
       case 'priceAsc':
-        sortBy = 'price';
-        sortDirection = 'asc';
+        newSortBy = 'price';
+        newSortDirection = 'asc';
         break;
       case 'priceDesc':
-        sortBy = 'price';
-        sortDirection = 'desc';
+        newSortBy = 'price';
+        newSortDirection = 'desc';
         break;
     }
-
-    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
-    const productName = this.route.snapshot.paramMap.get('productName') || '';
-    this.getProducts(categoryName, productName, sortBy, sortDirection, this.filters.minPrice, this.filters.maxPrice);
-  }
-
-  onPriceRangeChange(): void {
-    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
-    const productName = this.route.snapshot.paramMap.get('productName') || '';
-    this.getProducts(categoryName, productName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+  
+    console.log('Sort Change:', { sortBy: newSortBy, sortDirection: newSortDirection });
+  
+    this.sortBy = newSortBy;
+    this.sortDirection = newSortDirection;
+    this.currentSortOption = `${newSortBy}${newSortDirection.charAt(0).toUpperCase()}${newSortDirection.slice(1)}`;
+  
+    this.updateQueryParams({ sortBy: newSortBy, sortDirection: newSortDirection });
+    this.getProducts(this.categoryTitle, this.productName, newSortBy, newSortDirection, this.filters.minPrice, this.filters.maxPrice);
   }
   
+  
+  onPriceRangeChange(): void {
+    this.updateQueryParams({ minPrice: this.filters.minPrice, maxPrice: this.filters.maxPrice });
+    this.getProducts(this.categoryTitle, this.productName, this.sortBy, this.sortDirection, this.filters.minPrice, this.filters.maxPrice);
+  }
+
   onColorChange(color: string, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -107,11 +142,10 @@ export class ResultSearchComponent implements OnInit {
         this.filters.colors.splice(index, 1);
       }
     }
-    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
-    const productName = this.route.snapshot.paramMap.get('productName') || '';
-    this.getProducts(categoryName, productName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+    this.updateQueryParams({ colors: this.filters.colors.join(',') });
+    this.getProducts(this.categoryTitle, this.productName, this.sortBy, this.sortDirection, this.filters.minPrice, this.filters.maxPrice);
   }
-  
+
   onSizeChange(size: string, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -122,8 +156,14 @@ export class ResultSearchComponent implements OnInit {
         this.filters.sizes.splice(index, 1);
       }
     }
-    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
-    const productName = this.route.snapshot.paramMap.get('productName') || '';
-    this.getProducts(categoryName, productName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+    this.updateQueryParams({ sizes: this.filters.sizes.join(',') });
+    this.getProducts(this.categoryTitle, this.productName, this.sortBy, this.sortDirection, this.filters.minPrice, this.filters.maxPrice);
   }
+
+  updateQueryParams(params: any): void {
+    const queryParams = { ...this.route.snapshot.queryParams, ...params };
+    console.log('Updating Query Params:', queryParams);
+    this.router.navigate([], { queryParams });
+  }
+  
 }

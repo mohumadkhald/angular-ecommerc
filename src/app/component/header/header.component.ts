@@ -41,17 +41,22 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
+    private route: ActivatedRoute,
     private categoryService: CategoryService,
     private cartServerService: CartServerService,
     private cartService: CartService,
     public toastService: ToastService,
-    private categoryUpdateService: CategoryUpdateService, // Inject CategoryUpdateService
-    private route: ActivatedRoute
+    private categoryUpdateService: CategoryUpdateService
   ) {
     this.role = 'USER';
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.selectedCategory = params['category'] || 'all';
+      this.searchText = params['search'] || '';
+    });
+
     this.userService.username$.subscribe(username => {
       if (username) {
         this.username = username;
@@ -83,12 +88,6 @@ export class HeaderComponent implements OnInit {
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
       this.loadCategories(); // Refresh categories when notified
-    });
-
-    // Retrieve search parameters from the URI
-    this.route.queryParams.subscribe(params => {
-      this.selectedCategory = params['category'] || 'all';
-      this.searchText = params['search'] || '';
     });
   }
 
@@ -140,8 +139,6 @@ export class HeaderComponent implements OnInit {
   goToSearchResult() {
     const categoryTitle = this.selectedCategory || 'all';
     const productName = this.searchText || '';
-    this.router.navigate(['categories/search', categoryTitle, productName], {
-      queryParams: { category: categoryTitle, search: productName }
-    });
+    this.router.navigate(['search'], { queryParams: { category: categoryTitle, search: productName } });
   }
 }

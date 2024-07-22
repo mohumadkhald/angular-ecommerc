@@ -39,7 +39,7 @@ export const routes: Routes = [
   { path: 'categories/:categoryTitle', component: ProductListComponent,
     data: {title: 'Category: :categoryTitle'}
   },
-  { path: 'categories/search/:categoryTitle/:productName', component: ResultSearchComponent,
+  { path: 'search', component: ResultSearchComponent,
     data: {title: 'Sub_Category: :subCategoryName'}
   },
   { path:'user/profile',component:ProfileComponent,title: "Profile", canActivate: [authGuardGuard] },

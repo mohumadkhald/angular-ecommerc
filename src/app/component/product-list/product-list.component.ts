@@ -51,7 +51,7 @@ export class ProductListComponent implements OnInit {
   colorOptions: string[] = [
     'red', 'yellow', 'blue', 'green'
   ];
-  
+
   filters = {
     inStock: true,
     notAvailable: false,
@@ -72,6 +72,12 @@ export class ProductListComponent implements OnInit {
   currentCategoryImage: any;
   currentPage = 1;
   totalPages: number[] = [];
+  sortedProducts: Array<{ name: any, price: any }> = [];
+  sortBy = 'createdAt';
+  sortDirection = 'desc';
+  selectedSort: string = 'createdAtDesc';
+  currentSortOption!: string;
+  private hasQueryParams = false;
 
   constructor(
     private router: Router,
@@ -85,19 +91,45 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Handle paramMap changes
     this.route.paramMap.subscribe(paramMap => {
       this.categoryTitle = paramMap.get('categoryTitle');
       this.subCategoryName = paramMap.get('subCategoryName');
       this.loadSubCategories();
-      this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
       this.currentCategoryImage = localStorage.getItem('imgCat');
       this.updatePageTitle();
-      this.loadSubCategories();
+      this.hasQueryParams = false;
+
+      // Load products if no query params present
+      if (!this.hasQueryParams) {
+        setTimeout(() => {
+          this.loadProducts()
+        }, 200);
+      }
     });
 
-    setTimeout(() => {
-      this.loading = false;
-    }, 200);
+    // Handle queryParams changes
+    this.route.queryParams.subscribe(params => {
+      this.hasQueryParams = Object.keys(params).length > 0;
+
+      this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
+      this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
+      this.filters.colors = params['colors'] ? params['colors'].split(',') : [];
+      this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
+      this.sortBy = params['sortBy'] || 'createdAt';
+      this.sortDirection = params['sortDirection'] || 'desc';
+      this.currentPage = +params['page'] || 1;
+
+      // Construct currentSortOption from sortBy and sortDirection
+      this.currentSortOption = `${this.sortBy}${this.sortDirection.charAt(0).toUpperCase()}${this.sortDirection.slice(1)}`;
+
+      // Load products based on query params
+      if (this.hasQueryParams) {
+        this.loadProducts();
+      }
+    });
+
+    // Initialize sortedProducts
     this.sortedProducts = [...this.products];
   }
 
@@ -126,15 +158,26 @@ export class ProductListComponent implements OnInit {
     }
   }
 
-  loadProducts(subCategoryName: any, sortBy: string = 'createdAt', sortDirection: string = 'desc', minPrice: number = 50, maxPrice: number = 250, page: number = 0, pageSize: number = 5): void {
-    if (subCategoryName) {
-      this.productService.getProducts(subCategoryName, sortBy, sortDirection, minPrice, maxPrice, page, pageSize, this.filters.colors, this.filters.sizes)
-      .subscribe((response: PaginatedResponse<Product[]>) => {
+  loadProducts(): void {
+    if (this.subCategoryName) {
+      this.productService.getProducts(
+        this.subCategoryName,
+        this.sortBy,
+        this.sortDirection,
+        this.filters.minPrice,
+        this.filters.maxPrice,
+        this.currentPage - 1, // Adjust page number for API
+        5,
+        this.filters.colors,
+        this.filters.sizes
+      ).subscribe((response: PaginatedResponse<Product[]>) => {
+        this.loading = false;
         this.products = response.content;
-        this.currentPage = response.pageable.pageNumber + 1;
+        this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
         this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
       });
     } else {
+      this.loading = false;
       this.products = [];
     }
   }
@@ -157,6 +200,7 @@ export class ProductListComponent implements OnInit {
     this.currentCategoryName = this.categories.find(category => category.categoryId)?.categoryTitle || 'Category';
     localStorage.setItem('currentCategoryImage', this.currentCategoryImage);
     this.updatePageTitle();
+    this.router.navigate([], { queryParams: {} }); // Reset query params when selecting a new category
   }
 
   private updatePageTitle() {
@@ -170,7 +214,14 @@ export class ProductListComponent implements OnInit {
     this.titleService.setTitle(pageTitle);
     return pageTitle;
   }
-  title: string = this.updatePageTitle();
+
+  private updateQueryParams(params: any): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { ...this.route.snapshot.queryParams, ...params },
+      queryParamsHandling: 'merge'  // Merge with existing query params
+    });
+  }
 
   redirectToDetails(id: number) {
     this.router.navigate([`product/details/${id}`]);
@@ -187,8 +238,6 @@ export class ProductListComponent implements OnInit {
   scrollRight(slider: HTMLElement) {
     slider.scrollBy({ left: 955, behavior: 'smooth' });
   }
-
-  sortedProducts: Array<{ name: any, price: any }> = [];
 
   onSortChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
@@ -214,13 +263,16 @@ export class ProductListComponent implements OnInit {
         break;
     }
 
-    this.loadProducts(this.subCategoryName, sortBy, sortDirection, this.filters.minPrice, this.filters.maxPrice);
+    this.currentSortOption = value;
+    this.updateQueryParams({ sortBy, sortDirection });
+    this.loadProducts();
   }
 
   onPriceRangeChange(): void {
-    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+    this.updateQueryParams({ minPrice: this.filters.minPrice, maxPrice: this.filters.maxPrice });
+    this.loadProducts();
   }
-  
+
   onColorChange(color: string, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -231,9 +283,10 @@ export class ProductListComponent implements OnInit {
         this.filters.colors.splice(index, 1);
       }
     }
-    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+    this.updateQueryParams({ colors: this.filters.colors.join(',') });
+    this.loadProducts();
   }
-  
+
   onSizeChange(size: string, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -244,12 +297,12 @@ export class ProductListComponent implements OnInit {
         this.filters.sizes.splice(index, 1);
       }
     }
-    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice);
+    this.updateQueryParams({ sizes: this.filters.sizes.join(',') });
+    this.loadProducts();
   }
 
   onPageChange(page: number): void {
-    const categoryName = this.route.snapshot.paramMap.get('categoryTitle') || '';
-    const productName = this.route.snapshot.paramMap.get('productName') || '';
-    this.loadProducts(this.subCategoryName, 'createdAt', 'desc', this.filters.minPrice, this.filters.maxPrice, page-1);
+    this.updateQueryParams({ page });
+    this.loadProducts();
   }
 }

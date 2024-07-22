@@ -1,4 +1,4 @@
-<select id="sort">
+<select (change)="onSortChange($event)" [ngModel]="currentSortOption">
     <option value="createdAtDesc">Sort By: Featured Products</option>
     <option value="createdAtAsc">Sort By: Old Products</option>
     <option value="priceAsc">Price (Low to High)</option>

@@ -19,29 +19,28 @@
         <h3 style="margin: 0 5px;">Color</h3>
         <div class="color-options">
           <label *ngFor="let color of colorOptions" class="color-swatch">
-            <input type="checkbox" (change)="onColorChange(color, $event)">
+            <input type="checkbox" [checked]="filters.colors.includes(color)" (change)="onColorChange(color, $event)">
             <div class="color-indicator" [style.background]="color"></div>
           </label>
         </div>
       </div>
-      
       <div class="size-filter">
         <h3 style="margin: 5px 0 5px;">Size</h3>
-        <label><input type="checkbox" (change)="onSizeChange('small', $event)"> Small</label>
-        <label><input type="checkbox" (change)="onSizeChange('medium', $event)"> Medium</label>
+        <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
+            (change)="onSizeChange('small', $event)"> Small</label>
+        <label><input type="checkbox" [checked]="filters.sizes.includes('medium')"
+            (change)="onSizeChange('medium', $event)"> Medium</label>
       </div>
     </div>
   </div>
-
   <div style="height: 600px; width: 100%;" class="content-wrapper">
     <div class="sort-options">
-      <app-sort-options (change)="onSortChange($event)"></app-sort-options>
+      <app-sort-options [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
     </div>
     <main class="product-list">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>
-
-    <!-- Pagination Component -->
-    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-pagination>
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+      (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 </div>
