@@ -19,6 +19,7 @@ import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-ran
 import { PaginatedResponse, Product } from "../interface/product";
 import { PaginationComponent } from "../../pagination/pagination.component";
 import { SortOptionsComponent } from "../../sort-options/sort-options.component";
+import { ExpiredSessionDialogComponent } from "../../expired-session-dialog/expired-session-dialog.component";
 
 @Component({
     selector: 'app-product-list',
@@ -106,7 +107,15 @@ export class ProductListComponent implements OnInit {
           this.loadProducts()
         }, 200);
       }
-    });
+    }, error => {
+      if (error.status === 403 || error.status === 401) {
+        localStorage.removeItem("token");
+        this.showExpiredSessionDialog("Your Session Expired",`categroies/${this.categoryTitle}`);
+      } else {
+        console.error('Error loading subcategories:', error);
+      }
+    }
+  );
 
     // Handle queryParams changes
     this.route.queryParams.subscribe(params => {
@@ -127,7 +136,19 @@ export class ProductListComponent implements OnInit {
       if (this.hasQueryParams) {
         this.loadProducts();
       }
-    });
+    },
+    error => {
+      if (error.status === 403 || error.status === 401) {
+        localStorage.removeItem("token");
+        this.showExpiredSessionDialog("Your Session Expired",`categroies/${this.categoryTitle}`);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      } else {
+        console.error('Error loading subcategories:', error);
+      }
+    }
+  );
 
     // Initialize sortedProducts
     this.sortedProducts = [...this.products];
@@ -140,6 +161,13 @@ export class ProductListComponent implements OnInit {
       data: { message: message },
     });
   }
+  showExpiredSessionDialog(message: string, path: string): void {
+    this.dialog.open(ExpiredSessionDialogComponent, {
+      width: '350px',
+      height: '200px',
+      data: { message: message, path: path },
+    });
+  }
 
   loadSubCategories(): void {
     if (this.categoryTitle) {
@@ -148,8 +176,12 @@ export class ProductListComponent implements OnInit {
           this.subCategories = subCategories;
         },
         error => {
-          if (error.status === 403) {
+          if (error.status === 403 || error.status === 401) {
             localStorage.removeItem("token");
+            this.showExpiredSessionDialog("Your Session Expired",`categroies/${this.categoryTitle}`);
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000)
           } else {
             console.error('Error loading subcategories:', error);
           }
@@ -175,6 +207,16 @@ export class ProductListComponent implements OnInit {
         this.products = response.content;
         this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
         this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
+      }, error => {
+        if (error.status === 403 || error.status === 401) {
+          localStorage.removeItem("token");
+          this.showExpiredSessionDialog("Your Session Expired",`categroies/${this.categoryTitle}`);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000)
+        } else {
+          console.error('Error loading subcategories:', error);
+        }
       });
     } else {
       this.loading = false;

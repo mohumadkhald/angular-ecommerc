@@ -44,9 +44,12 @@ export class CartComponent implements OnInit {
           console.log(this.cartItems1)
         },
         (error) => {
-          if (error.status === 403) {
+          if (error.status === 403 || error.status === 401) {
             localStorage.removeItem("token");
-            this.showExpiredSessionDialog("Your Session Expired");
+            this.showExpiredSessionDialog("Your Session Expired", "cart");
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000)
           }
         }
       );
@@ -55,11 +58,11 @@ export class CartComponent implements OnInit {
       this.updateTotalPrice();
     }
   }
-  showExpiredSessionDialog(message: string): void {
+  showExpiredSessionDialog(message: string, path: string): void {
     this.dialog.open(ExpiredSessionDialogComponent, {
       width: '350px',
       height: '200px',
-      data: { message: message },
+      data: { message: message, path: path },
     });
   }
 
@@ -87,7 +90,13 @@ export class CartComponent implements OnInit {
           console.log(this.cartItems1)
         },
         (error) => {
-          console.error('Error fetching cart:', error);
+          if (error.status === 403 || error.status === 401) {
+            localStorage.removeItem("token");
+            this.showExpiredSessionDialog("Your Session Expired", "cart");
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000)
+          }
         }
       );
     }
@@ -114,7 +123,13 @@ export class CartComponent implements OnInit {
           console.log(this.cartItems1)
         },
         (error) => {
-          console.error('Error fetching cart:', error);
+          if (error.status === 403 || error.status === 401) {
+            localStorage.removeItem("token");
+            this.showExpiredSessionDialog("Your Session Expired", "cart");
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000)
+          }
         }
       );
     }

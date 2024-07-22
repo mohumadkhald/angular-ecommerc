@@ -63,7 +63,7 @@ export class ProductsComponent {
   }
 
   detailsProdcut(prodId: number): void {
-    this.router.navigate([`dashboard/users/${prodId}`]);
+    this.router.navigate([`dashboard/products/${prodId}`]);
   }
 
   open() {

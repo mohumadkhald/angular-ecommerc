@@ -18,6 +18,7 @@ import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.
 import { UsersComponent } from './dashboard/users/users.component';
 import { AdminGuard } from './admin.guard';
 import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
+import { ProductDetailsComponent } from './dashboard/product-details/product-details.component';
 
 
 
@@ -29,7 +30,8 @@ export const routes: Routes = [
     { path: 'products', component: ProductsComponent },
     { path: 'cart', component: CartComponent },
     { path: 'orders', component: OrdersComponent },
-    { path: 'users/:id', component: UsersDetailsComponent}
+    { path: 'users/:id', component: UsersDetailsComponent},
+    { path: "products/:id", component: ProductDetailsComponent}
   ]},
   { path: '', component: HomeComponent ,title: "Home"},
   { path: 'products', component: ProductListComponent ,title: "Products"},

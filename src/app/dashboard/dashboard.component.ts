@@ -5,6 +5,8 @@ import { UsersService } from '../dashboard-service/users.service';
 import { AuthService } from '../service/auth.service';
 import { CategoriesService } from '../dashboard-service/categories.service';
 import { ProductsService } from '../dashboard-service/products.service';
+import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -28,7 +30,9 @@ export class DashboardComponent implements OnInit {
       private usersService: UsersService,
       private categoriesService: CategoriesService,
       private productService: ProductsService,
-      private authService: AuthService
+      private authService: AuthService,
+      private dialog: MatDialog,
+
     ) {}
 
   ngOnInit(): void {
@@ -44,11 +48,28 @@ export class DashboardComponent implements OnInit {
     this.fetchProductCount()
   }
 
+  showExpiredSessionDialog(message: string): void {
+    this.dialog.open(ExpiredSessionDialogComponent, {
+      width: '350px',
+      height: '200px',
+      data: { message: message },
+    });
+  }
   fetchUserCount() {
     const token = this.authService.getToken();
     this.usersService.getUsers(token, 1, 10).subscribe(users => {
       this.userCount = users.totalElements      ;
       console.log('User count:', this.userCount, users);
+    }, error => {
+      if (error.status === 403 || error.status === 401) {
+        localStorage.removeItem("token");
+        this.showExpiredSessionDialog("Your Session Expired");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      } else {
+        console.error('Error loading subcategories:', error);
+      }
     });
   }
   fetchCategoryCount() {
@@ -56,6 +77,16 @@ export class DashboardComponent implements OnInit {
     this.categoriesService.getAllCategories().subscribe(cats => {
       this.catsCount = cats.length;
       console.log('Category count:', this.catsCount);
+    }, error => {
+      if (error.status === 403 || error.status === 401) {
+        localStorage.removeItem("token");
+        this.showExpiredSessionDialog("Your Session Expired");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      } else {
+        console.error('Error loading subcategories:', error);
+      }
     });
   }
 
@@ -63,6 +94,16 @@ export class DashboardComponent implements OnInit {
     this.productService.getAllProducts(1, 10).subscribe(products => {
       this.prodsCount = products.totalElements;
       console.log('Category count:', products);
+    }, error => {
+      if (error.status === 403 || error.status === 401) {
+        localStorage.removeItem("token");
+        this.showExpiredSessionDialog("Your Session Expired");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      } else {
+        console.error('Error loading subcategories:', error);
+      }
     });
   }
 }
