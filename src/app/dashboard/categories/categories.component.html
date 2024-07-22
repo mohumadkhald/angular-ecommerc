@@ -7,8 +7,9 @@
                 <tr>
                     <th>#ID</th>
                     <th>Category Name</th>
-                    <th>Control</th>
                     <th>Image</th>
+                    <th>Total Subcategories</th>
+                    <th>Control</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +17,7 @@
                     <td>{{ category.categoryId }}</td>
                     <td>{{ category.categoryTitle }}</td>
                     <td><img [width]="100" [src]="category.img"></td>
+                    <td>{{ getCountOfSubCats(category.categoryTitle) }}</td>
                     <td>
                         <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
                             Edit</a>

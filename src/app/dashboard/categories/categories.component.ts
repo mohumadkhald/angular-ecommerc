@@ -8,6 +8,8 @@ import { DashboardComponent } from '../dashboard.component';
 import { CommonModule } from '@angular/common';
 import { AddCategoryComponent } from '../add-category/add-category.component';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
+import { ProductListComponent } from '../../component/product-list/product-list.component';
+import { CategoryService } from '../../service/category.service';
 
 @Component({
   selector: 'app-categories',
@@ -19,6 +21,7 @@ import { CategoryUpdateService } from '../../dashboard-service/category-update.s
 export class CategoriesComponent implements OnInit {
   categories: any[] = [];
   token: any;
+  subCategoryCounts: { [key: string]: number } = {};
 
   constructor(
     private router: Router,
@@ -27,7 +30,8 @@ export class CategoriesComponent implements OnInit {
     private modalService: NgbModal,
     public toastService: ToastService,
     private dashboardComponent: DashboardComponent,
-    private categoryUpdateService: CategoryUpdateService // Inject CategoryUpdateService
+    private catService: CategoryService,
+    private categoryUpdateService: CategoryUpdateService
   ) { }
 
   ngOnInit(): void {
@@ -37,14 +41,39 @@ export class CategoriesComponent implements OnInit {
 
   getAllCategories(): void {
     this.categoryService.getAllCategories().subscribe(
-      (data) => {
-        this.categories = data;
+      (categoriesData) => {
+        this.categories = categoriesData;
         console.log(this.categories);
+        this.loadSubCategories(); // Fetch subcategories after categories are loaded
       },
       (error) => {
         console.error('Error fetching categories', error);
       }
     );
+  }
+
+  loadSubCategories(): void {
+    const categoryTitles = this.categories.map(category => category.categoryTitle);
+    
+    // Use a promise to handle sequential API calls
+    const promises = categoryTitles.map(title => 
+      this.catService.getSubCategoriesByCategoryTitle(title).toPromise()
+    );
+
+    // Process each promise sequentially
+    Promise.all(promises).then(results => {
+      results.forEach((subCategories, index) => {
+        const title = categoryTitles[index];
+        this.subCategoryCounts[title] = subCategories.length;
+      });
+      console.log(this.subCategoryCounts);
+    }).catch(error => {
+      if (error.status === 403) {
+        localStorage.removeItem("token");
+      } else {
+        console.error('Error loading subcategories:', error);
+      }
+    });
   }
 
   deleteCategory(catId: number): void {
@@ -79,5 +108,9 @@ export class CategoriesComponent implements OnInit {
         console.log('Modal dismissed:', reason);
       }
     );
+  }
+
+  getCountOfSubCats(categoryTitle: string): number {
+    return this.subCategoryCounts[categoryTitle] || 0;
   }
 }
