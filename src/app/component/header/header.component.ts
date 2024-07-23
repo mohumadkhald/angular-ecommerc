@@ -96,10 +96,6 @@ export class HeaderComponent implements OnInit {
       response => {
         console.log('Logout successful', response);
         this.router.navigate(['/login']);
-      },
-      error => {
-        console.error('Logout error', error);
-        localStorage.removeItem("token");
       }
     );
   }

@@ -7,11 +7,13 @@ import { PaginationComponent } from "../../component/pagination/pagination.compo
 import { ProductsService } from '../../dashboard-service/products.service';
 import { ToastService } from '../../service/toast.service';
 import { DashboardComponent } from '../dashboard.component';
+import { AuthService } from '../../service/auth.service';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [PaginationComponent, CommonModule],
+  imports: [PaginationComponent, CommonModule, SidebarComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
@@ -26,6 +28,7 @@ export class ProductsComponent {
     private prodcutsService: ProductsService,
     private modalService: NgbModal,
     public toastService: ToastService,
+    private authService: AuthService,
     private dashboardComponent: DashboardComponent // Inject DashboardComponent
   ) { }
 
@@ -85,5 +88,8 @@ export class ProductsComponent {
 
   onPageChange(page: number): void {
     this.fetchProducts(page - 1);
+  }
+  auth(): boolean {
+    return this.authService.isLoggedIn();
   }
 }

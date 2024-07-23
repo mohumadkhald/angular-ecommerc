@@ -7,12 +7,13 @@ import { CategoriesService } from '../dashboard-service/categories.service';
 import { ProductsService } from '../dashboard-service/products.service';
 import { UsersService } from '../dashboard-service/users.service';
 import { AuthService } from '../service/auth.service';
+import { SidebarComponent } from "./sidebar/sidebar.component";
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, NgIf],
+  imports: [RouterOutlet, RouterLink, NgIf, SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -40,6 +41,13 @@ export class DashboardComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.showStats = event.url === '/dashboard';
+      }
+    }, (error) => {
+      if (error.status === 403 || error.status === 401) {
+        this.showExpiredSessionDialog("Your Session Expired");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
       }
     });
 
@@ -105,5 +113,9 @@ export class DashboardComponent implements OnInit {
         console.error('Error loading subcategories:', error);
       }
     });
+  }
+
+  auth(): boolean {
+    return this.authService.isLoggedIn();
   }
 }

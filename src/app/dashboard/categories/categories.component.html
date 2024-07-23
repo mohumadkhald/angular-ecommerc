@@ -1,38 +1,40 @@
-<h1 class="text-center my-2">Manage Categories</h1>
-<div class="container">
-    <div class="table-responsive">
-        <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Category</a>
-        <table *ngIf="categories.length > 0; else noUsers" class="main-table table table-striped table-bordered table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <th>#ID</th>
-                    <th>Category Name</th>
-                    <th>Image</th>
-                    <th>Total Subcategories</th>
-                    <th>Control</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let category of categories">
-                    <td>{{ category.categoryId }}</td>
-                    <td>{{ category.categoryTitle }}</td>
-                    <td><img [width]="100" [src]="category.img"></td>
-                    <td>{{ getCountOfSubCats(category.categoryTitle) }}</td>
-                    <td>
-                        <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
-                            Edit</a>
-                        <a class="btn btn-danger btn-sm confirm" (click)="deleteCategory(category.categoryId)"><i
-                                class="fas fa-trash-alt"></i> Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <ng-template #noUsers>
-            <p>No Categories found.</p>
-        </ng-template>
+<div *ngIf="auth()">
+    <h1 class="text-center my-2">Manage Categories</h1>
+    <div class="container">
+        <div class="table-responsive">
+            <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Category</a>
+            <table *ngIf="categories.length > 0; else noUsers" class="main-table table table-striped table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#ID</th>
+                        <th>Category Name</th>
+                        <th>Image</th>
+                        <th>Total Subcategories</th>
+                        <th>Control</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let category of categories">
+                        <td>{{ category.categoryId }}</td>
+                        <td>{{ category.categoryTitle }}</td>
+                        <td><img [width]="100" [src]="category.img"></td>
+                        <td>{{ getCountOfSubCats(category.categoryTitle) }}</td>
+                        <td>
+                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
+                                Edit</a>
+                            <a class="btn btn-danger btn-sm confirm" (click)="deleteCategory(category.categoryId)"><i
+                                    class="fas fa-trash-alt"></i> Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ng-template #noUsers>
+                <p>No Categories found.</p>
+            </ng-template>
+        </div>
     </div>
-</div>
-
-<div *ngIf="toastService.toast" class="toast-container">
-    {{ toastService.toast }}
+    
+    <div *ngIf="toastService.toast" class="toast-container">
+        {{ toastService.toast }}
+    </div>
 </div>

@@ -2,11 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UsersService } from '../../dashboard-service/users.service';
 import { NgIf } from '@angular/common';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-users-details',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, SidebarComponent],
   templateUrl: './users-details.component.html',
   styleUrl: './users-details.component.css'
 })

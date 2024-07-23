@@ -18,7 +18,6 @@ import { ExpiredSessionDialogComponent } from "../expired-session-dialog/expired
 import { PaginatedResponse, Product } from "../interface/product";
 import { PaginationComponent } from "../pagination/pagination.component";
 import { ProductModalComponent } from '../product-modal/product-modal.component';
-import { SidebarComponent } from "../sidebar/sidebar.component";
 import { SortOptionsComponent } from "../sort-options/sort-options.component";
 
 @Component({
@@ -30,7 +29,6 @@ import { SortOptionsComponent } from "../sort-options/sort-options.component";
     NgForOf,
     NgIf,
     ProductCardComponent,
-    SidebarComponent,
     FormsModule,
     CurrencyPipe,
     NgClass,

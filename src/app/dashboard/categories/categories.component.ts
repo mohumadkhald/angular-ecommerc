@@ -10,11 +10,12 @@ import { AddCategoryComponent } from '../add-category/add-category.component';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
 import { ProductListComponent } from '../../component/product-list/product-list.component';
 import { CategoryService } from '../../service/category.service';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SidebarComponent],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css'
 })
@@ -112,5 +113,8 @@ export class CategoriesComponent implements OnInit {
 
   getCountOfSubCats(categoryTitle: string): number {
     return this.subCategoryCounts[categoryTitle] || 0;
+  }
+  auth(): boolean {
+    return this.authService.isLoggedIn();
   }
 }

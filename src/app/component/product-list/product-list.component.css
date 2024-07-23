@@ -69,15 +69,6 @@ a {
   display: flex;
 }
 
-.sidebar {
-  min-height: 100vh;
-  width: 250px;
-  padding: 20px;
-  margin: 10px;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
 .categories h2, .filters h2 {
   margin-top: 0;
 }
@@ -233,6 +224,8 @@ button:hover {
   width: 250px; /* Adjust width as needed */
   padding: 20px;
   background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: auto;
 }
 
 .content-wrapper {
@@ -259,6 +252,8 @@ button:hover {
 }
   .sidebar {
     width: 25%;
+    height: auto;
+    padding: 20px;
   }
 
 }

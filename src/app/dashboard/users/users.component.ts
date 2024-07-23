@@ -8,11 +8,12 @@ import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { DashboardComponent } from '../dashboard.component';
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgFor, NgIf, PaginationComponent],
+  imports: [NgFor, NgIf, PaginationComponent, SidebarComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
@@ -88,4 +89,8 @@ export class UsersComponent implements OnInit {
   onPageChange(page: number): void {
     this.fetchUsers(page - 1);
   }
+  auth(): boolean {
+    return this.authService.isLoggedIn();
+  }
+  
 }

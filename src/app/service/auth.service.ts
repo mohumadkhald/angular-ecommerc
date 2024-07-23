@@ -21,6 +21,7 @@ export class AuthService {
       tap((response: any) => {
         if (response && response.token) {
           this.saveToken(response.token);
+          this.setLogoutTimeout(); // Schedule automatic logout
         }
       })
     );
@@ -86,6 +87,7 @@ export class AuthService {
     }).pipe(
       tap(() => {
         this.cookieService.delete(this.tokenKey);
+        this.cookieService.delete('tokenExpiry'); // Also remove the expiration cookie
       })
     );
   }
@@ -96,12 +98,32 @@ export class AuthService {
 
   saveToken(token: string): void {
     const expiryDate = new Date();
-    expiryDate.setSeconds(expiryDate.getSeconds() + 10); // Add 10 seconds to the current time
+    expiryDate.setDate(expiryDate.getDate() + 1); // Set expiration to 1 day from now
     this.cookieService.set(this.tokenKey, token, { expires: expiryDate });
+  
+    // Save the expiration time in another cookie
+    this.cookieService.set('tokenExpiry', expiryDate.getTime().toString(), { expires: expiryDate });
   }
   
 
   getToken(): string | null {
     return this.cookieService.get(this.tokenKey);
   }
+
+  private setLogoutTimeout(): void {
+    const expiryTime = this.cookieService.get('tokenExpiry');
+    if (expiryTime) {
+      const expiryDate = new Date(parseInt(expiryTime, 10));
+      const now = new Date();
+      const timeLeft = expiryDate.getTime() - now.getTime();
+  
+      // Ensure logout is scheduled before the cookie expires
+      if (timeLeft > 0) {
+        setTimeout(() => {
+          this.logout().subscribe();
+        }, Math.max(timeLeft - 5000, 0));
+      }
+    }
+  }
+  
 }

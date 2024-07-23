@@ -1,37 +1,37 @@
 import { Routes } from '@angular/router';
-import {AuthComponent} from "./component/auth/auth.component";
-import {HomeComponent} from "./component/home/home.component";
-import {authGuardGuard} from "./utils/auth-guard.guard";
-import {AboutComponent} from "./component/about/about.component";
-import {ContactComponent} from "./component/contact/contact.component";
-import {CartComponent} from "./component/cart/cart.component";
-import {NotfoundComponent} from "./component/notfound/notfound.component";
-import {ProfileComponent} from "./component/profile/profile.component";
-import {ProductListComponent} from "./component/product-list/product-list.component";
+import { AboutComponent } from "./component/about/about.component";
+import { AuthComponent } from "./component/auth/auth.component";
+import { CartComponent } from "./component/cart/cart.component";
+import { ContactComponent } from "./component/contact/contact.component";
+import { HomeComponent } from "./component/home/home.component";
+import { NotfoundComponent } from "./component/notfound/notfound.component";
 import { PageDetailsComponent } from './component/page-details/page-details.component';
+import { ProductListComponent } from "./component/product-list/product-list.component";
+import { ProfileComponent } from "./component/profile/profile.component";
 import { ResultSearchComponent } from './component/result-search/result-search.component';
 import { CategoriesComponent } from './dashboard/categories/categories.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
+import { ProductDetailsComponent } from './dashboard/product-details/product-details.component';
 import { ProductsComponent } from './dashboard/products/products.component';
 import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.component';
-import { UsersComponent } from './dashboard/users/users.component';
-import { AdminGuard } from './admin.guard';
 import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
-import { ProductDetailsComponent } from './dashboard/product-details/product-details.component';
+import { UsersComponent } from './dashboard/users/users.component';
+import { AdminGuard } from './utils/admin.guard';
+import { authGuardGuard } from "./utils/auth-guard.guard";
 
 
 
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard], children: [
-    { path: 'users', component: UsersComponent },
-    { path: 'categories', component: CategoriesComponent },
-    { path: 'subcategories', component: SubcategoriesComponent },
-    { path: 'products', component: ProductsComponent },
-    { path: 'cart', component: CartComponent },
-    { path: 'orders', component: OrdersComponent },
-    { path: 'users/:id', component: UsersDetailsComponent},
-    { path: "products/:id", component: ProductDetailsComponent}
+  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", canActivate: [AdminGuard], children: [
+    { path: 'users', component: UsersComponent, title: "Users" },
+    { path: 'categories', component: CategoriesComponent, title: "Categories" },
+    { path: 'subcategories', component: SubcategoriesComponent, title: "Subcategories" },
+    { path: 'products', component: ProductsComponent, title: "Products" },
+    { path: 'cart', component: CartComponent, title: "Cart" },
+    { path: 'orders', component: OrdersComponent, title: "orders" },
+    { path: 'users/:id', component: UsersDetailsComponent, title: "UserDetails" },
+    { path: "products/:id", component: ProductDetailsComponent, title: "product Details" }
   ]},
   { path: '', component: HomeComponent ,title: "Home"},
   { path: 'products', component: ProductListComponent ,title: "Products"},

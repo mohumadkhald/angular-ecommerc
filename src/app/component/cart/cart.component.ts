@@ -45,7 +45,6 @@ export class CartComponent implements OnInit {
         },
         (error) => {
           if (error.status === 403 || error.status === 401) {
-            localStorage.removeItem("token");
             this.showExpiredSessionDialog("Your Session Expired", "cart");
             setTimeout(() => {
               window.location.reload();
@@ -91,7 +90,6 @@ export class CartComponent implements OnInit {
         },
         (error) => {
           if (error.status === 403 || error.status === 401) {
-            localStorage.removeItem("token");
             this.showExpiredSessionDialog("Your Session Expired", "cart");
             setTimeout(() => {
               window.location.reload();
@@ -124,7 +122,6 @@ export class CartComponent implements OnInit {
         },
         (error) => {
           if (error.status === 403 || error.status === 401) {
-            localStorage.removeItem("token");
             this.showExpiredSessionDialog("Your Session Expired", "cart");
             setTimeout(() => {
               window.location.reload();

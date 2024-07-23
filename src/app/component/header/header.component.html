@@ -14,7 +14,7 @@
     </button>
   </div>
   <div class="menu" style="margin-right: 20px;">
-    <a *ngIf='role=="ADMIN";' routerLink="dashboard">Dashboard</a>
+    <a *ngIf='auth() && role=="ADMIN";' routerLink="dashboard">Dashboard</a>
     <a href="#">
       <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="Egypt Flag"
         class="flag-icon">
