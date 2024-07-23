@@ -36,7 +36,7 @@ export class UsersComponent implements OnInit {
     this.fetchUsers(this.currentPage-1);
   }
 
-  fetchUsers(page: number = 1, pageSize: number = 10): void {
+  fetchUsers(page: number = 1, pageSize: number = 15): void {
     this.usersService.getUsers(this.token, page, pageSize).subscribe(
       (data) => {
         this.users = data.content; // Assuming data contains the users array
