@@ -1,14 +1,14 @@
 // cart.component.ts
 import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
-import { CartItem } from '../interface/cat';
 import { ToastService } from '../../service/toast.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ExpiredSessionDialogComponent } from '../../expired-session-dialog/expired-session-dialog.component';
+import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
+import { CartItem } from '../interface/cat';
 
 @Component({
   standalone: true,

@@ -7,9 +7,8 @@ import { ToastService } from '../../service/toast.service';
 import { UserService } from "../../service/user.service";
 import { Product } from "../interface/product";
 import { ProductCardComponent } from '../product-card/product-card.component';
-import { ProductModalComponent } from "../product-modal/product-modal.component";
-import { SetFirstPasswordComponent } from '../../set-first-password/set-first-password.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SetFirstPasswordComponent } from '../set-first-password/set-first-password.component';
 @Component({
     standalone: true,
     selector: 'app-home',

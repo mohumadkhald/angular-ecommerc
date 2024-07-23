@@ -1,13 +1,13 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PaginationComponent } from "../../component/pagination/pagination.component";
 import { UsersService } from '../../dashboard-service/users.service';
 import { AuthService } from '../../service/auth.service';
-import { NgFor, NgIf } from '@angular/common';
-import { Router } from '@angular/router';
-import { AddUserComponent } from '../add-user/add-user.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../service/toast.service';
+import { AddUserComponent } from '../add-user/add-user.component';
 import { DashboardComponent } from '../dashboard.component';
-import { PaginationComponent } from "../../pagination/pagination.component";
 
 @Component({
   selector: 'app-users',

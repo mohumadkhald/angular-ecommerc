@@ -1,12 +1,12 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { UsersService } from '../dashboard-service/users.service';
-import { AuthService } from '../service/auth.service';
+import { ExpiredSessionDialogComponent } from '../component/expired-session-dialog/expired-session-dialog.component';
 import { CategoriesService } from '../dashboard-service/categories.service';
 import { ProductsService } from '../dashboard-service/products.service';
-import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { UsersService } from '../dashboard-service/users.service';
+import { AuthService } from '../service/auth.service';
 
 
 @Component({

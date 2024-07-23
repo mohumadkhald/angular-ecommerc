@@ -10,7 +10,6 @@ import { CartService } from '../../service/cart.service';
 import { OAuth2Service } from '../../service/oauth2.service';
 import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
 import { ModalContentComponent } from "../modal-content/modal-content.component";
-import { SetFirstPasswordComponent } from '../../set-first-password/set-first-password.component';
 
 @Component({
   selector: 'app-auth',

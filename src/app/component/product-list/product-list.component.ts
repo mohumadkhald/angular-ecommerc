@@ -3,23 +3,23 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProductCardComponent } from "../product-card/product-card.component";
 
 import { FormsModule } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 import { CategoryService } from "../../service/category.service";
 import { ProductsService } from "../../service/products.service";
 import { ToastService } from '../../service/toast.service';
+import { CustomRangeSliderComponent } from "../custom-range-slider/custom-range-slider.component";
+import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
+import { ExpiredSessionDialogComponent } from "../expired-session-dialog/expired-session-dialog.component";
+import { PaginatedResponse, Product } from "../interface/product";
+import { PaginationComponent } from "../pagination/pagination.component";
 import { ProductModalComponent } from '../product-modal/product-modal.component';
 import { SidebarComponent } from "../sidebar/sidebar.component";
-import { CapitalizePipe } from "../../pipe/capitalize.pipe";
-import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
-import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-range-slider.component";
-import { PaginatedResponse, Product } from "../interface/product";
-import { PaginationComponent } from "../../pagination/pagination.component";
-import { SortOptionsComponent } from "../../sort-options/sort-options.component";
-import { ExpiredSessionDialogComponent } from "../../expired-session-dialog/expired-session-dialog.component";
+import { SortOptionsComponent } from "../sort-options/sort-options.component";
 
 @Component({
     selector: 'app-product-list',

@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../service/products.service';
-import { Product, PaginatedResponse } from '../interface/product';
+import { CustomRangeSliderComponent } from "../custom-range-slider/custom-range-slider.component";
+import { PaginatedResponse, Product } from '../interface/product';
+import { PaginationComponent } from "../pagination/pagination.component";
 import { ProductCardComponent } from '../product-card/product-card.component';
-import { PaginationComponent } from "../../pagination/pagination.component";
-import { SortOptionsComponent } from "../../sort-options/sort-options.component";
-import { CustomRangeSliderComponent } from "../../custom-range-slider/custom-range-slider.component";
+import { SortOptionsComponent } from '../sort-options/sort-options.component';
 
 @Component({
     selector: 'app-result-search',

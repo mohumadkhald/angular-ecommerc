@@ -1,13 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ProductsService } from '../../dashboard-service/products.service';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AddProductComponent } from '../../component/add-product/add-product.component';
+import { PaginationComponent } from "../../component/pagination/pagination.component";
+import { ProductsService } from '../../dashboard-service/products.service';
 import { ToastService } from '../../service/toast.service';
 import { DashboardComponent } from '../dashboard.component';
-import { AddUserComponent } from '../add-user/add-user.component';
-import { PaginationComponent } from "../../pagination/pagination.component";
-import { CommonModule } from '@angular/common';
-import { AddProductComponent } from '../../component/add-product/add-product.component';
 
 @Component({
   selector: 'app-products',
@@ -34,7 +33,7 @@ export class ProductsComponent {
     this.fetchProducts(this.currentPage-1);
   }
 
-  fetchProducts(page: number = 1, pageSize: number = 1): void {
+  fetchProducts(page: number = 1, pageSize: number = 10): void {
     this.prodcutsService.getAllProducts(page, pageSize).subscribe(
       (data) => {
         this.products = data.content; // Assuming data contains the users array

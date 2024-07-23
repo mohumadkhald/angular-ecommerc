@@ -1,4 +1,4 @@
-<h1 class="text-center my-4">Manage Members</h1>
+<h1 class="text-center my-2">Manage Members</h1>
 <div class="container">
     <div class="table-responsive">
         <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
@@ -21,7 +21,7 @@
                     <td>{{ product.productTitle }}</td>
                     <td>{{ product.price }}</td>
                     <td>{{ product.email }}</td>
-                    <td><img width="80" height="80" [src]="product.imageUrl"></td>
+                    <td><img width="50" height="50" [src]="product.imageUrl"></td>
                     <td>{{ product.subCategory.name }}</td>
                     <td>
                         <a class="btn btn-primary btn-sm mr-1" (click)="detailsProdcut(product.productId)"
