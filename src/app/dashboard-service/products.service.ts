@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Prod } from '../component/interface/product-all-details';
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +30,12 @@ export class ProductsService {
     return this.http.delete<any>(`${this.apiUrl}/${prodId}`, { headers });
   }
 
-  getProductDetails(prodId: number): Observable<any> {
+  getProductDetails(prodId: number): Observable<Prod> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}/${prodId}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/allDetails/${prodId}`, { headers });
   }
 
   

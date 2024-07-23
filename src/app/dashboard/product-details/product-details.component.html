@@ -1,1 +1,36 @@
-<p>product-details works!</p>
+<div class="container my-5">
+    <h2 class="mb-4 text-center animated fadeIn">Product Details</h2>
+    <div class="card mb-4 shadow-sm animated fadeInUp">
+        <div class="row g-0">
+
+            <div class="offset-1 col-md-7">
+                <div class="card-body">
+                    <h3 class="card-title">{{product.productTitle}}</h3>
+                    <p class="card-text"><strong>Price:</strong> ${{product.price}}</p>
+                    <p class="card-text"><strong>Discount:</strong> {{product.discountPercent}}%</p>
+                    <p class="card-text"><strong>Price After Discount:</strong> ${{product.discountPrice}}</p>
+                    <p class="card-text"><strong>Quantity:</strong> {{product.allQuantity}}</p>
+                    <p class="card-text"><strong>Email:</strong> <a href="mailto:{{product.email}}">{{product.email}}</a></p>
+
+                    <h5 class="mt-4">Variations</h5>
+                    <ul class="list-unstyled ms-3">
+                        <li *ngFor="let variation of product.productVariation" class="mb-2">
+                            <strong>Color:</strong> {{variation.color}}, <strong>Size:</strong> {{variation.size}}, <strong>Quantity:</strong> {{variation.quantity}}
+                        </li>
+                    </ul>
+
+                    <h5 class="mt-4">Subcategory</h5>
+                    <p><strong>Name:</strong> {{product.subCategory.name}}</p>
+
+                    <div class="mt-4">
+                        <button class="btn btn-primary me-2" (click)="onUpdate()">Update</button>
+                        <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img [src]="product.imageUrl" class="img-fluid p-3" alt="{{product.productTitle}}">
+            </div>
+        </div>
+    </div>
+</div>

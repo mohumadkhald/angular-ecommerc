@@ -1,7 +1,20 @@
 <div class="pagination-controls">
     <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
-    <button *ngFor="let page of totalPages" (click)="goToPage(page)" [class.active]="page === currentPage">
+    
+    <button *ngIf="showFirstPage" (click)="goToPage(1)">1</button>
+    <button *ngIf="showPreviousEllipsis" (click)="showPreviousPages()">...</button>
+    
+    <button *ngFor="let page of visiblePages" 
+            (click)="goToPage(page)" 
+            [class.active]="page === currentPage">
         {{ page }}
     </button>
-    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages.length">Next</button>
+    
+    <button *ngIf="showNextEllipsis" (click)="showNextPages()">...</button>
+    <button *ngIf="showLastPage" (click)="goToPage(totalPages.length)">
+        {{ totalPages.length }}
+    </button>
+    
+    <button (click)="goToPage(currentPage + 1)" 
+            [disabled]="currentPage === totalPages.length">Next</button>
 </div>
