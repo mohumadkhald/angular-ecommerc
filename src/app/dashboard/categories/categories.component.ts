@@ -44,7 +44,6 @@ export class CategoriesComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe(
       (categoriesData) => {
         this.categories = categoriesData;
-        console.log(this.categories);
         this.loadSubCategories(); // Fetch subcategories after categories are loaded
       },
       (error) => {
@@ -67,13 +66,8 @@ export class CategoriesComponent implements OnInit {
         const title = categoryTitles[index];
         this.subCategoryCounts[title] = subCategories.length;
       });
-      console.log(this.subCategoryCounts);
     }).catch(error => {
-      if (error.status === 403) {
-        localStorage.removeItem("token");
-      } else {
-        console.error('Error loading subcategories:', error);
-      }
+
     });
   }
 
@@ -83,10 +77,8 @@ export class CategoriesComponent implements OnInit {
         this.categories = this.categories.filter(category => category.categoryId !== catId);
         this.dashboardComponent.fetchCategoryCount();
         this.categoryUpdateService.notifyCategoryUpdate();
-        console.log(data);
       },
       (error) => {
-        console.error('Error deleting category:', error);
       }
     );
   }
@@ -103,10 +95,8 @@ export class CategoriesComponent implements OnInit {
 
     modalRef.result.then(
       (result) => {
-        console.log('Modal closed:', result);
       },
       (reason) => {
-        console.log('Modal dismissed:', reason);
       }
     );
   }

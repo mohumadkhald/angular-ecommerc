@@ -3,6 +3,7 @@ import {BehaviorSubject, catchError, Observable, of} from 'rxjs';
 import {tap} from "rxjs/operators";
 import {AuthService} from "./auth.service";
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class UserService implements OnInit {
   
   private profileLoaded: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private cookieService: CookieService,) {}
 
   ngOnInit(): void {
     this.loadProfile().subscribe();
@@ -46,13 +47,15 @@ export class UserService implements OnInit {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
           this.setImg(`${response.imageUrl}`);
-          this.setRole(`${response.role}`)
+          this.setRole(response.role);
           this.profileLoaded = true;
         }
       }),
       catchError(error => {
         if (error.status === 403) {
-          localStorage.removeItem("token");
+          this.cookieService.delete("token");
+          this.cookieService.delete("role");
+          this.cookieService.delete('tokenExpiry');
           this.router.navigate([`/login`]);
         }
         this.clearUsername();
@@ -61,23 +64,6 @@ export class UserService implements OnInit {
     );
   }
 
-  updateProfile(user: any): Observable<any> {
-    return this.authService.updateProfile(user).pipe(
-      tap(response => {
-        if (response) {
-          console.log(response);
-          // this.setUsername(`${response.firstName} ${response.lastName}`);
-          // this.setImg(`${response.imageUrl}`);
-          // this.profileLoaded = true;
-        }
-      }),
-      catchError(error => {
-        console.log('Profile error', error);
-        this.clearUsername();
-        return of(null);
-      })
-    );
-  }
 
   
 }

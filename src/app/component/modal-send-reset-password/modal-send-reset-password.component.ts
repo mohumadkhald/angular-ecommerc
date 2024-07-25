@@ -10,7 +10,7 @@ import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.comp
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @Component({
-  selector: 'app-modal-content',
+  selector: 'app-modal-send-reset-password',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,10 +22,10 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
     ReactiveFormsModule,
     MatProgressSpinner
   ],
-  templateUrl: './modal-content.component.html',
-  styleUrls: ['./modal-content.component.css']
+  templateUrl: './modal-send-reset-password.component.html',
+  styleUrls: ['./modal-send-reset-password.component.css']
 })
-export class ModalContentComponent {
+export class ModalSendResetPasswordComponent {
   emailForm: FormGroup;
   responseMessage: string = '';
   loading: boolean = false;
@@ -35,7 +35,7 @@ export class ModalContentComponent {
   emailPattern: string = '^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$';
 
   constructor(
-    public dialogRef: MatDialogRef<ModalContentComponent>,
+    public dialogRef: MatDialogRef<ModalSendResetPasswordComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private http: HttpClient,
@@ -67,7 +67,6 @@ export class ModalContentComponent {
           this.dialogRef.close();
           this.openChangePwdModal(email);
         }, error => {
-          console.error('Error sending reset email:', error);
           this.loading = false;
           if (error && error.error && error.error.message) {
             this.responseMessage = error.error.message;

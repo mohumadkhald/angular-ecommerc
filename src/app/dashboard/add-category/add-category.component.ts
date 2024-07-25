@@ -66,7 +66,6 @@ export class AddCategoryComponent implements OnInit {
       },
       (error) => {
         // Handle error response
-        console.error('Error adding category:', error);
         if (error.status === 400 && error.error.violations) {
           this.displayServerErrors(error.error.violations);
         } else {

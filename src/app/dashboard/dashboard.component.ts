@@ -8,6 +8,7 @@ import { ProductsService } from '../dashboard-service/products.service';
 import { UsersService } from '../dashboard-service/users.service';
 import { AuthService } from '../service/auth.service';
 import { SidebarComponent } from "./sidebar/sidebar.component";
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class DashboardComponent implements OnInit {
   catsCount: number = 0;
   prodsCount: number = 0;
   subCatsCount: any;
+  token!: string | null
 
   constructor(
       private router: Router,
@@ -33,6 +35,7 @@ export class DashboardComponent implements OnInit {
       private productService: ProductsService,
       private authService: AuthService,
       private dialog: MatDialog,
+      private cookieService: CookieService,
 
     ) {}
 
@@ -46,8 +49,8 @@ export class DashboardComponent implements OnInit {
       if (error.status === 403 || error.status === 401) {
         this.showExpiredSessionDialog("Your Session Expired");
         setTimeout(() => {
-          window.location.reload();
-        }, 2000)
+          this.router.navigate([`/login`]);
+        }, 1000)
       }
     });
 
@@ -63,55 +66,29 @@ export class DashboardComponent implements OnInit {
       data: { message: message },
     });
   }
+
   fetchUserCount() {
     const token = this.authService.getToken();
     this.usersService.getUsers(token, 1, 10).subscribe(users => {
       this.userCount = users.totalElements      ;
-      console.log('User count:', this.userCount, users);
     }, error => {
-      if (error.status === 403 || error.status === 401) {
-        localStorage.removeItem("token");
-        this.showExpiredSessionDialog("Your Session Expired");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000)
-      } else {
-        console.error('Error loading subcategories:', error);
-      }
+
     });
   }
   fetchCategoryCount() {
     const token = this.authService.getToken(); // Assuming you have a method to get the token
     this.categoriesService.getAllCategories().subscribe(cats => {
       this.catsCount = cats.length;
-      console.log('Category count:', this.catsCount);
     }, error => {
-      if (error.status === 403 || error.status === 401) {
-        localStorage.removeItem("token");
-        this.showExpiredSessionDialog("Your Session Expired");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000)
-      } else {
-        console.error('Error loading subcategories:', error);
-      }
+
     });
   }
 
   fetchProductCount() {
     this.productService.getAllProducts(1, 10).subscribe(products => {
       this.prodsCount = products.totalElements;
-      console.log('Category count:', products);
     }, error => {
-      if (error.status === 403 || error.status === 401) {
-        localStorage.removeItem("token");
-        this.showExpiredSessionDialog("Your Session Expired");
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000)
-      } else {
-        console.error('Error loading subcategories:', error);
-      }
+
     });
   }
 

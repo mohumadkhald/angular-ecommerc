@@ -1,0 +1,8 @@
+<div>
+    <ng-container *ngIf="isLoggedIn() && role() === 'ADMIN' || role() === 'SELLER'; else userTemplate">
+        <app-product-details></app-product-details>
+    </ng-container>
+    <ng-template #userTemplate>
+        <app-page-details></app-page-details>
+    </ng-template>
+</div>

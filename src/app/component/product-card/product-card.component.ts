@@ -6,7 +6,7 @@ import { CartService } from '../../service/cart.service';
 import { StarRatingComponent } from "../star-rating/star-rating.component";
 
 import { ToastService } from '../../service/toast.service';
-import { ProductModalComponent } from '../product-modal/product-modal.component';
+import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
 @Component({
     selector: 'app-product-card',
     standalone: true,
@@ -32,14 +32,14 @@ export class ProductCardComponent implements OnInit {
     this.cartService.addToCart(this.product);
   }
   redirectToDetails(id: number) {
-    this.router.navigate([`product/details/${id}`], {
+    this.router.navigate([`products/${id}`], {
 
     });
 
   }
 
   open(product: any) {
-    const modalRef = this.modalService.open(ProductModalComponent, { size: 'lg', centered: true });
+    const modalRef = this.modalService.open(AddToCartModalComponent, { size: 'lg', centered: true });
     modalRef.componentInstance.product = product;
     modalRef.result.then(
       (result) => {
@@ -48,7 +48,6 @@ export class ProductCardComponent implements OnInit {
         }
       },
       (reason) => {
-        console.log('Modal dismissed:', reason);
       }
     );
   }

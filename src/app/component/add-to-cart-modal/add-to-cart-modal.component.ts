@@ -7,16 +7,16 @@ import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 
 @Component({
-  selector: 'app-product-modal',
+  selector: 'app-add-to-cart-modal',
   standalone: true,
   imports: [
   FormsModule, NgbModule, NgForOf, NgStyle, CommonModule
   ],
-  templateUrl: './product-modal.component.html',
-  styleUrl: './product-modal.component.css'
+  templateUrl: './add-to-cart-modal.component.html',
+  styleUrl: './add-to-cart-modal.component.css'
 })
 
-export class ProductModalComponent {
+export class AddToCartModalComponent {
   @Input() product: any;
   selectedSize: string = '';
   selectedColor: string = '';

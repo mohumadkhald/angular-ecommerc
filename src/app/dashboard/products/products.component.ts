@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddProductComponent } from '../../component/add-product/add-product.component';
 import { PaginationComponent } from "../../component/pagination/pagination.component";
 import { ProductsService } from '../../dashboard-service/products.service';
+import { Prod } from '../../interface/product-all-details';
+import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { DashboardComponent } from '../dashboard.component';
-import { AuthService } from '../../service/auth.service';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
@@ -17,71 +18,68 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
-export class ProductsComponent {
-  products: any[] = [];
-  token: any = '';
+export class ProductsComponent implements OnInit {
+  products: Prod[] = [];
   currentPage = 1;
   totalPages: number[] = [];
 
   constructor(
     private router: Router,
-    private prodcutsService: ProductsService,
+    private productsService: ProductsService,
     private modalService: NgbModal,
     public toastService: ToastService,
     private authService: AuthService,
-    private dashboardComponent: DashboardComponent // Inject DashboardComponent
-  ) { }
+    private dashboardComponent: DashboardComponent
+  ) {}
 
   ngOnInit(): void {
-    this.fetchProducts(this.currentPage-1);
+    this.fetchProducts(this.currentPage - 1);
   }
 
-  fetchProducts(page: number = 1, pageSize: number = 10): void {
-    this.prodcutsService.getAllProducts(page, pageSize).subscribe(
+  fetchProducts(page: number = 0, pageSize: number = 10): void {
+    this.productsService.getAllProducts(page, pageSize).subscribe(
       (data) => {
-        this.products = data.content; // Assuming data contains the users array
-        console.log(this.products)
+        this.products = data.content;
         this.currentPage = data.pageable.pageNumber + 1;
         this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1);
       },
       (error) => {
-        console.error('Error fetching users', error);
+        console.error('Error fetching products', error);
       }
     );
   }
 
   deleteProduct(prodId: number): void {
-    this.prodcutsService.deleteProduct(prodId).subscribe(
-      (data) => {
-        // Filter out the deleted user from the array
+    this.productsService.deleteProduct(prodId).subscribe(
+      () => {
         this.products = this.products.filter(product => product.productId !== prodId);
-        this.dashboardComponent.fetchProductCount(); // Update the product count
-        console.log(data);
+        this.dashboardComponent.fetchProductCount();
       },
       (error) => {
-        console.error('Error deleting user:', error);
+        console.error('Error deleting product:', error);
       }
     );
   }
 
-  detailsProdcut(prodId: number): void {
+  detailsProduct(prodId: number): void {
     this.router.navigate([`dashboard/products/${prodId}`]);
   }
 
   open() {
     const modalRef = this.modalService.open(AddProductComponent, { size: 'lg', centered: true });
 
-    modalRef.componentInstance.userAdded.subscribe(() => {
-      this.fetchProducts(); // Refresh the users list
-      this.dashboardComponent.fetchUserCount(); // Update the user count
-      this.toastService.add('User Added successfully');
+    modalRef.componentInstance.productAdded.subscribe(() => {
+      this.fetchProducts(this.currentPage - 1); // Refresh the product list
+      this.dashboardComponent.fetchProductCount();
     });
 
     modalRef.result.then(
       (result) => {
+        if (result === 'added') {
+          this.toastService.add('Product added successfully');
+        }
       },
       (reason) => {
-        console.log('Modal dismissed:', reason);
       }
     );
   }
@@ -89,6 +87,7 @@ export class ProductsComponent {
   onPageChange(page: number): void {
     this.fetchProducts(page - 1);
   }
+
   auth(): boolean {
     return this.authService.isLoggedIn();
   }

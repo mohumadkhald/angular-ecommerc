@@ -1,8 +1,8 @@
 // quantity.service.ts
 
 import { Injectable } from '@angular/core';
+import { CartItem } from '../interface/cat';
 import { CartService } from './cart.service';
-import { CartItem } from '../component/interface/cat';
 
 @Injectable({
   providedIn: 'root',

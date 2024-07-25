@@ -1,0 +1,120 @@
+/* Styles for the modal container */
+.modal-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  .modal-title {
+    text-align: center;
+    margin-left: 15vw;
+  }
+  .modal-body {
+    padding: 20px;
+  }
+  
+  /* Form styling */
+  form {
+    max-width: 100%; /* Allow form to take full width */
+    margin: auto;
+  }
+  
+  /* Label styling */
+  label {
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  /* Input field styling */
+  select,
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Submit button styling */
+  button{
+    background-color: #007bff;
+    color: white;
+    padding: 5px 5px;
+    margin: 5px;
+    border: none;
+    margin-top: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  .error-message {
+    display: flex;
+    justify-content: end;
+    margin-top: -5px;
+    background-color: red;
+  }
+  .modal-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  .modal-title {
+    text-align: center;
+    margin: auto;
+  }
+  .modal-body {
+    padding: 20px;
+  }
+  
+  /* Form styling */
+  form {
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  /* Label styling */
+  label {
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  /* Input and Select field styling */
+  select,
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+
+  
+  button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  button[type="button"] {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  button[type="button"]:hover {
+    background-color: #5a6268;
+  }
+  
+  

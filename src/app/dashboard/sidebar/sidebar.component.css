@@ -1,8 +1,10 @@
 .nav-link.active {
     font-weight: bold;
-    color: #007bff;
+    color: #1a4573;
 }
-
+.nav-link {
+    color: #0e0e0f;
+}
 /* Main layout container */
 .layout {
     display: flex;

@@ -1,0 +1,46 @@
+<div class="sidebar">
+    <div class="subCategory">
+        <h2>{{ categoryTitle }}</h2>
+        <ul>
+            <li *ngFor="let subCategory of subCategories">
+                <i class="fa-solid fa-angle-left"></i>
+                <a class="sub-links" routerLinkActive="active_link"
+                    [routerLink]="['/categories', categoryTitle, subCategory.name]">{{ subCategory.name | capitalize
+                    }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div *ngIf="subCategoryName" class="filters">
+        <div class="availability">
+            <h3 style="margin: 5px 0;">Availability</h3>
+            <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
+            <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
+        </div>
+        <div class="price-range">
+            <h3 style="margin: 0; margin-top: 10px;">Price</h3>
+            <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
+                [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
+                (maxValueChange)="onPriceRangeChange()">
+            </app-custom-range-slider>
+            <p>Range: ${{ filters.minPrice }} - ${{ filters.maxPrice }}</p>
+        </div>
+        <div class="color-filter">
+            <h3 style="margin: 0 5px;">Color</h3>
+            <div class="color-options">
+                <label *ngFor="let color of colorOptions" class="color-swatch">
+                    <input type="checkbox" [checked]="filters.colors.includes(color)"
+                        (change)="onColorChange(color, $event)">
+                    <div class="color-indicator" [style.background]="color"></div>
+                </label>
+            </div>
+        </div>
+        <div class="size-filter">
+            <h3 style="margin: 5px 0 5px;">Size</h3>
+            <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
+                    (change)="onSizeChange('small', $event)"> Small</label>
+            <label><input type="checkbox" [checked]="filters.sizes.includes('medium')"
+                    (change)="onSizeChange('medium', $event)"> Medium</label>
+        </div>
+    </div>
+</div>

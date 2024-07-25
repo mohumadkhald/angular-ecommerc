@@ -19,6 +19,7 @@ import { UsersDetailsComponent } from './dashboard/users-details/users-details.c
 import { UsersComponent } from './dashboard/users/users.component';
 import { AdminGuard } from './utils/admin.guard';
 import { authGuardGuard } from "./utils/auth-guard.guard";
+import { PageDetailsProdComponent } from './page-details-prod/page-details-prod.component';
 
 
 
@@ -52,7 +53,8 @@ export const routes: Routes = [
 
   { path: 'logout', component: AuthComponent, title: "Logout"},
   // { path: 'user/login', component: AuthComponent,title: "Authontication", canActivate: [noAuthGuard] },
-  { path: 'product/details/:id',component: PageDetailsComponent,title: "Product Details"},
+  { path: 'products/:id',component: PageDetailsComponent,title: "Product Details"},
+  { path: 'products/seller/:id',component: PageDetailsProdComponent,title: "Product Details"},
   { path: 'cart',component: CartComponent,title: "Cart"},
   { path: 'notfound', component: NotfoundComponent,title: "Not Found"},
   { path: '**', redirectTo: '/notfound' }

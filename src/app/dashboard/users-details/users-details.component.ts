@@ -26,9 +26,7 @@ export class UsersDetailsComponent implements OnInit {
     this.usersService.getUserDetails(this.id, this.token).subscribe((res) => {
       if (res) {
         this.user = res;
-        console.log(this.user);
       } else {
-        console.error('No products found in the response.');
       }
     })
   }
@@ -37,10 +35,8 @@ export class UsersDetailsComponent implements OnInit {
     this.usersService.getUserDetails(userId, this.token).subscribe(
       data => {
         this.user = data;
-        console.log(this.user);
       },
       error => {
-        console.error('Error fetching user details', error);
       }
     );
   }
@@ -63,9 +59,7 @@ export class UsersDetailsComponent implements OnInit {
   updateUserStatus(params: any) {
     this.usersService.updateUserStatus(this.user.userId, params, this.token)
       .subscribe(response => {
-        console.log(response);
       }, error => {
-        console.error(error);
       });
   }
 }

@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service';
@@ -13,40 +13,47 @@ import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.compo
   templateUrl: './profile-user.component.html',
   styleUrl: './profile-user.component.css'
 })
-export class ProfileUserComponent {
+export class ProfileUserComponent implements OnInit {
+  user: any;
+
   constructor(
     private authService: AuthService,
-     private router: Router,
-     private modalService: NgbModal,
-     public toastService: ToastService
-
-    ) {}
-
-  user:any;
+    private router: Router,
+    private modalService: NgbModal,
+    public toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
-      this.authService.getProfile().subscribe(
-        response => {
-          console.log('profile successful', response);
-          this.user = response;
-        },
-        error => {
-          console.error('profile error', error);
-        }
-      );
+    this.loadUserProfile();
+  }
+
+  loadUserProfile() {
+    this.authService.getProfile().subscribe(
+      response => {
+        this.user = response;
+      },
+      error => {
+        console.error('Error loading user profile', error);
+      }
+    );
   }
 
   open(user: any) {
     const modalRef = this.modalService.open(EditUserModalComponent, { size: 'lg', centered: true });
     modalRef.componentInstance.user = user;
+
     modalRef.result.then(
       (result) => {
-        this.toastService.add('user edit success');
-
+        if (result === 'updated') {
+          this.toastService.add('User edit success');
+          this.loadUserProfile(); // Reload user profile after update
+        }
       },
       (reason) => {
         console.log('Modal dismissed:', reason);
       }
-    );
+    ).catch((error) => {
+      console.error('Modal error:', error);
+    });
   }
 }

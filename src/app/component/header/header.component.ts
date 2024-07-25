@@ -74,7 +74,7 @@ export class HeaderComponent implements OnInit {
     this.userService.role$.subscribe(role => {
       if (role) {
         this.role = role;
-        localStorage.setItem('role', this.role);
+        this.authService.saveRole(role);
         this.loading = false;
         this.cd.detectChanges();
       }
@@ -94,7 +94,6 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.logout().subscribe(
       response => {
-        console.log('Logout successful', response);
         this.router.navigate(['/login']);
       }
     );
@@ -108,12 +107,7 @@ export class HeaderComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe(categories => {
       this.categories = categories;
     }, error => {
-      if (error.status === 403) {
-        localStorage.removeItem("token");
-        setTimeout(() => {
-          this.router.navigate([`/login`]);
-        }, 3000);
-      }
+
     });
   }
 

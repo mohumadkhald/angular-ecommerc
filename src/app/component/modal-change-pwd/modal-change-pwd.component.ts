@@ -74,7 +74,6 @@ export class ModalChangePwdComponent {
 
       this.http.post(url, body).subscribe(
         (response: any) => {
-          console.log('Reset Password has successfully:', response);
           this.toastService.add(response.message);
           this.successMessage = response.message;
           setTimeout(() => {
@@ -82,7 +81,6 @@ export class ModalChangePwdComponent {
           }, 5000);
         },
         error => {
-          console.error('Error sending reset email:', error);
           if (error.error.errors) {
             this.responseMessage = Object.values(error.error.errors).join(', ');
           } else {

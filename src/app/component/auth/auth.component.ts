@@ -9,7 +9,7 @@ import { AuthService } from "../../service/auth.service";
 import { CartService } from '../../service/cart.service';
 import { OAuth2Service } from '../../service/oauth2.service';
 import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
-import { ModalContentComponent } from "../modal-content/modal-content.component";
+import { ModalSendResetPasswordComponent } from "../modal-send-reset-password/modal-send-reset-password.component";
 
 @Component({
   selector: 'app-auth',
@@ -116,12 +116,23 @@ export class AuthComponent implements OnInit {
           this.router.navigate(['/']);
         },
         error => {
-          console.error('Login error', error);
+          if (error.status === 400 && error.error.violations) {
+            this.displayServerErrors(error.error.violations);
+          } else {
           let msg = Object.values(error.error.errors).join(', ');
           this.showErrorDialog(msg);
+          }
         }
       );
     }
+  }
+
+  formErrors: any = {};
+  displayServerErrors(violations: any) {
+    this.formErrors = {};
+    violations.forEach((violation: any) => {
+      this.formErrors[violation.fieldName] = violation.message;
+    });
   }
 
   register() {
@@ -134,15 +145,17 @@ export class AuthComponent implements OnInit {
 
       this.authService.register(firstName, lastName, email, password, gender).subscribe(
         response => {
-          console.log('Registration successful', response);
           this.authService.saveToken(response.token);
           localStorage.setItem('firstPwdSet', 'true');
           this.router.navigate(['/']);
         },
         error => {
-          console.error('Registration error', error);
+          if (error.status === 400 && error.error.violations) {
+            this.displayServerErrors(error.error.violations);
+          } else {
           let msg = Object.values(error.error.errors).join(', ');
           this.showErrorDialog(msg);
+          }
         }
       );
     }
@@ -165,7 +178,7 @@ export class AuthComponent implements OnInit {
 
     this.isDialogOpen = true;
 
-    const dialogRef = this.dialog.open(ModalContentComponent, {
+    const dialogRef = this.dialog.open(ModalSendResetPasswordComponent, {
       width: '350px',
       height: '270px',
       data: { name: 'Send Reset Password' },

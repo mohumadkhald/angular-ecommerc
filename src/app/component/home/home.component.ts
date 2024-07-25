@@ -1,13 +1,13 @@
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, Renderer2 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { Product } from "../../interface/product";
 import { AuthService } from "../../service/auth.service";
 import { ToastService } from '../../service/toast.service';
 import { UserService } from "../../service/user.service";
-import { Product } from "../interface/product";
 import { ProductCardComponent } from '../product-card/product-card.component';
-import { MatDialog } from '@angular/material/dialog';
 import { SetFirstPasswordComponent } from '../set-first-password/set-first-password.component';
 @Component({
     standalone: true,
@@ -76,12 +76,10 @@ export class HomeComponent implements OnInit {
   logout(): void {
     this.authService.logout().subscribe(
       response => {
-        console.log('Logout successful', response);
         this.userService.clearUsername(); // Clear the username in the shared service
         this.router.navigate(['/user/login']);  // Redirect to login after logout
       },
       error => {
-        console.error('Logout error', error);
       }
     );
   }

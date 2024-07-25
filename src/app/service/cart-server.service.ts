@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { CartItem } from '../component/interface/cat';
+import { CartItem } from '../interface/cat';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -42,7 +42,6 @@ export class CartServerService implements OnInit {
       tap((res) => {
         this.cartItems = res;
         this.setCount(this.cartItems.length);
-        console.log('Cart data:', this.cartItems);
       })
     );
   }
@@ -62,10 +61,8 @@ export class CartServerService implements OnInit {
       (res) => {
         console.log(res);
         this.cartItems.length++
-        console.log(this.cartItems.length)
       },
       (error) => {
-        console.error('Error adding product to cart:', error);
       }
     );
   }
@@ -94,11 +91,8 @@ export class CartServerService implements OnInit {
           this.cartItems.splice(index, 1);
         }
   
-        // Log the updated cartItems array
-        console.log('Updated cart data:', this.cartItems);
       },
       (error) => {
-        console.error('Error removing product from cart:', error);
       }
     );
   }
@@ -117,16 +111,12 @@ export class CartServerService implements OnInit {
     // Make HTTP DELETE request to clear the cart
     this.http.delete<void>(this.apiUri, { headers }).subscribe(
       (res) => {
-        console.log('Cart cleared on server:', res);
         
         // Clear the local cartItems array using splice
         this.cartItems.splice(0, this.cartItems.length);
-        
-        // Log the updated cartItems array
-        console.log('Local cart data cleared:', this.cartItems);
+
       },
       (error) => {
-        console.error('Error clearing cart:', error);
       }
     );
   }

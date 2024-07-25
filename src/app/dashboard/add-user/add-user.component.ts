@@ -47,14 +47,14 @@ export class AddUserComponent {
       return;
     }
 
-    const token = 'your-auth-token'; // Replace with your actual token
+    const token = 'your-auth-token';
 
     this.userService.addUser(this.userForm.value, token)
       .subscribe({
         next: (response) => {
           console.log('User added successfully', response);
           this.userAdded.emit(); // Emit the event when a user is added
-          this.activeModal.close('success');
+          this.activeModal.close('added');
         },
         error: (error) => {
           console.error('Error adding user', error);

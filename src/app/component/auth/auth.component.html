@@ -20,34 +20,67 @@
         <input type="text" placeholder="Last Name" formControlName="lastName" />
       </div>
       <div style="display: grid; grid-template-columns: auto auto; gap: 10px">
-      <div *ngIf="registerForm.controls['firstName'].invalid && (registerForm.controls['firstName'].dirty || registerForm.controls['firstName'].touched)" class="error">
-        <div *ngIf="registerForm.controls['firstName'].errors?.['required']">First Name is required.</div>
-        <div *ngIf="registerForm.controls['firstName'].errors?.['trimmed']">First Name cannot start or end with spaces.</div>
-        <div *ngIf="!registerForm.controls['firstName'].errors?.['trimmed'] && registerForm.controls['firstName'].errors?.['pattern']">First Name must be at least 3 characters long and cannot contain numbers.</div>
-      </div>
-      <div *ngIf="registerForm.controls['lastName'].invalid && (registerForm.controls['lastName'].dirty || registerForm.controls['lastName'].touched)" class="error">
-        <div *ngIf="registerForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
-        <div *ngIf="registerForm.controls['lastName'].errors?.['trimmed']">Last Name cannot start or end with spaces.</div>
-        <div *ngIf="!registerForm.controls['lastName'].errors?.['trimmed'] && registerForm.controls['lastName'].errors?.['pattern']">Last Name must be at least 3 characters long and cannot contain numbers.</div>
-      </div>
+        <div *ngIf="formErrors['firstname']" class="text-danger">
+          {{ formErrors['firstname'] }}
+        </div>
+        <div
+          *ngIf="registerForm.controls['firstName'].invalid && (registerForm.controls['firstName'].dirty || registerForm.controls['firstName'].touched)"
+          class="error">
+          <div *ngIf="registerForm.controls['firstName'].errors?.['required']">First Name is required.</div>
+          <div *ngIf="registerForm.controls['firstName'].errors?.['trimmed']">First Name cannot start or end with
+            spaces.</div>
+          <div
+            *ngIf="!registerForm.controls['firstName'].errors?.['trimmed'] && registerForm.controls['firstName'].errors?.['pattern']">
+            First Name must be at least 3 characters long and cannot contain numbers.</div>
+        </div>
+
+        <div
+          *ngIf="registerForm.controls['lastName'].invalid && (registerForm.controls['lastName'].dirty || registerForm.controls['lastName'].touched)"
+          class="error">
+          <div *ngIf="registerForm.controls['lastName'].errors?.['required']">Last Name is required.</div>
+          <div *ngIf="registerForm.controls['lastName'].errors?.['trimmed']">Last Name cannot start or end with spaces.
+          </div>
+          <div
+            *ngIf="!registerForm.controls['lastName'].errors?.['trimmed'] && registerForm.controls['lastName'].errors?.['pattern']">
+            Last Name must be at least 3 characters long and cannot contain numbers.</div>
+        </div>
+        <div *ngIf="formErrors['lastname']" class="text-danger">
+          {{ formErrors['lastname'] }}
+        </div>
       </div>
       <input type="email" placeholder="Email" formControlName="email" />
-      <div *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)" class="error">
+      <div
+        *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)"
+        class="error">
         <div *ngIf="registerForm.controls['email'].errors?.['required']">Email is required.</div>
         <div *ngIf="registerForm.controls['email'].errors?.['pattern']">Email should be valid.</div>
       </div>
+      <div *ngIf="formErrors['email']" class="text-danger">
+        {{ formErrors['email'] }}
+      </div>
       <input type="password" placeholder="Password" formControlName="password" />
-      <div *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)" class="error">
+      <div
+        *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)"
+        class="error">
         <div *ngIf="registerForm.controls['password'].errors?.['required']">Password is required.</div>
-        <div *ngIf="registerForm.controls['password'].errors?.['pattern']">Password must contain at least one digit, one lowercase and one uppercase letter, and be at least 8 characters long.</div>
+        <div *ngIf="registerForm.controls['password'].errors?.['pattern']">Password must contain at least one digit, one
+          lowercase and one uppercase letter, and be at least 8 characters long.</div>
+      </div>
+      <div *ngIf="formErrors['password']" class="text-danger">
+        {{ formErrors['password'] }}
       </div>
       <select id="gender" formControlName="gender" required>
         <option value="" disabled selected>Select your gender</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
       </select>
-      <div *ngIf="registerForm.controls['gender'].invalid && (registerForm.controls['gender'].dirty || registerForm.controls['gender'].touched)" class="error">
+      <div
+        *ngIf="registerForm.controls['gender'].invalid && (registerForm.controls['gender'].dirty || registerForm.controls['gender'].touched)"
+        class="error">
         <div *ngIf="registerForm.controls['gender'].errors?.['required']">Gender is required.</div>
+      </div>
+      <div *ngIf="formErrors['gender']" class="text-danger">
+        {{ formErrors['gender'] }}
       </div>
       <button class="btn btn-success mt-3" type="submit" [disabled]="registerForm.invalid">Sign Up</button>
       <a class="text-primary tggle" (click)="showSignIn()">Sign In</a>
@@ -62,19 +95,29 @@
         <a (click)="initiateFaceLogin()" class="social facebook"><i class="fab fa-facebook-f"></i></a>
         <a href="#" class="social in"><i class="fab fa-linkedin-in"></i></a>
       </div>
-    
+
       <span>or use your account</span>
       <input type="email" placeholder="Email" formControlName="email" />
-      <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)" class="error">
+      <div
+        *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
+        class="error">
         <div *ngIf="loginForm.controls['email'].errors?.['required']">Email is required.</div>
         <div *ngIf="loginForm.controls['email'].errors?.['pattern']">Email should be valid.</div>
       </div>
+      <div *ngIf="formErrors['email']" class="text-danger">
+        {{ formErrors['email'] }}
+      </div>
       <input type="password" placeholder="Password" formControlName="password" />
-      <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)" class="error">
+      <div
+        *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)"
+        class="error">
         <div *ngIf="loginForm.controls['password'].errors?.['required']">Password is required.</div>
       </div>
+      <div *ngIf="formErrors['password']" class="text-danger">
+        {{ formErrors['password'] }}
+      </div>
       <a mat-button (click)="openDialog()">Forgot your password?</a>
-      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Sign In</button>
+      <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Sign In</button>
       <a class="text-success tggle" (click)="showSignUp()">Sign Up</a>
     </form>
   </div>

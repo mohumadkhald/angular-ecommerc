@@ -64,7 +64,6 @@ export class SetFirstPasswordComponent {
 
       this.http.patch(url, body, { headers }).subscribe(
         (response: any) => {
-          console.log('Password has been set successfully:', response);
           this.toastService.add(response.message);
           this.successMessage = response.message;
           this.dialogRef.close(); // Close the dialog only on success

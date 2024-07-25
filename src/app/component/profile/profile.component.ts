@@ -24,17 +24,10 @@ export class ProfileComponent implements OnInit{
   ngOnInit(): void {
       this.authService.getProfile().subscribe(
         response => {
-          console.log('profile successful', response);
           this.user = response;
         },
         error => {
-          if (error.status === 403) {
-            localStorage.removeItem("token");
-            this.toastService.add('Your Session has expired Login again');
-            setTimeout(() => {
-              this.router.navigate([`/login`]);
-            }, 3000);
-          }
+
         }
       );
   }

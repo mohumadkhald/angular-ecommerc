@@ -1,56 +1,77 @@
-      <div class="modal-header">
-        <h4 class="modal-title">Edit User</h4>
-        <button type="button" class="close" aria-label="Close" (click)="close()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="saveChanges()" autocomplete="off">
-            <div class="row">
-                <div class="offset-3 col-7">
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                          <label for="firstName">First Name</label>
-                          <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="user.firstName" required>
-                        </div>
-                        <div class="form-group col-md-12">
-                          <label for="lastName">Last Name</label>
-                          <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="user.lastName" required>
-                        </div>
-                      </div>
-                      <div class="form-row">
-                        <div class="form-group col-md-12">
-                          <label for="gender">Gender</label>
-                          <select class="form-control" id="gender" name="gender" [(ngModel)]="user.gender" required>
-                            <option value="male" [selected]="user.gender === 'male'">Male</option>
-                            <option value="female" [selected]="user.gender === 'female'">Female</option>
-                          </select>
-                        </div>
-                        <div class="form-group col-md-12">
-                          <label for="email">Email</label>
-                          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email" required>
-                        </div>
-                      </div>
-                      <input type="text" style="display:none">
-                      <input type="password" style="display:none">
-                      <div class="form-row">
-                        <div class="form-group col-md-12">
-                          <label for="old-passwd">Old Password</label>
-                          <input type="password" class="form-control" id="old-passwd" name="userOldPassword" [(ngModel)]="user.oldPassword" (focus)="disableAutocomplete('old-passwd')" autocomplete="new-password" required>
-                        </div>
-                        <div class="form-group col-md-12">
-                          <label for="new-passwd">New Password</label>
-                          <input type="password" class="form-control" id="new-passwd" name="userNewPassword" [(ngModel)]="user.password" (focus)="disableAutocomplete('new-passwd')" autocomplete="new-password" required>
-                        </div>
-                      </div>
-                </div>
-            </div>
-
-          <div class="form-row">
-            <div class="form-group offset-3 col-md-9 text-right">
-              <button type="submit" style="width: 75%; margin: 0px 10px;" class="btn btn-primary">Save Changes</button>
+<div class="modal-header">
+  <h4 class="modal-title">Edit User</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="userForm" (ngSubmit)="saveChanges()" autocomplete="off">
+    <div class="row">
+      <div class="offset-3 col-7">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" id="firstName" formControlName="firstName" required>
+            <div *ngIf="formErrors['firstName']" class="text-danger">
+              {{ formErrors['firstName'] }}
             </div>
           </div>
-        </form>
-  </div>
-  
+          <div class="form-group col-md-12">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" id="lastName" formControlName="lastName" required>
+            <div *ngIf="formErrors['lastName']" class="text-danger">
+              {{ formErrors['lastName'] }}
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="gender">Gender</label>
+            <select class="form-control" id="gender" formControlName="gender" required>
+              <option value="" disabled>Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <div *ngIf="formErrors['gender']" class="text-danger">
+              {{ formErrors['gender'] }}
+            </div>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" formControlName="email" required>
+            <div *ngIf="formErrors['email']" class="text-danger">
+              {{ formErrors['email'] }}
+            </div>
+          </div>
+        </div>
+        <input type="text" style="display:none">
+        <input type="password" style="display:none">
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="old-passwd">Old Password</label>
+            <input type="password" class="form-control" id="old-passwd" formControlName="oldPassword"
+              (focus)="disableAutocomplete('old-passwd')" autocomplete="new-password" required>
+            <div *ngIf="formErrors['oldPassword']" class="text-danger">
+              {{ formErrors['oldPassword'] }}
+            </div>
+            <div *ngIf="errMsg" class="text-danger">{{ errMsg }}</div>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="new-passwd">New Password</label>
+            <input type="password" class="form-control" id="new-passwd" formControlName="password"
+              (focus)="disableAutocomplete('new-passwd')" autocomplete="new-password" required>
+            <div *ngIf="formErrors['password']" class="text-danger">
+              {{ formErrors['password'] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group offset-3 col-md-9 text-right">
+        <button type="submit" style="width: 75%; margin: 0px 10px;" class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </form>
+</div>

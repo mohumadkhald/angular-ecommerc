@@ -3,12 +3,12 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
+import { CartItem } from '../../interface/cat';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 import { ToastService } from '../../service/toast.service';
 import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
-import { CartItem } from '../interface/cat';
 
 @Component({
   standalone: true,
@@ -41,15 +41,8 @@ export class CartComponent implements OnInit {
       this.cartServerService.getCart().subscribe(
         (items) => {
           this.cartItems1 = items;
-          console.log(this.cartItems1)
         },
         (error) => {
-          if (error.status === 403 || error.status === 401) {
-            this.showExpiredSessionDialog("Your Session Expired", "cart");
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000)
-          }
         }
       );
     } else {
@@ -86,15 +79,8 @@ export class CartComponent implements OnInit {
       this.cartServerService.getCart().subscribe(
         (items) => {
           this.cartItems1 = items;
-          console.log(this.cartItems1)
         },
         (error) => {
-          if (error.status === 403 || error.status === 401) {
-            this.showExpiredSessionDialog("Your Session Expired", "cart");
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000)
-          }
         }
       );
     }
@@ -118,15 +104,8 @@ export class CartComponent implements OnInit {
       this.cartServerService.getCart().subscribe(
         (items) => {
           this.cartItems1 = items;
-          console.log(this.cartItems1)
         },
         (error) => {
-          if (error.status === 403 || error.status === 401) {
-            this.showExpiredSessionDialog("Your Session Expired", "cart");
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000)
-          }
         }
       );
     }

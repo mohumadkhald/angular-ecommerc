@@ -1,9 +1,9 @@
 import { CommonModule, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryService } from '../../service/category.service';
-import { ProductsService } from '../../service/products.service';
+import { ProductService } from '../../service/product.service';
 
 
 @Component({
@@ -14,6 +14,8 @@ import { ProductsService } from '../../service/products.service';
   styleUrl: './add-product.component.css'
 })
 export class AddProductComponent implements OnInit {
+  @Output() productAdded = new EventEmitter<void>();
+
   productForm: FormGroup | any;
   selectedFile: File | any;
   subCategories: any[] = [];
@@ -21,7 +23,7 @@ export class AddProductComponent implements OnInit {
 
   constructor(
       private formBuilder: FormBuilder,
-      private productService: ProductsService,
+      private productService: ProductService,
       private categoryService: CategoryService,
       public activeModal: NgbActiveModal,
   ) { }
@@ -58,15 +60,15 @@ export class AddProductComponent implements OnInit {
     formData.append('image', this.selectedFile, this.selectedFile.name);
 
     this.productService.addProduct(formData).subscribe(
-      response => {
-        console.log('Product added successfully:', response);
+      () => {
         this.productForm.reset();
         this.selectedFile = null;
         this.fileTouched = false;
+        this.productAdded.emit();
         this.activeModal.close('added');
       },
       error => {
-        console.error('Error adding product:', error);
+        console.log('Error adding product:', error);
       }
     );
   }

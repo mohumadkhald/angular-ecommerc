@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h2 class="modal-title">Add New Product Variation</h2>
+    <button class="btn btn-close bg-danger text-light" (click)="onClose()"></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="variation-container">
+            <form (ngSubmit)="saveVariations(variationForm)" #variationForm="ngForm">
+                <div *ngFor="let variation of variations; let i = index" class="variation-item" style="display: flex; flex-direction: row; margin: 5px; gap: 20px;">
+                    <div>
+                        <label>
+                            Size:
+                            <select [(ngModel)]="variation.size" name="size{{i}}" required #size="ngModel">
+                                <option value="" disabled>Select Size</option>
+                                <option *ngFor="let size of sizes" [value]="size">{{size}}</option>
+                            </select>
+                            <div *ngIf="formSubmitted && size.invalid" class="text-danger">
+                                Size is required.
+                            </div>
+                            <div *ngIf="serverErrors['spec[' + i + '].size']" class="text-danger">
+                                {{ serverErrors['spec[' + i + '].size'] }}
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            Color:
+                            <select [(ngModel)]="variation.color" name="color{{i}}" required #color="ngModel">
+                                <option value="" disabled>Select Color</option>
+                                <option *ngFor="let color of colors" [value]="color">{{color}}</option>
+                            </select>
+                            <div *ngIf="formSubmitted && color.invalid" class="text-danger">
+                                Color is required.
+                            </div>
+                            <div *ngIf="serverErrors['spec[' + i + '].color']" class="text-danger">
+                                {{ serverErrors['spec[' + i + '].color'] }}
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            Quantity:
+                            <input type="number" [(ngModel)]="variation.quantity" name="quantity{{i}}" required min="1" #quantity="ngModel" />
+                            <div *ngIf="formSubmitted && quantity.invalid" class="text-danger">
+                                Quantity must be greater than 0.
+                            </div>
+                            <div *ngIf="serverErrors['spec[' + i + '].quantity']" class="text-danger">
+                                {{ serverErrors['spec[' + i + '].quantity'] }}
+                            </div>
+                        </label>
+                    </div>
+                    <button type="button" class="mt-4" style="height: 30px;" (click)="removeVariation(i)" *ngIf="variations.length > 1">Remove</button>
+                </div>
+                <button type="button" (click)="addVariation()">Add Another Variation</button>
+                <button type="submit">Save Variations</button>
+            </form>
+        </div>
+    </div>
+</div>

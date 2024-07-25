@@ -1,67 +1,118 @@
-import { ChangeDetectorRef, Component, Input, NgZone, Renderer2 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+
+import { ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../service/user.service';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-edit-user-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './edit-user-modal.component.html',
   styleUrl: './edit-user-modal.component.css'
 })
 export class EditUserModalComponent {
   @Input() user: any; // Input property for receiving user details
+  @Output() userUpdated = new EventEmitter<void>();
   originalUser: any; // To store original user details for comparison or rollback purposes
-  selectedSize: string = '';
-  selectedColor: string = '';
-  scaleRange: number = 1;
-  xValue: number = 0;
-  yValue: number = 0;
+  userForm!: FormGroup;
+  formErrors: any = {};
+  errMsg!: string;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private userService: UserService,
-    private router: Router,
-    private renderer: Renderer2
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    // Make a copy of the original user object to enable rollback on cancel
     this.originalUser = { ...this.user };
+    this.createForm();
+  }
+
+  createForm() {
+    this.userForm = this.fb.group({
+      firstName: [this.user.firstName, [Validators.required, Validators.pattern(/^\S.*$/)]],
+      lastName: [this.user.lastName, [Validators.required, Validators.pattern(/^\S.*$/)]],
+      gender: [this.user.gender, Validators.required],
+      email: [this.user.email, [Validators.required, Validators.email, Validators.pattern(/^\S.*$/)]],
+      oldPassword: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+      password: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+    });
   }
 
   saveChanges() {
-    // Implement logic to save changes (e.g., call a service to update user details)
-    console.log('Saving changes', this.user);
-    this.userService.updateProfile(this.user).subscribe(
-      response => {
+    if (this.userForm.invalid) {
+      this.displayValidationErrors();
+      return;
+    }
+
+    this.authService.updateProfile(this.userForm.value).subscribe({
+      next: (response) => {
         this.router.navigate(['/user/profile']);
+        this.userUpdated.emit();
+        if (response !== null) {
+          this.activeModal.close('updated');
+        }
       },
-      error => {
+      error: (error) => {
         console.log(error);
+        if (error.status === 400 && error.error.violations) {
+          this.displayServerErrors(error.error.violations);
+          console.log(error)
+        } else {
+          this.errMsg = error.error.message || 'An error occurred while updating the profile';
+        }
       }
-    )
-  
-    // Close the modal after saving changes
-    this.activeModal.close(this.user); // Pass any data back to the caller if needed
+    });
+  }
+
+  displayValidationErrors() {
+    for (const field in this.userForm.controls) {
+      if (this.userForm.controls[field].invalid) {
+        this.formErrors[field] = this.getErrorMessage(field);
+      }
+    }
+  }
+
+  displayServerErrors(violations: any) {
+    this.formErrors = {};
+    console.log(this.formErrors)
+    violations.forEach((violation: any) => {
+      this.formErrors[violation.fieldName] = violation.message;
+    });
+  }
+
+  getErrorMessage(field: string): string {
+    switch (field) {
+      case 'firstName':
+      case 'lastName':
+        return 'This field cannot be empty or start with a space.';
+      case 'gender':
+        return 'Gender is required.';
+      case 'email':
+        return 'Enter a valid email.';
+      case 'oldPassword':
+      case 'password':
+        return 'Password cannot be empty or start with a space.';
+      default:
+        return 'This field is required.';
+    }
   }
 
   disableAutocomplete(elementId: string) {
     const element = document.getElementById(elementId);
     if (element) {
-      this.renderer.setAttribute(element, 'autocomplete', 'off');
+      element.setAttribute('autocomplete', 'off');
     }
   }
 
   close() {
-    // Implement logic to handle modal close (e.g., rollback changes if needed)
-    console.log('Closing modal');
-    // Rollback changes if the user cancels editing
-    Object.assign(this.user, this.originalUser); // Restore original values
+    Object.assign(this.user, this.originalUser);
     this.activeModal.dismiss('cancel');
   }
 }

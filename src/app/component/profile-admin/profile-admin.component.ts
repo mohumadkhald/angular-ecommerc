@@ -2,12 +2,12 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service';
-import { ProductsService } from '../../service/products.service';
 import { ToastService } from '../../service/toast.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
 import { CommonModule } from '@angular/common';
 import { CapitalizePipe } from "../../pipe/capitalize.pipe";
+import { ProductService } from '../../service/product.service';
 
 @Component({
     selector: 'app-profile-admin',
@@ -32,26 +32,28 @@ export class ProfileAdminComponent {
     private router: Router,
     private modalService: NgbModal,
     public toastService: ToastService,
-    private productsService: ProductsService
+    private productsService: ProductService
   ) {}
 
   ngOnInit(): void {
+    this.loadUserProfile();
+    this.loadProducts();
+  }
+
+  loadUserProfile() {
     this.authService.getProfile().subscribe(
       response => {
-        console.log('Profile successful', response);
         this.user = response;
       },
       error => {
-        console.error('Profile error', error);
+        console.error('Error loading user profile', error);
       }
     );
-    this.loadProducts();
   }
 
   loadProducts() {
     this.productsService.getProductsByCreatedBy().subscribe(products => {
       this.products = products;
-      console.log(this.products)
       this.loadMoreProducts();
     });
   }
@@ -72,7 +74,6 @@ export class ProfileAdminComponent {
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          console.log('Product added:');
           this.toastService.add('Product added successfully');
           this.loadProducts(); // Reload products after adding a new one
         }
@@ -98,12 +99,10 @@ export class ProfileAdminComponent {
   uploadImage(file: File) {
     this.authService.changePhoto(file).subscribe(
       response => {
-        console.log('Image uploaded successfully:', response);
         this.toastService.add('Image updated successfully');
         this.user.imageUrl = response.message; // Update user image URL
       },
       error => {
-        console.error('Image upload error:', error);
         this.toastService.add('Image upload failed');
       }
     );
@@ -112,19 +111,25 @@ export class ProfileAdminComponent {
   open(user: any) {
     const modalRef = this.modalService.open(EditUserModalComponent, { size: 'lg', centered: true });
     modalRef.componentInstance.user = user;
+
     modalRef.result.then(
       (result) => {
-        this.toastService.add('User edit success');
+        if (result === 'updated') {
+          this.toastService.add('User edit success');
+          this.loadUserProfile(); // Reload user profile after update
+        }
       },
       (reason) => {
         console.log('Modal dismissed:', reason);
       }
-    );
-  }
-  redirectToDetails(id: number) {
-    this.router.navigate([`product/details/${id}`], {
-
+    ).catch((error) => {
+      console.error('Modal error:', error);
     });
+  }
 
+  redirectToDetails(id: number) {
+    this.router.navigate([`products/seller/${id}`]);
   }
 }
+
+

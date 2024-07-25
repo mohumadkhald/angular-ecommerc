@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductModalComponent } from './product-modal.component';
+import { ModalContentComponent } from './modal-send-reset-password.component';
 
-describe('ProductModalComponent', () => {
-  let component: ProductModalComponent;
-  let fixture: ComponentFixture<ProductModalComponent>;
+describe('ModalContentComponent', () => {
+  let component: ModalContentComponent;
+  let fixture: ComponentFixture<ModalContentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductModalComponent]
+      imports: [ModalContentComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ProductModalComponent);
+    fixture = TestBed.createComponent(ModalContentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {map, Observable} from "rxjs";
-import {PaginatedResponse, Product} from "../component/interface/product";
+import { map, Observable } from "rxjs";
+import { PaginatedResponse, Product } from "../interface/product";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService {
+export class ProductService {
   private apiUrl = 'http://localhost:8080/api/products';
 
   constructor(private http: HttpClient) {}
