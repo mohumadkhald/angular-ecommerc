@@ -32,7 +32,6 @@ export class AuthService {
             this.saveToken(response.token);
             this.saveRole(response.role);
             this.setLogoutTimeout();
-            this.cookieService.delete('reloadFlag');
           }
         })
       );
@@ -45,29 +44,23 @@ export class AuthService {
     password: string,
     gender: string
   ): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/register`, {
-      firstname,
-      lastname,
-      email,
-      password,
-      gender,
-    }) .pipe(
-      tap((response: any) => {
-        if (response && response.token) {
-          this.saveToken(response.token);
-          this.saveRole(response.role);
-          this.setLogoutTimeout();
-        }
+    return this.http
+      .post(`${this.baseUrl}/auth/register`, {
+        firstname,
+        lastname,
+        email,
+        password,
+        gender,
       })
-    );;
-  }
-
-  showExpiredSessionDialog(message: string): void {
-    this.dialog.open(ExpiredSessionDialogComponent, {
-      width: '350px',
-      height: '200px',
-      data: { message: message },
-    });
+      .pipe(
+        tap((response: any) => {
+          if (response && response.token) {
+            this.saveToken(response.token);
+            this.saveRole(response.role);
+            this.setLogoutTimeout();
+          }
+        })
+      );
   }
 
   getProfile(): Observable<any> {
@@ -78,7 +71,12 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe(
       catchError((error) => {
-        if (error.error.message == 'Token not valid' || error.status === 403 || error.status === 401) {
+        if (
+          error.error.message == 'Token not valid' ||
+          error.status === 403 ||
+          error.status === 401
+        ) {
+          
         } else {
         }
         return of(null);
@@ -125,36 +123,39 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.clearAuthState();
-          // setTimeout(() => {
-          //   window.location.reload()
-          // }, 100);
         })
       );
   }
-  
+
   clearAuthState(): void {
-    this.cookieService.delete(this.tokenKey);
-    this.cookieService.delete(this.roleKey);
-    this.cookieService.delete('tokenExpiry');
+    // this.cookieService.delete(this.tokenKey);
+    // this.cookieService.delete(this.roleKey);
+    // this.cookieService.delete('tokenExpiry');
+    localStorage.removeItem(this.tokenKey);
   }
 
   isLoggedIn(): boolean {
-    return !!this.cookieService.get(this.tokenKey);
+    // return !!this.cookieService.get(this.tokenKey);
+    return !!localStorage.getItem(this.tokenKey);
   }
 
+  // saveToken(token: string): void {
+  //   const expiryDate = new Date();
+  //   expiryDate.setDate(expiryDate.getDate() + 1); // Set expiration to 1 day from now
+  //   this.cookieService.set(this.tokenKey, token, { expires: expiryDate });
+
+  //   // Save the expiration time in another cookie
+  //   this.cookieService.set('tokenExpiry', expiryDate.getTime().toString(), {
+  //     expires: expiryDate,
+  //   });
+  // }
   saveToken(token: string): void {
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 1); // Set expiration to 1 day from now
-    this.cookieService.set(this.tokenKey, token, { expires: expiryDate });
-
-    // Save the expiration time in another cookie
-    this.cookieService.set('tokenExpiry', expiryDate.getTime().toString(), {
-      expires: expiryDate,
-    });
+    localStorage.setItem(this.tokenKey, token);
   }
 
-  getToken(): string {
-    return this.cookieService.get(this.tokenKey);
+  getToken(): string | null {
+    // return this.cookieService.get(this.tokenKey);
+    return localStorage.getItem(this.tokenKey);
   }
 
   saveRole(role: string): void {
@@ -186,5 +187,13 @@ export class AuthService {
         }, Math.max(timeLeft - 5000, 0));
       }
     }
+  }
+
+  showExpiredSessionDialog(message: string): void {
+    this.dialog.open(ExpiredSessionDialogComponent, {
+      width: '350px',
+      height: '200px',
+      data: { message: message },
+    });
   }
 }

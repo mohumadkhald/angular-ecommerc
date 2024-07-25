@@ -99,7 +99,7 @@ export class AuthComponent implements OnInit {
 
     setTimeout(() => {
       this.loading = false;
-    }, 100);
+    }, 500);
   }
 
   login() {
