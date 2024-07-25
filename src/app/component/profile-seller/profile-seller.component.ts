@@ -6,7 +6,6 @@ import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
-import { UserService } from '../../service/user.service';
 import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 import { ProductService } from '../../service/product.service';
 

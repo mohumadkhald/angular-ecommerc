@@ -32,7 +32,7 @@ export class ProfileAdminComponent {
     private router: Router,
     private modalService: NgbModal,
     public toastService: ToastService,
-    private productsService: ProductService
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class ProfileAdminComponent {
 
   loadProducts() {
     if (this.authService.isLoggedIn()) {
-      this.productsService.getProductsByCreatedBy().subscribe((products) => {
+      this.productService.getProductsByCreatedBy().subscribe((products) => {
         this.products = products;
         this.loadMoreProducts();
       });
