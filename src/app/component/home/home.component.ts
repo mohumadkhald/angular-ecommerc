@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -9,6 +9,7 @@ import { ToastService } from '../../service/toast.service';
 import { UserService } from "../../service/user.service";
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { SetFirstPasswordComponent } from '../set-first-password/set-first-password.component';
+import { Subscription } from 'rxjs';
 @Component({
     standalone: true,
     selector: 'app-home',
@@ -17,12 +18,13 @@ import { SetFirstPasswordComponent } from '../set-first-password/set-first-passw
   imports: [NgClass, NgStyle, NgFor, NgIf, ProductCardComponent]
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   title = 'Home';
   products!: Product[];
   private username!: string;
   private modalRef?: NgbModalRef;
   private closeTimeoutId?: number;
+  private authSubscription!: Subscription;
 
   constructor(
     private router: Router,
@@ -37,18 +39,14 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.auth()) {
-      this.userService.loadProfile().subscribe(() => {
-        this.userService.username$.subscribe(username => {
-          if (username) {
-            this.username = username;
-            this.cd.detectChanges();
-          }
-        });
-      });
-    }
-    
-    this.route.queryParams.subscribe(params => {
+    this.authSubscription = this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
+      console.log('Auth status changed:', isLoggedIn);
+      if (isLoggedIn) {
+        this.checkFirstPwdSet();
+      }
+    });
+
+    this.route.queryParams.subscribe((params) => {
       const token = params['token'];
       const message = params['message'];
       const role = params['role'];
@@ -61,25 +59,28 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+  }
 
-    // Check if the user needs to set the first password
-    const firstPwdSet = localStorage.getItem('firstPwdSet');
-    if (firstPwdSet == "false") {
-      this.openSetFirstPwd();
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
     }
   }
 
-  auth(): boolean {
-    return this.authService.isLoggedIn();
-  }
 
+  private checkFirstPwdSet(): void {
+    const firstPwdSet = localStorage.getItem('firstPwdSet');
+    if (firstPwdSet === 'false') {
+      this.openSetFirstPwd();
+    }
+  }
 
   openSetFirstPwd(): void {
     const dialogRef = this.dialog.open(SetFirstPasswordComponent, {
       width: '500px',
       height: '400px',
       data: { name: 'Set Password For Email Address' },
-      panelClass: 'custom-dialog-container'  // Apply the custom class here
+      panelClass: 'custom-dialog-container', // Apply the custom class here
     });
 
     dialogRef.afterOpened().subscribe(() => {
@@ -102,5 +103,4 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('firstPwdSet', 'true');
     });
   }
-
 }

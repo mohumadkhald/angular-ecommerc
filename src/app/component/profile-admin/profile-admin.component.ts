@@ -8,6 +8,7 @@ import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.compo
 import { CommonModule } from '@angular/common';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { ProductService } from '../../service/product.service';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-profile-admin',
@@ -29,6 +30,7 @@ export class ProfileAdminComponent {
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private router: Router,
     private modalService: NgbModal,
     public toastService: ToastService,
@@ -42,7 +44,7 @@ export class ProfileAdminComponent {
 
   loadUserProfile() {
     if (this.authService.isLoggedIn()) {
-      this.authService.getProfile().subscribe(
+      this.userService.loadProfile().subscribe(
         (response) => {
           this.user = response;
         },

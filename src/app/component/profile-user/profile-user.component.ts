@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-profile-user',
@@ -20,6 +21,7 @@ export class ProfileUserComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private modalService: NgbModal,
+    private userService: UserService,
     public toastService: ToastService
   ) {}
 
@@ -29,7 +31,7 @@ export class ProfileUserComponent implements OnInit {
 
   loadUserProfile() {
     if (this.authService.isLoggedIn()) {
-      this.authService.getProfile().subscribe(
+      this.userService.loadProfile().subscribe(
         (response) => {
           this.user = response;
         },

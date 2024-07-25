@@ -3,6 +3,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import {
@@ -21,6 +22,7 @@ import { CategoryService } from '../../service/category.service';
 import { UserService } from '../../service/user.service';
 import { ToastService } from '../../service/toast.service';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -37,7 +39,7 @@ import { CategoryUpdateService } from '../../dashboard-service/category-update.s
   styleUrl: './header.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   selectedCategory: string = 'all';
   searchText: string = '';
   quantity: any = 0;
@@ -47,6 +49,8 @@ export class HeaderComponent implements OnInit {
   loading: boolean = true;
   categories: any[] = [];
   menuVisible = false;
+  private authSubscription!: Subscription;
+
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -58,7 +62,8 @@ export class HeaderComponent implements OnInit {
     private cartServerService: CartServerService,
     private cartService: CartService,
     public toastService: ToastService,
-    private categoryUpdateService: CategoryUpdateService
+    private categoryUpdateService: CategoryUpdateService,
+    
   ) {
     this.role = 'USER';
   }
@@ -69,6 +74,14 @@ export class HeaderComponent implements OnInit {
       this.searchText = params['search'] || '';
     });
 
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        console.log('Auth status changed:', isLoggedIn);
+        if (isLoggedIn) {
+          this.loadUserProfile();
+        }
+      }
+    );
     this.userService.username$.subscribe((username) => {
       this.username = username || '';
       this.loading = false;
@@ -88,7 +101,6 @@ export class HeaderComponent implements OnInit {
     });
 
     if (this.authService.isLoggedIn()) {
-      this.loadProfile();
       this.cartServerService.getCart().subscribe();
       this.getCountOfItems();
     }
@@ -98,21 +110,30 @@ export class HeaderComponent implements OnInit {
       this.loadCategories(); // Refresh categories when notified
     });
   }
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+
 
   logout() {
     this.authService.logout().subscribe(() => {
       this.clearUserData();
-      // setTimeout(() => {
-      //   this.router.navigate(['/login']);
-      // }, 200);
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 200);
     });
   }
 
-  private loadProfile(): void {
-    this.userService.loadProfile().subscribe({
-      error: (err) => {
-
-      }
+  private loadUserProfile(): void {
+    this.userService.loadProfile().subscribe(() => {
+      this.userService.username$.subscribe((username) => {
+        if (username) {
+          this.username = username;
+          this.cd.detectChanges();
+        }
+      });
     });
   }
 
@@ -129,8 +150,7 @@ export class HeaderComponent implements OnInit {
       (categories) => {
         this.categories = categories;
       },
-      (error) => {
-      }
+      (error) => {}
     );
   }
 
@@ -157,6 +177,6 @@ export class HeaderComponent implements OnInit {
     });
   }
   auth() {
-    return this.authService.isLoggedIn()
+    return this.authService.isLoggedIn();
   }
 }

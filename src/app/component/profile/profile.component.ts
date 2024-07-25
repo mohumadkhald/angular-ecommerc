@@ -1,29 +1,38 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { ProfileSellerComponent } from '../profile-seller/profile-seller.component';
 import { ProfileUserComponent } from '../profile-user/profile-user.component';
 import { ToastService } from '../../service/toast.service';
 import { ProfileAdminComponent } from '../profile-admin/profile-admin.component';
-
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   templateUrl: './profile.component.html',
-    styleUrl: './profile.component.css',
-    imports: [ProfileAdminComponent, ProfileSellerComponent, ProfileUserComponent, CommonModule]
+  styleUrl: './profile.component.css',
+  imports: [
+    ProfileAdminComponent,
+    ProfileSellerComponent,
+    ProfileUserComponent,
+    CommonModule,
+  ],
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastService: ToastService,
+    private userService: UserService
+  ) {}
 
-  constructor(private authService: AuthService, private router: Router, private toastService: ToastService) {}
-
-  user:any;
+  user: any;
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.authService.getProfile().subscribe(data => {
+      this.userService.loadProfile().subscribe((data) => {
         this.user = data;
       });
     }
@@ -39,5 +48,4 @@ export class ProfileComponent implements OnInit{
   auth() {
     return this.authService.isLoggedIn();
   }
-
 }

@@ -1,7 +1,7 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -15,6 +15,7 @@ export class AuthService {
   private tokenKey = 'token';
   private roleKey = 'role';
   private baseUrl = 'http://localhost:8080/api';
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(
     private http: HttpClient,
@@ -23,47 +24,40 @@ export class AuthService {
     private dialog: MatDialog
   ) {}
 
+  get isLoggedIn$() {
+    return this.loggedIn.asObservable();
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem(this.tokenKey);
+  }
+
   login(email: string, password: string): Observable<any> {
-    return this.http
-      .post(`${this.baseUrl}/auth/login`, { email, password })
-      .pipe(
-        tap((response: any) => {
-          if (response && response.token) {
-            this.saveToken(response.token);
-            this.saveRole(response.role);
-            this.setLogoutTimeout();
-          }
-        })
-      );
-  }
-
-  register(
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string,
-    gender: string
-  ): Observable<any> {
-    return this.http
-      .post(`${this.baseUrl}/auth/register`, {
-        firstname,
-        lastname,
-        email,
-        password,
-        gender,
+    return this.http.post(`${this.baseUrl}/auth/login`, { email, password }).pipe(
+      tap((response: any) => {
+        if (response && response.token) {
+          this.saveToken(response.token);
+          this.saveRole(response.role);
+          this.setLogoutTimeout();
+          this.loadProfile().subscribe();
+        }
       })
-      .pipe(
-        tap((response: any) => {
-          if (response && response.token) {
-            this.saveToken(response.token);
-            this.saveRole(response.role);
-            this.setLogoutTimeout();
-          }
-        })
-      );
+    );
   }
 
-  getProfile(): Observable<any> {
+  register(firstname: string, lastname: string, email: string, password: string, gender: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/register`, { firstname, lastname, email, password, gender }).pipe(
+      tap((response: any) => {
+        if (response && response.token) {
+          this.saveToken(response.token);
+          this.saveRole(response.role);
+          this.setLogoutTimeout();
+        }
+      })
+    );
+  }
+
+  loadProfile(): Observable<any> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -71,14 +65,7 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe(
       catchError((error) => {
-        if (
-          error.error.message == 'Token not valid' ||
-          error.status === 403 ||
-          error.status === 401
-        ) {
-          
-        } else {
-        }
+        // Handle error
         return of(null);
       })
     );
@@ -90,9 +77,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http
-      .put(`${this.baseUrl}/auth/profile`, user, { headers })
-      .pipe();
+    return this.http.put(`${this.baseUrl}/auth/profile`, user, { headers });
   }
 
   changePhoto(image: File): Observable<any> {
@@ -103,9 +88,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.patch<any>(`${this.baseUrl}/auth/photo`, formData, {
-      headers,
-    });
+    return this.http.patch<any>(`${this.baseUrl}/auth/photo`, formData, { headers });
   }
 
   logout(): Observable<any> {
@@ -123,38 +106,28 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.clearAuthState();
+          this.loggedIn.next(false);
         })
       );
   }
-
+  
   clearAuthState(): void {
-    // this.cookieService.delete(this.tokenKey);
-    // this.cookieService.delete(this.roleKey);
-    // this.cookieService.delete('tokenExpiry');
+    this.cookieService.delete(this.roleKey);
+    this.cookieService.delete('tokenExpiry');
     localStorage.removeItem(this.tokenKey);
   }
-
+  
   isLoggedIn(): boolean {
-    // return !!this.cookieService.get(this.tokenKey);
     return !!localStorage.getItem(this.tokenKey);
   }
+  
 
-  // saveToken(token: string): void {
-  //   const expiryDate = new Date();
-  //   expiryDate.setDate(expiryDate.getDate() + 1); // Set expiration to 1 day from now
-  //   this.cookieService.set(this.tokenKey, token, { expires: expiryDate });
-
-  //   // Save the expiration time in another cookie
-  //   this.cookieService.set('tokenExpiry', expiryDate.getTime().toString(), {
-  //     expires: expiryDate,
-  //   });
-  // }
   saveToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
+    this.loggedIn.next(true);
   }
 
   getToken(): string | null {
-    // return this.cookieService.get(this.tokenKey);
     return localStorage.getItem(this.tokenKey);
   }
 
@@ -193,7 +166,7 @@ export class AuthService {
     this.dialog.open(ExpiredSessionDialogComponent, {
       width: '350px',
       height: '200px',
-      data: { message: message },
+      data: { message },
     });
   }
 }

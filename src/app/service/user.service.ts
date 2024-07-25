@@ -26,7 +26,9 @@ export class UserService implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadProfile().subscribe();
+    if(this.authService.isLoggedIn()) {
+      this.loadProfile().subscribe();
+    }
   }
 
   setUsername(username: string): void {
@@ -46,7 +48,7 @@ export class UserService implements OnInit {
   }
 
   loadProfile(): Observable<any> {
-    return this.authService.getProfile().pipe(
+    return this.authService.loadProfile().pipe(
       tap(response => {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
