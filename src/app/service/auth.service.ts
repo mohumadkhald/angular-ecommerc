@@ -32,6 +32,7 @@ export class AuthService {
             this.saveToken(response.token);
             this.saveRole(response.role);
             this.setLogoutTimeout();
+            this.cookieService.delete('reloadFlag');
           }
         })
       );

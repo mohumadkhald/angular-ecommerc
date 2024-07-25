@@ -17,16 +17,15 @@ export class PageDetailsComponent {
   @Input() id!: number;
   cartItems: { product: any }[] = [];
   constructor(
-    private productsService: ProductService,
+    private productService: ProductService,
     private cartService: CartService,
     private router: Router,
   ) {}
   ngOnInit() {
     this.cartItems = this.cartService.getCart();
-    this.productsService.getProductById(this.id).subscribe((res) => {
+    this.productService.getProductById(this.id).subscribe((res) => {
       if (res) {
         this.productItem = res;
-        console.log(this.productItem);
       } else {
       }
     }, (error) => {

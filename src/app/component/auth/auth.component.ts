@@ -97,10 +97,9 @@ export class AuthComponent implements OnInit {
       this.router.navigate(['/']);
     }
 
-    // Simulate loading for 2 seconds
     setTimeout(() => {
-      this.loading = false; // Set loading to false after 2 seconds
-    }, 0);
+      this.loading = false;
+    }, 100);
   }
 
   login() {
@@ -110,7 +109,6 @@ export class AuthComponent implements OnInit {
 
       this.authService.login(email, password).subscribe(
         response => {
-          console.log('Login successful', response);
           this.cartService.syncCartFromLocalStorage();
           this.authService.saveToken(response.token);
           localStorage.setItem('firstPwdSet', 'true');

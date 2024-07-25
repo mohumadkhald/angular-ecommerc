@@ -130,7 +130,6 @@ export class HeaderComponent implements OnInit {
         this.categories = categories;
       },
       (error) => {
-        console.error('Error loading categories', error);
       }
     );
   }

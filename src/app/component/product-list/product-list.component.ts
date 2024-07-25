@@ -16,7 +16,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaginatedResponse, Product } from '../../interface/product';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { CategoryService } from '../../service/category.service';
-import { ProductService } from '../../service/product.service';
 import { ToastService } from '../../service/toast.service';
 import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
 import { CustomRangeSliderComponent } from '../custom-range-slider/custom-range-slider.component';
@@ -24,6 +23,7 @@ import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { SortOptionsComponent } from '../sort-options/sort-options.component';
+import { ProductService } from '../../service/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -167,7 +167,8 @@ export class ProductListComponent implements OnInit {
           (subCategories) => {
             this.subCategories = subCategories;
           },
-          (error) => {}
+          (error) => {
+          }
         );
     }
   }
