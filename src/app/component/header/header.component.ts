@@ -102,19 +102,16 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.logout().subscribe(() => {
       this.clearUserData();
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 1000);
+      // setTimeout(() => {
+      //   this.router.navigate(['/login']);
+      // }, 200);
     });
   }
 
   private loadProfile(): void {
     this.userService.loadProfile().subscribe({
       error: (err) => {
-        if (err.status === 401) {
-          this.clearUserData();
-          this.router.navigate(['/login']);
-        }
+
       }
     });
   }

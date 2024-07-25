@@ -78,12 +78,7 @@ export class AuthService {
     return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe(
       catchError((error) => {
         if (error.error.message == 'Token not valid' || error.status === 403 || error.status === 401) {
-          this.cookieService.delete(this.tokenKey);
-          this.cookieService.delete(this.roleKey);
-          this.cookieService.delete('tokenExpiry');
-          this.router.navigate([`/login`]);
         } else {
-          console.log(error)
         }
         return of(null);
       })
@@ -129,6 +124,9 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.clearAuthState();
+          // setTimeout(() => {
+          //   window.location.reload()
+          // }, 100);
         })
       );
   }

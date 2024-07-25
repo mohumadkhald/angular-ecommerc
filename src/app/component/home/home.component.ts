@@ -73,17 +73,6 @@ export class HomeComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-  logout(): void {
-    this.authService.logout().subscribe(
-      response => {
-        this.userService.clearUsername(); // Clear the username in the shared service
-        this.router.navigate(['/user/login']);  // Redirect to login after logout
-      },
-      error => {
-      }
-    );
-  }
-
 
   openSetFirstPwd(): void {
     const dialogRef = this.dialog.open(SetFirstPasswordComponent, {

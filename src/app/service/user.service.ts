@@ -57,10 +57,6 @@ export class UserService implements OnInit {
       }),
       catchError(error => {
         if (error.status === 403 || error.status === 401) {
-          this.cookieService.delete("token");
-          this.cookieService.delete("role");
-          this.cookieService.delete('tokenExpiry');
-          this.router.navigate([`/login`]);
         }
         this.clearUsername();
         return of(null);

@@ -100,7 +100,7 @@ export class AuthComponent implements OnInit {
     // Simulate loading for 2 seconds
     setTimeout(() => {
       this.loading = false; // Set loading to false after 2 seconds
-    }, 200);
+    }, 0);
   }
 
   login() {
