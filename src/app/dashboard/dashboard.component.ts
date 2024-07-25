@@ -47,10 +47,7 @@ export class DashboardComponent implements OnInit {
       }
     }, (error) => {
       if (error.status === 403 || error.status === 401) {
-        this.showExpiredSessionDialog("Your Session Expired");
-        setTimeout(() => {
-          this.router.navigate([`/login`]);
-        }, 1000)
+
       }
     });
 
@@ -68,9 +65,9 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchUserCount() {
-    const token = this.authService.getToken();
-    this.usersService.getUsers(token, 1, 10).subscribe(users => {
-      this.userCount = users.totalElements      ;
+    this.usersService.getUsers(0, 10).subscribe(users => {
+      this.userCount = users.totalElements;
+      console.log(users)
     }, error => {
 
     });
@@ -85,7 +82,7 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchProductCount() {
-    this.productService.getAllProducts(1, 10).subscribe(products => {
+    this.productService.getAllProducts(0, 10).subscribe(products => {
       this.prodsCount = products.totalElements;
     }, error => {
 

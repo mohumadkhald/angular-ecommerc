@@ -3,27 +3,39 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectorRef,
   Component,
-  OnInit
+  OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from "../../service/auth.service";
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
+import { AuthService } from '../../service/auth.service';
 
 import { FormsModule } from '@angular/forms';
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 import { CategoryService } from '../../service/category.service';
-import { UserService } from "../../service/user.service";
+import { UserService } from '../../service/user.service';
 import { ToastService } from '../../service/toast.service';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgFor, NgIf, MatProgressSpinner, FormsModule],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    NgFor,
+    NgIf,
+    MatProgressSpinner,
+    FormsModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HeaderComponent implements OnInit {
   selectedCategory: string = 'all';
@@ -52,39 +64,35 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.selectedCategory = params['category'] || 'all';
       this.searchText = params['search'] || '';
     });
 
-    this.userService.username$.subscribe(username => {
-      if (username) {
-        this.username = username;
-        this.loading = false;
-        this.cd.detectChanges();
-      }
-    });
-    this.userService.img$.subscribe(img => {
-      if (img) {
-        this.img = img;
-        this.loading = false;
-        this.cd.detectChanges();
-      }
-    });
-    this.userService.role$.subscribe(role => {
-      if (role) {
-        this.role = role;
-        this.authService.saveRole(role);
-        this.loading = false;
-        this.cd.detectChanges();
-      }
+    this.userService.username$.subscribe((username) => {
+      this.username = username || '';
+      this.loading = false;
+      this.cd.detectChanges();
     });
 
-    if (this.auth()) {
+    this.userService.img$.subscribe((img) => {
+      this.img = img || '';
+      this.loading = false;
+      this.cd.detectChanges();
+    });
+
+    this.userService.role$.subscribe((role) => {
+      this.role = role;
+      this.loading = false;
+      this.cd.detectChanges();
+    });
+
+    if (this.authService.isLoggedIn()) {
+      this.loadProfile();
       this.cartServerService.getCart().subscribe();
       this.getCountOfItems();
-      this.userService.loadProfile().subscribe();
     }
+
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
       this.loadCategories(); // Refresh categories when notified
@@ -92,23 +100,42 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().subscribe(
-      response => {
+    this.authService.logout().subscribe(() => {
+      this.clearUserData();
+      setTimeout(() => {
         this.router.navigate(['/login']);
-      }
-    );
+      }, 1000);
+    });
   }
 
-  auth(): boolean {
-    return this.authService.isLoggedIn();
+  private loadProfile(): void {
+    this.userService.loadProfile().subscribe({
+      error: (err) => {
+        if (err.status === 401) {
+          this.clearUserData();
+          this.router.navigate(['/login']);
+        }
+      }
+    });
+  }
+
+  private clearUserData(): void {
+    this.username = '';
+    this.img = '';
+    this.role = '';
+    this.loading = false;
+    this.cd.detectChanges();
   }
 
   loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe(categories => {
-      this.categories = categories;
-    }, error => {
-
-    });
+    this.categoryService.getAllCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+      },
+      (error) => {
+        console.error('Error loading categories', error);
+      }
+    );
   }
 
   toggleMenu(visible: boolean): void {
@@ -116,19 +143,24 @@ export class HeaderComponent implements OnInit {
   }
 
   getCountOfItems() {
-    if (this.auth()) {
+    if (this.authService.isLoggedIn()) {
       return this.cartServerService.getCountOfItems();
     }
     return this.cartService.getCountOfItems();
   }
 
   saveImg(img: string) {
-    localStorage.setItem("imgCat", img);
+    localStorage.setItem('imgCat', img);
   }
 
   goToSearchResult() {
     const categoryTitle = this.selectedCategory || 'all';
     const productName = this.searchText || '';
-    this.router.navigate(['search'], { queryParams: { category: categoryTitle, search: productName } });
+    this.router.navigate(['search'], {
+      queryParams: { category: categoryTitle, search: productName },
+    });
+  }
+  auth() {
+    return this.authService.isLoggedIn()
   }
 }

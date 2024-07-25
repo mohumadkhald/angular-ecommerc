@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Prod } from '../interface/product-all-details';
+import { AuthService } from '../service/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,9 @@ import { Prod } from '../interface/product-all-details';
 export class ProductsService {
 
   private apiUrl = 'http://localhost:8080/api/products';
-  private token = localStorage.getItem('token');
+  private token = this.authService.getToken();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   getAllProducts(page: number, pageSize: number): Observable<any> {
     const headers = new HttpHeaders({

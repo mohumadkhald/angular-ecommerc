@@ -1,21 +1,30 @@
 // auth.interceptor.ts
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import {AuthService} from "../service/auth.service";
+import { AuthService } from '../service/auth.service';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
-    const authService = inject(AuthService);
-    const authToken = authService.getToken();
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const authToken = authService.getToken();
 
-    if (authToken) {
-      const clonedRequest = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${authToken}`
+  const clonedRequest = authToken ? req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  }) : req;
+
+  return next(clonedRequest).pipe(
+    catchError(error => {
+      if (error.status === 401) {
+        authService.clearAuthState(); // Ensure auth state is cleared on 401
+        if (router.url !== '/login') {
+          router.navigate(['/login']); // Redirect to login only if not already there
         }
-      });
-      return next(clonedRequest);
-    }
-
-    return next(req);
-  }
-;
+      }
+      return throwError(() => error);
+    })
+  );
+};

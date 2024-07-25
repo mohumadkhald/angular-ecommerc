@@ -22,14 +22,11 @@ export class ProfileComponent implements OnInit{
   user:any;
 
   ngOnInit(): void {
-      this.authService.getProfile().subscribe(
-        response => {
-          this.user = response;
-        },
-        error => {
-
-        }
-      );
+    if (this.authService.isLoggedIn()) {
+      this.authService.getProfile().subscribe(data => {
+        this.user = data;
+      });
+    }
   }
 
   removeToast(): void {
@@ -38,6 +35,9 @@ export class ProfileComponent implements OnInit{
 
   showToast(): void {
     this.toastService.add('This is a toast message.');
+  }
+  auth() {
+    return this.authService.isLoggedIn();
   }
 
 }

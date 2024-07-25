@@ -30,6 +30,7 @@ export class AuthService {
         tap((response: any) => {
           if (response && response.token) {
             this.saveToken(response.token);
+            this.saveRole(response.role);
             this.setLogoutTimeout();
           }
         })
@@ -49,7 +50,15 @@ export class AuthService {
       email,
       password,
       gender,
-    });
+    }) .pipe(
+      tap((response: any) => {
+        if (response && response.token) {
+          this.saveToken(response.token);
+          this.saveRole(response.role);
+          this.setLogoutTimeout();
+        }
+      })
+    );;
   }
 
   showExpiredSessionDialog(message: string): void {
@@ -68,15 +77,13 @@ export class AuthService {
 
     return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe(
       catchError((error) => {
-        if (error.error.message == 'Token not valid') {
+        if (error.error.message == 'Token not valid' || error.status === 403 || error.status === 401) {
           this.cookieService.delete(this.tokenKey);
           this.cookieService.delete(this.roleKey);
           this.cookieService.delete('tokenExpiry');
           this.router.navigate([`/login`]);
         } else {
-          this.cookieService.delete(this.tokenKey);
-          this.cookieService.delete(this.roleKey);
-          this.cookieService.delete('tokenExpiry');
+          console.log(error)
         }
         return of(null);
       })
@@ -121,11 +128,15 @@ export class AuthService {
       )
       .pipe(
         tap(() => {
-          this.cookieService.delete(this.tokenKey);
-          this.cookieService.delete(this.roleKey);
-          this.cookieService.delete('tokenExpiry');
+          this.clearAuthState();
         })
       );
+  }
+  
+  clearAuthState(): void {
+    this.cookieService.delete(this.tokenKey);
+    this.cookieService.delete(this.roleKey);
+    this.cookieService.delete('tokenExpiry');
   }
 
   isLoggedIn(): boolean {
@@ -158,7 +169,7 @@ export class AuthService {
     });
   }
 
-  getRole(): string | null {
+  getRole(): string {
     return this.cookieService.get(this.roleKey);
   }
 

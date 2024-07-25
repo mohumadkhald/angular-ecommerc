@@ -15,7 +15,6 @@ export class UsersDetailsComponent implements OnInit {
 
   @Input() id !: number;
   user: any;
-  token: any = localStorage.getItem('token'); // Replace this with the actual token retrieval logic
 
   constructor(
     private route: ActivatedRoute,
@@ -23,20 +22,22 @@ export class UsersDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.usersService.getUserDetails(this.id, this.token).subscribe((res) => {
+    this.usersService.getUserDetails(this.id).subscribe((res) => {
       if (res) {
         this.user = res;
       } else {
+        console.log('User not found');
       }
     })
   }
 
   getUserDetails(userId: number): void {
-    this.usersService.getUserDetails(userId, this.token).subscribe(
+    this.usersService.getUserDetails(userId).subscribe(
       data => {
         this.user = data;
       },
       error => {
+        console.log(error)
       }
     );
   }
@@ -57,7 +58,7 @@ export class UsersDetailsComponent implements OnInit {
   }
 
   updateUserStatus(params: any) {
-    this.usersService.updateUserStatus(this.user.userId, params, this.token)
+    this.usersService.updateUserStatus(this.user.userId, params)
       .subscribe(response => {
       }, error => {
       });

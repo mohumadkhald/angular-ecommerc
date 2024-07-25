@@ -1,56 +1,61 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AuthService } from '../service/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-
   private apiUrl = 'http://localhost:8080/api/users';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) {}
+  private token = this.authService.getToken();
 
-  getUsers(token: any, page: number, pageSize: number): Observable<any> {
+
+  getUsers(page: number, pageSize: number): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     const url = `${this.apiUrl}?page=${page}&pageSize=${pageSize}`;
 
     return this.http.get<any>(url, { headers });
   }
-  deleteUser(userId: number, token: string): Observable<any> {
+  deleteUser(userId: number): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.delete<any>(`${this.apiUrl}/${userId}`, { headers });
   }
 
-  getUserDetails(userId: number, token: string): Observable<any> {
+  getUserDetails(userId: number): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers });
   }
 
-  
-  addUser(user: any, token: string): Observable<any> {
+  addUser(user: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.post(this.apiUrl, user, { headers });
   }
-  
-  updateUserStatus(userId: number, params: any, token: string): Observable<any> {
+
+  updateUserStatus(userId: number, params: any): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.patch<any>(`${this.apiUrl}/status/${userId}`, {}, { headers, params });
+    return this.http.patch<any>(
+      `${this.apiUrl}/status/${userId}`,
+      {},
+      { headers, params }
+    );
   }
 }

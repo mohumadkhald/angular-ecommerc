@@ -47,9 +47,7 @@ export class AddUserComponent {
       return;
     }
 
-    const token = 'your-auth-token';
-
-    this.userService.addUser(this.userForm.value, token)
+    this.userService.addUser(this.userForm.value)
       .subscribe({
         next: (response) => {
           console.log('User added successfully', response);

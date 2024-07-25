@@ -6,15 +6,15 @@ import { ToastService } from '../../service/toast.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
 import { CommonModule } from '@angular/common';
-import { CapitalizePipe } from "../../pipe/capitalize.pipe";
+import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { ProductService } from '../../service/product.service';
 
 @Component({
-    selector: 'app-profile-admin',
-    standalone: true,
-    templateUrl: './profile-admin.component.html',
-    styleUrl: './profile-admin.component.css',
-    imports: [CommonModule, CapitalizePipe]
+  selector: 'app-profile-admin',
+  standalone: true,
+  templateUrl: './profile-admin.component.html',
+  styleUrl: './profile-admin.component.css',
+  imports: [CommonModule, CapitalizePipe],
 })
 export class ProfileAdminComponent {
   user: any;
@@ -41,25 +41,32 @@ export class ProfileAdminComponent {
   }
 
   loadUserProfile() {
-    this.authService.getProfile().subscribe(
-      response => {
-        this.user = response;
-      },
-      error => {
-        console.error('Error loading user profile', error);
-      }
-    );
+    if (this.authService.isLoggedIn()) {
+      this.authService.getProfile().subscribe(
+        (response) => {
+          this.user = response;
+        },
+        (error) => {
+          console.error('Error loading user profile', error);
+        }
+      );
+    }
   }
 
   loadProducts() {
-    this.productsService.getProductsByCreatedBy().subscribe(products => {
-      this.products = products;
-      this.loadMoreProducts();
-    });
+    if (this.authService.isLoggedIn()) {
+      this.productsService.getProductsByCreatedBy().subscribe((products) => {
+        this.products = products;
+        this.loadMoreProducts();
+      });
+    }
   }
 
   loadMoreProducts() {
-    const nextProducts = this.products.slice(this.visibleProducts.length, this.visibleProducts.length + this.productsToShow);
+    const nextProducts = this.products.slice(
+      this.visibleProducts.length,
+      this.visibleProducts.length + this.productsToShow
+    );
     this.visibleProducts = this.visibleProducts.concat(nextProducts);
     this.hasMoreProducts = this.visibleProducts.length < this.products.length;
   }
@@ -69,7 +76,10 @@ export class ProfileAdminComponent {
   }
 
   openAddProductModal() {
-    const modalRef = this.modalService.open(AddProductComponent, { size: 'lg', centered: true });
+    const modalRef = this.modalService.open(AddProductComponent, {
+      size: 'lg',
+      centered: true,
+    });
 
     modalRef.result.then(
       (result) => {
@@ -98,38 +108,41 @@ export class ProfileAdminComponent {
 
   uploadImage(file: File) {
     this.authService.changePhoto(file).subscribe(
-      response => {
+      (response) => {
         this.toastService.add('Image updated successfully');
         this.user.imageUrl = response.message; // Update user image URL
       },
-      error => {
+      (error) => {
         this.toastService.add('Image upload failed');
       }
     );
   }
 
   open(user: any) {
-    const modalRef = this.modalService.open(EditUserModalComponent, { size: 'lg', centered: true });
+    const modalRef = this.modalService.open(EditUserModalComponent, {
+      size: 'lg',
+      centered: true,
+    });
     modalRef.componentInstance.user = user;
 
-    modalRef.result.then(
-      (result) => {
-        if (result === 'updated') {
-          this.toastService.add('User edit success');
-          this.loadUserProfile(); // Reload user profile after update
+    modalRef.result
+      .then(
+        (result) => {
+          if (result === 'updated') {
+            this.toastService.add('User edit success');
+            this.loadUserProfile(); // Reload user profile after update
+          }
+        },
+        (reason) => {
+          console.log('Modal dismissed:', reason);
         }
-      },
-      (reason) => {
-        console.log('Modal dismissed:', reason);
-      }
-    ).catch((error) => {
-      console.error('Modal error:', error);
-    });
+      )
+      .catch((error) => {
+        console.error('Modal error:', error);
+      });
   }
 
   redirectToDetails(id: number) {
     this.router.navigate([`products/seller/${id}`]);
   }
 }
-
-

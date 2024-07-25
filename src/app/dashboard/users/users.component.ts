@@ -37,20 +37,20 @@ export class UsersComponent implements OnInit {
     this.fetchUsers(this.currentPage - 1);
   }
 
-  fetchUsers(page: number = 0, pageSize: number = 15): void {
-    this.usersService.getUsers(this.token, page, pageSize).subscribe(
+  fetchUsers(page: number = 0, pageSize: number = 10): void {
+    this.usersService.getUsers(page, pageSize).subscribe(
       (data) => {
-        this.users = data.content; // Assuming data contains the users array
+        this.users = data.content;
         this.currentPage = data.pageable.pageNumber + 1;
         this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1);
       },
       (error) => {
+        console.error('Error fetching products', error);
       }
     );
   }
-
   deleteUser(userId: number): void {
-    this.usersService.deleteUser(userId, this.token).subscribe(
+    this.usersService.deleteUser(userId).subscribe(
       () => {
         // Filter out the deleted user from the array
         this.users = this.users.filter(user => user.id !== userId);

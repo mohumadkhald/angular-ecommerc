@@ -82,6 +82,7 @@ export class AuthComponent implements OnInit {
       const role = params['role'];
       if (token) {
         this.authService.saveToken(token);
+        this.authService.saveRole(role);
         this.cartService.syncCartFromLocalStorage();
         if (params['newUser'] === 'true') {
           this.router.navigate(['/']);

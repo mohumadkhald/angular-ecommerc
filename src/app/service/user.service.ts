@@ -11,16 +11,19 @@ import { CookieService } from 'ngx-cookie-service';
 export class UserService implements OnInit {
   private usernameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private imgSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private roleSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   public username$: Observable<string | null> = this.usernameSubject.asObservable();
   public img$: Observable<string | null> = this.imgSubject.asObservable();
-
-  private roleSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public role$: Observable<any> = this.roleSubject.asObservable();
-  
+
   private profileLoaded: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private cookieService: CookieService,) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cookieService: CookieService
+  ) {}
 
   ngOnInit(): void {
     this.loadProfile().subscribe();
@@ -37,6 +40,7 @@ export class UserService implements OnInit {
   setImg(imgUrl: any): void {
     this.imgSubject.next(imgUrl);
   }
+
   setRole(role: any): void {
     this.roleSubject.next(role);
   }
@@ -46,13 +50,13 @@ export class UserService implements OnInit {
       tap(response => {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
-          this.setImg(`${response.imageUrl}`);
+          this.setImg(response.imageUrl);
           this.setRole(response.role);
           this.profileLoaded = true;
         }
       }),
       catchError(error => {
-        if (error.status === 403) {
+        if (error.status === 403 || error.status === 401) {
           this.cookieService.delete("token");
           this.cookieService.delete("role");
           this.cookieService.delete('tokenExpiry');
@@ -64,6 +68,19 @@ export class UserService implements OnInit {
     );
   }
 
-
-  
+  updateProfile(user: any): Observable<any> {
+    return this.authService.updateProfile(user).pipe(
+      tap(response => {
+        if (response) {
+          this.setUsername(`${response.firstName} ${response.lastName}`);
+          this.setImg(response.imageUrl);
+          this.setRole(response.role);
+        }
+      }),
+      catchError(error => {
+        console.error('Error updating profile', error);
+        return of(null);
+      })
+    );
+  }
 }
