@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { ProfileSellerComponent } from '../profile-seller/profile-seller.component';
@@ -7,6 +7,7 @@ import { ProfileUserComponent } from '../profile-user/profile-user.component';
 import { ToastService } from '../../service/toast.service';
 import { ProfileAdminComponent } from '../profile-admin/profile-admin.component';
 import { UserService } from '../../service/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,7 @@ import { UserService } from '../../service/user.service';
     CommonModule,
   ],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -29,13 +30,31 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   user: any;
+  private authSubscription!: Subscription;
+
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.userService.loadProfile().subscribe((data) => {
-        this.user = data;
-      });
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        console.log('Auth status changed:', isLoggedIn);
+        if (isLoggedIn) {
+          this.loadUserProfile();
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
     }
+  }
+
+
+  private loadUserProfile(): void {
+    this.userService.loadProfile().subscribe((response) => {
+      this.user = response
+    });
   }
 
   removeToast(): void {

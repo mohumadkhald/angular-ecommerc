@@ -241,6 +241,25 @@ input, select {
   height: 40px;
   width: 40px;
 }
+/* Style for Remember Me section */
+.remember-me-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.remember-me-label {
+  margin-right: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.remember-me-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #007bff; /* Change the color to match your primary color */
+}
+
 
 footer {
   background-color: #222;

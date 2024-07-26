@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   categories: any[] = [];
   menuVisible = false;
   private authSubscription!: Subscription;
-
+  
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -79,6 +79,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         console.log('Auth status changed:', isLoggedIn);
         if (isLoggedIn) {
           this.loadUserProfile();
+          this.cartServerService.getCart().subscribe();
         }
       }
     );
@@ -100,14 +101,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.cd.detectChanges();
     });
 
-    if (this.authService.isLoggedIn()) {
-      this.cartServerService.getCart().subscribe();
-      this.getCountOfItems();
-    }
 
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
-      this.loadCategories(); // Refresh categories when notified
+      this.loadCategories();
     });
   }
   ngOnDestroy(): void {

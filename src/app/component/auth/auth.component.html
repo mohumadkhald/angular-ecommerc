@@ -116,6 +116,10 @@
       <div *ngIf="formErrors['password']" class="text-danger">
         {{ formErrors['password'] }}
       </div>
+      <div class="remember-me-container">
+        <label class="remember-me-label" for="remember">Remember Me</label>
+        <input type="checkbox" id="remember" formControlName="remember" class="remember-me-checkbox">
+      </div>
       <a mat-button (click)="openDialog()">Forgot your password?</a>
       <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Sign In</button>
       <a class="text-success tggle" (click)="showSignUp()">Sign Up</a>

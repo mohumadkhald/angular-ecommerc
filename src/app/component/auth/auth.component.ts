@@ -44,7 +44,8 @@ export class AuthComponent implements OnInit {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern('^(.+)@(.+)$')]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      remember: []
     });
   }
 
@@ -106,8 +107,9 @@ export class AuthComponent implements OnInit {
     if (this.loginForm.valid) {
       const email = this.loginForm.value.email.trim();
       const password = this.loginForm.value.password.trim();
+      const remember = this.loginForm.value.remember;
 
-      this.authService.login(email, password).subscribe(
+      this.authService.login(email, password, remember).subscribe(
         response => {
           this.cartService.syncCartFromLocalStorage();
           this.authService.saveToken(response.token);

@@ -9,6 +9,6 @@ export class CategoryUpdateService {
   categoryUpdated$ = this.categorySubject.asObservable();
 
   notifyCategoryUpdate() {
-    this.categorySubject.next(); // Emit an event with no value
+    this.categorySubject.next();
   }
 }

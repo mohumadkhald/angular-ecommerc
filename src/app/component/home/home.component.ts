@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-      console.log('Auth status changed:', isLoggedIn);
       if (isLoggedIn) {
         this.checkFirstPwdSet();
       }
@@ -52,6 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       const role = params['role'];
       if (token) {
         this.authService.saveToken(token);
+        this.authService.saveRole(role);
         if (params['newUser'] === 'true') {
           this.openSetFirstPwd();
         } else {

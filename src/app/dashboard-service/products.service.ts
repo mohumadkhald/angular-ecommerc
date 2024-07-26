@@ -53,4 +53,13 @@ export class ProductsService {
     const url = `${this.apiUrl}/${productId}/stock`;
     return this.http.put(url, variations);
   }
+
+  setDiscount(productIds: number[], discount: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    const url = `${this.apiUrl}/setDiscount?productIds=${productIds}&discount=${discount}`;
+    return this.http.patch(url, { headers });
+  }
 }

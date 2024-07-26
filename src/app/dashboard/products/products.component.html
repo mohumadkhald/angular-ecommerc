@@ -2,7 +2,11 @@
     <h1 class="text-center my-2">Manage Members</h1>
     <div class="container">
         <div class="table-responsive">
-            <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
+            <a class="btn btn-primary mb-3 me-2" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
+            <a class="btn btn-info mb-3" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i> Make
+                Discount</a>
+            <input type="number" #discountInput placeholder="Discount %" class="form-control p-2 d-inline-block"
+            style="width: 150px; position: relative; top: -5px; left: 10px;">
             <table *ngIf="products.length > 0; else noUsers"
                 class="main-table table table-striped table-bordered table-hover">
                 <thead class="thead-dark">
@@ -11,14 +15,17 @@
                         <th>product Title</th>
                         <th>Price</th>
                         <th>Email Seller</th>
-                        <th>image</th>
+                        <th>Image</th>
                         <th>SubCategory Name</th>
                         <th>Control</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let product of products">
-                        <td>{{ product.productId }}</td>
+                        <td>
+                            <input type="checkbox" class="m-2" (change)="toggleProductSelection(product.productId)">
+                            {{ product.productId }}
+                        </td>
                         <td>{{ product.productTitle }}</td>
                         <td>{{ product.price }}</td>
                         <td>{{ product.email }}</td>
@@ -26,17 +33,15 @@
                         <td>{{ product.subCategory.name }}</td>
                         <td>
                             <a class="btn btn-primary btn-sm mr-1" (click)="detailsProduct(product.productId)"
-                                style="margin-right: 10px;"><i class="fa fa-circle-info"></i>
-                                Details</a>
-                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
-                                Edit</a>
+                                style="margin-right: 10px;"><i class="fa fa-circle-info"></i> Details</a>
+                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i
+                                    class="fa fa-edit"></i> Edit</a>
                             <a class="btn btn-danger btn-sm confirm" (click)="deleteProduct(product.productId)"><i
                                     class="fas fa-trash-alt"></i> Delete</a>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <!-- Pagination Component -->
             <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
                 (pageChange)="onPageChange($event)"></app-pagination>
             <ng-template #noUsers>
@@ -44,7 +49,7 @@
             </ng-template>
         </div>
     </div>
-    
+
     <div *ngIf="toastService.toast" class="toast-container">
         {{ toastService.toast }}
     </div>

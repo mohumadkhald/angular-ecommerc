@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationComponent } from "../../component/pagination/pagination.component";
@@ -9,6 +9,7 @@ import { ToastService } from '../../service/toast.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { DashboardComponent } from '../dashboard.component';
 import { SidebarComponent } from "../sidebar/sidebar.component";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -17,11 +18,13 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   users: any[] = [];
   token: any = '';
   currentPage = 1;
   totalPages: number[] = [];
+  private authSubscription!: Subscription;
+
 
   constructor(
     private router: Router,
@@ -33,8 +36,19 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.token = this.authService.getToken(); // Get the token
-    this.fetchUsers(this.currentPage - 1);
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        console.log('Auth status changed:', isLoggedIn);
+        if (isLoggedIn) {
+          this.fetchUsers(this.currentPage - 1);
+        }
+      }
+    );
+  }
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   fetchUsers(page: number = 0, pageSize: number = 10): void {
