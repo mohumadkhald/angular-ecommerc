@@ -18,9 +18,13 @@
     <div *ngIf="subCategoryName" class="filters">
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
-        <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
-        <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
-      </div>
+        <label>
+          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock (26)
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available (3)
+        </label>
+      </div>      
       <div class="price-range">
         <h3 style="margin: 0; margin-top: 10px;">Price</h3>
         <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"

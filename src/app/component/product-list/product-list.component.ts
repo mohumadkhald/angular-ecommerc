@@ -54,7 +54,7 @@ export class ProductListComponent implements OnInit {
   colorOptions: string[] = ['red', 'yellow', 'blue', 'green'];
 
   filters = {
-    inStock: true,
+    inStock: false,
     notAvailable: false,
     priceRange: 250,
     minPrice: 0,
@@ -101,7 +101,7 @@ export class ProductListComponent implements OnInit {
         this.currentCategoryImage = localStorage.getItem('imgCat');
         this.updatePageTitle();
         this.hasQueryParams = false;
-
+  
         // Load products if no query params present
         if (!this.hasQueryParams) {
           setTimeout(() => {
@@ -111,12 +111,12 @@ export class ProductListComponent implements OnInit {
       },
       (error) => {}
     );
-
+  
     // Handle queryParams changes
     this.route.queryParams.subscribe(
       (params) => {
         this.hasQueryParams = Object.keys(params).length > 0;
-
+  
         this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
         this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
         this.filters.colors = params['colors']
@@ -126,12 +126,16 @@ export class ProductListComponent implements OnInit {
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
         this.currentPage = +params['page'] || 1;
-
+  
+        // Initialize inStock and notAvailable filters
+        this.filters.inStock = params['inStock'] === 'true';
+        this.filters.notAvailable = params['notAvailable'] === 'true';
+  
         // Construct currentSortOption from sortBy and sortDirection
         this.currentSortOption = `${this.sortBy}${this.sortDirection
           .charAt(0)
           .toUpperCase()}${this.sortDirection.slice(1)}`;
-
+  
         // Load products based on query params
         if (this.hasQueryParams) {
           this.loadProducts();
@@ -139,11 +143,11 @@ export class ProductListComponent implements OnInit {
       },
       (error) => {}
     );
-
+  
     // Initialize sortedProducts
     this.sortedProducts = [...this.products];
   }
-
+  
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
       width: '350px',
@@ -175,6 +179,13 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     if (this.subCategoryName) {
+      let available: boolean | null = null;
+      if (this.filters.inStock && !this.filters.notAvailable) {
+        available = true;
+      } else if (!this.filters.inStock && this.filters.notAvailable) {
+        available = false;
+      }
+
       this.productService
         .getProducts(
           this.subCategoryName,
@@ -185,7 +196,8 @@ export class ProductListComponent implements OnInit {
           this.currentPage - 1, // Adjust page number for API
           this.numElement,
           this.filters.colors,
-          this.filters.sizes
+          this.filters.sizes,
+          available
         )
         .subscribe(
           (response: PaginatedResponse<Product[]>) => {
@@ -288,6 +300,24 @@ export class ProductListComponent implements OnInit {
 
     this.currentSortOption = value;
     this.updateQueryParams({ sortBy, sortDirection });
+    this.loadProducts();
+  }
+
+  onFilterChange(): void {
+    let available: boolean | null = null;
+
+    if (this.filters.inStock && !this.filters.notAvailable) {
+      available = true;
+    } else if (!this.filters.inStock && this.filters.notAvailable) {
+      available = false;
+    }
+
+    this.updateQueryParams({
+      inStock: this.filters.inStock,
+      notAvailable: this.filters.notAvailable,
+      available: available !== null ? available : undefined
+    });
+
     this.loadProducts();
   }
 

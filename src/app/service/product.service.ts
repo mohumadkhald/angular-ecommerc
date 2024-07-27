@@ -26,7 +26,7 @@ export class ProductService {
   //   );
   // }
 
-  getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[]): Observable<PaginatedResponse<Product[]>> {
+  getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[], available: any): Observable<PaginatedResponse<Product[]>> {
     let params = new HttpParams()
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)
@@ -34,6 +34,10 @@ export class ProductService {
       .set('maxPrice', maxPrice.toString())
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
+      if (available !== null) {
+        params = params.set('available', available.toString());
+      }
+
   
     colors.forEach(color => {
       params = params.append('color', color);
