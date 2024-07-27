@@ -1,22 +1,41 @@
 <div *ngIf="auth()">
-    <h1 class="text-center my-2">Manage Members</h1>
+    <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
         <div class="table-responsive">
-            <a class="btn btn-primary mb-3 me-2" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
-            <a class="btn btn-info mb-3" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i> Make
-                Discount</a>
-            <input type="number" #discountInput placeholder="Discount %" class="form-control p-2 d-inline-block"
-            style="width: 150px; position: relative; top: -5px; left: 10px;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="flex-grow-1">
+                    <a class="btn btn-primary me-2" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
+                    <a class="btn btn-danger me-2" (click)="deleteProducts()"><i class="fas fa-trash-alt"></i> Delete
+                        Selected Products</a>
+                    <a class="btn btn-info" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i>                        Discount For Selected</a>
+                    <input type="number" #discountInput placeholder="Discount %"
+                        class="form-control p-2 d-inline-block ms-2" style="width: 150px; display: inline;">
+                    <input type="text" class="form-control"
+                        style="width: 230px; display: inline;" placeholder="Search Products By Email" (keydown.enter)="onSearch($event)">
+                </div>
+                <div class="sort-options ms-3">
+                    <app-sort-options [currentSortOption]="currentSortOption"
+                        (change)="onSortChange($event)"></app-sort-options>
+                </div>
+            </div>
+            <div class="price-range mb-3">
+                <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
+                    [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
+                    (maxValueChange)="onPriceRangeChange()">
+                </app-custom-range-slider>
+                <p><span style="margin: 0 50px; color: red; font-weight: bold;"> Price</span>Range: ${{ filters.minPrice
+                    }} - ${{ filters.maxPrice }}</p>
+            </div>
             <table *ngIf="products.length > 0; else noUsers"
                 class="main-table table table-striped table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
                         <th>#ID</th>
-                        <th>product Title</th>
+                        <th>Product Title</th>
                         <th>Price</th>
                         <th>Email Seller</th>
                         <th>Image</th>
-                        <th>SubCategory Name</th>
+                        <th>Stock</th>
                         <th>Control</th>
                     </tr>
                 </thead>
@@ -27,10 +46,10 @@
                             {{ product.productId }}
                         </td>
                         <td>{{ product.productTitle }}</td>
-                        <td>{{ product.price }}</td>
+                        <td>${{ product.price }}</td>
                         <td>{{ product.email }}</td>
                         <td><img width="50" height="50" [src]="product.imageUrl"></td>
-                        <td>{{ product.subCategory.name }}</td>
+                        <td>{{ product.allQuantity }}</td>
                         <td>
                             <a class="btn btn-primary btn-sm mr-1" (click)="detailsProduct(product.productId)"
                                 style="margin-right: 10px;"><i class="fa fa-circle-info"></i> Details</a>

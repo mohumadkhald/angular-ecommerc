@@ -1,13 +1,20 @@
 <div class="product">
-  <img style="cursor: pointer;" [src]="product.imageUrl" (click)="redirectToDetails(product.productId)"
-    [alt]="product.productTitle">
-  <h2 style="cursor: pointer;" (click)="redirectToDetails(product.productId)" class="text-start m-2">{{
-    product.productTitle }}</h2>
+  <div class="image-container" style="position: relative;">
+    <img style="cursor: pointer;" [src]="product.imageUrl" (click)="redirectToDetails(product.productId)" [alt]="product.productTitle">
+    <div class="discount-badge" *ngIf="product.discountPercent">
+      {{ product.discountPercent }}% OFF
+    </div>
+    <div class="stock-status" [ngClass]="{'in-stock': product.inStock, 'out-of-stock': !product.inStock}">
+      {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
+    </div>
+  </div>
+  <h2 style="cursor: pointer;" (click)="redirectToDetails(product.productId)" class="text-start m-2">{{ product.productTitle }}</h2>
   <div class="product-info">
     <p>{{ product.price | currency }}</p>
-    <button (click)="open(product)">Add to Cart</button>
+    <button (click)="open(product)" [disabled]="!product.inStock">Add to Cart</button>
   </div>
 </div>
+
 
 <div *ngIf="toastService.toast" class="toast-container">
   {{ toastService.toast }}

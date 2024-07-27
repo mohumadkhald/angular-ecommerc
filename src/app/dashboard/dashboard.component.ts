@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
     private productService: ProductsService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private cookieService: CookieService
+    private cookieService: CookieService,
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +80,6 @@ export class DashboardComponent implements OnInit {
     this.usersService.getUsers(0, 10).subscribe(
       (users) => {
         this.userCount = users.totalElements;
-        console.log(users);
       },
       (error) => {}
     );
@@ -96,11 +95,12 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchProductCount() {
-    this.productService.getAllProducts(0, 10).subscribe(
+    this.productService.getAllProducts("createdAt", "desc", 0, 999999, 0, 10, "").subscribe(
       (products) => {
         this.prodsCount = products.totalElements;
       },
       (error) => {}
+
     );
   }
 

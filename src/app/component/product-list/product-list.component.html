@@ -40,8 +40,10 @@
       </div>
       <div class="size-filter">
         <h3 style="margin: 5px 0 5px;">Size</h3>
-        <label><input type="checkbox" [checked]="filters.sizes.includes('small')" (change)="onSizeChange('small', $event)"> Small</label>
-        <label><input type="checkbox" [checked]="filters.sizes.includes('medium')" (change)="onSizeChange('medium', $event)"> Medium</label>
+        <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
+            (change)="onSizeChange('small', $event)"> Small</label>
+        <label><input type="checkbox" [checked]="filters.sizes.includes('medium')"
+            (change)="onSizeChange('medium', $event)"> Medium</label>
       </div>
     </div>
 

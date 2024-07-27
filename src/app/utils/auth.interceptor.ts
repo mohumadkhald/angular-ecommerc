@@ -26,9 +26,9 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
         if (router.url !== '/login') {
           router.navigate(['/login']).then(() => {
             authService.clearAuthState();
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000)
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 1000)
           });
         }
       }

@@ -1,15 +1,15 @@
 app-pagination {
-    margin: 100px;
-    position: relative;
-    bottom: 35px;
+  margin: 100px;
+  position: relative;
+  bottom: 35px;
 }
 .toast-container {
-    position: fixed;
-    top: 14%;
-    right: 1%;
-    z-index: 9999;
-    color: white;
-    background-color: rgb(61, 106, 29);
-    opacity: .8;
-    padding: 15px;
+  position: fixed;
+  top: 14%;
+  right: 1%;
+  z-index: 9999;
+  color: white;
+  background-color: rgb(61, 106, 29);
+  opacity: 0.8;
+  padding: 15px;
 }
