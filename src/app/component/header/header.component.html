@@ -7,13 +7,13 @@
       <option value="all">All</option>
       <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}</option>
     </select>
-    <input style="max-width: 400px;" type="text" placeholder="Search Amazon.eg" [(ngModel)]="searchText"
+    <input type="text" placeholder="Search Amazon.eg" [(ngModel)]="searchText"
       (keydown.enter)="goToSearchResult()">
     <button (click)="goToSearchResult()">
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Search_Icon.svg" alt="Search Icon" height="20">
     </button>
   </div>
-  <div class="menu" style="margin-right: 20px;">
+  <div class="menu">
     <a *ngIf='auth() && role=="ADMIN";' routerLink="dashboard">Dashboard</a>
     <a href="#">
       <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="Egypt Flag"
@@ -47,7 +47,7 @@
       </div>
     </div>
     <a href="#">Orders</a>
-    <a routerLink="cart" class="cart" style="display: flex; flex-direction: row; height: 50px; width: 80px;">
+    <a routerLink="cart" class="cart">
       <img src="../../../assets/shopping-cart-outline-svgrepo-com.svg" style="color: white;" width="50" alt="Cart Icon">
       <span style="font-size: small; position: relative; left: -20px; top: -10px;"
         class="cart-count">{{getCountOfItems()}}</span>

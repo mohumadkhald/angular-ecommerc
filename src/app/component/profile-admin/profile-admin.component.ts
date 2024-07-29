@@ -45,9 +45,13 @@ export class ProfileAdminComponent {
   loadUserProfile() {
     if (this.authService.isLoggedIn()) {
       this.userService.loadProfile().subscribe(
+
         (response) => {
+
           this.user = response;
+
         },
+
         (error) => {
           console.error('Error loading user profile', error);
         }

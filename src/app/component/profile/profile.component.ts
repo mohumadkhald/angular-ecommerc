@@ -36,7 +36,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
-        console.log('Auth status changed:', isLoggedIn);
         if (isLoggedIn) {
           this.loadUserProfile();
         }

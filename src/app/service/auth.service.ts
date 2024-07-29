@@ -112,17 +112,16 @@ import { UserService } from './user.service';
 //         })
 //       );
 //   }
-  
+
 //   clearAuthState(): void {
 //     this.cookieService.delete(this.roleKey);
 //     this.cookieService.delete('tokenExpiry');
 //     localStorage.removeItem(this.tokenKey);
 //   }
-  
+
 //   isLoggedIn(): boolean {
 //     return !!localStorage.getItem(this.tokenKey);
 //   }
-  
 
 //   saveToken(token: string): void {
 //     localStorage.setItem(this.tokenKey, token);
@@ -172,9 +171,6 @@ import { UserService } from './user.service';
 //     });
 //   }
 // }
-
-
-
 export class AuthService {
   private tokenKey = 'token';
   private roleKey = 'role';
@@ -197,27 +193,43 @@ export class AuthService {
   }
 
   login(email: string, password: string, remember: boolean): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, { email, password, remember }).pipe(
-      tap((response: any) => {
-        if (response && response.token) {
-          this.saveToken(response.token);
-          this.saveRole(response.role);
-          this.loadProfile().subscribe();
-        }
-      }),
-    );
+    return this.http
+      .post(`${this.baseUrl}/auth/login`, { email, password, remember })
+      .pipe(
+        tap((response: any) => {
+          if (response && response.token) {
+            this.saveToken(response.token);
+            this.saveRole(response.role);
+            this.loadProfile().subscribe();
+          }
+        })
+      );
   }
 
-  register(firstname: string, lastname: string, email: string, password: string, gender: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/register`, { firstname, lastname, email, password, gender }).pipe(
-      tap((response: any) => {
-        if (response && response.token) {
-          this.saveToken(response.token);
-          this.saveRole(response.role);
-          this.loadProfile().subscribe();
-        }
-      }),
-    );
+  register(
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string,
+    gender: string
+  ): Observable<any> {
+    return this.http
+      .post(`${this.baseUrl}/auth/register`, {
+        firstname,
+        lastname,
+        email,
+        password,
+        gender,
+      })
+      .pipe(
+        tap((response: any) => {
+          if (response && response.token) {
+            this.saveToken(response.token);
+            this.saveRole(response.role);
+            this.loadProfile().subscribe();
+          }
+        })
+      );
   }
 
   loadProfile(): Observable<any> {
@@ -226,12 +238,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe(
-      catchError((error) => {
-        console.error('Load profile error:', error);
-        return of(null);
-      })
-    );
+    return this.http.get(`${this.baseUrl}/auth/profile`, { headers }).pipe();
   }
 
   updateProfile(user: any): Observable<any> {
@@ -240,12 +247,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.put(`${this.baseUrl}/auth/profile`, user, { headers }).pipe(
-      catchError((error) => {
-        console.error('Update profile error:', error);
-        return of(null);
-      })
-    );
+    return this.http.put(`${this.baseUrl}/auth/profile`, user, { headers });
   }
 
   changePhoto(image: File): Observable<any> {
@@ -256,36 +258,40 @@ export class AuthService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.patch<any>(`${this.baseUrl}/auth/photo`, formData, { headers }).pipe(
-      catchError((error) => {
-        console.error('Change photo error:', error);
-        return of(null);
-      })
-    );
+    return this.http
+      .patch<any>(`${this.baseUrl}/auth/photo`, formData, { headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Change photo error:', error);
+          return of(null);
+        })
+      );
   }
 
   logout(): Observable<any> {
     const token = this.getToken();
-    return this.http.post(
-      `${this.baseUrl}/auth/logout`,
-      {},
-      {
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${token}`,
+    return this.http
+      .post(
+        `${this.baseUrl}/auth/logout`,
+        {},
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+          }),
+        }
+      )
+      .pipe(
+        tap(() => {
+          this.clearAuthState();
+          this.loggedIn.next(false);
         }),
-      }
-    ).pipe(
-      tap(() => {
-        this.clearAuthState();
-        this.loggedIn.next(false);
-      }),
-      catchError((error) => {
-        console.error('Logout error:', error);
-        this.clearAuthState();
-        this.loggedIn.next(false);
-        return of(null);
-      })
-    );
+        catchError((error) => {
+          console.error('Logout error:', error);
+          this.clearAuthState();
+          this.loggedIn.next(false);
+          return of(null);
+        })
+      );
   }
 
   clearAuthState(): void {
@@ -302,7 +308,10 @@ export class AuthService {
   saveToken(token: string): void {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 1); // Set expiration to 1 day from now
-    this.cookieService.set(this.tokenKey, token, { expires: expiryDate, path: '/' });
+    this.cookieService.set(this.tokenKey, token, {
+      expires: expiryDate,
+      path: '/',
+    });
     this.loggedIn.next(true);
   }
 
@@ -313,10 +322,16 @@ export class AuthService {
   saveRole(role: string): void {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 1); // Set expiration to 1 day from now
-    this.cookieService.set(this.roleKey, role, { expires: expiryDate, path: '/' });
+    this.cookieService.set(this.roleKey, role, {
+      expires: expiryDate,
+      path: '/',
+    });
 
     // Save the expiration time in another cookie
-    this.cookieService.set('tokenExpiry', expiryDate.getTime().toString(), { expires: expiryDate, path: '/' });
+    this.cookieService.set('tokenExpiry', expiryDate.getTime().toString(), {
+      expires: expiryDate,
+      path: '/',
+    });
   }
 
   getRole(): string {

@@ -249,6 +249,24 @@ app-pagination {
   bottom: 60px;
 }
 
+.text-center {
+  text-align: center;
+}
+
+.cont-notfound {
+  display: none; /* Default to none */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.cont-notfound.show-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
 /* Responsive Styles */
 @media (max-width: 1480px) {
   app-product-card {
@@ -261,7 +279,7 @@ app-pagination {
 }
   .sidebar {
     width: 25%;
-    padding: 20px;
+    padding: 10px;
   }
 
 }
@@ -281,8 +299,9 @@ app-pagination {
   }
   .sidebar {
     width: 170px; /* Adjust width as needed */
-    padding: 20px;
+    padding: 10px;
     background-color: white;
+    margin:0;
   }
   .slider-wrapper {
     display: flex;
@@ -303,8 +322,9 @@ app-pagination {
 }
   .sidebar {
     width: 150px; /* Adjust width as needed */
-    padding: 20px;
+    padding: 5px;
     background-color: white;
+    margin:0;
   }
   .slider-wrapper {
     display: flex;
@@ -334,8 +354,9 @@ app-pagination {
 }
   .sidebar {
     width: 150px; /* Adjust width as needed */
-    padding: 20px;
+    padding: 5px;
     background-color: white;
+    margin: 0;
   }
   .slider-wrapper {
     display: flex;
@@ -354,6 +375,9 @@ app-pagination {
 }
 
 @media (max-width: 400) {
+  * {
+    font-size: 10px;
+  }
   .sidebar {
     width: 50%;
   }
@@ -367,6 +391,7 @@ app-pagination {
     width: 100px; /* Adjust width as needed */
     padding: 5px;
     background-color: white;
+    margin: 0;
   }
   .slider-wrapper {
     display: flex;

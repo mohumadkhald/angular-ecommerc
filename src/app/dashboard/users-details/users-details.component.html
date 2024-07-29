@@ -1,5 +1,9 @@
 <!-- users-details.component.html -->
-<div class="container mt-2">
+<div *ngIf="loading" style="margin: 30vh 40vw" class="spinner-container">
+    <mat-spinner></mat-spinner>
+    <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading, please wait...</div>
+</div>
+<div *ngIf="!loading" class="container mt-2">
     <div *ngIf="user" class="card">
         <div class="card-header">
             <h3>{{ user.firstName }} {{ user.lastName }}</h3>
@@ -7,7 +11,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4">
-                    <img [src]="user.imageUrl" class="img-fluid rounded" alt="User Image">
+                    <img *ngIf="user.imageUrl" [src]="user.imageUrl" class="img-fluid rounded" alt="User Image">
+                    <img *ngIf="!user.imageUrl" src='../../../assets/no-user.jpg' class="img-fluid rounded"
+                        alt="User Image">
                 </div>
                 <div class="col-md-8">
                     <ul class="list-group">
@@ -59,5 +65,11 @@
             </div>
 
         </div>
+    </div>
+</div>
+
+<div class="cont-notfound" *ngIf="!user && !loading">
+    <div class="text-center">
+        <h1 class="not-found-title"><span class="text-danger">This User With ID {{id}} Not Found</span></h1>
     </div>
 </div>

@@ -76,7 +76,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
-        console.log('Auth status changed:', isLoggedIn);
         if (isLoggedIn) {
           this.loadUserProfile();
           this.cartServerService.getCart().subscribe();

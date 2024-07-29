@@ -10,18 +10,27 @@ import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { DashboardComponent } from '../dashboard.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { SortOptionsComponent } from "../../component/sort-options/sort-options.component";
+import { SortOptionsComponent } from '../../component/sort-options/sort-options.component';
 import { PaginatedResponse, Product } from '../../interface/product';
-import { CustomRangeSliderComponent } from "../../component/custom-range-slider/custom-range-slider.component";
+import { CustomRangeSliderComponent } from '../../component/custom-range-slider/custom-range-slider.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [PaginationComponent, CommonModule, SidebarComponent, SortOptionsComponent, CustomRangeSliderComponent],
+  imports: [
+    PaginationComponent,
+    CommonModule,
+    SidebarComponent,
+    SortOptionsComponent,
+    CustomRangeSliderComponent,
+    MatProgressSpinner,
+  ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
+  loading: boolean = true;
   products: any = [];
   searchQuery: string = '';
   sortBy = 'createdAt';
@@ -41,7 +50,6 @@ export class ProductsComponent implements OnInit {
     minPrice: 0,
     maxPrice: 25000,
   };
-
 
   constructor(
     private router: Router,
@@ -71,8 +79,7 @@ export class ProductsComponent implements OnInit {
           .toUpperCase()}${this.sortDirection.slice(1)}`;
 
         // Load products based on query params
-          this.loadProducts();
-      
+        this.loadProducts();
       },
       (error) => {}
     );
@@ -81,37 +88,37 @@ export class ProductsComponent implements OnInit {
     this.sortedProducts = [...this.products];
   }
 
-
   loadProducts(): void {
-      this.productsService
-        .getAllProducts(
-          this.sortBy,
-          this.sortDirection,
-          this.filters.minPrice,
-          this.filters.maxPrice,
-          this.currentPage - 1, // Adjust page number for API
-          this.numElement,
-          this.searchQuery
-        )
-        .subscribe(
-          (response: PaginatedResponse<Product[]>) => {
-            this.products = response.content;
-            this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
-            this.totalPages = Array.from(
-              { length: response.totalPages },
-              (_, i) => i + 1
-            );
-            console.log(response)
-          },
-          (error) => {}
-        );
-
+    this.productsService
+      .getAllProducts(
+        this.sortBy,
+        this.sortDirection,
+        this.filters.minPrice,
+        this.filters.maxPrice,
+        this.currentPage - 1, // Adjust page number for API
+        this.numElement,
+        this.searchQuery
+      )
+      .subscribe(
+        (response: PaginatedResponse<Product[]>) => {
+          this.loading = false;
+          this.products = response.content;
+          this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
+          this.totalPages = Array.from(
+            { length: response.totalPages },
+            (_, i) => i + 1
+          );
+        },
+        (error) => {
+          this.loading = false;
+        }
+      );
   }
 
   onSearch(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.searchQuery = target.value;
-    this.loadProducts(); // Fetch products based on the search query
+    this.loadProducts();
   }
 
   onSortChange(event: Event): void {
@@ -163,12 +170,11 @@ export class ProductsComponent implements OnInit {
     this.productsService.deleteProduct(prodId).subscribe(
       () => {
         this.products = this.products.filter(
-          (product: { productId: number; }) => product.productId !== prodId
+          (product: { productId: number }) => product.productId !== prodId
         );
         this.dashboardComponent.fetchProductCount();
       },
       (error) => {
-        console.error('Error deleting product:', error);
       }
     );
   }
@@ -181,7 +187,8 @@ export class ProductsComponent implements OnInit {
     this.productsService.deleteProducts(this.selectedProductIds).subscribe(
       () => {
         this.products = this.products.filter(
-          (product: { productId: number; }) => !this.selectedProductIds.includes(product.productId)
+          (product: { productId: number }) =>
+            !this.selectedProductIds.includes(product.productId)
         );
         this.selectedProductIds = []; // Clear the selection
         this.dashboardComponent.fetchProductCount();
@@ -192,7 +199,6 @@ export class ProductsComponent implements OnInit {
       }
     );
   }
-
 
   detailsProduct(prodId: number): void {
     this.router.navigate([`dashboard/products/${prodId}`]);
@@ -221,7 +227,9 @@ export class ProductsComponent implements OnInit {
 
   toggleProductSelection(productId: number): void {
     if (this.selectedProductIds.includes(productId)) {
-      this.selectedProductIds = this.selectedProductIds.filter(id => id !== productId);
+      this.selectedProductIds = this.selectedProductIds.filter(
+        (id) => id !== productId
+      );
     } else {
       this.selectedProductIds.push(productId);
     }
@@ -239,16 +247,18 @@ export class ProductsComponent implements OnInit {
       return;
     }
 
-    this.productsService.setDiscount(this.selectedProductIds, discountValue).subscribe(
-      () => {
-        this.loadProducts(); // Refresh the product list
-        this.selectedProductIds = []; // Clear the selection
-        this.toastService.add('Discount applied successfully');
-      },
-      (error) => {
-        console.error('Error applying discount:', error);
-      }
-    );
+    this.productsService
+      .setDiscount(this.selectedProductIds, discountValue)
+      .subscribe(
+        () => {
+          this.loadProducts(); // Refresh the product list
+          this.selectedProductIds = []; // Clear the selection
+          this.toastService.add('Discount applied successfully');
+        },
+        (error) => {
+          console.error('Error applying discount:', error);
+        }
+      );
   }
 
   onPageChange(page: number): void {

@@ -64,6 +64,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin-left: 20px; /* Adjust for spacing between sidebar and content */
 }
 
+.not-found-title {
+  font-size: 2em;
+  font-weight: bold;
+  color: #555; /* Change to your desired color */
+}
+.cont-notfound {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
 @media (max-width: 768px) {
   .layout {
       flex-direction: column;
@@ -77,5 +89,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
   .content {
       margin-left: 0;
+  }
+}
+
+@media (max-width: 400) {
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+  }
+  body {
+    font-size: 12px
   }
 }

@@ -1,8 +1,8 @@
 <div *ngIf="loading" style="margin: 30vh 50vw" class="spinner-container">
   <mat-spinner></mat-spinner>
-  <div class="spinner-message">Loading, please wait...</div>
+  <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading, please wait...</div>
 </div>
-<div *ngIf="!loading" class="main-container">
+<div *ngIf="!loading && !showNotFound && subCategories.length > 0" class="main-container">
   <div class="sidebar">
     <div class="subCategory">
       <h2>{{ categoryTitle }}</h2>
@@ -19,12 +19,12 @@
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
         <label>
-          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock (26)
+          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span *ngIf="inStockCount">({{inStockCount}})</span>
         </label>
         <label>
-          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available (3)
+          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
         </label>
-      </div>      
+      </div>
       <div class="price-range">
         <h3 style="margin: 0; margin-top: 10px;">Price</h3>
         <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
@@ -53,18 +53,23 @@
 
   </div>
 
-  <div style="height: 600px; width: 100%;" class="content-wrapper">
+  <div style="height: 600px; width: 100%;" class="content-wrapper" *ngIf="subCategories.length > 0">
     <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper"
       [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
     </div>
     <div *ngIf="subCategoryName" class="sort-options">
       <app-sort-options [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
     </div>
-    <main class="product-list" [ngStyle]="{'padding-bottom': subCategoryName ? '50px' : '0px'}">
+    <main class="product-list" [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>
+    <div class="cont-notfound" *ngIf="subCategoryName && products.length == 0">
+      <div class="text-center">
+        <h1 class="not-found-title"><span class="text-danger">Not Found Any Products</span></h1>
+      </div>
+    </div>
     <!-- Pagination Component -->
-    <app-pagination *ngIf="subCategoryName" [currentPage]="currentPage" [totalPages]="totalPages"
+    <app-pagination *ngIf="subCategoryName && products.length > 0" [currentPage]="currentPage" [totalPages]="totalPages"
       (pageChange)="onPageChange($event)">
     </app-pagination>
 
@@ -84,5 +89,10 @@
         <button class="nav-button right" (click)="scrollRight(slider)">&#10095;</button>
       </div>
     </div>
+  </div>
+</div>
+<div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
+  <div class="text-center">
+    <h1 class="not-found-title">Category <span class="text-danger">{{categoryTitle}} {{subCategoryName}}</span> Not Found</h1>
   </div>
 </div>

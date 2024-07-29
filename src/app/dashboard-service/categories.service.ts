@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { AuthService } from '../service/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ export class CategoriesService {
 
   private apiUrl = 'http://localhost:8080/api/categories';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
+  token: string | null = this.authService.getToken()
 
   getAllCategories(): Observable<any[]> {
     return this.http.get<any>(this.apiUrl)
@@ -17,17 +19,16 @@ export class CategoriesService {
   }
 
   addCategory(category: FormData): Observable<any> {
-    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${this.token}`
     });
 
     return this.http.post(this.apiUrl, category, { headers });
   }
   
-  deleteCategory(catId: number, token: string): Observable<any> {
+  deleteCategory(catId: number): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${this.token}`
     });
 
     return this.http.delete<any>(`${this.apiUrl}/${catId}`, { headers });

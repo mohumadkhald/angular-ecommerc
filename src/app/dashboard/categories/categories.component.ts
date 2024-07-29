@@ -72,7 +72,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   deleteCategory(catId: number): void {
-    this.categoryService.deleteCategory(catId, this.token).subscribe(
+    this.categoryService.deleteCategory(catId).subscribe(
       (data) => {
         this.categories = this.categories.filter(category => category.categoryId !== catId);
         this.dashboardComponent.fetchCategoryCount();

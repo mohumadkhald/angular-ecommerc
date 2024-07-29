@@ -16,24 +16,29 @@ export class PageDetailsComponent {
   counter: number = 0;
   @Input() id!: number;
   cartItems: { product: any }[] = [];
+  showNotFound: boolean = false;
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private router: Router,
+    private router: Router
   ) {}
   ngOnInit() {
     this.cartItems = this.cartService.getCart();
-    this.productService.getProductById(this.id).subscribe((res) => {
-      if (res) {
-        this.productItem = res;
-      } else {
+    this.productService.getProductById(this.id).subscribe(
+      (res) => {
+        if (res) {
+          this.productItem = res;
+        }
+      },
+      (error) => {
+        if (error.status == 404) {
+            this.showNotFound = true;
+        }
+        if (error.status == 403) {
+          this.router.navigate(['notfound']);
+        }
       }
-    }, (error) => {
-      if(error.status==403){
-        this.router.navigate(['notfound']);
-      }
-    }
-  );
+    );
   }
   addToCart(product: any): void {
     this.cartService.addToCart(this.productItem);

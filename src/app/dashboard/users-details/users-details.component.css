@@ -28,6 +28,11 @@
     transform: translateY(-50%);
     transition: left 0.3s;
   }
+
+  img {
+    width: 380px;
+    height: 360px;
+  }
   
   .btn-toggle.active::before {
     left: calc(100% - 29px);

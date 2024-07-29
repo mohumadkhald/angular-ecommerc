@@ -121,3 +121,16 @@ a {
   top: -20px;
   right: -20px;
 }
+
+@media screen and (max-width: 400px) {
+  button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #f04;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+}

@@ -1,4 +1,8 @@
-<div *ngIf="auth()">
+<div *ngIf="loading" style="margin: 30vh 40vw" class="spinner-container">
+    <mat-spinner></mat-spinner>
+    <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading, please wait...</div>
+</div>
+<div *ngIf="auth() && !loading">
     <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
         <div class="table-responsive">
@@ -26,7 +30,7 @@
                 <p><span style="margin: 0 50px; color: red; font-weight: bold;"> Price</span>Range: ${{ filters.minPrice
                     }} - ${{ filters.maxPrice }}</p>
             </div>
-            <table *ngIf="products.length > 0; else noUsers"
+            <table *ngIf="products.length > 0; else noProducts"
                 class="main-table table table-striped table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -61,10 +65,14 @@
                     </tr>
                 </tbody>
             </table>
-            <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+            <app-pagination *ngIf="products.length > 0;" [currentPage]="currentPage" [totalPages]="totalPages"
                 (pageChange)="onPageChange($event)"></app-pagination>
-            <ng-template #noUsers>
-                <p>No users found.</p>
+            <ng-template #noProducts>
+                <div class="cont-notfound">
+                    <div class="text-center">
+                        <h1 class="not-found-title"><span class="text-danger">No Products Found</span></h1>
+                    </div>
+                </div>
             </ng-template>
         </div>
     </div>

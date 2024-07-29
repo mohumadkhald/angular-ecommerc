@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title">Add New SubCategory</h4>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="category-form">
+        <div class="row justify-content-center">
+            <!-- Category Title -->
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <input placeholder="Enter Category Title" id="name" formControlName="name" type="text"
+                        [ngClass]="{'is-invalid': categoryForm.get('name')?.invalid && (categoryForm.get('name')?.touched || categoryForm.get('name')?.dirty)}"
+                        class="form-control" />
+                    <div *ngIf="formErrors['name']" class="text-danger">
+                        {{ formErrors['name'] }}
+                    </div>
+                    <div *ngIf="errMsg" class="text-danger">
+                        {{ errMsg }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SubCategory Category -->
+        <div class="row justify-content-center mt-2">
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <div>
+                        <select formControlName="categoryId" id="categoryId" class="form-control">
+                            <option value="">Select Category</option>
+                            <option *ngFor="let category of categories" value="{{ category.categoryId }}">{{
+                                category.categoryTitle }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SubCategory Image -->
+        <div class="row justify-content-center mt-2">
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <input id="image" type="file" (change)="onFileChange($event)" class="form-control-file" />
+                    <div *ngIf="formErrors['image']" class="text-danger">
+                        {{ formErrors['image'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6">
+                <button type="submit" [disabled]="categoryForm.invalid" class="btn btn-primary w-100">Add
+                    Category</button>
+            </div>
+        </div>
+    </form>
+</div>

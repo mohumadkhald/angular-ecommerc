@@ -110,6 +110,21 @@
 .action-buttons button {
     margin-right: 10px;
 }
+
+.cont-notfound {
+    display: none; /* Default to none */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .cont-notfound.show-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+  
 @media (min-width: 770px) and ( max-width:1200px) {
     .thumbnail-images img {
         flex: 0 0 auto;

@@ -15,6 +15,7 @@ import { AuthService } from '../service/auth.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
+import { SubCategoriesService } from '../dashboard-service/sub-categories.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private usersService: UsersService,
     private categoriesService: CategoriesService,
+    private SubCategoriesService: SubCategoriesService,
     private productService: ProductsService,
     private authService: AuthService,
     private dialog: MatDialog,
@@ -62,6 +64,7 @@ export class DashboardComponent implements OnInit {
 
           this.fetchUserCount();
           this.fetchCategoryCount();
+          this.fetchSubCategoryCount();
           this.fetchProductCount();
         }
       }
@@ -89,6 +92,16 @@ export class DashboardComponent implements OnInit {
     this.categoriesService.getAllCategories().subscribe(
       (cats) => {
         this.catsCount = cats.length;
+      },
+      (error) => {}
+    );
+  }
+
+  fetchSubCategoryCount() {
+    const token = this.authService.getToken(); // Assuming you have a method to get the token
+    this.SubCategoriesService.getAllSubCategories().subscribe(
+      (subCats) => {
+        this.subCatsCount = subCats.length;
       },
       (error) => {}
     );

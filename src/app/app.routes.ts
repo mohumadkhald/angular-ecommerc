@@ -47,8 +47,8 @@ export const routes: Routes = [
   { path:'user/profile',component:ProfileComponent,title: "Profile", canActivate: [authGuardGuard] },
   { path: 'about', component: AboutComponent,title: "About"},
   { path: 'contact', component: ContactComponent,title: "Contact"},
-  { path: 'login', component: AuthComponent, data: { action: 'login' } },
-  { path: 'register', component: AuthComponent, data: { action: 'register' } },
+  { path: 'login', component: AuthComponent, data: { action: 'login' }, title: 'Login' },
+  { path: 'register', component: AuthComponent, data: { action: 'register' }, title: 'Register' },
 
   { path: 'logout', component: AuthComponent, title: "Logout"},
   // { path: 'user/login', component: AuthComponent,title: "Authontication", canActivate: [noAuthGuard] },

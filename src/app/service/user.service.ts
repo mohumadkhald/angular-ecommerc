@@ -58,8 +58,7 @@ export class UserService implements OnInit {
         }
       }),
       catchError(error => {
-        if (error.status === 403 || error.status === 401) {
-        }
+        console.log(error)
         this.clearUsername();
         return of(null);
       })
@@ -76,7 +75,6 @@ export class UserService implements OnInit {
         }
       }),
       catchError(error => {
-        console.error('Error updating profile', error);
         return of(null);
       })
     );
