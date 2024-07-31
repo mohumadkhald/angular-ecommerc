@@ -54,6 +54,7 @@ export class UserService implements OnInit {
           this.setUsername(`${response.firstName} ${response.lastName}`);
           this.setImg(response.imageUrl);
           this.setRole(response.role);
+          this.authService.saveRole(response.role)
           this.profileLoaded = true;
         }
       }),

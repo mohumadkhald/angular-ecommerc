@@ -97,6 +97,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userService.role$.subscribe((role) => {
       this.role = role;
       this.loading = false;
+      this.authService.saveRole(role);
       this.cd.detectChanges();
     });
 
@@ -127,6 +128,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userService.username$.subscribe((username) => {
         if (username) {
           this.username = username;
+          this.cd.detectChanges();
+        }
+      });
+      this.userService.role$.subscribe((role) => {
+        if (role) {
+          this.role = role;
+          this.authService.saveRole(role);
           this.cd.detectChanges();
         }
       });

@@ -23,15 +23,15 @@ import { authGuardGuard } from "./utils/auth-guard.guard";
 
 
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", canActivate: [AdminGuard], children: [
-    { path: 'users', component: UsersComponent, title: "Users", canActivate: [AdminGuard] },
-    { path: 'categories', component: CategoriesComponent, title: "Categories", canActivate: [AdminGuard] },
-    { path: 'subcategories', component: SubcategoriesComponent, title: "Subcategories", canActivate: [AdminGuard] },
-    { path: 'products', component: ProductsComponent, title: "Products", canActivate: [AdminGuard] },
-    { path: 'cart', component: CartComponent, title: "Cart", canActivate: [AdminGuard] },
-    { path: 'orders', component: OrdersComponent, title: "orders", canActivate: [AdminGuard] },
-    { path: 'users/:id', component: UsersDetailsComponent, title: "UserDetails", canActivate: [AdminGuard] },
-    { path: "products/:id", component: ProductDetailsComponent, title: "product Details", canActivate: [AdminGuard] }
+  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", children: [
+    { path: 'users', component: UsersComponent, title: "Users" },
+    { path: 'categories', component: CategoriesComponent, title: "Categories" },
+    { path: 'subcategories', component: SubcategoriesComponent, title: "Subcategories" },
+    { path: 'products', component: ProductsComponent, title: "Products"},
+    { path: 'cart', component: CartComponent, title: "Cart" },
+    { path: 'orders', component: OrdersComponent, title: "orders", },
+    { path: 'users/:id', component: UsersDetailsComponent, title: "UserDetails" },
+    { path: "products/:id", component: ProductDetailsComponent, title: "product Details" }
   ]},
   { path: '', component: HomeComponent ,title: "Home"},
   { path: 'products', component: ProductListComponent ,title: "Products"},

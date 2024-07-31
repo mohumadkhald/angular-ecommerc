@@ -22,7 +22,7 @@ export class AdminGuard implements CanActivate {
         if (this.authService.isLoggedIn() && this.role === "ADMIN") {
           return of(true); // Using 'of' from RxJS
         } else {
-          this.router.navigate(['/notfound']);
+          this.router.navigate(['/']);
           return of(false); // Using 'of' from RxJS
         }
   }
