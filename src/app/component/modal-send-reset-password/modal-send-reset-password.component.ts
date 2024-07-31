@@ -58,7 +58,7 @@ export class ModalSendResetPasswordComponent {
     if (this.emailForm.valid) {
       this.loading = true;
       const email = this.emailForm.get('email')?.value;
-      const url = `http://localhost:8080/api/auth/send-reset?email=${encodeURIComponent(email)}`;
+      const url = `https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/auth/send-reset?email=${encodeURIComponent(email)}`;
       this.http.post(url, {})
         .subscribe((response: any) => {
           console.log('Reset email sent successfully:', response);

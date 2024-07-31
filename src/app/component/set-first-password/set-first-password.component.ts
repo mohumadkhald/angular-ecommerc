@@ -53,7 +53,7 @@ export class SetFirstPasswordComponent {
   onOkClick(): void {
     if (this.changePwdForm.valid) {
       const formValue = this.changePwdForm.getRawValue();
-      const url = `http://localhost:8080/api/auth/setFirstPwd`;
+      const url = `https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/auth/setFirstPwd`;
       const body = {
         password: formValue.password,
       };

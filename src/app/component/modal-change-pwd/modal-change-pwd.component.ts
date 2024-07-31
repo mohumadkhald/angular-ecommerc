@@ -66,7 +66,7 @@ export class ModalChangePwdComponent {
   onOkClick(): void {
     if (this.changePwdForm.valid) {
       const formValue = this.changePwdForm.getRawValue();
-      const url = `http://localhost:8080/api/auth/reset?email=${encodeURIComponent(this.data.email)}`;
+      const url = `https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/auth/reset?email=${encodeURIComponent(this.data.email)}`;
       const body = {
         password: formValue.password,
         code: formValue.code
@@ -78,7 +78,7 @@ export class ModalChangePwdComponent {
           this.successMessage = response.message;
           setTimeout(() => {
             this.dialogRef.close();
-          }, 5000);
+          }, 2000);
         },
         error => {
           if (error.error.errors) {
