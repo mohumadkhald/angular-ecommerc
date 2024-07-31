@@ -14,7 +14,7 @@ export class CartService implements OnInit {
     this.getCart();
   }
   totalprice: number = 0;
-  apiUri = "http://127.0.0.1:8080/api/cart/sync";
+  apiUri = "https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/cart/sync";
   private cart: { product: any }[] = [];
   getCart(): { product: any }[] {
     const storedCart = localStorage.getItem('cart');

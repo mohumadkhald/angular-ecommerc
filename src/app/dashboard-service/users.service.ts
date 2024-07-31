@@ -7,7 +7,7 @@ import { AuthService } from '../service/auth.service';
   providedIn: 'root',
 })
 export class UsersService {
-  private apiUrl = 'http://localhost:8080/api/users';
+  private apiUrl = 'http://ec2-13-245-232-27.af-south-1.compute.amazonaws.com:8080/api/users';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
   private token = this.authService.getToken();

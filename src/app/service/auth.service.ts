@@ -174,7 +174,7 @@ import { UserService } from './user.service';
 export class AuthService {
   private tokenKey = 'token';
   private roleKey = 'role';
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api';
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(

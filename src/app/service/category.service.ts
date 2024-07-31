@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class CategoryService {
 
   getSubCategoriesByCategoryTitle(categoryTitle: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:8080/api/sub-categories/find/${categoryTitle}`).pipe(
+    return this.http.get<any>(`https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/sub-categories/find/${categoryTitle}`).pipe(
       map(response => response.collection)
     );
   }
@@ -17,12 +17,12 @@ export class CategoryService {
   constructor(private http: HttpClient, private router: Router) { }
 
   getAllCategories(): Observable<any[]> {
-    return this.http.get<any>('http://localhost:8080/api/categories')
+    return this.http.get<any>('https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/categories')
       .pipe(map(response => response.collection));
   }
 
   getAllSubCategories(): Observable<any[]> {
-    return this.http.get<any>('http://localhost:8080/api/sub-categories')
+    return this.http.get<any>('https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/sub-categories')
       .pipe(map(response => response.collection));
   }
 }

@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 export class CartServerService implements OnInit {
 
-  apiUri = "http://127.0.0.1:8080/api/cart";
+  apiUri = "https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/cart";
   cartItems: CartItem[] = [];
 
   constructor(

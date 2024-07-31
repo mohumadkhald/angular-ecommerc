@@ -7,7 +7,7 @@ import { PaginatedResponse, Product } from "../interface/product";
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/products';
+  private apiUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/products';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { AuthService } from '../service/auth.service';
   providedIn: 'root'
 })
 export class SubCategoriesService {
-  private apiUrl = 'http://localhost:8080/api/sub-categories';
+  private apiUrl = 'http://ec2-13-245-232-27.af-south-1.compute.amazonaws.com:8080/api/sub-categories';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
   token: string | null = this.authService.getToken();

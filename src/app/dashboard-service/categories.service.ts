@@ -8,7 +8,7 @@ import { AuthService } from '../service/auth.service';
 })
 export class CategoriesService {
 
-  private apiUrl = 'http://localhost:8080/api/categories';
+  private apiUrl = 'http://ec2-13-245-232-27.af-south-1.compute.amazonaws.com:8080/api/categories';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
   token: string | null = this.authService.getToken()
