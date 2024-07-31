@@ -10,7 +10,7 @@ import { PaginatedResponse, Product } from '../interface/product';
 })
 export class ProductsService {
 
-  private apiUrl = 'http://ec2-13-245-232-27.af-south-1.compute.amazonaws.com:8080/api/products';
+  private apiUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/products';
   private token = this.authService.getToken();
 
   constructor(private http: HttpClient, private authService: AuthService) { }
