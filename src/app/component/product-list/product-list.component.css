@@ -345,6 +345,7 @@ app-pagination {
 @media (max-width: 600px) {
   .sidebar {
     width: 50%;
+    display: none;
   }
   .store-container {
     flex-direction: column;
@@ -357,6 +358,7 @@ app-pagination {
     padding: 5px;
     background-color: white;
     margin: 0;
+    display: none;
   }
   .slider-wrapper {
     display: flex;
@@ -379,7 +381,8 @@ app-pagination {
     font-size: 10px;
   }
   .sidebar {
-    width: 50%;
+    /* width: 50%; */
+    display: none;
   }
   .store-container {
     flex-direction: column;
@@ -392,6 +395,7 @@ app-pagination {
     padding: 5px;
     background-color: white;
     margin: 0;
+    display: none;
   }
   .slider-wrapper {
     display: flex;
