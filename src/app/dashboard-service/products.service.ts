@@ -4,16 +4,19 @@ import { map, Observable } from 'rxjs';
 import { Prod } from '../interface/product-all-details';
 import { AuthService } from '../service/auth.service';
 import { PaginatedResponse, Product } from '../interface/product';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
 
-  private apiUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/products';
+  private apiUrl: string;
   private token = this.authService.getToken();
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService, private configService: ConfigService) {
+    this.apiUrl = configService.getApiUri();
+   }
 
   getAllProducts(sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, searchQuery: string): Observable<any> {
     let params = new HttpParams()
@@ -25,7 +28,7 @@ export class ProductsService {
       .set('pageSize', pageSize.toString());
       params = params.set('email', searchQuery);
   
-    return this.http.get<any>(`${this.apiUrl}`, { params })
+    return this.http.get<any>(`${this.apiUrl}/products`, { params })
       .pipe(map(response => response));
   }
   
@@ -35,7 +38,7 @@ export class ProductsService {
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.delete<any>(`${this.apiUrl}/${prodId}`, { headers });
+    return this.http.delete<any>(`${this.apiUrl}/products/${prodId}`, { headers });
   }
 
   deleteProducts(productIds: number[]): Observable<any> {
@@ -45,7 +48,7 @@ export class ProductsService {
 
     const params = new HttpParams().set('productIds', productIds.join(','));
 
-    return this.http.delete<any>(`${this.apiUrl}/bulk-delete`, { headers, params });
+    return this.http.delete<any>(`${this.apiUrl}/products/bulk-delete`, { headers, params });
   }
 
   getProductDetails(prodId: number): Observable<Prod> {
@@ -53,7 +56,7 @@ export class ProductsService {
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}/allDetails/${prodId}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/products/allDetails/${prodId}`, { headers });
   }
 
   
@@ -63,11 +66,11 @@ export class ProductsService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post(this.apiUrl, product, { headers });
+    return this.http.post(`${this.apiUrl}/products`, product, { headers });
   }
   
   updateProductVariations(productId: number, variations: any[]): Observable<any> {
-    const url = `${this.apiUrl}/${productId}/stock`;
+    const url = `${this.apiUrl}/products/${productId}/stock`;
     return this.http.put(url, variations);
   }
 
@@ -76,7 +79,7 @@ export class ProductsService {
       'Authorization': `Bearer ${this.token}`
     });
 
-    const url = `${this.apiUrl}/setDiscount?productIds=${productIds}&discount=${discount}`;
+    const url = `${this.apiUrl}/products/setDiscount?productIds=${productIds}&discount=${discount}`;
     return this.http.patch(url, { headers });
   }
 }

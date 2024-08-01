@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ExpiredSessionDialogComponent } from '../component/expired-session-dialog/expired-session-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from './user.service';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -174,15 +175,18 @@ import { UserService } from './user.service';
 export class AuthService {
   private tokenKey = 'token';
   private roleKey = 'role';
-  private baseUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api';
+  private baseUrl: string;
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private cookieService: CookieService,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private configService: ConfigService
+  ) {
+    this.baseUrl = configService.getApiUri();
+  }
 
   get isLoggedIn$() {
     return this.loggedIn.asObservable();

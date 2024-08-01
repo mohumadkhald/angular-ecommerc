@@ -2,14 +2,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from "rxjs";
 import { PaginatedResponse, Product } from "../interface/product";
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/products';
+  private apiUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.apiUrl = configService.getApiUri();
+   }
 
   // getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[]): Observable<PaginatedResponse<Product[]>> {
   //   return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/product-category/${subCategoryName}`, {
@@ -47,18 +50,18 @@ export class ProductService {
       params = params.append('size', size);
     });
   
-    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/product-category/${subCategoryName}`, { params })
+    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/products/product-category/${subCategoryName}`, { params })
       .pipe(map(response => response));
   }
   
   
   
   getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
   }
 
   addProduct(formData: FormData): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}`, formData);
+    return this.http.post<Product>(`${this.apiUrl}/products`, formData);
   }
 
   
@@ -79,11 +82,11 @@ export class ProductService {
       params = params.append('size', size);
     });
   
-    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/${categoryName}/${productName}`, { params });
+    return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/products/${categoryName}/${productName}`, { params });
   }
   
   getProductsByCreatedBy(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/find/created-by`).pipe(map(response => response));
+    return this.http.get<Product[]>(`${this.apiUrl}/products/find/created-by`).pipe(map(response => response));
   }
 }
 

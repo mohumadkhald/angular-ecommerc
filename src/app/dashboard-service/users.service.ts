@@ -2,14 +2,17 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth.service';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  private apiUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/users';
+  private apiUrl: string;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService, private configService: ConfigService) {
+    this.apiUrl = configService.getApiUri();
+  }
   private token = this.authService.getToken();
 
 
@@ -18,7 +21,7 @@ export class UsersService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    const url = `${this.apiUrl}?page=${page}&pageSize=${pageSize}`;
+    const url = `${this.apiUrl}/users?page=${page}&pageSize=${pageSize}`;
 
     return this.http.get<any>(url, { headers });
   }
@@ -27,7 +30,7 @@ export class UsersService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete<any>(`${this.apiUrl}/${userId}`, { headers });
+    return this.http.delete<any>(`${this.apiUrl}/users/${userId}`, { headers });
   }
 
   getUserDetails(userId: number): Observable<any> {
@@ -35,7 +38,7 @@ export class UsersService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(`${this.apiUrl}/${userId}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/users/${userId}`, { headers });
   }
 
   addUser(user: any): Observable<any> {
@@ -53,7 +56,7 @@ export class UsersService {
     });
 
     return this.http.patch<any>(
-      `${this.apiUrl}/status/${userId}`,
+      `${this.apiUrl}/users/status/${userId}`,
       {},
       { headers, params }
     );

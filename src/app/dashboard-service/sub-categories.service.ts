@@ -2,18 +2,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { AuthService } from '../service/auth.service';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubCategoriesService {
-  private apiUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/sub-categories';
+  private apiUrl: string;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService, private configService: ConfigService) {
+    this.apiUrl = configService.getApiUri();
+   }
   token: string | null = this.authService.getToken();
 
   getAllSubCategories(): Observable<any[]> {
-    return this.http.get<any>(this.apiUrl)
+    return this.http.get<any>(`${this.apiUrl}/sub-categories`)
       .pipe(map(response => response.collection));
   }
 
@@ -22,7 +25,7 @@ export class SubCategoriesService {
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.post(this.apiUrl, category, { headers });
+    return this.http.post(`${this.apiUrl}/sub-categories`, category, { headers });
   }
   
   deleteSubCategory(catId: number): Observable<any> {
@@ -30,6 +33,6 @@ export class SubCategoriesService {
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.delete<any>(`${this.apiUrl}/${catId}`, { headers });
+    return this.http.delete<any>(`${this.apiUrl}/sub-categories/${catId}`, { headers });
   }
 }
