@@ -14,13 +14,13 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let category of subCategories">
-                        <td>{{ category.categoryId }}</td>
+                        <td>{{ category.id }}</td>
                         <td>{{ category.name }}</td>
                         <td><img [width]="100" [src]="category.img"></td>
                         <td>
                             <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
                                 Edit</a>
-                            <a class="btn btn-danger btn-sm confirm" (click)="deleteCategory(category.categoryId)"><i
+                            <a class="btn btn-danger btn-sm confirm" (click)="deleteCategory(category.id)"><i
                                     class="fas fa-trash-alt"></i> Delete</a>
                         </td>
                     </tr>
