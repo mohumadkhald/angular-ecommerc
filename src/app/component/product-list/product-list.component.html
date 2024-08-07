@@ -10,7 +10,9 @@
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
           <a class="sub-links" routerLinkActive="active_link"
-            [routerLink]="['/categories', categoryTitle, subCategory.name]">{{ subCategory.name | capitalize }}</a>
+            [routerLink]="['/categories', categoryTitle, subCategory.name]" [queryParams]="{ page: 1 }">
+            {{ subCategory.name | capitalize }}
+          </a>
         </li>
       </ul>
     </div>
@@ -19,10 +21,12 @@
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
         <label>
-          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span *ngIf="inStockCount">({{inStockCount}})</span>
+          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span
+            *ngIf="inStockCount">({{inStockCount}})</span>
         </label>
         <label>
-          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
+          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available <span
+            *ngIf="outOfStockCount">({{outOfStockCount}})</span>
         </label>
       </div>
       <div class="price-range">
@@ -60,7 +64,8 @@
     <div *ngIf="subCategoryName" class="sort-options">
       <app-sort-options [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
     </div>
-    <main class="product-list" [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
+    <main class="product-list"
+      [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>
     <div class="cont-notfound" *ngIf="subCategoryName && products.length == 0">
@@ -93,6 +98,7 @@
 </div>
 <div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
   <div class="text-center">
-    <h1 class="not-found-title">Category <span class="text-danger">{{categoryTitle}} {{subCategoryName}}</span> Not Found</h1>
+    <h1 class="not-found-title">Category <span class="text-danger">{{categoryTitle}} {{subCategoryName}}</span> Not
+      Found</h1>
   </div>
 </div>

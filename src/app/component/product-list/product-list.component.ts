@@ -119,6 +119,7 @@ export class ProductListComponent implements OnInit {
     this.route.queryParams.subscribe(
       (params) => {
         this.hasQueryParams = Object.keys(params).length > 0;
+        this.currentPage = params['page'] ? +params['page'] : 1;
 
         this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
         this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
