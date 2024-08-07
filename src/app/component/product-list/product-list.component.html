@@ -16,7 +16,6 @@
         </li>
       </ul>
     </div>
-
     <div *ngIf="subCategoryName" class="filters">
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
@@ -74,7 +73,7 @@
       </div>
     </div>
     <!-- Pagination Component -->
-    <app-pagination *ngIf="subCategoryName && products.length > 0" [currentPage]="currentPage" [totalPages]="totalPages"
+    <app-pagination *ngIf="subCategoryName && products.length > 0 && totalPages.length > 1" [currentPage]="currentPage" [totalPages]="totalPages"
       (pageChange)="onPageChange($event)">
     </app-pagination>
 

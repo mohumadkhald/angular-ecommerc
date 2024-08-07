@@ -1,10 +1,12 @@
 body {
   font-family: Arial, sans-serif;
 }
-.active_link {
+.subCategory .sub-links.active_link {
   font-size: 18px;
   padding: 0px 10px;
+  color: #dc8109 !important; /* Use only if necessary */
 }
+
 .sort-options {
   text-align: right;
   margin: 0 5px;
