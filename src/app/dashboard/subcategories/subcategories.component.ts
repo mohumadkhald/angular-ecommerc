@@ -55,7 +55,7 @@ export class SubcategoriesComponent {
   deleteCategory(catId: number): void {
     this.subCategoryService.deleteSubCategory(catId).subscribe(
       (data) => {
-        this.subCategories = this.subCategories.filter(category => category.categoryId !== catId);
+        this.subCategories = this.subCategories.filter(category => category.id !== catId);
         this.dashboardComponent.fetchCategoryCount();
       },
       (error) => {
