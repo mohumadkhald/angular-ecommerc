@@ -21,8 +21,9 @@
         <option value="all">All</option>
         <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}</option>
       </select>
-      <input type="search" name="search" id="search" placeholder=" Search Amazon.in">
-      <label for="search" class="sicon">
+      <input type="search" name="search" id="search" placeholder=" Search Amazon.in" [(ngModel)]="searchText"
+      (keydown.enter)="goToSearchResult()">
+      <label for="search" class="sicon" (click)="goToSearchResult()">
         <i class="fa-solid fa-magnifying-glass"></i>
       </label>
     </div>
@@ -35,7 +36,7 @@
       <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
         <div class="small" style="font-weight: bolder;" >
           <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" class="signin">sign in</div>
+          <div *ngIf="!auth();" class="signin not-login">sign in</div>
           <div *ngIf="auth();" class="signin">{{ username }}</div>
           <i class="fa-solid fa-angle-right arrow"></i>
           <i class="fa-regular fa-user user"></i>

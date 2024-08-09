@@ -56,7 +56,7 @@
 
   </div>
 
-  <div style="height: 600px; width: 100%;" class="content-wrapper" *ngIf="subCategories.length > 0">
+  <div style="height: 600px; width: 85%;" class="content-wrapper" *ngIf="subCategories.length > 0">
     <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper"
       [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
     </div>
@@ -79,13 +79,13 @@
 
     <div *ngIf="categoryTitle && !subCategoryName" class="shop-by-category">
       <h2 style="margin-left: 8.5vw; margin-top: 20px;">Shop by category</h2>
-      <div class="slider-container" style="width: 83vw;">
+      <div class="slider-container">
         <button class="nav-button left" (click)="scrollLeft(slider)">&#10094;</button>
         <div style="background-color: rgb(225, 230, 229); padding: 10px; margin: 5px;" class="slider-wrapper" #slider>
           <div style="margin: 5px;" class="slider">
-            <div style="width: 306px; height: 230px;" class="category-item" *ngFor="let subCategory of subCategories">
+            <div class="category-item" *ngFor="let subCategory of subCategories">
               <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)"
-                style="width: 100%; height: 200px; cursor: pointer" [src]="subCategory.img" [alt]="subCategory.name">
+                style="cursor: pointer" [src]="subCategory.img" [alt]="subCategory.name">
               <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
             </div>
           </div>

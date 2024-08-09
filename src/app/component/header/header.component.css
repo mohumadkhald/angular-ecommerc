@@ -338,6 +338,10 @@ label.sicon {
       margin-top: -.4em;
       width: 8em;
   }
+  .not-login{
+    position: relative;
+    left: 4em;
+}
 
   .sign .small i {
       font-size: 2em;
@@ -361,6 +365,14 @@ label.sicon {
       grid-column: 3/4;
       display: flex;
       justify-content: flex-end;
+  }
+  .cart {
+    display: flex;
+    flex-direction: row;
+    width: 7em;
+    position: relative;
+    top: 5px;
+    left: 5px;
   }
 }
 

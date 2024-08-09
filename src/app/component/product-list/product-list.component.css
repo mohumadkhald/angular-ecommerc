@@ -180,7 +180,7 @@ button:hover {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
-  width: 80%;
+  width: 90%;
 }
 
 .slider {
@@ -191,11 +191,6 @@ button:hover {
 .category-item {
   flex: 0 0 auto;
   text-align: center;
-}
-
-.category-item img {
-  width: 100px; /* Adjust width as needed */
-  height: 100px; /* Adjust height as needed */
 }
 
 .category-item a {
@@ -229,7 +224,7 @@ button:hover {
 }
 
 .sidebar {
-  width: 250px; /* Adjust width as needed */
+  width: 240px; /* Adjust width as needed */
   padding: 20px;
   margin: 10px;
   background-color: white;
@@ -239,6 +234,7 @@ button:hover {
 .content-wrapper {
   flex: 1;
   padding: 10px;
+  width: 100%;
 }
 
 .product-slider {
@@ -268,11 +264,45 @@ app-pagination {
   align-items: center;
   height: 50vh;
 }
+.slider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  max-width: 100%;
+}
 
+.category-item {
+  flex: 0 0 auto;
+  text-align: center;
+  width: 225px;
+}
+.category-item img {
+  width: 100%; /* Adjust width as needed */
+  height: 200px;
+}
 /* Responsive Styles */
 @media (max-width: 1480px) {
   app-product-card {
     width: calc(25.00%);
+  }
+  .slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 205px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 200px;
   }
 }
 @media screen and (max-width: 1280px) {
@@ -280,8 +310,58 @@ app-pagination {
     width: calc(33.3%);
 }
   .sidebar {
-    width: 25%;
+    width: 17.5%;
     padding: 10px;
+  }
+  .slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 200px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 200px;
+  }
+
+}
+@media screen and (max-width: 1024px) {
+  app-product-card {
+    width: calc(33.3%);
+}
+.slider-wrapper {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  width: 90%;
+}
+  .sidebar {
+    width: 19%;
+    margin: 0;
+  }
+  .slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 200px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 200px;
   }
 
 }
@@ -309,24 +389,44 @@ app-pagination {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    width: 70%;
+    width: 85%;
+  }
+  .slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 210px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 200px;
   }
 
   
 }
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .sidebar {
     width: 35%;
+    display: none;
   }
 
   app-product-card {
-    width: calc(100%);
+    width: calc(50%);
 }
   .sidebar {
     width: 150px; /* Adjust width as needed */
     padding: 5px;
     background-color: white;
     margin:0;
+    display: none;
   }
   .slider-wrapper {
     display: flex;
@@ -340,11 +440,64 @@ app-pagination {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    max-width: 80%;
+    max-width: 100%;
+  }
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 240px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 140px;
   }
 
 }
 @media (max-width: 600px) {
+  .sidebar {
+    width: 50%;
+    display: none;
+  }
+  .store-container {
+    flex-direction: column;
+  }
+  app-product-card {
+    width: calc(50%);
+}
+  .sidebar {
+    width: 150px; /* Adjust width as needed */
+    padding: 5px;
+    background-color: white;
+    margin: 0;
+    display: none;
+  }
+  .slider-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    width: 100%;
+  }
+  .slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 250px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 140px;
+  }
+  
+}
+
+@media (max-width: 500px) {
   .sidebar {
     width: 50%;
     display: none;
@@ -366,7 +519,7 @@ app-pagination {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    width: 70%;
+    width: 100%;
   }
   .slider-container {
     position: relative;
@@ -374,54 +527,16 @@ app-pagination {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    max-width: 70%;
-  }
-}
-
-@media (max-width: 400) {
-  * {
-    font-size: 10px;
-  }
-  .sidebar {
-    /* width: 50%; */
-    display: none;
-  }
-  .store-container {
-    flex-direction: column;
-  }
-  app-product-card {
-    width: calc(100%);
-}
-  .sidebar {
-    width: 100px; /* Adjust width as needed */
-    padding: 5px;
-    background-color: white;
-    margin: 0;
-    display: none;
-  }
-  .slider-wrapper {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    width: 40%;
-  }
-  .slider-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    max-width: 40%;
+    max-width: 100%;
   }
   .category-item {
     flex: 0 0 auto;
     text-align: center;
-    width: 200px;
+    width: 250px;
   }
-  
   .category-item img {
-    width: 80px; /* Adjust width as needed */
-    height: 80px; /* Adjust height as needed */
+    width: 100%; /* Adjust width as needed */
+    height: 140px;
   }
   
 }
