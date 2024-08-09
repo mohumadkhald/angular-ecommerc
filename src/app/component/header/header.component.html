@@ -1,4 +1,107 @@
-<div class="navbar">
+<!-- -------------------------header--------------------------- -->
+<div class="nav">
+  <div class="sticky">
+    <div class="nav-left">
+      <div class="amazon hover">
+        <i class="fa-solid fa-bars menu"></i>
+        <a routerLink=""><img src="../../../assets/amz/amazoni1.png" alt="amazon.in"></a>
+        <div class="in">.in</div>
+      </div>
+      <div class="address hover">
+        <div class="small">Hello</div>
+        <div class="add">
+          <i class="fa-solid fa-location-dot"></i>
+          <b>Select your address</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-search">
+      <select class="" style="padding: 8px; border-radius: 10px 0;" [(ngModel)]="selectedCategory">
+        <option value="all">All</option>
+        <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}</option>
+      </select>
+      <input type="search" name="search" id="search" placeholder=" Search Amazon.in">
+      <label for="search" class="sicon">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </label>
+    </div>
+    <div class="nav-right">
+      <div class="ind hover">
+        <img src="../../../assets/amz/india.png" alt="india">
+        <b class=" add">EN</b>
+        <i class="fa-solid fa-caret-down"></i>
+      </div>
+      <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
+        <div class="small" style="font-weight: bolder;" >
+          <div class="hello">Hello, </div>
+          <div *ngIf="!auth();" class="signin">sign in</div>
+          <div *ngIf="auth();" class="signin">{{ username }}</div>
+          <i class="fa-solid fa-angle-right arrow"></i>
+          <i class="fa-regular fa-user user"></i>
+        </div>
+        <div class="add">
+          <b>Account & Lists</b>
+          <i class="fa-solid fa-caret-down"></i>
+        </div>
+        <div class="dropdown-menu" *ngIf="menuVisible">
+          <div class="dropdown-content">
+            <div *ngIf="!auth();" class="dropdown-item"><a routerLink="/login">Login</a></div>
+            <div class="dropdown-item" *ngIf='auth() && role=="ADMIN";' routerLink="dashboard">Dashboard</div>
+            <div *ngIf="auth()" class="dropdown-item"><a routerLink="/user/profile">Account</a></div>
+            <!-- Add other dropdown items here -->
+            <div *ngIf="auth();" class="dropdown-item"><a routerLink="/login" (click)="logout()">Logout</a></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="return  hover">
+        <div class="add">
+          <b>Orders</b>
+        </div>
+      </div>
+      <div routerLink="cart" class="cart hover">
+        <span style="font-size: 2.5em;" class="material-symbols-rounded">
+          shopping_cart
+        </span>
+        <p class="cardCount">{{getCountOfItems()}}</p>
+        <div style="margin-top: 10px;" class="add cardName">
+          <b>Cart</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-main">
+    <div class="nav-main-menu">
+      <div class="nav-menu">
+        <i class="fa-solid fa-bars menubar"></i>
+        <div><b>All</b></div>
+      </div>
+      <div class="shopCate">
+        <div class="small">Shop By</div>
+        <div class="add">
+          <a href="#">Category</a>
+        </div>
+      </div>
+      <div class="xshop">
+        <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
+          (click)="saveImg(category.img)" *ngFor="let category of categories">
+          {{ category.categoryTitle }}
+        </a>
+      </div>
+    </div>
+    <div class="slot">
+      <img class="last" alt="Amazon App"
+        src="https://m.media-amazon.com/images/G/31/IN-hq/2021/img/Mobile_Traffic_/XCM_Manual_1321458_1651511_IN_3781247_400x39_en_IN._CB655944656_.jpg">
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- <div class="navbar">
   <a routerLink="/" class="logo">
     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon Logo" height="30">
   </a>
@@ -61,7 +164,7 @@
     {{ category.categoryTitle }}
   </a>
 </div>
-
+ -->
 
 
 

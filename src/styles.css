@@ -4,26 +4,13 @@
   padding: 0;
   margin: 0;
 }
-a {
-  color: black;
-  cursor: pointer;
-  text-decoration: none;
-}
+
 .spinner {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
-
-html, body { height: 100%; }
-body {
-  margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #f0f0f0;
-}
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .cdk-global-overlay-wrapper {
   backdrop-filter: blur(5px); /* Adjust the blur value as needed */
@@ -89,17 +76,5 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
   .content {
       margin-left: 0;
-  }
-}
-
-@media (max-width: 400) {
-  * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-  }
-  body {
-    font-size: 12px
   }
 }
