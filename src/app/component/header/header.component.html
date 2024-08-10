@@ -38,7 +38,7 @@
         <div class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
           <div *ngIf="!auth();" routerLink="/login" class="signin not-login">sign in</div>
-          <div *ngIf="auth();" class="signin" (touchstart)="toggleMenu(true)" (touchend)="toggleMenu(false)">
+          <div *ngIf="auth();" class="signin" (click)="toggleMenu(true)" (touchend)="toggleMenu(false)">
             {{ username }}
           </div> <i *ngIf="auth();" class="fa-solid fa-angle-right arrow"></i>
           <i *ngIf="auth();" class="fa-regular fa-user user" routerLink="/user/profile"></i>
