@@ -305,11 +305,6 @@ label.sicon {
 @media (max-width: 1024px) {
 
 
-
-
-
-
-
    /* Ensure the dropdown-menu is hidden initially */
 .dropdown-menu {
   display: none;
@@ -318,6 +313,7 @@ label.sicon {
   color: white;
   padding: 10px;
   z-index: 1000;
+  top: 50px;
 }
 
 /* Show dropdown-menu when hovering over the .sign element or the dropdown itself */
