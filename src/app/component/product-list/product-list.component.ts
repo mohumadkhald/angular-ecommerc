@@ -392,10 +392,13 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
   scrollLeft(slider: HTMLElement) {
-    slider.scrollBy({ left: -955, behavior: 'smooth' });
+    const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
+    slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
   }
-
+  
   scrollRight(slider: HTMLElement) {
-    slider.scrollBy({ left: 955, behavior: 'smooth' });
+    const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
+    slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
+  
 }

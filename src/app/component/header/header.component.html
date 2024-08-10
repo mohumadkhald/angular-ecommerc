@@ -34,15 +34,17 @@
         <b class=" add">EN</b>
         <i class="fa-solid fa-caret-down"></i>
       </div>
-      <div class="sign hover">
+      <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
         <div class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
           <div *ngIf="!auth();" routerLink="/login" class="signin not-login" (click)="toggleMenu(false)">
             Sign in
           </div>
-          <div *ngIf="auth();" class="signin" (click)="toggleMenu(true)" (touchend)="toggleMenu(false)">
+          <div class="nav user" [ngStyle]="{'width.px': usernameWidth}" (click)="toggleMenu(true)"
+            (touchend)="toggleMenu(false)">
             {{ username }}
-          </div> <i *ngIf="auth();" class="fa-solid fa-angle-right arrow"></i>
+          </div>
+          <i *ngIf="auth();" class="fa-solid fa-angle-right arrow"></i>
           <i *ngIf="auth();" class="fa-regular fa-user user" routerLink="/user/profile"></i>
         </div>
         <div class="add">

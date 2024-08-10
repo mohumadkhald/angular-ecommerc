@@ -12,11 +12,6 @@
   display: block;
 }
 
-.nav {
-  width: 100%;
-  color: white;
-  padding: 5px;
-}
 
 .sticky {
   background-color: #1f2833;
@@ -39,6 +34,16 @@
 }
 
 @media (min-width: 1024px) {
+
+.nav {
+  padding: 5px;
+  color: white;
+  background-color: #1f2833;
+  border-radius: 5px;
+  text-align: center;
+  margin: -8px 0 0;
+}
+
   .amazon i.menu {
     display: none;
   }
@@ -85,7 +90,18 @@
   background-color: #485769;
 }
 
+.user {
+  width: 200px;
+  overflow: hidden;
 }
+
+.small {
+  width: 350px;
+}
+
+}
+
+
 
 .amazon {
   width: 9em;
@@ -117,6 +133,7 @@
   height: 1em;
   font-size: 0.8em;
   opacity: 0.7;
+  margin-right: 70px;
 }
 
 .address .small {
@@ -248,7 +265,7 @@ label.sicon {
 }
 
 .sign {
-  width: 12em;
+  width: 15em;
   align-items: center;
 }
 
@@ -302,6 +319,7 @@ label.sicon {
   top: 5px;
 }
 
+
 @media (max-width: 1024px) {
 
 
@@ -344,12 +362,6 @@ label.sicon {
 .dropdown-item:hover {
   background-color: #485769;
 }
-
-
-
-
-
-
 
 
   .hover:hover {
@@ -408,7 +420,7 @@ label.sicon {
 
   .signin {
     margin-top: -0.4em;
-    width: 8.5em;
+    width: 8em;
     font-size: x-small;
     cursor: pointer;
   }
@@ -427,6 +439,7 @@ label.sicon {
     opacity: 1;
     font-size: 1em;
     margin-top: -0.1em;
+    margin-left: 5px;
   }
 
   .sign .small i.user {
@@ -434,6 +447,29 @@ label.sicon {
     font-size: 1.5em;
     margin: -0.3em 5px 0px 5px;
   }
+
+  
+
+  .nav {
+    padding: 5px;
+    color: white;
+    background-color: #1f2833;
+    border-radius: 5px;
+    text-align: center;
+    margin: -10px 0 0;
+  }
+  .user {
+    overflow: hidden;
+    width: 190px;
+  }
+
+  i.user {
+    opacity: 1;
+    font-size: 1.5em;
+    margin: -0.3em 5px 0px 5px;
+    width: 25px;
+  }
+
 
   .nav-right {
     grid-column: 3/4;
@@ -450,12 +486,99 @@ label.sicon {
   }
 }
 
-@media (max-width: 300px) {
+@media (max-width: 400px) {
   .signin,
   i.arrow {
     display: none;
   }
+
+  .sign {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 1.25em;
+    width: 6.5em;
+    padding: 0;
+  }
+
+  .small {
+    height: 1em;
+    font-size: 0.8em;
+    opacity: 0.7;
+    width: 12em;
+
+  }
+  .nav {
+    padding: 5px;
+    color: white;
+    background-color: #1f2833;
+    border-radius: 5px;
+    text-align: center;
+    margin: -8px 0 0;
+  }
+  .user {
+    overflow: hidden;
+    width: 155px;
+  }
+
+  i.user {
+    opacity: 1;
+    font-size: 1.5em;
+    margin: -0.3em 6px 0px 5px;
+    width: 25px;
+  }
+
+  .sign .small i.user {
+    opacity: 1;
+    font-size: 1.5em;
+    margin: -0.3em -12px 0px 5px;
+  }
+
 }
+
+@media (max-width: 350px) {
+  .signin,
+  i.arrow {
+    display: none;
+  }
+
+  .sign {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 1.25em;
+    width: 5em;
+    padding: 0;
+  }
+
+  .small {
+    height: 1em;
+    font-size: 0.8em;
+    opacity: 0.7;
+    width: 10em;
+  }
+  .nav {
+    padding: 5px;
+    color: white;
+    background-color: #1f2833;
+    border-radius: 5px;
+    text-align: center;
+    margin: -8px 0 0;
+  }
+  .user {
+    overflow: hidden;
+    width: 100px;
+  }
+
+  i.user {
+    opacity: 1;
+    font-size: 1.5em;
+    margin: -0.3em 5px 0px 5px;
+    width: 25px;
+  }
+
+}
+
 
 .nav-main {
   height: 3em;
