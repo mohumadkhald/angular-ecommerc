@@ -1,10 +1,14 @@
 import { NgFor, NgIf } from '@angular/common';
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
+  AfterViewInit,
+  // CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
+  Renderer2,
+  ViewChild,
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -37,9 +41,16 @@ import { Subscription } from 'rxjs';
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('searchContainer', { static: false }) searchContainer!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('selectElement', { static: false })
+
+  selectElement!: ElementRef<HTMLSelectElement>;
+
   selectedCategory: string = 'all';
   searchText: string = '';
   quantity: any = 0;
@@ -50,7 +61,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   categories: any[] = [];
   menuVisible = false;
   private authSubscription!: Subscription;
-  
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -62,8 +72,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private cartServerService: CartServerService,
     private cartService: CartService,
     public toastService: ToastService,
-    private categoryUpdateService: CategoryUpdateService,
-    
+    private renderer: Renderer2,
+    private categoryUpdateService: CategoryUpdateService
   ) {
     this.role = 'USER';
   }
@@ -101,18 +111,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.cd.detectChanges();
     });
 
-
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
       this.loadCategories();
     });
   }
+
+  ngAfterViewInit(): void {
+    this.adjustSelectWidth(); // Adjust initially
+  
+    // Listen for changes to adjust the width whenever an option is selected
+    this.selectElement.nativeElement.addEventListener('change', () => {
+      this.adjustSelectWidth();
+    });
+    this.renderer.listen(this.searchContainer.nativeElement, 'mousedown', () => {
+      this.renderer.addClass(this.searchContainer.nativeElement, 'focused');
+    });
+
+    this.renderer.listen('document', 'mousedown', (event: MouseEvent) => {
+      if (!this.searchContainer.nativeElement.contains(event.target as Node)) {
+        this.renderer.removeClass(this.searchContainer.nativeElement, 'focused');
+      }
+    });
+  }
+  
   ngOnDestroy(): void {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
   }
-
 
   logout() {
     this.authService.logout().subscribe(() => {
@@ -153,6 +180,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.categoryService.getAllCategories().subscribe(
       (categories) => {
         this.categories = categories;
+        this.adjustSelectWidth(); // Adjust width after categories are loaded
       },
       (error) => {}
     );
@@ -180,7 +208,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
       queryParams: { category: categoryTitle, search: productName },
     });
   }
+
   auth() {
     return this.authService.isLoggedIn();
   }
+
+  private adjustSelectWidth() {
+    const selectElement = this.selectElement.nativeElement;
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+  
+    if (!selectedOption) {
+      return; // Exit if there's no selected option
+    }
+  
+    // Create a temporary span to measure the width of the selected option
+    const tempSpan = document.createElement('span');
+    tempSpan.style.visibility = 'hidden';
+    tempSpan.style.position = 'absolute';
+    tempSpan.style.whiteSpace = 'nowrap';
+    tempSpan.style.fontSize = window.getComputedStyle(selectElement).fontSize;
+    tempSpan.style.fontFamily = window.getComputedStyle(selectElement).fontFamily;
+    tempSpan.innerText = selectedOption.text;
+  
+    document.body.appendChild(tempSpan);
+    const selectedOptionWidth = tempSpan.clientWidth;
+    document.body.removeChild(tempSpan);
+  
+    // Apply the width to the select element, adding padding for aesthetics
+    selectElement.style.width = `${selectedOptionWidth + 64}px`; // Adjust padding if necessary
+  }
+  
 }

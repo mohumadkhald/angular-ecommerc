@@ -3,9 +3,8 @@
   <div class="sticky">
     <div class="nav-left">
       <div class="amazon hover">
-        <i class="fa-solid fa-bars menu"></i>
+        <!-- <i class="fa-solid fa-bars menu"></i> -->
         <a routerLink=""><img src="../../../assets/amz/amazoni1.png" alt="amazon.in"></a>
-        <div class="in">.in</div>
       </div>
       <div class="address hover">
         <div class="small">Hello</div>
@@ -16,30 +15,33 @@
       </div>
     </div>
 
-    <div class="nav-search">
-      <select class="" style="padding: 8px; border-radius: 10px 0;" [(ngModel)]="selectedCategory">
+    <div class="nav-search" #searchContainer>
+      <select #selectElement style="padding: 7px;" [(ngModel)]="selectedCategory">
         <option value="all">All</option>
-        <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}</option>
+        <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}
+        </option>
       </select>
       <input type="search" name="search" id="search" placeholder=" Search Amazon.in" [(ngModel)]="searchText"
-      (keydown.enter)="goToSearchResult()">
+        (keydown.enter)="goToSearchResult()">
       <label for="search" class="sicon" (click)="goToSearchResult()">
         <i class="fa-solid fa-magnifying-glass"></i>
       </label>
     </div>
+
     <div class="nav-right">
       <div class="ind hover">
         <img src="../../../assets/amz/india.png" alt="india">
         <b class=" add">EN</b>
         <i class="fa-solid fa-caret-down"></i>
       </div>
-      <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
-        <div class="small" style="font-weight: bolder;" >
+      <div class="sign hover">
+        <div class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" class="signin not-login">sign in</div>
-          <div *ngIf="auth();" class="signin">{{ username }}</div>
-          <i class="fa-solid fa-angle-right arrow"></i>
-          <i class="fa-regular fa-user user"></i>
+          <div *ngIf="!auth();" routerLink="/login" class="signin not-login">sign in</div>
+          <div *ngIf="auth();" class="signin" (touchstart)="toggleMenu(true)" (touchend)="toggleMenu(false)">
+            {{ username }}
+          </div> <i *ngIf="auth();" class="fa-solid fa-angle-right arrow"></i>
+          <i *ngIf="auth();" class="fa-regular fa-user user" routerLink="/user/profile"></i>
         </div>
         <div class="add">
           <b>Account & Lists</b>
@@ -55,7 +57,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="return  hover">
         <div class="add">
           <b>Orders</b>
@@ -78,12 +80,6 @@
       <div class="nav-menu">
         <i class="fa-solid fa-bars menubar"></i>
         <div><b>All</b></div>
-      </div>
-      <div class="shopCate">
-        <div class="small">Shop By</div>
-        <div class="add">
-          <a href="#">Category</a>
-        </div>
       </div>
       <div class="xshop">
         <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
