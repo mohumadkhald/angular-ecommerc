@@ -12,10 +12,19 @@
   display: block;
 }
 
+.nav {
+  padding: 5px;
+  color: white;
+  background-color: #1f2833;
+  border-radius: 5px;
+  text-align: center;
+  white-space: nowrap;
+  margin: -8px 0 0;
+}
 
 .sticky {
   background-color: #1f2833;
-  height: 3em;
+  height: 4em;
   padding: 0.5em 1.2em 0.5em 0.5em;
   display: flex;
   align-items: center;
@@ -34,16 +43,6 @@
 }
 
 @media (min-width: 1024px) {
-
-.nav {
-  padding: 5px;
-  color: white;
-  background-color: #1f2833;
-  border-radius: 5px;
-  text-align: center;
-  margin: -8px 0 0;
-}
-
   .amazon i.menu {
     display: none;
   }
@@ -90,22 +89,25 @@
   background-color: #485769;
 }
 
+.cart {
+  display: flex;
+  flex-direction: row;
+  width: 4em;
+  position: relative;
+  top: 5px;
+}
+
 .user {
-  width: 200px;
   overflow: hidden;
-}
-
-.small {
-  width: 350px;
+  margin-bottom: -2px;
 }
 
 }
-
-
 
 .amazon {
-  width: 9em;
+  width: 7em;
   display: flex;
+  margin-left: -10px;
 }
 
 .in {
@@ -115,7 +117,7 @@
 }
 
 .address {
-  width: 12em;
+  width: 8em;
   padding: 0.4em;
 }
 
@@ -133,7 +135,6 @@
   height: 1em;
   font-size: 0.8em;
   opacity: 0.7;
-  margin-right: 70px;
 }
 
 .address .small {
@@ -265,7 +266,7 @@ label.sicon {
 }
 
 .sign {
-  width: 15em;
+  width: 13em;
   align-items: center;
 }
 
@@ -283,7 +284,7 @@ label.sicon {
 }
 
 .return {
-  width: 5em;
+  width: 4em;
 }
 
 .cardCount {
@@ -314,11 +315,11 @@ label.sicon {
 .cart {
   display: flex;
   flex-direction: row;
-  width: 7em;
+  width: 5em;
   position: relative;
   top: 5px;
+  left: 10px;
 }
-
 
 @media (max-width: 1024px) {
 
@@ -364,6 +365,12 @@ label.sicon {
 }
 
 
+
+
+
+
+
+
   .hover:hover {
     border: none;
     box-shadow: none;
@@ -402,25 +409,32 @@ label.sicon {
     width: 95%;
   }
 
-  .nav-left,
+  .nav-left {
+    display: inline-flex;
+    justify-content: end;
+    width: 7em;
+  }
+
   .nav-right {
     display: inline-flex;
     justify-content: end;
     width: 8em;
   }
 
+
   .sign {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    font-size: 1.25em;
     width: 10em;
     padding: 0;
+    margin-top: 10px;
+    font-size: 16px;
   }
 
   .signin {
     margin-top: -0.4em;
-    width: 8em;
+    width: 12.5em;
     font-size: x-small;
     cursor: pointer;
   }
@@ -448,29 +462,6 @@ label.sicon {
     margin: -0.3em 5px 0px 5px;
   }
 
-  
-
-  .nav {
-    padding: 5px;
-    color: white;
-    background-color: #1f2833;
-    border-radius: 5px;
-    text-align: center;
-    margin: -10px 0 0;
-  }
-  .user {
-    overflow: hidden;
-    width: 190px;
-  }
-
-  i.user {
-    opacity: 1;
-    font-size: 1.5em;
-    margin: -0.3em 5px 0px 5px;
-    width: 25px;
-  }
-
-
   .nav-right {
     grid-column: 3/4;
     display: flex;
@@ -484,99 +475,27 @@ label.sicon {
     top: 5px;
     left: 5px;
   }
-}
-
-@media (max-width: 400px) {
-  .signin,
-  i.arrow {
-    display: none;
-  }
-
-  .sign {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    font-size: 1.25em;
-    width: 6.5em;
-    padding: 0;
-  }
-
   .small {
     height: 1em;
     font-size: 0.8em;
     opacity: 0.7;
-    width: 12em;
-
-  }
-  .nav {
-    padding: 5px;
-    color: white;
-    background-color: #1f2833;
-    border-radius: 5px;
-    text-align: center;
-    margin: -8px 0 0;
+    margin-right: 20px;
   }
   .user {
     overflow: hidden;
-    width: 155px;
+    margin-bottom: -2px;
+    margin-top: -5px;
   }
-
-  i.user {
-    opacity: 1;
-    font-size: 1.5em;
-    margin: -0.3em 6px 0px 5px;
-    width: 25px;
-  }
-
-  .sign .small i.user {
-    opacity: 1;
-    font-size: 1.5em;
-    margin: -0.3em -12px 0px 5px;
-  }
-
 }
 
-@media (max-width: 350px) {
-  .signin,
-  i.arrow {
-    display: none;
-  }
 
-  .sign {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    font-size: 1.25em;
-    width: 5em;
-    padding: 0;
-  }
-
-  .small {
-    height: 1em;
-    font-size: 0.8em;
-    opacity: 0.7;
-    width: 10em;
-  }
-  .nav {
-    padding: 5px;
-    color: white;
-    background-color: #1f2833;
-    border-radius: 5px;
-    text-align: center;
-    margin: -8px 0 0;
-  }
-  .user {
-    overflow: hidden;
-    width: 100px;
-  }
-
-  i.user {
-    opacity: 1;
-    font-size: 1.5em;
-    margin: -0.3em 5px 0px 5px;
-    width: 25px;
-  }
-
+.nav {
+  padding: 5px;
+  color: white;
+  background-color: #1f2833;
+  border-radius: 5px;
+  text-align: center;
+  margin: -8px 0 0;
 }
 
 
@@ -620,6 +539,173 @@ label.sicon {
   text-decoration: none;
   color: white;
 }
+
+@media (max-width: 380px) {
+
+
+  /* Ensure the dropdown-menu is hidden initially */
+.dropdown-menu {
+ display: none;
+ position: absolute;
+ background-color: #232f3e;
+ color: white;
+ padding: 10px;
+ z-index: 1000;
+ top: 50px;
+}
+
+/* Show dropdown-menu when hovering over the .sign element or the dropdown itself */
+.sign:hover .dropdown-menu, 
+.dropdown-menu:hover {
+ display: block;
+}
+
+/* Dropdown content styling */
+.dropdown-content {
+ display: flex;
+ flex-direction: column;
+}
+
+.dropdown-item {
+ margin: 5px 0;
+ padding: 5px 10px;
+ color: white; /* Ensure text is visible */
+ background-color: #37475a;
+ border-radius: 3px;
+ text-decoration: none;
+}
+.dropdown-content a {
+ color: white;
+ text-decoration: none;
+}
+
+.dropdown-item:hover {
+ background-color: #485769;
+}
+
+
+
+
+
+
+
+
+ .hover:hover {
+   border: none;
+   box-shadow: none;
+ }
+
+ .sticky {
+   width: 100vw;
+   height: 6em;
+   display: grid;
+   grid-template-columns: 8em auto 8em;
+   grid-template-rows: 3em 3em;
+   padding: 0;
+ }
+
+ .address,
+ .ind,
+ .sign div.add,
+ .hello,
+ .return,
+ .cardName,
+ label.hidden {
+   display: none;
+ }
+
+ .signin::first-letter {
+   text-transform: uppercase;
+ }
+
+ .nav-search {
+   margin: 0;
+   padding: 0;
+   align-self: flex-start;
+   justify-self: center;
+   grid-row: 2/3;
+   grid-column: 1/4;
+   width: 95%;
+ }
+
+ .nav-left{
+   display: inline-flex;
+   justify-content: end;
+   width: 7em;
+ }
+
+ .nav-right {
+  display: inline-flex;
+  justify-content: end;
+  width: 8em;
+}
+
+ .sign {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+   width: 8em;
+   padding: 0;
+   margin-top: 5px;
+   font-size: 14px;
+ }
+
+ .signin {
+   margin-top: -0.4em;
+   width: 9em;
+   font-size: x-small;
+   cursor: pointer;
+ }
+ .not-login {
+   position: relative;
+   left: 4em;
+   font-size: 14px;
+ }
+
+ .sign .small i {
+   font-size: 2em;
+   color: white;
+ }
+
+ .sign .small i.arrow {
+   opacity: 1;
+   font-size: 1.25em;
+   margin-top: -2px;
+   margin-left: 5px;
+ }
+
+ .sign .small i.user {
+   opacity: 1;
+   font-size: 1.25em;
+   margin: -2px 5px 0px 5px;
+ }
+
+ .nav-right {
+   grid-column: 3/4;
+   display: flex;
+   justify-content: flex-end;
+ }
+ .cart {
+   display: flex;
+   flex-direction: row;
+   width: 7em;
+   position: relative;
+   top: 5px;
+   left: 5px;
+ }
+ .small {
+   height: 1em;
+   font-size: 0.8em;
+   opacity: 0.7;
+   margin-right: 5px;
+ }
+ .user {
+   overflow: hidden;
+   margin-bottom: -2px;
+   margin-top: -5px;
+ }
+}
+
 
 @media (min-width: 1024px) {
   .shopCate {

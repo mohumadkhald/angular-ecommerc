@@ -7,10 +7,9 @@
         <a routerLink=""><img src="../../../assets/amz/amazoni1.png" alt="amazon.in"></a>
       </div>
       <div class="address hover">
-        <div class="small">Hello</div>
         <div class="add">
           <i class="fa-solid fa-location-dot"></i>
-          <b>Select your address</b>
+          <b>Select address</b>
         </div>
       </div>
     </div>
@@ -40,7 +39,7 @@
           <div *ngIf="!auth();" routerLink="/login" class="signin not-login" (click)="toggleMenu(false)">
             Sign in
           </div>
-          <div class="nav user" [ngStyle]="{'width.px': usernameWidth}" (click)="toggleMenu(true)"
+          <div class="signin user" (click)="toggleMenu(true)"
             (touchend)="toggleMenu(false)">
             {{ username }}
           </div>
@@ -73,7 +72,7 @@
         </span>
         <p class="cardCount">{{getCountOfItems()}}</p>
         <div style="margin-top: 10px;" class="add cardName">
-          <b>Cart</b>
+          <b style="margin-left: -15px;">Cart</b>
         </div>
       </div>
     </div>

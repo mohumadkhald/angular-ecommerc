@@ -45,10 +45,9 @@ import { Subscription } from 'rxjs';
 
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('searchContainer', { static: false }) searchContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('usernameDiv', { static: false }) usernameDiv!: ElementRef;
+
   @ViewChild('selectElement', { static: false })
 
-  usernameWidth: number | null = null;
   selectElement!: ElementRef<HTMLSelectElement>;
 
   selectedCategory: string = 'all';
@@ -236,20 +235,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   
     // Apply the width to the select element, adding padding for aesthetics
     selectElement.style.width = `${selectedOptionWidth + 64}px`; // Adjust padding if necessary
-  }
-
-  adjustUsernameWidth(): void {
-    if (this.username && this.usernameDiv) {
-      const tempElement = this.renderer.createElement('span');
-      const textNode = this.renderer.createText(this.username);
-      this.renderer.appendChild(tempElement, textNode);
-      this.renderer.appendChild(document.body, tempElement);
-
-      const computedWidth = tempElement.getBoundingClientRect().width;
-      this.usernameWidth = computedWidth + 20; // Add padding/margin if needed
-
-      this.renderer.removeChild(document.body, tempElement);
-    }
   }
   
 }
