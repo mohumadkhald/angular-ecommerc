@@ -34,17 +34,17 @@
         <i class="fa-solid fa-caret-down"></i>
       </div>
       <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
-        <div class="small" style="font-weight: bolder;">
+        <div  class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" routerLink="/login" class="signin not-login" (click)="toggleMenu(false)">
+          <div *ngIf="!auth();" routerLink="/login" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)" class="signin not-login">
             Sign in
           </div>
           <div class="signin user" (click)="toggleMenu(true)"
             (touchend)="toggleMenu(false)">
             {{ username }}
           </div>
-          <i *ngIf="auth();" class="fa-solid fa-angle-right arrow"></i>
-          <i *ngIf="auth();" class="fa-regular fa-user user" routerLink="/user/profile"></i>
+          <i class="fa-solid fa-angle-right arrow" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
+          <i class="fa-regular fa-user user" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
         </div>
         <div class="add">
           <b>Account & Lists</b>
@@ -55,12 +55,10 @@
             <div *ngIf="!auth();" class="dropdown-item"><a routerLink="/login">Login</a></div>
             <div class="dropdown-item" *ngIf='auth() && role=="ADMIN";' routerLink="dashboard">Dashboard</div>
             <div *ngIf="auth()" class="dropdown-item"><a routerLink="/user/profile">Account</a></div>
-            <!-- Add other dropdown items here -->
             <div *ngIf="auth();" class="dropdown-item"><a routerLink="/login" (click)="logout()">Logout</a></div>
           </div>
         </div>
       </div>
-
       <div class="return  hover">
         <div class="add">
           <b>Orders</b>

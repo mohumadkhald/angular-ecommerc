@@ -45,10 +45,8 @@ import { Subscription } from 'rxjs';
 
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('searchContainer', { static: false }) searchContainer!: ElementRef<HTMLDivElement>;
-
-  @ViewChild('selectElement', { static: false })
-
-  selectElement!: ElementRef<HTMLSelectElement>;
+  @ViewChild('selectElement', { static: false }) selectElement!: ElementRef<HTMLSelectElement>;
+  @ViewChild('usernameContainer', { static: false }) usernameContainer!: ElementRef<HTMLDivElement>;
 
   selectedCategory: string = 'all';
   searchText: string = '';
@@ -91,6 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     );
+
     this.userService.username$.subscribe((username) => {
       this.username = username || '';
       this.loading = false;
@@ -118,7 +117,8 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.adjustSelectWidth(); // Adjust initially
-  
+    this.adjustUsernameWidth(); // Adjust username width initially
+
     // Listen for changes to adjust the width whenever an option is selected
     this.selectElement.nativeElement.addEventListener('change', () => {
       this.adjustSelectWidth();
@@ -133,7 +133,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
   }
-  
+
   ngOnDestroy(): void {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
@@ -155,6 +155,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         if (username) {
           this.username = username;
           this.cd.detectChanges();
+          this.adjustUsernameWidth(); // Adjust width after username is set
         }
       });
       this.userService.role$.subscribe((role) => {
@@ -235,6 +236,27 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   
     // Apply the width to the select element, adding padding for aesthetics
     selectElement.style.width = `${selectedOptionWidth + 64}px`; // Adjust padding if necessary
+  }
+
+  private adjustUsernameWidth() {
+    const usernameContainer = this.usernameContainer.nativeElement;
+    const usernameElement = usernameContainer.querySelector('div')!;
+  
+    // Create a temporary span to measure the width of the username
+    const tempSpan = document.createElement('span');
+    tempSpan.style.visibility = 'hidden';
+    tempSpan.style.position = 'absolute';
+    tempSpan.style.whiteSpace = 'nowrap';
+    tempSpan.style.fontSize = window.getComputedStyle(usernameElement).fontSize;
+    tempSpan.style.fontFamily = window.getComputedStyle(usernameElement).fontFamily;
+    tempSpan.innerText = this.username;
+  
+    document.body.appendChild(tempSpan);
+    const usernameWidth = tempSpan.clientWidth;
+    document.body.removeChild(tempSpan);
+  
+    // Apply the width to the container, adding padding for aesthetics
+    usernameContainer.style.width = `${usernameWidth + 30}px`; // Adjust padding if necessary
   }
   
 }
