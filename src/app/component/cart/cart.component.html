@@ -13,11 +13,11 @@
                                         </a>
                                     </h5>
                                     <hr>
-                                    <div class="d-flex justify-content-between p-2 align-items-center mb-3">
-                                        <div class="col-5 btn btn-danger">
-                                            <p class="mb">You Have {{ getCountOfItems() }} Items in your cart</p>
+                                    <div class="empty-item d-flex justify-content-between p-2 align-items-center mb-3">
+                                        <div class="col-7 btn btn-danger">
+                                            <p class="mb item-count">You Have {{ getCountOfItems() }} Items in your cart</p>
                                         </div>
-                                        <button class="offset-2 col-3 btn btn-danger" (click)="clearCart()">Clear Cart</button>
+                                        <button class="col-4 btn btn-danger" (click)="clearCart()">Clear Cart</button>
                                     </div>
 
                                     <ng-container *ngIf="auth(); else guestCart">
@@ -26,19 +26,19 @@
                                             <div class="card-body">
                                                 <div class="d-flex justify-content-between">
                                                     <div class="d-flex flex-row align-items-center">
-                                                        <div>
-                                                            <img [src]="item.imageUrl" class="img-fluid rounded-3" alt="Shopping item" style="width: 90px;">
+                                                        <div class="div-img">
+                                                            <img [src]="item.imageUrl" class="product-img img-fluid rounded-3" alt="Shopping item">
                                                         </div>
-                                                        <div class="ms-3">
+                                                        <div class="ms-3 product-title">
                                                             <h3>{{ item.productTitle }}</h3>
-                                                            <p class="small mb-0 me-3">
+                                                            <p style="display: flex;" class="small mb-0 me-3">
                                                                 <button style="width: 30px; height: 30px; padding: 0;" class="btn btn-primary me-3" (click)="increaseQuantity(item.productId)">+</button>
                                                                 <span style="margin-left: -8px;margin-right: 5px;">{{ item.quantity }}</span>
                                                                 <button style="width: 30px; height: 30px; padding: 0;" class="btn btn-primary" (click)="decreaseQuantity(item.productId)">-</button>
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <div class="ms-3">
+                                                    <div class="ms-3 spec">
                                                         <div>
                                                             <h5 class="fw-normal mb-0">Size: {{ item.size }} {{ item.color }}</h5>
                                                         </div>
@@ -147,8 +147,8 @@
                                         <img src="https://m.media-amazon.com/images/G/01/cart/empty/kettle-desaturated._CB445243794_.svg" alt="Nice Day">
                                     </div>
                                     <div class="detailsReq">
-                                        <h2>Your Cart is Empty</h2>
-                                        <p><a routerLink="">Products Today</a></p>
+                                        <h2 class="empty-cart">Your Cart is Empty</h2>
+                                        <p class="product-today"><a routerLink="">Products Today</a></p>
                                         <button *ngIf="!auth()" class="btnLog"><a style="text-decoration: none; color: white" routerLink="/login">Sign in To Your Account</a></button>
                                         <button *ngIf="!auth()" style="background-color: white;" class="btnLog"><a style="text-decoration: none; color: black" routerLink="/register">Sign Up Now</a></button>
                                     </div>

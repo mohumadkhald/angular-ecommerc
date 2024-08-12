@@ -36,15 +36,17 @@
       <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
         <div  class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" routerLink="/login" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)" class="signin not-login">
+          <div *ngIf="!auth();" routerLink="/login" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)" class="signin no-login">
             Sign in
           </div>
           <div class="signin user" (click)="toggleMenu(true)"
             (touchend)="toggleMenu(false)">
             {{ username }}
           </div>
-          <i class="fa-solid fa-angle-right arrow" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
-          <i class="fa-regular fa-user user" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
+          <div style="display: block;">
+            <i class="fa-solid fa-angle-right arrow" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
+            <i class="fa-regular fa-user user" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
+          </div>
         </div>
         <div class="add">
           <b>Account & Lists</b>

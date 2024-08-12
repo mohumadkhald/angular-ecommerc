@@ -31,14 +31,7 @@
   font-size: 1.25rem;
 }
 
-.close {
-  opacity: 0.8;
-  padding: 3px 10px;
-  background-color: #eb2727;
-  border: 1px solid red;
-  color: white;
-  font-size: 24px; /* Adjust font size for smaller screens */
-}
+
 
 .close:hover {
   opacity: 1;
@@ -109,27 +102,17 @@
       padding: 10px;
   }
 
-  .close {
-      font-size: 28px; /* Adjust font size for smaller screens */
-  }
-
   .modal-body {
       padding: 10px;
   }
+
+  .btn1 {
+    width: 100%; /* Full-width button on small screens */
+    padding: 12px;
+    font-size: 14px; /* Adjust font size for buttons */
 }
-
-@media (max-width: 576px) {
-  .modal-header {
-      padding: 10px 5px; /* Less padding for very small screens */
-  }
-
-  .modal-title {
-      font-size: 1.1rem; /* Smaller font size for very small screens */
-  }
-
-  .btn {
-      width: 100%; /* Full-width button on small screens */
-      padding: 12px;
-      font-size: 14px; /* Adjust font size for buttons */
-  }
+.btn-close {
+  margin-right: 5px;
+  margin-top: -30px;
+}
 }

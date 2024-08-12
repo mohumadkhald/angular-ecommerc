@@ -50,7 +50,6 @@
 .small {
   display: inline-block;
   white-space: nowrap;
-  max-width: 240px;
 }
 @media (min-width: 1024px) {
   .amazon i.menu {
@@ -467,8 +466,10 @@ label.sicon {
   .sign .small i.arrow {
     opacity: 1;
     font-size: 1em;
-    margin-top: -0.1em;
-    margin-left: 5px;
+    position: relative;
+    top: -2px;
+    left: 1px;
+
   }
 
   .sign .small i.user {
@@ -498,8 +499,7 @@ label.sicon {
   }
   .user {
     overflow: hidden;
-    margin-bottom: -2px;
-    margin-top: -5px;
+    margin-top: -3px;
   }
 }
 
@@ -655,68 +655,75 @@ label.sicon {
   width: 8em;
 }
 
- .sign {
-   display: flex;
-   align-items: center;
-   justify-content: space-around;
-   padding: 0;
-   margin-top: 5px;
-   font-size: 14px;
-   width: 10em;
- }
 
- .signin {
-   margin-top: -0.4em;
-   font-size: x-small;
-   cursor: pointer;
-   width: 8em;
- }
- .not-login {
-   position: relative;
-   font-size: 14px;
- }
+.sign {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 12em;
+  padding: 0;
+  margin-top: 10px;
+  font-size: 16px;
+}
 
- .sign .small i {
-   font-size: 2em;
-   color: white;
- }
+.signin {
+  margin-top: -0.3em;
+  font-size: x-small;
+  cursor: pointer;
+}
+.not-login {
+  position: relative;
+  left: 0em;
+  font-size: 14px;
+}
 
- .sign .small i.arrow {
-   opacity: 1;
-   font-size: 1.25em;
-   margin-top: -2px;
-   margin-left: 5px;
- }
+.sign .small i {
+  font-size: 2em;
+  color: white;
+}
 
- .sign .small i.user {
-   opacity: 1;
-   font-size: 1.25em;
-   margin: -2px 5px 0px 5px;
- }
+.sign .small i.arrow {
+  opacity: 1;
+  font-size: 1em;
+  position: relative;
+  top: -2px;
+  left: 1px;
 
- .nav-right {
-   grid-column: 3/4;
-   display: flex;
-   justify-content: flex-end;
- }
- .cart {
-   display: flex;
-   flex-direction: row;
-   width: 7em;
-   position: relative;
-   top: 5px;
-   left: 5px;
- }
- .small {
-   height: 1em;
-   font-size: 0.8em;
-   opacity: 0.7;
- }
- .user {
-   overflow: hidden;
-   margin-bottom: -2px;
-   margin-top: -5px;
- }
+}
+
+.sign .small i.user {
+  opacity: 1;
+  font-size: 1.5em;
+  margin: -0.3em 5px 0px 5px;
+}
+
+.nav-right {
+  grid-column: 3/4;
+  display: flex;
+  justify-content: flex-end;
+}
+.cart {
+  display: flex;
+  flex-direction: row;
+  width: 7em;
+  position: relative;
+  top: 5px;
+  left: 5px;
+}
+.small {
+  height: 1em;
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-right: 20px;
+  width: 10em;
+}
+.user {
+  overflow: hidden;
+  margin-top: -3px;
+}
+.no-login {
+  margin-left: 5em;
+}
 }
 
 @media (max-width: 320px) {
@@ -826,31 +833,35 @@ label.sicon {
    padding: 0;
    margin-top: 5px;
    font-size: 14px;
-   width: 7em;
+   width: 9em;
  }
 
- .signin {
-   margin-top: -0.4em;
-   font-size: x-small;
-   cursor: pointer;
-   width: 7em;
- }
- .not-login {
-   position: relative;
-   font-size: 14px;
- }
 
- .sign .small i {
-   font-size: 2em;
-   color: white;
- }
+.signin {
+  margin-top: -0.3em;
+  font-size: x-small;
+  cursor: pointer;
+}
 
- .sign .small i.arrow {
-   opacity: 1;
-   font-size: 1.25em;
-   margin-top: -2px;
-   margin-left: 5px;
- }
+.sign .small i {
+  font-size: 2em;
+  color: white;
+}
+
+.sign .small i.arrow {
+  opacity: 1;
+  font-size: 1em;
+  position: relative;
+  top: -2px;
+  left: 1px;
+
+}
+
+.sign .small i.user {
+  opacity: 1;
+  font-size: 1.5em;
+  margin: -0.3em 5px 0px 5px;
+}
 
  .sign .small i.user {
    opacity: 1;
@@ -878,8 +889,7 @@ label.sicon {
  }
  .user {
    overflow: hidden;
-   margin-bottom: -2px;
-   margin-top: -5px;
+   margin-top: -3px;
  }
 }
 

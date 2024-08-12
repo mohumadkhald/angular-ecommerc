@@ -1,3 +1,7 @@
+.product-img {
+  width: 200px;
+  height: 100px;
+}
 .loginReq {
     width: 90vw;
     background-color: #ddd;
@@ -38,6 +42,7 @@
     margin-top: .5vw;
     position: relative;
     left: -.5vw;
+    width: 180px;
 }
 
 .loginRe {
@@ -52,6 +57,8 @@
   
 .loginReqImg {
   margin-right: 20px;
+  margin-bottom: 50px;
+
 }
 
 .detailsReq {
@@ -64,4 +71,259 @@
     position: relative;
     top: 5%;
   }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    position: relative;
+    top: 5%;
+  }
+  .container, .container-sm {
+    max-width: 772px;
+}
+.detailsReq {
+  float: left;
+  margin-top: 4vw;
+  width: 30vw;
+  position: relative;
+  right: 7vw;
+
+}
+.empty-cart {
+  width: 180px;
+}
+
+}
+
+
+@media screen and (max-width: 600px) {
+  .container {
+    position: relative;
+    top: 5%;
+  }
+  .product-img {
+    width: 200px;
+    height: 100px;
+  }
+  .item-count {
+    font-size: 12px;
+  }
+
+.detailsReq button {
+  background-color: #4079eb;
+  padding: .5vw;
+  margin-top: .5vw;
+  position: relative;
+  left: -.5vw;
+  width: 180px;
+}
+.detailsReq {
+  float: left;
+  margin-top: 4vw;
+  width: 30vw;
+  position: relative;
+  right: 7vw;
+  margin-bottom: 30px;
+
+
+}
+.empty-cart {
+  width: 180px;
+}
+
+}
+
+@media screen and (max-width: 450px) {
+  .container {
+    position: relative;
+    top: 5%;
+  }
+  .div-img {
+    width: 100px;
+  }
+  .product-img {
+    width: 500px;
+    height: 100px;
+  }
+
+  .loginReqImg {
+    padding-top: 2vw;
+    width: 40vw;
+    float: left;
+}
+.detailsReq button {
+  background-color: #4079eb;
+  padding: .5vw;
+  margin-top: .5vw;
+  position: relative;
+  left: -.5vw;
+  width: 180px;
+}
+.detailsReq {
+  float: left;
+  margin-top: 4vw;
+  width: 30vw;
+  position: relative;
+  right: 7vw;
+  margin-bottom: 30px;
+
+
+}
+
+}
+
+@media screen and (max-width: 420px) {
+  .container {
+    position: relative;
+    top: 5%;
+  }
+  .div-img {
+    width: 70px;
+  }
+  .product-img {
+    width: 70px;
+    height: 60px;
+  }
+
+  .spec {
+    position: relative;
+    right: 15px;
+  }
+
+  .loginReqImg {
+    padding-top: 2vw;
+    width: 35vw;
+    float: left;
+}
+.detailsReq button {
+  background-color: #4079eb;
+  padding: .5vw;
+  margin-top: .5vw;
+  position: relative;
+  left: -.5vw;
+  width: 160px;
+}
+.detailsReq {
+  float: left;
+  margin-top: 4vw;
+  width: 33vw;
+  position: relative;
+  right: 7vw;
+  margin-bottom: 30px;
+}
+
+}
+
+@media screen and (max-width: 399px) {
+  .container {
+    position: relative;
+    top: 5%;
+  }
+  .div-img {
+    width: 60px;
+    margin-top: -20px;
+  }
+  .product-img {
+    width: 60px;
+    height: 50px;
+  }
+
+  .product-title {
+    position: relative;
+    top: -30px;
+    right: 70px;
+  }
+
+  .small {
+    display: flex;
+    position: relative;
+    right: 5px;
+    top: 50px;
+  }
+  .spec {
+    position: relative;
+    right: 75px;
+  }
+  .empty-item {
+    flex-direction: column;
+  }
+  .empty-item > * {
+    margin: 5px;
+    width: 100%;
+}
+.empty-cart {
+  position: relative;
+  left: -2.8em;
+}
+
+.detailsReq button {
+  background-color: #4079eb;
+  padding: .5vw;
+  margin-top: 2.5vw;
+  position: relative;
+  top: 1em;
+  left: -15.0vw;
+  width: 180px;
+}
+}
+
+@media screen and (max-width: 320px) {
+  .container {
+    position: relative;
+    top: 5%;
+  }
+  .div-img {
+    width: 70px;
+    margin-top: -20px;
+  }
+  .product-img {
+    width: 70px;
+    height: 60px;
+  }
+
+  .product-title {
+    position: relative;
+    top: -30px;
+    right: 90px;
+  }
+
+  .small {
+    display: flex;
+    position: relative;
+    right: 0px;
+    top: 50px;
+  }
+  .spec {
+    position: relative;
+    right: 100px;
+  }
+  .empty-cart {
+    position: relative;
+    left: -4em;
+  }
+
+  .loginReqImg {
+    padding-top: 2vw;
+    width: 35vw;
+    float: left;
+}
+
+  .detailsReq button {
+    background-color: #4079eb;
+    padding: .5vw;
+    margin-top: 2.5vw;
+    position: relative;
+    top: 1em;
+    left: -25.0vw;
+    width: 180px;
+  }
+  .detailsReq {
+    float: left;
+    margin-top: 4vw;
+    width: 33vw;
+    position: relative;
+    right: 7vw;
+    margin-bottom: 30px;
+  }
+
 }

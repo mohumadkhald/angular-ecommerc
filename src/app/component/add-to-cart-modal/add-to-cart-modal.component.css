@@ -5,6 +5,7 @@
 }
 .modal-title {
   font-size: 2rem; /* Responsive font size */
+  padding: 5px; color: white; margin-left: 40%; margin-top: 10px
 }
 .custom-image-zoom .lib-ngx-image-zoom-container {
   border: 1px solid #ccc;
@@ -30,7 +31,7 @@ img {
   margin-top: 5px;
 }
 
-@media (min-width: 800) {
+@media (min-width: 992) {
   .modal-body {
     padding: 20px; /* Adjust padding for smaller screens */
   }
@@ -39,12 +40,26 @@ img {
     max-height: 200;
   }
 }
-@media (max-width: 792px) {
+@media (max-width: 992px) {
   .modal-body {
-    padding: 20px; /* Adjust padding for smaller screens */
+    padding: 10px; /* Adjust padding for smaller screens */
   }
   img {
-    max-width: 250px;
-    max-height: 250;
+    max-width: 240px;
+    max-height: 240;
+  }
+}
+
+@media (max-width: 400px) {
+  .modal-body {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+  img {
+    max-width: 240px;
+    max-height: 240;
+  }
+  .modal-title {
+    font-size: 2rem; /* Responsive font size */
+    padding: 5px; color: white; margin-left: 10%; margin-top: 10px
   }
 }
