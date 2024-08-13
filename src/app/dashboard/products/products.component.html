@@ -5,27 +5,42 @@
 <div *ngIf="auth() && !loading">
     <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
+        <div class="sort-options">
+            <div class="price-range mb-3">
+                <div style="display: flex; align-items: center;">
+                    <span style="margin: 0 10px; color: red; font-weight: bold;">Price Range: </span>
+                    <input type="number" class="form-control" [(ngModel)]="filters.minPrice" min="0" max="25000"
+                        step="10" placeholder="Min" style="width: 80px; margin-right: 10px;">
+                    <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" min="0" max="25000"
+                        step="10" placeholder="Max" style="width: 80px; margin-right: 10px;">
+                    <input class="btn btn-warning text-light" style="border-radius: 10px;" type="submit" (click)="onPriceRangeChange()" value="Go">
+                </div>
+                <app-custom-range-slider style="width: 400px;" [min]="0" [max]="25000" [step]="10"
+                    [(minValue)]="filters.minPrice" [(maxValue)]="filters.maxPrice">
+                </app-custom-range-slider>
+            </div>
+            <app-sort-options class="sort-sort" [currentSortOption]="currentSortOption"
+                (change)="onSortChange($event)"></app-sort-options>
+        </div>
+        <div class="manage-products-container">
+            <div class="button-group" style="display: flex; align-items: center; gap: 10px;">
+                <a class="btn btn-primary" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
+                <a class="btn btn-danger" (click)="deleteProducts()"><i class="fas fa-trash-alt"></i> Delete
+                    Selected Products</a>
+                <a class="btn btn-info" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i>
+                    Discount For Selected</a>
+                <input type="number" #discountInput placeholder="Discount %" class="form-control" style="width: 100px;">
+
+                <div class="search-prod" style="display: flex; gap: 10px;">
+                    <input type="text" class="form-control" placeholder="Search Products By Email" (keydown.enter)="onSearch()" [(ngModel)]="emailQuery">
+                    <input type="text" class="form-control" placeholder="Search Products By Name" (keydown.enter)="onSearch()" [(ngModel)]="nameQuery">
+                    <button class="btn btn-secondary" (click)="onSearch()">Search</button>
+                </div>
+                
+
+            </div>
+        </div>
         <div class="table-responsive">
-            <div class="sort-options">
-                <div class="price-range mb-3">
-                    <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
-                        [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
-                        (maxValueChange)="onPriceRangeChange()">
-                    </app-custom-range-slider>
-                    <p><span style="margin: 0 50px; color: red; font-weight: bold;"> Price</span>Range: ${{ filters.minPrice
-                        }} - ${{ filters.maxPrice }}</p>
-                </div>
-                <app-sort-options class="sort-sort" [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
-            </div>
-            <div class="manage-products-container">
-                <div class="button-group">
-                    <a class="btn btn-primary" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
-                    <a class="btn btn-danger" (click)="deleteProducts()"><i class="fas fa-trash-alt"></i> Delete Selected Products</a>
-                    <a class="btn btn-info" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i> Discount For Selected</a>
-                    <input type="number" #discountInput placeholder="Discount %" class="form-control" style="width: 200px; margin-top: -5px;">
-                    <input type="text" class="form-control" placeholder="Search Products By Email" (keydown.enter)="onSearch($event)">
-                </div>
-            </div>
             <table *ngIf="products.length > 0; else noProducts"
                 class="main-table table table-striped table-bordered table-hover">
                 <thead class="thead-dark">
@@ -45,9 +60,8 @@
                 <tbody>
                     <tr *ngFor="let product of products">
                         <td>
-                            <input type="checkbox" class="m-2" 
-                                   [(ngModel)]="selectedProducts[product.productId]" 
-                                   (change)="toggleProductSelection(product.productId)">
+                            <input type="checkbox" class="m-2" [(ngModel)]="selectedProducts[product.productId]"
+                                (change)="toggleProductSelection(product.productId)">
                             {{ product.productId }}
                         </td>
                         <td>{{ product.productTitle }}</td>
@@ -56,34 +70,31 @@
                         <td><img width="50" height="50" [src]="product.imageUrl"></td>
                         <td>{{ product.allQuantity }}</td>
                         <td>
-                            <a class="btn btn-primary btn-sm mr-1" 
-                               (click)="detailsProduct(product.productId)" 
-                               style="margin-right: 10px;">
-                               <i class="fa fa-circle-info"></i> Details
+                            <a class="btn btn-primary btn-sm mr-1" (click)="detailsProduct(product.productId)"
+                                style="margin-right: 10px;">
+                                <i class="fa fa-circle-info"></i> Details
                             </a>
-                            <a class="btn btn-success btn-sm mr-1" 
-                               style="margin-right: 10px;">
-                               <i class="fa fa-edit"></i> Edit
+                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;">
+                                <i class="fa fa-edit"></i> Edit
                             </a>
-                            <a class="btn btn-danger btn-sm confirm" 
-                               (click)="deleteProduct(product.productId)">
-                               <i class="fas fa-trash-alt"></i> Delete
+                            <a class="btn btn-danger btn-sm confirm" (click)="deleteProduct(product.productId)">
+                                <i class="fas fa-trash-alt"></i> Delete
                             </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            
-            <app-pagination *ngIf="products.length > 0;" [currentPage]="currentPage" [totalPages]="totalPages"
-                (pageChange)="onPageChange($event)"></app-pagination>
-            <ng-template #noProducts>
-                <div class="cont-notfound">
-                    <div class="text-center">
-                        <h1 class="not-found-title"><span class="text-danger">No Products Found</span></h1>
-                    </div>
-                </div>
-            </ng-template>
         </div>
+
+        <app-pagination *ngIf="products.length > 0;" [currentPage]="currentPage" [totalPages]="totalPages"
+            (pageChange)="onPageChange($event)"></app-pagination>
+        <ng-template #noProducts>
+            <div class="cont-notfound">
+                <div class="text-center">
+                    <h1 class="not-found-title"><span class="text-danger">No Products Found</span></h1>
+                </div>
+            </div>
+        </ng-template>
     </div>
 
     <div *ngIf="toastService.toast" class="toast-container">

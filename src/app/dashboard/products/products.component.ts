@@ -34,7 +34,8 @@ import { FormsModule } from '@angular/forms';
 export class ProductsComponent implements OnInit {
   loading: boolean = true;
   products: any = [];
-  searchQuery: string = '';
+  emailQuery: string = '';
+  nameQuery: string = '';
   sortBy = 'createdAt';
   sortDirection = 'desc';
   selectedSort: string = 'createdAtDesc';
@@ -100,7 +101,8 @@ checkboxes: any;
         this.filters.maxPrice,
         this.currentPage - 1, // Adjust page number for API
         this.numElement,
-        this.searchQuery
+        this.emailQuery,
+        this.nameQuery
       )
       .subscribe(
         (response: PaginatedResponse<Product[]>) => {
@@ -118,9 +120,9 @@ checkboxes: any;
       );
   }
 
-  onSearch(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchQuery = target.value;
+
+  onSearch(): void {
+    // Update your search logic here to handle both queries.
     this.loadProducts();
   }
 
