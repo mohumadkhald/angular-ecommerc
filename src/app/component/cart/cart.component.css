@@ -1,6 +1,6 @@
 .product-img {
   width: 200px;
-  height: 100px;
+  height: 150px;
 }
 .loginReq {
     width: 90vw;
@@ -103,7 +103,7 @@
   }
   .product-img {
     width: 200px;
-    height: 100px;
+    height: 120px;
   }
   .item-count {
     font-size: 12px;
@@ -139,11 +139,11 @@
     top: 5%;
   }
   .div-img {
-    width: 100px;
+    width: 85px;
   }
   .product-img {
-    width: 500px;
-    height: 100px;
+    width: 85px;
+    height: 85px;
   }
 
   .loginReqImg {
@@ -273,24 +273,24 @@
     top: 5%;
   }
   .div-img {
-    width: 70px;
+    width: 60px;
     margin-top: -20px;
   }
   .product-img {
-    width: 70px;
+    width: 60px;
     height: 60px;
   }
 
   .product-title {
     position: relative;
     top: -30px;
-    right: 90px;
+    right: 70px;
   }
 
   .small {
     display: flex;
     position: relative;
-    right: 0px;
+    right: 10px;
     top: 50px;
   }
   .spec {

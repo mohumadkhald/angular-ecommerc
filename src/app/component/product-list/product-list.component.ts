@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
 import { FormsModule } from '@angular/forms';
@@ -16,14 +16,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaginatedResponse, Product } from '../../interface/product';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { CategoryService } from '../../service/category.service';
+import { ProductService } from '../../service/product.service';
 import { ToastService } from '../../service/toast.service';
 import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
 import { CustomRangeSliderComponent } from '../custom-range-slider/custom-range-slider.component';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
+import { ModelFilterComponent } from "../model-filter/model-filter.component";
 import { PaginationComponent } from '../pagination/pagination.component';
 import { SortOptionsComponent } from '../sort-options/sort-options.component';
-import { ProductService } from '../../service/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -45,13 +46,14 @@ import { ProductService } from '../../service/product.service';
     CustomRangeSliderComponent,
     PaginationComponent,
     SortOptionsComponent,
-  ],
+    ModelFilterComponent,
+],
 })
 export class ProductListComponent implements OnInit {
   currentSubCategoryImage: any;
   openSubLists: { [key: string]: boolean } = {};
   @ViewChild('slider') slider!: ElementRef;
-  colorOptions: string[] = ['red', 'yellow', 'blue', 'green'];
+  colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
 
   filters = {
     inStock: false,
@@ -82,6 +84,7 @@ export class ProductListComponent implements OnInit {
   numElement: number = 20;
   inStockCount: number = 0;
   outOfStockCount: number = 0;
+screenWidth: any;
 
   constructor(
     private router: Router,
@@ -91,7 +94,7 @@ export class ProductListComponent implements OnInit {
     private modalService: NgbModal,
     private titleService: Title,
     public toastService: ToastService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -399,6 +402,41 @@ export class ProductListComponent implements OnInit {
   scrollRight(slider: HTMLElement) {
     const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
     slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.handleScreenResize(event.target.innerWidth);
+  }
+
+  private handleScreenResize(width: number): void {
+    if (width >= 767) {
+      // this.dialogRef.close();
+    }
+  }
+  
+
+  openFilterModal() {
+    const dialogRef = this.dialog.open(ModelFilterComponent, {
+      width: '400px',
+      data: {
+        categoryTitle: this.categoryTitle,
+        subCategories: this.subCategories,
+        filters: this.filters,
+        subCategoryName: this.subCategoryName,
+        colorOptions: this.colorOptions,
+        inStockCount: this.inStockCount,
+        outOfStockCount: this.outOfStockCount
+      }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.filters = { ...this.filters, ...result.filters };
+        this.loadProducts(); // Re-load products with updated filters
+      }
+    });
   }
   
 }

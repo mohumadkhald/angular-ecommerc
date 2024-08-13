@@ -1,0 +1,122 @@
+h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  align-content: center;
+  text-align: center;
+  background-color: #007bff;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+ul li {
+  margin-bottom: 10px;
+  margin: 5px 10px;
+}
+
+.sub-links {
+  text-decoration: none;
+  color: #333;
+}
+
+.sub-links:hover,
+.active_link {
+  color: #007bff;
+}
+
+.filters {
+    padding: 10px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .filter-title {
+    margin: 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .filter-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .price-range {
+    margin-top: 20px;
+  }
+  
+  .range {
+    color: red;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  
+  .price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .form-control {
+    width: 80px;
+    padding: 5px;
+    font-size: 12px;
+  }
+  
+  .btn {
+    border-radius: 10px;
+    padding: 3px 8px;
+  }
+
+  .color-filter {
+    margin-top: 20px;
+  }
+  
+  .color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .color-swatch {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+  
+  .color-swatch input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .color-indicator {
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    border: 1px solid rgb(142, 137, 137);
+  }
+  
+  .color-swatch input:checked + .color-indicator {
+    border: 5px solid #000000;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 767px) {
+    .price-inputs {
+      flex-direction: row;
+    }
+  
+    .color-options {
+      justify-content: space-between;
+    }
+  }
+  

@@ -1,0 +1,73 @@
+<!-- <div class="modal-header">
+    <h2 class="modal-title" style="margin-top: 10px;">Add New Product</h2>
+    <button class="btn btn-close bg-danger text-light" style="margin-right: 5px;"></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+
+    </div>
+</div> -->
+<h2>Category Name: {{ categoryTitle }}</h2>
+<div class="container">
+<ul>
+    <li *ngFor="let subCategory of subCategories">
+        <i class="fa-solid fa-angle-left"></i>
+        <a class="sub-links" routerLinkActive="active_link"
+            [routerLink]="['/categories', categoryTitle, subCategory.name]" [queryParams]="{ page: 1 }">
+            {{ subCategory.name | capitalize }}
+        </a>
+    </li>
+</ul>
+
+<div class="filters">
+    <div class="availability">
+        <h3 class="filter-title">Availability</h3>
+        <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock
+            <span *ngIf="inStockCount">({{inStockCount}})</span>
+        </label>
+        <label class="filter-label">
+            <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available
+            <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
+        </label>
+    </div>
+
+    <div class="price-range mb-3 mt-5">
+        <span class="range">Price Range:</span>
+        <div class="price-inputs">
+            <input type="number" class="form-control" [(ngModel)]="filters.minPrice" min="0" max="25000" step="10"
+                placeholder="Min">
+            <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" min="0" max="25000" step="10"
+                placeholder="Max">
+            <input class="btn btn-warning text-light" type="submit" (click)="onPriceRangeChange()" value="Go">
+        </div>
+        <app-custom-range-slider class="custom-range-slider" [min]="0" [max]="25000" [step]="10"
+            [(minValue)]="filters.minPrice" [(maxValue)]="filters.maxPrice">
+        </app-custom-range-slider>
+        <p>Range: $0 - $25000</p>
+    </div>
+
+    <div class="color-filter">
+        <h3 class="filter-title">Color</h3>
+        <div class="color-options">
+            <label *ngFor="let color of colorOptions" class="color-swatch">
+                <input type="checkbox" [checked]="filters.colors.includes(color)"
+                    (change)="onColorChange(color, $event)">
+                <div class="color-indicator" [style.background]="color"></div>
+            </label>
+        </div>
+    </div>
+
+    <div class="size-filter">
+        <h3 class="filter-title">Size</h3>
+        <label class="filter-label">
+            <input type="checkbox" [checked]="filters.sizes.includes('small')" (change)="onSizeChange('small', $event)">
+            Small
+        </label>
+        <label class="filter-label">
+            <input type="checkbox" [checked]="filters.sizes.includes('medium')"
+                (change)="onSizeChange('medium', $event)"> Medium
+        </label>
+    </div>
+</div>
+</div>

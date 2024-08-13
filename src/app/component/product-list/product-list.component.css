@@ -8,9 +8,16 @@ body {
 }
 
 .sort-options {
-  text-align: right;
   margin: 0 5px;
   margin-bottom: 10px;
+  margin-left: auto; /* This pushes the sort options to the right */
+  align-self: flex-end;
+}
+
+.filter-options {
+  margin: 0 5px;
+  margin-bottom: 10px;
+  display: none;
 }
 
 .color-filter {
@@ -43,6 +50,7 @@ body {
   height: 100%;
   border: 2px solid transparent;
   border-radius: 5px;
+  border: 1px solid rgb(142, 137, 137);
 }
 
 .color-swatch input:checked + .color-indicator {
@@ -282,6 +290,11 @@ app-pagination {
   width: 100%; /* Adjust width as needed */
   height: 200px;
 }
+
+div.filters > div.price-range.mb-3.mt-5 > div > input {
+  width: 70px; margin-right: 8px; font-size: 12px; padding: 5px 5px;
+}
+
 /* Responsive Styles */
 @media (max-width: 1480px) {
   app-product-card {
@@ -304,14 +317,16 @@ app-pagination {
     width: 100%; /* Adjust width as needed */
     height: 200px;
   }
+
 }
 @media screen and (max-width: 1280px) {
   app-product-card {
     width: calc(33.3%);
 }
   .sidebar {
-    width: 17.5%;
+    width: 18.5%;
     padding: 10px;
+    margin: 0;
   }
   .slider-container {
     position: relative;
@@ -329,6 +344,9 @@ app-pagination {
   .category-item img {
     width: 100%; /* Adjust width as needed */
     height: 200px;
+  }
+  .range {
+    font-size: 10px;
   }
 
 }
@@ -364,6 +382,7 @@ app-pagination {
     height: 200px;
   }
 
+  
 }
 @media (max-width: 992px) {
   .sidebar {
@@ -380,7 +399,7 @@ app-pagination {
     width: 50%;
   }
   .sidebar {
-    width: 170px; /* Adjust width as needed */
+    width: 180px; /* Adjust width as needed */
     padding: 10px;
     background-color: white;
     margin:0;
@@ -410,9 +429,15 @@ app-pagination {
     height: 200px;
   }
 
-  
+  div.filters > div.price-range.mb-3.mt-5 > div > input {
+    width: 55px; margin-right: 5px; font-size: 12px; padding: 3px 5px;
+  }
 }
 @media (max-width: 768px) {
+  .filter-options {
+
+    display: block; /* Default to none */
+  }
   .sidebar {
     width: 35%;
     display: none;

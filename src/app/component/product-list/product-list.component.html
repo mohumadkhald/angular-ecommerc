@@ -28,20 +28,29 @@
             *ngIf="outOfStockCount">({{outOfStockCount}})</span>
         </label>
       </div>
-      <div class="price-range">
-        <h3 style="margin: 0; margin-top: 10px;">Price</h3>
-        <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
-          [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
-          (maxValueChange)="onPriceRangeChange()">
+      <div class="price-range mb-3 mt-5">
+        <span class="range" style="color: red; font-weight: bold; width: 100px; font-size: 12px;">Price Range: </span>
+        <div style="display: flex; align-items: center;">
+          <input type="number" class="form-control" [(ngModel)]="filters.minPrice" min="0" max="25000" step="10"
+            placeholder="Min">
+          <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" min="0" max="25000" step="10"
+            placeholder="Max">
+          <input class="btn btn-warning text-light" style="border-radius: 10px; padding: 3px 8px;" type="submit"
+            (click)="onPriceRangeChange()" value="Go">
+        </div>
+        <app-custom-range-slider style="width: 400px;" [min]="0" [max]="25000" [step]="10"
+          [(minValue)]="filters.minPrice" [(maxValue)]="filters.maxPrice">
         </app-custom-range-slider>
-        <p>Range: ${{ filters.minPrice }} - ${{ filters.maxPrice }}</p>
+        <p>Range: $0 - $25000</p>
       </div>
       <div class="color-filter">
         <h3 style="margin: 0 5px;">Color</h3>
         <div class="color-options">
           <label *ngFor="let color of colorOptions" class="color-swatch">
             <input type="checkbox" [checked]="filters.colors.includes(color)" (change)="onColorChange(color, $event)">
-            <div class="color-indicator" [style.background]="color"></div>
+            <div class="color-indicator"
+              [ngStyle]="{'background': color}">
+            </div>
           </label>
         </div>
       </div>
@@ -60,8 +69,10 @@
     <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper"
       [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
     </div>
-    <div *ngIf="subCategoryName" class="sort-options">
-      <app-sort-options [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
+    <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <button class="filter-options" (click)="openFilterModal()">Filter</button>
+      <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
+        (change)="onSortChange($event)"></app-sort-options>
     </div>
     <main class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
@@ -73,8 +84,8 @@
       </div>
     </div>
     <!-- Pagination Component -->
-    <app-pagination *ngIf="subCategoryName && products.length > 0 && totalPages.length > 1" [currentPage]="currentPage" [totalPages]="totalPages"
-      (pageChange)="onPageChange($event)">
+    <app-pagination *ngIf="subCategoryName && products.length > 0 && totalPages.length > 1" [currentPage]="currentPage"
+      [totalPages]="totalPages" (pageChange)="onPageChange($event)">
     </app-pagination>
 
     <div *ngIf="categoryTitle && !subCategoryName" class="shop-by-category">
@@ -84,8 +95,8 @@
         <div style="background-color: rgb(225, 230, 229); padding: 10px; margin: 5px;" class="slider-wrapper" #slider>
           <div style="margin: 5px;" class="slider">
             <div class="category-item" *ngFor="let subCategory of subCategories">
-              <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)"
-                style="cursor: pointer" [src]="subCategory.img" [alt]="subCategory.name">
+              <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)" style="cursor: pointer"
+                [src]="subCategory.img" [alt]="subCategory.name">
               <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
             </div>
           </div>
