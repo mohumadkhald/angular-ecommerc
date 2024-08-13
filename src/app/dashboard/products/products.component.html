@@ -6,35 +6,34 @@
     <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
         <div class="table-responsive">
-            <div class="d-flex align-items-center mb-3">
-                <div class="flex-grow-1">
-                    <a class="btn btn-primary me-2" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
-                    <a class="btn btn-danger me-2" (click)="deleteProducts()"><i class="fas fa-trash-alt"></i> Delete
-                        Selected Products</a>
-                    <a class="btn btn-info" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i>                        Discount For Selected</a>
-                    <input type="number" #discountInput placeholder="Discount %"
-                        class="form-control p-2 d-inline-block ms-2" style="width: 150px; display: inline;">
-                    <input type="text" class="form-control"
-                        style="width: 230px; display: inline;" placeholder="Search Products By Email" (keydown.enter)="onSearch($event)">
+            <div class="sort-options">
+                <div class="price-range mb-3">
+                    <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
+                        [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
+                        (maxValueChange)="onPriceRangeChange()">
+                    </app-custom-range-slider>
+                    <p><span style="margin: 0 50px; color: red; font-weight: bold;"> Price</span>Range: ${{ filters.minPrice
+                        }} - ${{ filters.maxPrice }}</p>
                 </div>
-                <div class="sort-options ms-3">
-                    <app-sort-options [currentSortOption]="currentSortOption"
-                        (change)="onSortChange($event)"></app-sort-options>
-                </div>
+                <app-sort-options class="sort-sort" [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
             </div>
-            <div class="price-range mb-3">
-                <app-custom-range-slider [min]="0" [max]="25000" [step]="10" [(minValue)]="filters.minPrice"
-                    [(maxValue)]="filters.maxPrice" (minValueChange)="onPriceRangeChange()"
-                    (maxValueChange)="onPriceRangeChange()">
-                </app-custom-range-slider>
-                <p><span style="margin: 0 50px; color: red; font-weight: bold;"> Price</span>Range: ${{ filters.minPrice
-                    }} - ${{ filters.maxPrice }}</p>
+            <div class="manage-products-container">
+                <div class="button-group">
+                    <a class="btn btn-primary" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
+                    <a class="btn btn-danger" (click)="deleteProducts()"><i class="fas fa-trash-alt"></i> Delete Selected Products</a>
+                    <a class="btn btn-info" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i> Discount For Selected</a>
+                    <input type="number" #discountInput placeholder="Discount %" class="form-control" style="width: 200px; margin-top: -5px;">
+                    <input type="text" class="form-control" placeholder="Search Products By Email" (keydown.enter)="onSearch($event)">
+                </div>
             </div>
             <table *ngIf="products.length > 0; else noProducts"
                 class="main-table table table-striped table-bordered table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th>#ID</th>
+                        <th>
+                            <input type="checkbox" class="m-2" (change)="makeAllSelected($event)">
+                            #ID
+                        </th>
                         <th>Product Title</th>
                         <th>Price</th>
                         <th>Email Seller</th>
@@ -46,7 +45,9 @@
                 <tbody>
                     <tr *ngFor="let product of products">
                         <td>
-                            <input type="checkbox" class="m-2" (change)="toggleProductSelection(product.productId)">
+                            <input type="checkbox" class="m-2" 
+                                   [(ngModel)]="selectedProducts[product.productId]" 
+                                   (change)="toggleProductSelection(product.productId)">
                             {{ product.productId }}
                         </td>
                         <td>{{ product.productTitle }}</td>
@@ -55,16 +56,24 @@
                         <td><img width="50" height="50" [src]="product.imageUrl"></td>
                         <td>{{ product.allQuantity }}</td>
                         <td>
-                            <a class="btn btn-primary btn-sm mr-1" (click)="detailsProduct(product.productId)"
-                                style="margin-right: 10px;"><i class="fa fa-circle-info"></i> Details</a>
-                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i
-                                    class="fa fa-edit"></i> Edit</a>
-                            <a class="btn btn-danger btn-sm confirm" (click)="deleteProduct(product.productId)"><i
-                                    class="fas fa-trash-alt"></i> Delete</a>
+                            <a class="btn btn-primary btn-sm mr-1" 
+                               (click)="detailsProduct(product.productId)" 
+                               style="margin-right: 10px;">
+                               <i class="fa fa-circle-info"></i> Details
+                            </a>
+                            <a class="btn btn-success btn-sm mr-1" 
+                               style="margin-right: 10px;">
+                               <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <a class="btn btn-danger btn-sm confirm" 
+                               (click)="deleteProduct(product.productId)">
+                               <i class="fas fa-trash-alt"></i> Delete
+                            </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            
             <app-pagination *ngIf="products.length > 0;" [currentPage]="currentPage" [totalPages]="totalPages"
                 (pageChange)="onPageChange($event)"></app-pagination>
             <ng-template #noProducts>

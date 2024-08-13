@@ -3,6 +3,190 @@ app-pagination {
   position: relative;
   bottom: 35px;
 }
+.main-table th, .main-table td {
+  vertical-align: middle;
+  white-space: nowrap; /* Prevent text wrapping */
+  word-wrap: break-word;
+}
+/* Base styling for the container */
+.manage-products-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+/* Styling for buttons and form elements */
+.manage-products-container .button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.manage-products-container .sort-options {
+  margin-right: auto;
+}
+
+.manage-products-container .button-group .btn {
+  flex: 1 1 auto;
+  min-width: 150px;
+}
+
+/* Input fields */
+.manage-products-container input {
+  margin-top: 5px;
+  flex: 1 1 auto;
+  min-width: 150px;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Sort options */
+.manage-products-container .sort-options select {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+.sort-options {
+  display: flex;
+  gap: 50px;
+  justify-content: space-between;
+  
+}
+.sort-sort {
+  justify-self: end;
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .manage-products-container {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .manage-products-container .button-group {
+      width: 100%;
+      justify-content: center;
+  }
+
+  .manage-products-container .sort-options {
+      width: 100%;
+      text-align: center;
+      margin-top: 10px;
+  }
+
+  .manage-products-container input,
+  .manage-products-container .sort-options select {
+      width: 100%;
+  }
+  .sort-options {
+    display: flex;
+    gap: 0px;
+    flex-direction: column;
+  }
+}
+
+
+@media (min-width: 1600px) and (max-width:2000px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 1500px;
+  }
+}
+
+@media (min-width: 1400px) and (max-width:1600px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 1240px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width:1400px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 1024px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width:1200px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 850px;
+  }
+}
+
+@media (min-width: 992px) and (max-width:1024px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 767px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-md, .container-sm {
+      max-width: 565px;
+  }
+}
+
+/* Style the spinner container */
+.spinner-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Center the toast message */
 .toast-container {
   position: fixed;
   top: 14%;

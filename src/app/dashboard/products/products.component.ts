@@ -14,6 +14,7 @@ import { SortOptionsComponent } from '../../component/sort-options/sort-options.
 import { PaginatedResponse, Product } from '../../interface/product';
 import { CustomRangeSliderComponent } from '../../component/custom-range-slider/custom-range-slider.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
@@ -25,6 +26,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     SortOptionsComponent,
     CustomRangeSliderComponent,
     MatProgressSpinner,
+    FormsModule
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
@@ -50,6 +52,7 @@ export class ProductsComponent implements OnInit {
     minPrice: 0,
     maxPrice: 25000,
   };
+checkboxes: any;
 
   constructor(
     private router: Router,
@@ -225,15 +228,7 @@ export class ProductsComponent implements OnInit {
     );
   }
 
-  toggleProductSelection(productId: number): void {
-    if (this.selectedProductIds.includes(productId)) {
-      this.selectedProductIds = this.selectedProductIds.filter(
-        (id) => id !== productId
-      );
-    } else {
-      this.selectedProductIds.push(productId);
-    }
-  }
+
 
   makeDiscount(discount: string): void {
     const discountValue = Number(discount);
@@ -268,4 +263,40 @@ export class ProductsComponent implements OnInit {
   auth(): boolean {
     return this.authService.isLoggedIn();
   }
+  // To track the selection state of each product
+  selectedProducts: { [key: number]: boolean } = {};
+
+// Toggle all selections
+makeAllSelected(event: Event): void {
+  const isChecked = (event.target as HTMLInputElement).checked;
+  this.products.forEach((product: { productId: number; }) => {
+    this.selectedProducts[product.productId] = isChecked;
+  });
+  if (isChecked) {
+    // Select all product IDs
+    this.selectedProductIds = this.products.map(
+      (product: { productId: number }) => product.productId
+    );
+  } else {
+    // Deselect all
+    this.selectedProductIds = [];
+  }
+
+}
+
+
+// Toggle individual selection
+toggleProductSelection(productId: number): void {
+  if (this.selectedProductIds.includes(productId)) {
+    // Remove productId if already selected
+    this.selectedProductIds = this.selectedProductIds.filter(
+      (id) => id !== productId
+    );
+  } else {
+    // Add productId to the selected list
+    this.selectedProductIds.push(productId);
+  }
+}
+
+
 }
