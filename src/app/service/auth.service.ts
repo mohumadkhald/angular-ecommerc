@@ -1,6 +1,6 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -270,7 +270,7 @@ export class AuthService {
       );
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<HttpResponse<any>> {
     const token = this.getToken();
     return this.http
       .post(
@@ -280,22 +280,26 @@ export class AuthService {
           headers: new HttpHeaders({
             Authorization: `Bearer ${token}`,
           }),
+          observe: 'response' // Observe the full HTTP response
         }
       )
       .pipe(
-        tap(() => {
-          this.clearAuthState();
-          this.loggedIn.next(false);
+        tap(response => {
+          if (response.status === 200) {
+            this.clearAuthState();
+            this.loggedIn.next(false);
+          }
         }),
         catchError((error) => {
           console.error('Logout error:', error);
           this.clearAuthState();
           this.loggedIn.next(false);
-          return of(null);
+          return of(new HttpResponse<any>({ status: 500 })); // Return an empty HttpResponse with a 500 status
         })
       );
   }
-
+  
+  
   clearAuthState(): void {
     console.log('Clearing authentication state...');
     this.cookieService.delete(this.tokenKey, '/');

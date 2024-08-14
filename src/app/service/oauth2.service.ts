@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 })
 export class OAuth2Service {
 
-  private baseUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443'; // Replace with your Spring Boot backend URL
+  // private baseUrl = 'https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443';
+  private baseUrl = "http://localhost:8080";
 
   constructor(private http: HttpClient, private router: Router) { }
 

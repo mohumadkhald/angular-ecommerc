@@ -140,13 +140,14 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.clearUserData();
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 200);
+    this.authService.logout().subscribe(response => {
+      if (response.status === 200) {
+        this.clearUserData();
+          this.router.navigate(['/login']);
+      }
     });
   }
+  
 
   private loadUserProfile(): void {
     this.userService.loadProfile().subscribe(() => {

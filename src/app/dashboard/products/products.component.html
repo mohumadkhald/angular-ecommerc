@@ -5,21 +5,9 @@
 <div *ngIf="auth() && !loading">
     <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
-        <div class="sort-options">
-            <div class="price-range mb-3">
-                <div style="display: flex; align-items: center;">
-                    <span style="margin: 0 10px; color: red; font-weight: bold;">Price Range: </span>
-                    <input type="number" class="form-control" [(ngModel)]="filters.minPrice" min="0" max="25000"
-                        step="10" placeholder="Min" style="width: 80px; margin-right: 10px;">
-                    <input type="number" class="form-control" [(ngModel)]="filters.maxPrice" min="0" max="25000"
-                        step="10" placeholder="Max" style="width: 80px; margin-right: 10px;">
-                    <input class="btn btn-warning text-light" style="border-radius: 10px;" type="submit" (click)="onPriceRangeChange()" value="Go">
-                </div>
-                <app-custom-range-slider style="width: 400px;" [min]="0" [max]="25000" [step]="10"
-                    [(minValue)]="filters.minPrice" [(maxValue)]="filters.maxPrice">
-                </app-custom-range-slider>
-            </div>
-            <app-sort-options class="sort-sort" [currentSortOption]="currentSortOption"
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <button class="filter-options" (click)="openFilterModal()">Filter</button>
+            <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
                 (change)="onSortChange($event)"></app-sort-options>
         </div>
         <div class="manage-products-container">
@@ -32,11 +20,13 @@
                 <input type="number" #discountInput placeholder="Discount %" class="form-control" style="width: 100px;">
 
                 <div class="search-prod" style="display: flex; gap: 10px;">
-                    <input type="text" class="form-control" placeholder="Search Products By Email" (keydown.enter)="onSearch()" [(ngModel)]="emailQuery">
-                    <input type="text" class="form-control" placeholder="Search Products By Name" (keydown.enter)="onSearch()" [(ngModel)]="nameQuery">
+                    <input type="text" class="form-control" placeholder="Search Products By Email"
+                        (keydown.enter)="onSearch()" [(ngModel)]="emailQuery">
+                    <input type="text" class="form-control" placeholder="Search Products By Name"
+                        (keydown.enter)="onSearch()" [(ngModel)]="nameQuery">
                     <button class="btn btn-secondary" (click)="onSearch()">Search</button>
                 </div>
-                
+
 
             </div>
         </div>

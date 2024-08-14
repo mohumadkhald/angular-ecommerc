@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddProductComponent } from '../../component/add-product/add-product.component';
@@ -15,6 +15,11 @@ import { PaginatedResponse, Product } from '../../interface/product';
 import { CustomRangeSliderComponent } from '../../component/custom-range-slider/custom-range-slider.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
+import { ModelFilterComponent } from '../../component/model-filter/model-filter.component';
+import { ProductService } from '../../service/product.service';
+import { Title } from '@angular/platform-browser';
+import { CategoryService } from '../../service/category.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-products',
@@ -26,12 +31,36 @@ import { FormsModule } from '@angular/forms';
     SortOptionsComponent,
     CustomRangeSliderComponent,
     MatProgressSpinner,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
+  currentSubCategoryImage: any;
+  openSubLists: { [key: string]: boolean } = {};
+  @ViewChild('slider') slider!: ElementRef;
+  colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
+
+  filters = {
+    inStock: false,
+    notAvailable: false,
+    priceRange: 250,
+    minPrice: 0,
+    maxPrice: 25000,
+    colors: [] as string[],
+    sizes: [] as string[],
+  };
+
+  categories: any[] = [];
+  subCategories: any[] = [];
+  categoryTitle: string = 'All';
+  currentCategoryName: string = 'All';
+  currentCategoryImage: any;
+  inStockCount: number = 0;
+  outOfStockCount: number = 0;
+  screenWidth: any;
+
   loading: boolean = true;
   products: any = [];
   emailQuery: string = '';
@@ -46,14 +75,7 @@ export class ProductsComponent implements OnInit {
   currentPage = 1;
   totalPages: number[] = [];
   selectedProductIds: number[] = [];
-  filters = {
-    inStock: true,
-    notAvailable: false,
-    priceRange: 250,
-    minPrice: 0,
-    maxPrice: 25000,
-  };
-checkboxes: any;
+
 
   constructor(
     private router: Router,
@@ -62,7 +84,11 @@ checkboxes: any;
     private modalService: NgbModal,
     public toastService: ToastService,
     private authService: AuthService,
-    private dashboardComponent: DashboardComponent
+    private dashboardComponent: DashboardComponent,
+    private categoryService: CategoryService,
+    private productService: ProductService,
+    private titleService: Title,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -119,7 +145,6 @@ checkboxes: any;
         }
       );
   }
-
 
   onSearch(): void {
     // Update your search logic here to handle both queries.
@@ -179,8 +204,7 @@ checkboxes: any;
         );
         this.dashboardComponent.fetchProductCount();
       },
-      (error) => {
-      }
+      (error) => {}
     );
   }
   deleteProducts(): void {
@@ -230,8 +254,6 @@ checkboxes: any;
     );
   }
 
-
-
   makeDiscount(discount: string): void {
     const discountValue = Number(discount);
     if (isNaN(discountValue)) {
@@ -268,37 +290,54 @@ checkboxes: any;
   // To track the selection state of each product
   selectedProducts: { [key: number]: boolean } = {};
 
-// Toggle all selections
-makeAllSelected(event: Event): void {
-  const isChecked = (event.target as HTMLInputElement).checked;
-  this.products.forEach((product: { productId: number; }) => {
-    this.selectedProducts[product.productId] = isChecked;
-  });
-  if (isChecked) {
-    // Select all product IDs
-    this.selectedProductIds = this.products.map(
-      (product: { productId: number }) => product.productId
-    );
-  } else {
-    // Deselect all
-    this.selectedProductIds = [];
+  // Toggle all selections
+  makeAllSelected(event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.products.forEach((product: { productId: number }) => {
+      this.selectedProducts[product.productId] = isChecked;
+    });
+    if (isChecked) {
+      // Select all product IDs
+      this.selectedProductIds = this.products.map(
+        (product: { productId: number }) => product.productId
+      );
+    } else {
+      // Deselect all
+      this.selectedProductIds = [];
+    }
   }
 
-}
-
-
-// Toggle individual selection
-toggleProductSelection(productId: number): void {
-  if (this.selectedProductIds.includes(productId)) {
-    // Remove productId if already selected
-    this.selectedProductIds = this.selectedProductIds.filter(
-      (id) => id !== productId
-    );
-  } else {
-    // Add productId to the selected list
-    this.selectedProductIds.push(productId);
+  // Toggle individual selection
+  toggleProductSelection(productId: number): void {
+    if (this.selectedProductIds.includes(productId)) {
+      // Remove productId if already selected
+      this.selectedProductIds = this.selectedProductIds.filter(
+        (id) => id !== productId
+      );
+    } else {
+      // Add productId to the selected list
+      this.selectedProductIds.push(productId);
+    }
   }
-}
 
+  openFilterModal() {
+    const dialogRef = this.dialog.open(ModelFilterComponent, {
+      width: '400px',
+      data: {
+        categoryTitle: this.categoryTitle,
+        subCategories: this.subCategories,
+        filters: this.filters,
+        colorOptions: this.colorOptions,
+        inStockCount: this.inStockCount,
+        outOfStockCount: this.outOfStockCount,
+      },
+    });
 
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.filters = { ...this.filters, ...result.filters };
+        this.loadProducts(); // Re-load products with updated filters
+      }
+    });
+  }
 }

@@ -49,15 +49,22 @@ app-pagination {
   font-size: 0.875rem;
 }
 .sort-options {
-  display: flex;
-  gap: 50px;
-  justify-content: space-between;
-  
-}
-.sort-sort {
-  justify-self: end;
-  align-self: flex-start;
+  margin: 0 5px;
   margin-bottom: 10px;
+  margin-left: auto; /* This pushes the sort options to the right */
+  align-self: flex-end;
+}
+
+.filter-options {
+  margin: 0 5px;
+  margin-bottom: 10px;
+  display: none;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #f04;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
 /* Responsive Adjustments */
@@ -171,7 +178,7 @@ app-pagination {
   }
 }
 
-@media (min-width: 1024px) and (max-width:1200px) {
+@media (min-width: 1100px) and (max-width:1200px) {
   .main-table th, .main-table td {
       font-size: 0.875rem; /* Smaller text */
       padding: 0.5rem; /* Smaller padding */
@@ -186,7 +193,7 @@ app-pagination {
   }
 }
 
-@media (min-width: 992px) and (max-width:1024px) {
+@media (min-width: 992px) and (max-width:1100px) {
   .main-table th, .main-table td {
       font-size: 0.875rem; /* Smaller text */
       padding: 0.5rem; /* Smaller padding */
@@ -197,11 +204,25 @@ app-pagination {
       padding: 0.2rem 0.4rem;
   }
   .container, .container-lg, .container-md, .container-sm {
-      max-width: 767px;
+      max-width: 750px;
+  }
+}
+@media (min-width: 850px) and (max-width: 992px) {
+  .main-table th, .main-table td {
+      font-size: 0.875rem; /* Smaller text */
+      padding: 0.5rem; /* Smaller padding */
+  }
+  
+  .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+  }
+  .container, .container-md, .container-sm {
+      max-width: 625px;
   }
 }
 
-@media (min-width: 768px) and (max-width: 992px) {
+@media (min-width: 768px) and (max-width: 850px) {
   .main-table th, .main-table td {
       font-size: 0.875rem; /* Smaller text */
       padding: 0.5rem; /* Smaller padding */
@@ -232,4 +253,11 @@ app-pagination {
   background-color: rgb(61, 106, 29);
   opacity: 0.8;
   padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .filter-options {
+
+    display: block; /* Default to none */
+  }
 }
