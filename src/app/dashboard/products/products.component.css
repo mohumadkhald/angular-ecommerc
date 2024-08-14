@@ -3,7 +3,8 @@ app-pagination {
   position: relative;
   bottom: 35px;
 }
-.main-table th, .main-table td {
+.main-table th,
+.main-table td {
   vertical-align: middle;
   white-space: nowrap; /* Prevent text wrapping */
   word-wrap: break-word;
@@ -60,7 +61,7 @@ app-pagination {
   margin-bottom: 10px;
   display: none;
   margin-top: 10px;
-  padding: 10px 20px;
+  padding: 6px 20px;
   background-color: #f04;
   color: #fff;
   border: none;
@@ -70,24 +71,24 @@ app-pagination {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .manage-products-container {
-      flex-direction: column;
-      align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .manage-products-container .button-group {
-      width: 100%;
-      justify-content: center;
+    width: 100%;
+    justify-content: center;
   }
 
   .manage-products-container .sort-options {
-      width: 10%;
-      text-align: center;
-      margin-top: 10px;
+    width: 10%;
+    text-align: center;
+    margin-top: 10px;
   }
 
   .manage-products-container input,
   .manage-products-container .sort-options select {
-      width: 100%;
+    width: 100%;
   }
   .sort-options {
     display: flex;
@@ -96,28 +97,27 @@ app-pagination {
   }
 }
 
-
 /* Responsive Adjustments */
 @media (max-width: 520px) {
   .manage-products-container {
-      flex-direction: column;
-      align-items: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .manage-products-container .button-group {
-      width: 100%;
-      justify-content: center;
+    width: 100%;
+    justify-content: center;
   }
 
   .manage-products-container .sort-options {
-      width: 10%;
-      text-align: center;
-      margin-top: 10px;
+    width: 10%;
+    text-align: center;
+    margin-top: 10px;
   }
 
   .manage-products-container input,
   .manage-products-container .sort-options select {
-      width: 100%;
+    width: 100%;
   }
   .sort-options {
     display: flex;
@@ -132,108 +132,187 @@ app-pagination {
   }
 }
 
+@media (min-width: 1600px) and (max-width: 2000px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
 
-@media (min-width: 1600px) and (max-width:2000px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
-  }
-  
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-lg, .container-md, .container-sm {
-      max-width: 1500px;
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 1500px;
   }
 }
 
-@media (min-width: 1400px) and (max-width:1600px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
+@media (min-width: 1400px) and (max-width: 1600px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-lg, .container-md, .container-sm {
-      max-width: 1240px;
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 1240px;
   }
 }
 
-@media (min-width: 1200px) and (max-width:1400px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-lg, .container-md, .container-sm {
-      max-width: 1024px;
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 1024px;
   }
 }
 
-@media (min-width: 1100px) and (max-width:1200px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
+@media (min-width: 1100px) and (max-width: 1200px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-lg, .container-md, .container-sm {
-      max-width: 850px;
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 850px;
   }
 }
 
-@media (min-width: 992px) and (max-width:1100px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
+@media (min-width: 992px) and (max-width: 1100px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-lg, .container-md, .container-sm {
-      max-width: 750px;
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 750px;
   }
 }
 @media (min-width: 850px) and (max-width: 992px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-md, .container-sm {
-      max-width: 625px;
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 625px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 850px) {
-  .main-table th, .main-table td {
-      font-size: 0.875rem; /* Smaller text */
-      padding: 0.5rem; /* Smaller padding */
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
   .btn-sm {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  .container, .container-md, .container-sm {
-      max-width: 565px;
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 550px;
+  }
+}
+
+@media (min-width: 720px) and (max-width: 768px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 630px) and (max-width: 720px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 660px;
+  }
+}
+
+@media (min-width: 580px) and (max-width: 630px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 600px;
   }
 }
 
@@ -257,7 +336,6 @@ app-pagination {
 
 @media (max-width: 768px) {
   .filter-options {
-
     display: block; /* Default to none */
   }
 }

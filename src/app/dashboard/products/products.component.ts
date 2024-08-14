@@ -71,10 +71,11 @@ export class ProductsComponent implements OnInit {
   sortedProducts: Array<{ name: any; price: any }> = [];
   currentSortOption!: string;
   private hasQueryParams = false;
-  numElement: number = 20;
+  numElement: number = 10;
   currentPage = 1;
   totalPages: number[] = [];
   selectedProductIds: number[] = [];
+  countProducts: number = 0;
 
 
   constructor(
@@ -91,17 +92,69 @@ export class ProductsComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  // ngOnInit(): void {
+  //   // Handle queryParams changes
+  //   this.route.queryParams.subscribe(
+  //     (params) => {
+  //       this.hasQueryParams = Object.keys(params).length > 0;
+
+  //       this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
+  //       this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
+  //       this.sortBy = params['sortBy'] || 'createdAt';
+  //       this.sortDirection = params['sortDirection'] || 'desc';
+  //       this.currentPage = +params['page'] || 1;
+
+  //       // Construct currentSortOption from sortBy and sortDirection
+  //       this.currentSortOption = `${this.sortBy}${this.sortDirection
+  //         .charAt(0)
+  //         .toUpperCase()}${this.sortDirection.slice(1)}`;
+
+  //       // Load products based on query params
+  //       this.loadProducts();
+  //     },
+  //     (error) => {}
+  //   );
+
+  //   // Initialize sortedProducts
+  //   this.sortedProducts = [...this.products];
+  // }
+
+
   ngOnInit(): void {
+    // Handle paramMap changes
+    this.route.paramMap.subscribe(
+      (paramMap) => {
+        this.hasQueryParams = false;
+
+        // Load products if no query params present
+        if (!this.hasQueryParams) {
+          setTimeout(() => {
+            this.loadProducts();
+          }, 200);
+        }
+      },
+      (error) => {}
+    );
+
     // Handle queryParams changes
     this.route.queryParams.subscribe(
       (params) => {
         this.hasQueryParams = Object.keys(params).length > 0;
+        this.currentPage = params['page'] ? +params['page'] : 1;
 
         this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
         this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
+        this.filters.colors = params['colors']
+          ? params['colors'].split(',')
+          : [];
+        this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
         this.currentPage = +params['page'] || 1;
+
+        // Initialize inStock and notAvailable filters
+        this.filters.inStock = params['inStock'] === 'true';
+        this.filters.notAvailable = params['notAvailable'] === 'true';
 
         // Construct currentSortOption from sortBy and sortDirection
         this.currentSortOption = `${this.sortBy}${this.sortDirection
@@ -109,7 +162,9 @@ export class ProductsComponent implements OnInit {
           .toUpperCase()}${this.sortDirection.slice(1)}`;
 
         // Load products based on query params
-        this.loadProducts();
+        if (this.hasQueryParams) {
+          this.loadProducts();
+        }
       },
       (error) => {}
     );
@@ -118,27 +173,38 @@ export class ProductsComponent implements OnInit {
     this.sortedProducts = [...this.products];
   }
 
+
+
   loadProducts(): void {
+    let available: boolean | null = null;
+    if (this.filters.inStock && !this.filters.notAvailable) {
+      available = true;
+    } else if (!this.filters.inStock && this.filters.notAvailable) {
+      available = false;
+    }
+
     this.productsService
       .getAllProducts(
         this.sortBy,
         this.sortDirection,
         this.filters.minPrice,
         this.filters.maxPrice,
+        this.filters.colors,
+        this.filters.sizes,
         this.currentPage - 1, // Adjust page number for API
         this.numElement,
         this.emailQuery,
-        this.nameQuery
+        this.nameQuery,
+        available
       )
       .subscribe(
         (response: PaginatedResponse<Product[]>) => {
           this.loading = false;
           this.products = response.content;
           this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
-          this.totalPages = Array.from(
-            { length: response.totalPages },
-            (_, i) => i + 1
-          );
+          this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
+          this.countProducts = response.totalElements;
+          // this.updatePageTitle(); this is solve issue
         },
         (error) => {
           this.loading = false;
@@ -147,7 +213,6 @@ export class ProductsComponent implements OnInit {
   }
 
   onSearch(): void {
-    // Update your search logic here to handle both queries.
     this.loadProducts();
   }
 
@@ -177,14 +242,6 @@ export class ProductsComponent implements OnInit {
 
     this.currentSortOption = value;
     this.updateQueryParams({ sortBy, sortDirection });
-    this.loadProducts();
-  }
-
-  onPriceRangeChange(): void {
-    this.updateQueryParams({
-      minPrice: this.filters.minPrice,
-      maxPrice: this.filters.maxPrice,
-    });
     this.loadProducts();
   }
 
@@ -325,7 +382,6 @@ export class ProductsComponent implements OnInit {
       width: '400px',
       data: {
         categoryTitle: this.categoryTitle,
-        subCategories: this.subCategories,
         filters: this.filters,
         colorOptions: this.colorOptions,
         inStockCount: this.inStockCount,

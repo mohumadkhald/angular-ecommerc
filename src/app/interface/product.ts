@@ -38,6 +38,7 @@ export interface Product {
 }
 
 export interface PaginatedResponse<T> {
+  totalElements: number;
   content: T;
   pageable: {
     pageNumber: number;

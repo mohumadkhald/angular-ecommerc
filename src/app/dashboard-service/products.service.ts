@@ -18,7 +18,7 @@ export class ProductsService {
     this.apiUrl = configService.getApiUri();
    }
 
-  getAllProducts(sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, emailQuery: string, nameQuery: string): Observable<any> {
+  getAllProducts(sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, colors: string[], sizes: string[], page: number, pageSize: number, emailQuery: string, nameQuery: string, available: any): Observable<any> {
     let params = new HttpParams()
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)
@@ -26,8 +26,19 @@ export class ProductsService {
       .set('maxPrice', maxPrice.toString())
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
+      
       params = params.set('email', emailQuery);
       params = params.set('productTitle', nameQuery);
+      colors.forEach(color => {
+        params = params.append('color', color);
+      });
+    
+      sizes.forEach(size => {
+        params = params.append('size', size);
+      });
+      if (available !== null) {
+        params = params.set('available', available.toString());
+      }
   
     return this.http.get<any>(`${this.apiUrl}/products`, { params })
       .pipe(map(response => response));

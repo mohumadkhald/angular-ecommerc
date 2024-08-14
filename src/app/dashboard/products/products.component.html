@@ -6,6 +6,7 @@
     <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <!-- <div style="margin: 10px; color: red; font-size: 20px;">The Total products is {{countProducts}}</div> -->
             <button class="filter-options" (click)="openFilterModal()">Filter</button>
             <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
                 (change)="onSortChange($event)"></app-sort-options>

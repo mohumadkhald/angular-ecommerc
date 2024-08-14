@@ -1,20 +1,19 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router, ActivatedRoute } from '@angular/router';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AddToCartModalComponent } from '../../component/add-to-cart-modal/add-to-cart-modal.component';
 import { ErrorDialogComponent } from '../../component/error-dialog/error-dialog.component';
 import { ExpiredSessionDialogComponent } from '../../component/expired-session-dialog/expired-session-dialog.component';
-import { ModelFilterComponent } from '../../component/model-filter/model-filter.component';
 import { ProductCardComponent } from '../../component/product-card/product-card.component';
 import { PaginatedResponse, Product } from '../../interface/product';
 import { CategoryService } from '../../service/category.service';
-import { ProductService } from '../../service/product.service';
 import { ToastService } from '../../service/toast.service';
 import { CustomRangeSliderComponent } from "../../component/custom-range-slider/custom-range-slider.component";
+import { ProductsService } from '../../dashboard-service/products.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,10 +22,11 @@ import { CustomRangeSliderComponent } from "../../component/custom-range-slider/
 templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  showFilter:boolean = false
   currentSubCategoryImage: any;
   openSubLists: { [key: string]: boolean } = {};
-  @ViewChild('slider') slider!: ElementRef;
+  // @ViewChild('slider') slider!: ElementRef;
   colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
 
   filters = {
@@ -55,23 +55,31 @@ export class SidebarComponent {
   selectedSort: string = 'createdAtDesc';
   currentSortOption!: string;
   private hasQueryParams = false;
-  numElement: number = 20;
+  numElement: number = 10;
   inStockCount: number = 0;
   outOfStockCount: number = 0;
+  emailQuery: string = '';
+  nameQuery: string = '';
 screenWidth: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private categoryService: CategoryService,
-    private productService: ProductService,
+    private productService: ProductsService,
     private modalService: NgbModal,
     private titleService: Title,
     public toastService: ToastService,
     private dialog: MatDialog,
   ) {}
 
+  getPageTitle(): string {
+    return this.titleService.getTitle();
+  }
+
   ngOnInit(): void {
+
+    this.getPageTitle()
     // Handle paramMap changes
     this.route.paramMap.subscribe(
       (paramMap) => {
@@ -79,17 +87,18 @@ screenWidth: any;
         this.subCategoryName = paramMap.get('subCategoryName');
         this.loadSubCategories();
         this.currentCategoryImage = localStorage.getItem('imgCat');
-        this.updatePageTitle();
         this.hasQueryParams = false;
 
-        // Load products if no query params present
+        // Load products if no query params are present
         if (!this.hasQueryParams) {
           setTimeout(() => {
             this.loadProducts();
           }, 200);
         }
       },
-      (error) => {}
+      (error) => {
+        console.error('Error handling paramMap:', error);
+      }
     );
 
     // Handle queryParams changes
@@ -100,35 +109,32 @@ screenWidth: any;
 
         this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
         this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
-        this.filters.colors = params['colors']
-          ? params['colors'].split(',')
-          : [];
+        this.filters.colors = params['colors'] ? params['colors'].split(',') : [];
         this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
-        this.currentPage = +params['page'] || 1;
 
         // Initialize inStock and notAvailable filters
         this.filters.inStock = params['inStock'] === 'true';
         this.filters.notAvailable = params['notAvailable'] === 'true';
 
         // Construct currentSortOption from sortBy and sortDirection
-        this.currentSortOption = `${this.sortBy}${this.sortDirection
-          .charAt(0)
-          .toUpperCase()}${this.sortDirection.slice(1)}`;
+        this.currentSortOption = `${this.sortBy}${this.sortDirection.charAt(0).toUpperCase()}${this.sortDirection.slice(1)}`;
 
         // Load products based on query params
         if (this.hasQueryParams) {
           this.loadProducts();
         }
       },
-      (error) => {}
+      (error) => {
+        console.error('Error handling queryParams:', error);
+      }
     );
 
     // Initialize sortedProducts
     this.sortedProducts = [...this.products];
   }
-
+  
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
       width: '350px',
@@ -181,16 +187,17 @@ screenWidth: any;
       }
 
       this.productService
-        .getProducts(
-          this.subCategoryName,
+        .getAllProducts(
           this.sortBy,
           this.sortDirection,
           this.filters.minPrice,
           this.filters.maxPrice,
-          this.currentPage - 1, // Adjust page number for API
-          this.numElement,
           this.filters.colors,
           this.filters.sizes,
+          this.currentPage - 1, // Adjust page number for API
+          this.numElement,
+          this.emailQuery,
+          this.nameQuery,
           available
         )
         .subscribe(
@@ -233,46 +240,6 @@ screenWidth: any;
     }
   }
 
-  toggleSubList(categoryName: string): void {
-    this.openSubLists[categoryName] = !this.openSubLists[categoryName];
-    this.currentCategoryName = this.openSubLists[categoryName]
-      ? categoryName
-      : '';
-    localStorage.getItem('imgCat');
-  }
-
-  open(product: any) {
-    const modalRef = this.modalService.open(AddToCartModalComponent, {
-      size: 'lg',
-      centered: true,
-    });
-    modalRef.componentInstance.product = product;
-  }
-
-  selectCategory(event: Event, Category: any): void {
-    event.stopPropagation();
-    this.categoryTitle = Category.categoryTitle;
-    this.currentCategoryImage =
-      Category.img || 'default-category-image-url.jpg';
-    this.currentCategoryName =
-      this.categories.find((category) => category.categoryId)?.categoryTitle ||
-      'Category';
-    localStorage.setItem('currentCategoryImage', this.currentCategoryImage);
-    this.updatePageTitle();
-    this.router.navigate([], { queryParams: {} }); // Reset query params when selecting a new category
-  }
-
-  private updatePageTitle() {
-    let pageTitle = '';
-    if (this.categoryTitle) {
-      pageTitle += `${this.categoryTitle}`;
-    }
-    if (this.subCategoryName) {
-      pageTitle += ` - ${this.subCategoryName}`;
-    }
-    this.titleService.setTitle(pageTitle);
-    return pageTitle;
-  }
 
   private updateQueryParams(params: any): void {
     this.router.navigate([], {
@@ -377,39 +344,5 @@ screenWidth: any;
     const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
     slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
-
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.handleScreenResize(event.target.innerWidth);
-  }
-
-  private handleScreenResize(width: number): void {
-    if (width >= 767) {
-      // this.dialogRef.close();
-    }
-  }
   
-
-  openFilterModal() {
-    const dialogRef = this.dialog.open(ModelFilterComponent, {
-      width: '400px',
-      data: {
-        categoryTitle: this.categoryTitle,
-        subCategories: this.subCategories,
-        filters: this.filters,
-        subCategoryName: this.subCategoryName,
-        colorOptions: this.colorOptions,
-        inStockCount: this.inStockCount,
-        outOfStockCount: this.outOfStockCount
-      }
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.filters = { ...this.filters, ...result.filters };
-        this.loadProducts(); // Re-load products with updated filters
-      }
-    });
-  }
 }
