@@ -40,3 +40,12 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+src/app/config.service.ts
+src/app/service/oauth2.service.ts
+
+# git update-index --assume-unchanged src/app/config.service.ts
+# git update-index --no-assume-unchanged src/app/config.service.ts
+# git update-index --assume-unchanged src/app/service/oauth2.service.ts
+# git update-index --no-assume-unchanged src/app/service/oauth2.service.ts
