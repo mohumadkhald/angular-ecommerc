@@ -43,3 +43,4 @@ Thumbs.db
 
 
 src/app/config.sevice.ts
+src/app/service/oauth2.service.ts
