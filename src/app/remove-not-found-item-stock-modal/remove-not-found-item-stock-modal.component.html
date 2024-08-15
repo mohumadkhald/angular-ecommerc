@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h6 class="modal-title">Remove Items Not Available in Stock</h6>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        &times;
+    </button>
+</div>
+
+<div class="modal-body">
+    <div *ngIf="cartItemsWithIssues.length">
+        <h5>Cart Items with Issues:</h5>
+        <div *ngFor="let item of cartItemsWithIssues" class="cart-item">
+            <img [src]="item.imageUrl" class="item-image">
+            <!-- Add more details if needed -->
+        </div>
+    </div>
+    <div *ngIf="productIssues.length">
+        <h5>Issues:</h5>
+        <div *ngFor="let issue of productIssues" class="issue">
+            <h6>{{ issue.title }}</h6>
+            <p>{{ issue.message }}</p>
+            <div class="issue-details">
+                <p>Requested Quantity: {{ issue.requestedQuantity }}</p>
+                <p>Available Quantity: {{ issue.availableQuantity }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+    <button type="button" class="btn btn-danger" (click)="removeItems()">Remove Items</button>
+</div>

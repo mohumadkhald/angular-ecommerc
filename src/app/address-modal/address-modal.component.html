@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h2 class="modal-title" style="margin-top: 10px;">Add Your Address</h2>
+    <button class="btn btn-close bg-danger text-light" style="margin-right: 5px;" (click)="onClose()"></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <!-- Street -->
+                <div class="col-md-6">
+                    <label>Full Street:</label>
+                    <input type="text" placeholder="Enter street" formControlName="street" />
+                    <div class="error-message"
+                        *ngIf="addressForm.get('street').invalid && (addressForm.get('street').dirty || addressForm.get('street').touched)">
+                        <small class="text-danger" *ngIf="addressForm.get('street').errors.required">Full Street
+                            is required.</small>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label>City:</label>
+                    <input type="text" placeholder="Enter City" formControlName="city" />
+                    <div class="error-message"
+                        *ngIf="addressForm.get('city').invalid && (addressForm.get('city').dirty || addressForm.get('city').touched)">
+                        <small class="text-danger" *ngIf="addressForm.get('city').errors.required">City Place
+                            is required.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- State -->
+                <div class="col-md-6">
+                    <label>State:</label>
+                    <input type="text" placeholder="Enter State" formControlName="state" />
+                    <div class="error-message"
+                        *ngIf="addressForm.get('state').invalid && (addressForm.get('state').dirty || addressForm.get('state').touched)">
+                        <small class="text-danger" *ngIf="addressForm.get('state').errors.required">State Place
+                            is required.</small>
+                    </div>
+                </div>
+
+                <!-- Country -->
+                <div class="col-md-6">
+                    <label>Country:</label>
+                    <input type="text" placeholder="Enter Country" formControlName="country" />
+                    <div class="error-message"
+                        *ngIf="addressForm.get('country').invalid && (addressForm.get('country').dirty || addressForm.get('country').touched)">
+                        <small class="text-danger" *ngIf="addressForm.get('country').errors.required">Country is
+                            required.</small>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <!-- PostalCode -->
+                <div class="col-md-6">
+                    <label>PostalCode:</label>
+                    <input type="number" placeholder="Enter PostalCode" formControlName="postalCode" />
+                    <div class="error-message"
+                    *ngIf="addressForm.get('postalCode').invalid && (addressForm.get('postalCode').dirty || addressForm.get('postalCode').touched)">
+                    
+                    <small class="text-danger" *ngIf="addressForm.get('postalCode').errors?.required">
+                        PostalCode is required.
+                    </small>
+                    
+                    <small class="text-danger" *ngIf="addressForm.get('postalCode').errors?.minlength">
+                        PostalCode must be at least {{ addressForm.get('postalCode').errors?.minlength.requiredLength }} characters long. 
+                        (Current length: {{ addressForm.get('postalCode').errors?.minlength.actualLength }}).
+                    </small>
+                    
+                    <small class="text-danger" *ngIf="addressForm.get('postalCode').errors?.maxlength">
+                        PostalCode cannot be longer than {{ addressForm.get('postalCode').errors?.maxlength.requiredLength }} characters. 
+                        (Current length: {{ addressForm.get('postalCode').errors?.maxlength.actualLength }}).
+                    </small>
+                </div>
+                
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

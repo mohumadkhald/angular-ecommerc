@@ -13,9 +13,10 @@
                                         </a>
                                     </h5>
                                     <hr>
-                                    <div class="empty-item d-flex justify-content-between p-2 align-items-center mb-3">
+                                    <div class="empty-item d-flex justify-content-between align-items-center mb-3">
                                         <div class="col-7 btn btn-danger">
-                                            <p class="mb item-count">You Have {{ getCountOfItems() }} Items in your cart</p>
+                                            <p style="margin: 0 0 2px;" class="mb item-count">You Have {{ getCountOfItems() }} Items in your cart
+                                            </p>
                                         </div>
                                         <button class="col-4 btn btn-danger" (click)="clearCart()">Clear Cart</button>
                                     </div>
@@ -27,25 +28,35 @@
                                                 <div class="d-flex justify-content-between">
                                                     <div class="d-flex flex-row align-items-center">
                                                         <div class="div-img">
-                                                            <img [src]="item.imageUrl" class="product-img img-fluid rounded-3" alt="Shopping item">
+                                                            <img [src]="item.imageUrl"
+                                                                class="product-img img-fluid rounded-3"
+                                                                alt="Shopping item">
                                                         </div>
                                                         <div class="ms-3 product-title">
                                                             <h3>{{ item.productTitle }}</h3>
                                                             <p style="display: flex;" class="small mb-0 me-3">
-                                                                <button style="width: 30px; height: 30px; padding: 0;" class="btn btn-primary me-3" (click)="increaseQuantity(item.productId)">+</button>
-                                                                <span style="margin-left: -8px;margin-right: 5px;">{{ item.quantity }}</span>
-                                                                <button style="width: 30px; height: 30px; padding: 0;" class="btn btn-primary" (click)="decreaseQuantity(item.productId)">-</button>
+                                                                <button style="width: 30px; height: 30px; padding: 0;"
+                                                                    class="btn btn-primary me-3"
+                                                                    (click)="increaseQuantity(item.productId)">+</button>
+                                                                <span style="margin-left: -8px;margin-right: 5px;">{{
+                                                                    item.quantity }}</span>
+                                                                <button style="width: 30px; height: 30px; padding: 0;"
+                                                                    class="btn btn-primary"
+                                                                    (click)="decreaseQuantity(item.productId)">-</button>
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div class="ms-3 spec">
                                                         <div>
-                                                            <h5 class="fw-normal mb-0">Size: {{ item.size }} {{ item.color }}</h5>
+                                                            <h5 class="fw-normal mb-0">Size: {{ item.size }} {{
+                                                                item.color }}</h5>
                                                         </div>
                                                         <div style="width: 120px;">
-                                                            <h5 class="mb-0 mt-2">Total Price: {{ item.totalPrice | currency }}</h5>
+                                                            <h5 class="mb-0 mt-2">Total Price: {{ item.totalPrice |
+                                                                currency }}</h5>
                                                         </div>
-                                                        <button class="mt-2 btn btn-danger" (click)="removeItemCart(item.itemID)">Remove</button>
+                                                        <button class="mt-2 btn btn-danger"
+                                                            (click)="removeItemCart(item.itemID)">Remove</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -58,106 +69,162 @@
                                                 <div class="d-flex justify-content-between">
                                                     <div class="d-flex flex-row align-items-center">
                                                         <div>
-                                                            <img [src]="item.product.imageUrl" class="img-fluid rounded-3" alt="Shopping item" style="width: 90px;">
+                                                            <img [src]="item.product.imageUrl"
+                                                                class="img-fluid rounded-3" alt="Shopping item"
+                                                                style="width: 90px;">
                                                         </div>
                                                         <div class="ms-3">
                                                             <h3>{{ item.product.productTitle }}</h3>
                                                             <p class="small mb-0 me-3">
-                                                                <button style="width: 30px; height: 30px; padding: 0;" class="btn btn-primary me-3" (click)="increaseQuantity(item.product)">+</button>
-                                                                <span style="margin-left: -8px;margin-right: 5px;">{{ item.product.quantity }}</span>
-                                                                <button style="width: 30px; height: 30px; padding: 0;" class="btn btn-primary" (click)="decreaseQuantity(item.product)">-</button>
+                                                                <button style="width: 30px; height: 30px; padding: 0;"
+                                                                    class="btn btn-primary me-3"
+                                                                    (click)="increaseQuantity(item.product)">+</button>
+                                                                <span style="margin-left: -8px;margin-right: 5px;">{{
+                                                                    item.product.quantity }}</span>
+                                                                <button style="width: 30px; height: 30px; padding: 0;"
+                                                                    class="btn btn-primary"
+                                                                    (click)="decreaseQuantity(item.product)">-</button>
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div class="ms-3">
                                                         <div>
-                                                            <h5 class="fw-normal mb-0">Size: {{ item.product.size }} {{ item.product.color }}</h5>
+                                                            <h5 class="fw-normal mb-0">Size: {{ item.product.size }} {{
+                                                                item.product.color }}</h5>
                                                         </div>
                                                         <div style="width: 120px;">
-                                                            <h5 class="mb-0 mt-2">{{ item.product.price | currency }}</h5>
+                                                            <h5 class="mb-0 mt-2">{{ item.product.price | currency }}
+                                                            </h5>
                                                         </div>
-                                                        <button class="mt-2 btn btn-danger" (click)="removeFromCart(item.product)">Remove</button>
+                                                        <button class="mt-2 btn btn-danger"
+                                                            (click)="removeFromCart(item.product)">Remove</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </ng-template>
                                 </div>
+
+
                                 <div class="col-lg-5">
                                     <div class="card bg-primary text-white rounded-3">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-4">
                                                 <h5 class="mb-0">Card details</h5>
-                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
+                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+                                                    class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
                                             </div>
                                             <p class="small mb-2">Card type</p>
-                                            <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-mastercard fa-2x me-2"></i></a>
-                                            <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-visa fa-2x me-2"></i></a>
-                                            <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-amex fa-2x me-2"></i></a>
-                                            <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a>
-                                            <form class="mt-4">
+                                            <a href="#!" class="text-white"><i
+                                                    class="fab fa-cc-mastercard fa-2x me-2"></i></a>
+                                            <a href="#!" class="text-white"><i
+                                                    class="fab fa-cc-visa fa-2x me-2"></i></a>
+                                            <a href="#!" class="text-white"><i
+                                                    class="fab fa-cc-amex fa-2x me-2"></i></a>
+                                            <a href="#!" class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a>
+                                            <form [formGroup]="paymentForm" class="mt-4">
                                                 <div class="form-outline form-white mb-4">
-                                                    <input type="text" id="typeName" class="form-control form-control-lg" size="17" placeholder="Enter your Name" />
                                                     <label class="form-label" for="typeName">Name</label>
+                                                    <input type="text" id="typeName" formControlName="cardHolderName"
+                                                        class="form-control form-control-lg"
+                                                        placeholder="Enter your Name" />
+                                                    <div *ngIf="paymentForm.get('cardHolderName')?.invalid && paymentForm.get('cardHolderName')?.touched"
+                                                        class="text-light bg-danger m-2">
+                                                        Card Holder Name is required.
+                                                    </div>
                                                 </div>
                                                 <div class="form-outline form-white mb-4">
-                                                    <input type="text" id="typeText" class="form-control form-control-lg" size="17" placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
                                                     <label class="form-label" for="typeText">Card Number</label>
+                                                    <input type="text" id="typeText" formControlName="cardNumber"
+                                                        class="form-control form-control-lg"
+                                                        placeholder="1234 5678 9012 3457" minlength="16"
+                                                        maxlength="16" />
+                                                    <div *ngIf="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched"
+                                                        class="text-light bg-danger m-2">
+                                                        Card Number must be 16 digits.
+                                                    </div>
                                                 </div>
                                                 <div class="row mb-4">
                                                     <div class="col-md-6">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="typeExp" class="form-control form-control-lg" placeholder="MM/YYYY" size="7" minlength="7" maxlength="7" />
                                                             <label class="form-label" for="typeExp">Expiration</label>
+                                                            <input type="text" id="typeExp"
+                                                                formControlName="expirationDate"
+                                                                class="form-control form-control-lg" placeholder="MM/YY"
+                                                                minlength="5" maxlength="5" />
+                                                            <div *ngIf="paymentForm.get('expirationDate')?.invalid && paymentForm.get('expirationDate')?.touched"
+                                                                class="text-light bg-danger m-2">
+                                                                Expiration Date must be in MM/YY format.
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-outline form-white">
-                                                            <input type="password" id="typeText" class="form-control form-control-lg" placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
-                                                            <label class="form-label" for="typeText">Cvv</label>
+                                                            <label class="form-label" for="typeCvv">Cvv</label>
+                                                            <input type="password" id="typeCvv" formControlName="cvv"
+                                                                class="form-control form-control-lg"
+                                                                placeholder="&#9679;&#9679;&#9679;" minlength="3"
+                                                                maxlength="3" />
+                                                            <div *ngIf="paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched"
+                                                                class="text-light bg-danger m-2">
+                                                                CVV must be 3 digits.
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </form>
-                                            <hr class="my-4">
-                                            <div class="d-flex justify-content-between">
-                                                <p class="mb-2">Subtotal</p>
-                                                <p class="mb-2">{{ totalprice | currency }}</p>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <p class="mb-2">Shipping</p>
-                                                <p class="mb-2">{{ shipping | currency }}</p>
-                                            </div>
-                                            <div class="d-flex justify-content-between mb-4">
-                                                <p class="mb-2">Total (Incl. taxes)</p>
-                                                <p class="mb-2">{{ totalprice + shipping | currency }}</p>
-                                            </div>
-                                            <button type="button" class="btn btn-info btn-block btn-lg">
+                                                <button type="button" class="btn btn-info btn-block btn-lg"
+                                                    [disabled]="!paymentForm.valid" (click)="handleCheckout()">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Checkout<i class="fas fa-map-marker-alt ms-2"></i>
+                                                            <i class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </span>
+                                                    </div>
+                                                </button>
+                                                <hr class="my-4">
                                                 <div class="d-flex justify-content-between">
-                                                    <span>Checkout <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
+                                                    <p class="mb-2">Subtotal</p>
+                                                    <p class="mb-2">{{ totalprice | currency }}</p>
                                                 </div>
-                                            </button>
+                                                <div class="d-flex justify-content-between">
+                                                    <p class="mb-2">Shipping</p>
+                                                    <p class="mb-2">{{ shipping | currency }}</p>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-4">
+                                                    <p class="mb-2">Total (Incl. taxes)</p>
+                                                    <p class="mb-2">{{ totalprice + shipping | currency }}</p>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
+
+
+
                             </ng-container>
                             <ng-template #content>
                                 <div class="loginReq">
                                     <div class="loginReqImg">
-                                        <img src="https://m.media-amazon.com/images/G/01/cart/empty/kettle-desaturated._CB445243794_.svg" alt="Nice Day">
+                                        <img src="https://m.media-amazon.com/images/G/01/cart/empty/kettle-desaturated._CB445243794_.svg"
+                                            alt="Nice Day">
                                     </div>
                                     <div class="detailsReq">
                                         <h2 class="empty-cart">Your Cart is Empty</h2>
                                         <p class="product-today"><a routerLink="">Products Today</a></p>
-                                        <button *ngIf="!auth()" class="btnLog"><a style="text-decoration: none; color: white" routerLink="/login">Sign in To Your Account</a></button>
-                                        <button *ngIf="!auth()" style="background-color: white;" class="btnLog"><a style="text-decoration: none; color: black" routerLink="/register">Sign Up Now</a></button>
+                                        <button *ngIf="!auth()" class="btnLog"><a
+                                                style="text-decoration: none; color: white" routerLink="/login">Sign in
+                                                To Your Account</a></button>
+                                        <button *ngIf="!auth()" style="background-color: white;" class="btnLog"><a
+                                                style="text-decoration: none; color: black" routerLink="/register">Sign
+                                                Up Now</a></button>
                                     </div>
                                 </div>
                                 <div class="loginRe">
                                     <p>
-                                        The price and availability of items at MyShopinng.com are subject to change. 
-                                        The Cart is a temporary place to store a list of your items and reflects each item's most recent price.
-                                        Shopping Cart Learn more. Do you have a gift card or promotional code? We'll ask you to enter your claim code 
+                                        The price and availability of items at MyShopinng.com are subject to change.
+                                        The Cart is a temporary place to store a list of your items and reflects each
+                                        item's most recent price.
+                                        Shopping Cart Learn more. Do you have a gift card or promotional code? We'll ask
+                                        you to enter your claim code
                                         when it's time to pay.
                                     </p>
                                 </div>
@@ -173,5 +240,9 @@
 <div *ngIf="toastService.toast" class="toast-container">
     {{ toastService.toast }}
     <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
-  </div>
-  
+</div>
+
+<div *ngIf="toastService.err" class="toast-err">
+    {{ toastService.err }}
+    <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
+</div>

@@ -97,8 +97,6 @@ export class AddProductComponent implements OnInit {
 
 }
 
-
-
 function greaterThanZeroValidator(): any {
   return (control: AbstractControl): ValidationErrors | null => {
     const isValid = control.value > 0;
