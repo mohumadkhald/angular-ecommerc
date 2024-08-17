@@ -26,7 +26,7 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         authService.showExpiredSessionDialog('Your Session Expired');
         authService.clearAuthState();
-        userService.clearUsername();
+        // userService.clearUsername();
         if (router.url !== '/login') {
           // router.navigate(['/login']).then(() => {
             setTimeout(() => {
