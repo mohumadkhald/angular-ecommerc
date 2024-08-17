@@ -20,6 +20,7 @@ import { HttpClient } from '@angular/common/http';
 import { AddressModalComponent } from '../address-modal/address-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
+import { ConfigService } from '../../config.service';
 
 @Component({
   standalone: true,
@@ -38,6 +39,7 @@ export class CartComponent implements OnInit, OnDestroy {
   paymentForm!: FormGroup;
   addressForm!: FormGroup;
   shipping: number = 0;
+  apiUrl: string;
 
   constructor(
     private cartService: CartService,
@@ -48,8 +50,10 @@ export class CartComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private modalService: NgbModal,
     private fb: FormBuilder,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private configService: ConfigService) {
+      this.apiUrl = configService.getApiUri();
+    }
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
@@ -221,7 +225,7 @@ submitOrder() {
       deliveryDate: null,
     };
 
-    this.http.post('http://localhost:8080/api/orders', order).subscribe(
+    this.http.post(`${this.apiUrl}/orders`, order).subscribe(
       (response) => {
         console.log('Order submitted successfully', response);
         this.toastService.add('Order Success');
