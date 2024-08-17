@@ -127,21 +127,21 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     // Handle the route parameter or query parameter to extract token and other data
-    // this.route.queryParams.subscribe((params) => {
-    //   const token = params['token'];
-    //   const message = params['message'];
-    //   const role = params['role'];
-    //   if (token) {
-    //     this.authService.saveToken(token);
-    //     this.authService.saveRole(role);
-    //     if (params['newUser'] === 'true') {
-    //       this.router.navigate(['/']);
-    //       localStorage.setItem('firstPwdSet', 'false');
-    //     } else {
-    //       this.router.navigate(['/']);
-    //     }
-    //   }
-    // });
+    this.route.queryParams.subscribe((params) => {
+      const token = params['token'];
+      const message = params['message'];
+      const role = params['role'];
+      if (token) {
+        this.authService.saveToken(token);
+        this.authService.saveRole(role);
+        if (params['newUser'] === 'true') {
+          this.router.navigate(['/']);
+          localStorage.setItem('firstPwdSet', 'false');
+        } else {
+          this.router.navigate(['/']);
+        }
+      }
+    });
 
     if (this.isLogin) {
       this.router.navigate(['/']);
