@@ -51,9 +51,10 @@ export class CartComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private fb: FormBuilder,
     private http: HttpClient,
-    private configService: ConfigService) {
-      this.apiUrl = configService.getApiUri();
-    }
+    private configService: ConfigService
+  ) {
+    this.apiUrl = configService.getApiUri();
+  }
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
@@ -196,7 +197,7 @@ export class CartComponent implements OnInit, OnDestroy {
       (result) => {
         console.log('Address saved:', result);
         this.addressForm.setValue(result);
-        console.log("addressForm", this.addressForm)
+        console.log('addressForm', this.addressForm);
         this.submitOrder();
       },
       (reason) => {
@@ -207,83 +208,92 @@ export class CartComponent implements OnInit, OnDestroy {
 
   handleCheckout(): void {
     if (this.addressForm.valid) {
-        // Address form is valid, proceed with order submission
-        this.submitOrder();
+      // Address form is valid, proceed with order submission
+      this.submitOrder();
     } else {
-        // Address form is not valid, open the address modal
-        this.openAddressModal();
+      // Address form is not valid, open the address modal
+      this.openAddressModal();
     }
-}
+  }
 
-submitOrder() {
-  if (this.paymentForm.valid && this.addressForm.valid) {
-    const order = {
-      status: 'PENDING',
-      paymentInfo: this.paymentForm.value,
-      address: this.addressForm.value,
-      orderDate: new Date().toISOString(),
-      deliveryDate: null,
-    };
+  submitOrder() {
+    if (this.paymentForm.valid && this.addressForm.valid) {
+      const order = {
+        status: 'PENDING',
+        paymentInfo: this.paymentForm.value,
+        address: this.addressForm.value,
+        orderDate: new Date().toISOString(),
+        deliveryDate: null,
+      };
 
-    this.http.post(`${this.apiUrl}/orders`, order).subscribe(
-      (response) => {
-        console.log('Order submitted successfully', response);
-        this.toastService.add('Order Success');
+      this.http.post(`${this.apiUrl}/orders`, order).subscribe(
+        (response) => {
+          console.log('Order submitted successfully', response);
+          this.toastService.add('Order Success');
+          this.loadCartItems();
+        },
+        (error) => {
+          console.log('Error submitting order', error);
+          this.handleOrderError(error.error.errors);
+        }
+      );
+    }
+  }
+
+  private handleOrderError(errors: any) {
+    // Extract the product issues from the error response
+    const productIssues = Object.keys(errors).map((key) => ({
+      title: key, // This should be the product title from the error response
+      message: errors[key].message, // The error message
+      requestedQuantity: errors[key].requestedQuantity, // The quantity requested in the order
+      availableQuantity: errors[key].availableQuantity, // The available quantity in stock
+    }));
+
+    // Find matching items in the cart based on the product title
+    const cartItemsWithIssues = this.cartItems1.filter((item) =>
+      productIssues.some((issue) => issue.title === item.productTitle)
+    );
+
+    console.log('Cart Items with Issues:', cartItemsWithIssues);
+
+    // Pass the cart items with issues, product issues, address, and payment information to the modal
+    this.openNotFoundStockModal(
+      cartItemsWithIssues,
+      productIssues,
+      this.paymentForm.value,
+      this.addressForm.value
+    );
+  }
+
+  openNotFoundStockModal(
+    cartItemsWithIssues: any[],
+    productIssues: any[],
+    paymentInfo: any,
+    address: any
+  ) {
+    const modalRef = this.modalService.open(
+      RemoveNotFoundItemStockModalComponent,
+      {
+        size: 'lg',
+        centered: true,
+      }
+    );
+
+    // Pass the product issues, cart items with issues, payment info, and address to the modal component
+    modalRef.componentInstance.productIssues = productIssues;
+    modalRef.componentInstance.cartItemsWithIssues = cartItemsWithIssues;
+    modalRef.componentInstance.paymentInfo = paymentInfo;
+    modalRef.componentInstance.address = address;
+
+    // Handle the modal result
+    modalRef.result.then(
+      (result) => {
+        console.log('Dialog was closed', result);
         this.loadCartItems();
       },
-      (error) => {
-        console.log('Error submitting order', error);
-        this.handleOrderError(error.error.errors);
+      (reason) => {
+        console.log('Modal dismissed:', reason);
       }
     );
   }
-}
-
-private handleOrderError(errors: any) {
-  // Extract the product issues from the error response
-  const productIssues = Object.keys(errors).map(key => ({
-    title: key, // This should be the product title from the error response
-    message: errors[key].message, // The error message
-    requestedQuantity: errors[key].requestedQuantity, // The quantity requested in the order
-    availableQuantity: errors[key].availableQuantity // The available quantity in stock
-  }));
-
-  // Find matching items in the cart based on the product title
-  const cartItemsWithIssues = this.cartItems1.filter(item =>
-    productIssues.some(issue => issue.title === item.productTitle)
-  );
-
-  console.log('Cart Items with Issues:', cartItemsWithIssues);
-  
-  // Pass the cart items with issues, product issues, address, and payment information to the modal
-  this.openNotFoundStockModal(cartItemsWithIssues, productIssues, this.paymentForm.value, this.addressForm.value);
-}
-
-
-
-openNotFoundStockModal(cartItemsWithIssues: any[], productIssues: any[], paymentInfo: any, address: any) {
-  const modalRef = this.modalService.open(RemoveNotFoundItemStockModalComponent, {
-    size: 'lg',
-    centered: true,
-  });
-
-  // Pass the product issues, cart items with issues, payment info, and address to the modal component
-  modalRef.componentInstance.productIssues = productIssues;
-  modalRef.componentInstance.cartItemsWithIssues = cartItemsWithIssues;
-  modalRef.componentInstance.paymentInfo = paymentInfo;
-  modalRef.componentInstance.address = address;
-
-  // Handle the modal result
-  modalRef.result.then(
-    (result) => {
-      console.log('Dialog was closed', result);
-      this.loadCartItems();
-    },
-    (reason) => {
-      console.log('Modal dismissed:', reason);
-    }
-  );
-}
-
-
 }

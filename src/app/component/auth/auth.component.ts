@@ -84,6 +84,8 @@ export class AuthComponent implements OnInit {
         ],
       ],
       gender: ['', Validators.required],
+      role: ['', Validators.required],
+
     });
 
     this.loginForm = this.fb.group({
@@ -192,9 +194,11 @@ export class AuthComponent implements OnInit {
       const email = this.registerForm.value.email.trim();
       const password = this.registerForm.value.password.trim();
       const gender = this.registerForm.value.gender;
+      const role = this.registerForm.value.role;
+
 
       this.authService
-        .register(firstName, lastName, email, password, gender)
+        .register(firstName, lastName, email, password, gender, role)
         .subscribe(
           (response) => {
             this.authService.saveToken(response.token);

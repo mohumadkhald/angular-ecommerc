@@ -82,6 +82,14 @@
       <div *ngIf="formErrors['gender']" class="text-danger">
         {{ formErrors['gender'] }}
       </div>
+
+      <select id="role" formControlName="role" required>
+        <option value="" disabled selected>Select your role</option>
+        <option value="USER">User</option>
+        <option value="SELLER">Seller</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+
       <button class="btn btn-success mt-3" type="submit" [disabled]="registerForm.invalid">Sign Up</button>
       <a class="text-primary tggle" (click)="showSignIn()">Sign In</a>
     </form>

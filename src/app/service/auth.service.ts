@@ -214,7 +214,8 @@ export class AuthService {
     lastname: string,
     email: string,
     password: string,
-    gender: string
+    gender: string,
+    role: string
   ): Observable<any> {
     return this.http
       .post(`${this.baseUrl}/auth/register`, {
@@ -223,6 +224,7 @@ export class AuthService {
         email,
         password,
         gender,
+        role
       })
       .pipe(
         tap((response: any) => {
