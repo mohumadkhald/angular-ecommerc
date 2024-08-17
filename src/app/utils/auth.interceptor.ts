@@ -4,12 +4,10 @@ import { inject } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
-import { HeaderComponent } from '../component/header/header.component';
-import { UserService } from '../service/user.service';
+
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const userService = inject(UserService)
   const router = inject(Router);
   const authToken = authService.getToken();
 
@@ -26,14 +24,13 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         authService.showExpiredSessionDialog('Your Session Expired');
         authService.clearAuthState();
-        // userService.clearUsername();
         if (router.url !== '/login') {
-          // router.navigate(['/login']).then(() => {
-            setTimeout(() => {
-              // window.location.reload();
-              router.navigate(['/login'])
-            }, 1500)
-          // });
+          router.navigate(['/login']).then(() => {
+            // setTimeout(() => {
+            //   // window.location.reload();
+            //   router.navigate(['/login'])
+            // }, 1500)
+          });
         }
       }
       return throwError(() => error);
