@@ -15,6 +15,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { ToastService } from '../../service/toast.service';
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-modal-content',
@@ -36,14 +37,17 @@ export class ModalChangePwdComponent {
   successMessage: string = '';
 
   confirmPasswordBlurred: boolean = false;
+  baseUrl: string;
 
   constructor(
     public dialogRef: MatDialogRef<ModalChangePwdComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private http: HttpClient,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private configService: ConfigService
   ) {
+    this.baseUrl = configService.getApiUri();
     this.dialogRef.disableClose = true;
     this.changePwdForm = this.fb.group({
       email: [{ value: data.email, disabled: true }],
@@ -66,7 +70,7 @@ export class ModalChangePwdComponent {
   onOkClick(): void {
     if (this.changePwdForm.valid) {
       const formValue = this.changePwdForm.getRawValue();
-      const url = `https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/auth/reset?email=${encodeURIComponent(this.data.email)}`;
+      const url = `${this.baseUrl}/auth/reset?email=${encodeURIComponent(this.data.email)}`;
       const body = {
         password: formValue.password,
         code: formValue.code

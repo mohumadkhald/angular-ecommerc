@@ -81,10 +81,14 @@ export class ProductsService {
     return this.http.post(`${this.apiUrl}/products`, product, { headers });
   }
   
-  updateProductVariations(productId: number, variations: any[]): Observable<any> {
-    const url = `${this.apiUrl}/products/${productId}/stock`;
-    return this.http.put(url, variations);
+  updateProductVariations(productId: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/products/${productId}/stock`, formData, {
+      headers: new HttpHeaders({
+        'Accept': 'application/json'
+      })
+    });
   }
+  
 
   setDiscount(productIds: number[], discount: number): Observable<any> {
     const headers = new HttpHeaders({

@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import {HttpClient} from "@angular/common/http";
 import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.component";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import { ConfigService } from '../../config.service';
 
 @Component({
   selector: 'app-modal-send-reset-password',
@@ -33,6 +34,7 @@ export class ModalSendResetPasswordComponent {
 
   // Regular expression pattern for email validation
   emailPattern: string = '^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$';
+  baseUrl: string;
 
   constructor(
     public dialogRef: MatDialogRef<ModalSendResetPasswordComponent>,
@@ -40,8 +42,10 @@ export class ModalSendResetPasswordComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     private dialog: MatDialog,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private configService: ConfigService
   ) {
+    this.baseUrl = configService.getApiUri();
     this.dialogRef.disableClose = true;
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern(this.emailPattern)]]
@@ -58,7 +62,7 @@ export class ModalSendResetPasswordComponent {
     if (this.emailForm.valid) {
       this.loading = true;
       const email = this.emailForm.get('email')?.value;
-      const url = `https://ec2-13-247-87-159.af-south-1.compute.amazonaws.com:8443/api/auth/send-reset?email=${encodeURIComponent(email)}`;
+      const url = `${this.baseUrl}/auth/send-reset?email=${encodeURIComponent(email)}`;
       this.http.post(url, {})
         .subscribe((response: any) => {
           console.log('Reset email sent successfully:', response);

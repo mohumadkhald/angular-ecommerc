@@ -17,15 +17,17 @@ export class AddProductComponent implements OnInit {
   @Output() productAdded = new EventEmitter<void>();
 
   productForm: FormGroup | any;
-  selectedFile: File | any;
-  subCategories: any[] = [];
+  selectedFile: File | null = null;
+  selectedFile1: File | null = null;
   fileTouched = false;
+  fileTouched1 = false;
+  subCategories: any[] = [];
 
   constructor(
-      private formBuilder: FormBuilder,
-      private productService: ProductService,
-      private categoryService: CategoryService,
-      public activeModal: NgbActiveModal,
+    private formBuilder: FormBuilder,
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    public activeModal: NgbActiveModal,
   ) { }
 
   ngOnInit(): void {
@@ -40,12 +42,11 @@ export class AddProductComponent implements OnInit {
     this.loadSubCategories();
   }
 
-
-  
   onSubmit(): void {
     this.fileTouched = true;
+    this.fileTouched1 = true;
 
-    if (this.productForm.invalid || !this.selectedFile) {
+    if (this.productForm.invalid || !this.selectedFile || !this.selectedFile1) {
       this.markAllAsTouched();
       return;
     }
@@ -58,12 +59,15 @@ export class AddProductComponent implements OnInit {
     formData.append('price', this.productForm.get('price').value.toString());
     formData.append('subCategoryId', this.productForm.get('subCategoryId').value);
     formData.append('image', this.selectedFile, this.selectedFile.name);
+    formData.append('image1', this.selectedFile1, this.selectedFile1.name);
 
     this.productService.addProduct(formData).subscribe(
       () => {
         this.productForm.reset();
         this.selectedFile = null;
+        this.selectedFile1 = null;
         this.fileTouched = false;
+        this.fileTouched1 = false;
         this.productAdded.emit();
         this.activeModal.close('added');
       },
@@ -80,8 +84,13 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] as File;
+  onFileSelected(event: any, fileType: string): void {
+    const file = event.target.files[0] as File;
+    if (fileType === 'image') {
+      this.selectedFile = file;
+    } else if (fileType === 'image1') {
+      this.selectedFile1 = file;
+    }
   }
 
   loadSubCategories(): void {
@@ -93,8 +102,6 @@ export class AddProductComponent implements OnInit {
   onClose(): void {
     this.activeModal.close();
   }
-
-
 }
 
 function greaterThanZeroValidator(): any {
@@ -103,4 +110,3 @@ function greaterThanZeroValidator(): any {
     return isValid ? null : { greaterThanZero: true };
   };
 }
-

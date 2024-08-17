@@ -28,11 +28,12 @@ export class PageDetailsComponent {
       (res) => {
         if (res) {
           this.productItem = res;
+          console.log(this.productItem);
         }
       },
       (error) => {
         if (error.status == 404) {
-            this.showNotFound = true;
+          this.showNotFound = true;
         }
         if (error.status == 403) {
           this.router.navigate(['notfound']);
@@ -42,5 +43,14 @@ export class PageDetailsComponent {
   }
   addToCart(product: any): void {
     this.cartService.addToCart(this.productItem);
+  }
+
+  get repeatArray(): any[] {
+    const count = Math.max(0, 3 - this.productItem.productVariations.length);
+    return new Array(count);
+  }
+
+  getColorKeys(colorsAndSizes: any): string[] {
+    return Object.keys(colorsAndSizes);
   }
 }

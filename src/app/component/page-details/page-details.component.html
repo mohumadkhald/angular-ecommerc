@@ -2,11 +2,12 @@
     <div class="product-details">
         <div class="product-images">
             <img [src]="productItem.imageUrl" alt="Product Image">
+
             <div class="thumbnail-images">
-                <img [src]="productItem.imageUrl" alt="Product Thumbnail">
-                <img [src]="productItem.imageUrl" alt="Product Thumbnail">
-                <img [src]="productItem.imageUrl" alt="Product Thumbnail">
-                <img [src]="productItem.imageUrl" alt="Product Thumbnail">
+                <!-- Display product variation images -->
+                <ng-container *ngFor="let variation of productItem.productVariations">
+                    <img [src]="variation.img" alt="Product Variation Thumbnail" *ngIf="variation.img" />
+                </ng-container>
             </div>
         </div>
         <div class="product-info mt-2">
@@ -22,7 +23,21 @@
             </ul>
             <div class="product-price">
                 <h5>Price</h5>
-                <h1>&#8377; 1000</h1>
+                <h1>&#8377; {{ productItem.price }}</h1>
+            </div>
+            <div class="product-availability">
+                <h5>Available Colors and Sizes:</h5>
+                <ul>
+                    <li *ngFor="let color of getColorKeys(productItem.colorsAndSizes)">
+                        {{ color | titlecase }}: 
+                        <span *ngFor="let size of productItem.colorsAndSizes[color]; let last = last">
+                            {{ size }}<span *ngIf="!last">, </span>
+                        </span>
+                    </li>
+                    <!-- <ng-container *ngFor="let variation of productItem.productVariations">
+                        <li>{{ variation.quantity }}</li>
+                    </ng-container> -->
+                </ul>
             </div>
             <div class="action-buttons">
                 <button type="button" class="btn btn-outline-primary">ADD TO CART</button>
@@ -31,6 +46,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
     <div class="product-details">

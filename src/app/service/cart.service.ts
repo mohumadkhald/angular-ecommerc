@@ -2,6 +2,7 @@ import { Injectable, HostListener, OnInit } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from '../config.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ export class CartService implements OnInit {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private router: Router
   ) {
     this.apiUrl = configService.getApiUri();
   }
@@ -133,8 +135,8 @@ export class CartService implements OnInit {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       let cartItems = JSON.parse(storedCart);
-
-      // Map each item to include productId, color, size, and quantity
+  
+      // Map each item to include productId, color, size, quantity, and price
       cartItems = cartItems.map(
         (item: {
           product: {
@@ -152,26 +154,33 @@ export class CartService implements OnInit {
           price: item.product.price,
         })
       );
-
-      // Get JWT token from AuthService
-      const jwtToken = this.authService.getToken();
-
-      // Prepare headers with Authorization token
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwtToken}`,
-      });
-
-      // Make HTTP POST request to sync cart
-      this.http.post<void>(`${this.apiUrl}/cart/sync`, cartItems, { headers }).subscribe(
-        () => {
-          console.log(`Cart synchronized successfully for user`, cartItems);
-          localStorage.removeItem('cart');
-        },
-        (error) => {
-          console.error('Error syncing cart:', error);
-        }
-      );
+  
+      // Check if the cart is not empty
+      if (cartItems.length > 0) {
+        // Get JWT token from AuthService
+        const jwtToken = this.authService.getToken();
+  
+        // Prepare headers with Authorization token
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        });
+  
+        // Make HTTP POST request to sync cart
+        this.http.post<void>(`${this.apiUrl}/cart/sync`, cartItems, { headers }).subscribe(
+          () => {
+            localStorage.removeItem('cart');
+            // Redirect to cart page after successful sync
+            this.router.navigate(['/cart']);
+          },
+          (error) => {
+            console.error('Error syncing cart:', error);
+          }
+        );
+      } else {
+        console.warn('Cart is empty, not syncing.');
+      }
     }
   }
+  
 }

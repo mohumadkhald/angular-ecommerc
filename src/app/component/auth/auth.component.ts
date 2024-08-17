@@ -1,24 +1,42 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AuthService } from "../../service/auth.service";
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
 import { CartService } from '../../service/cart.service';
 import { OAuth2Service } from '../../service/oauth2.service';
-import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
-import { ModalSendResetPasswordComponent } from "../modal-send-reset-password/modal-send-reset-password.component";
+import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
+import { ModalSendResetPasswordComponent } from '../modal-send-reset-password/modal-send-reset-password.component';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatProgressSpinner],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatProgressSpinner,
+  ],
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  styleUrls: ['./auth.component.css'],
 })
-
 export class AuthComponent implements OnInit {
   @ViewChild('container') container!: ElementRef;
   registerForm: FormGroup;
@@ -35,23 +53,52 @@ export class AuthComponent implements OnInit {
     private cartService: CartService
   ) {
     this.registerForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
-      lastName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
-      email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-      password: ['', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$')]],
-      gender: ['', Validators.required]
+      firstName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[^0-9]{3,}$'),
+          this.noLeadingTrailingSpaces,
+        ],
+      ],
+      lastName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[^0-9]{3,}$'),
+          this.noLeadingTrailingSpaces,
+        ],
+      ],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$'),
+        ],
+      ],
+      gender: ['', Validators.required],
     });
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern('^(.+)@(.+)$')]],
       password: ['', Validators.required],
-      remember: []
+      remember: [],
     });
   }
 
   noLeadingTrailingSpaces(control: any) {
-    if (control.value && (control.value.startsWith(' ') || control.value.endsWith(' '))) {
-      return { 'trimmed': true };
+    if (
+      control.value &&
+      (control.value.startsWith(' ') || control.value.endsWith(' '))
+    ) {
+      return { trimmed: true };
     }
     return null;
   }
@@ -65,7 +112,10 @@ export class AuthComponent implements OnInit {
   }
 
   showSignIn() {
-    this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
+    this.renderer.removeClass(
+      this.container.nativeElement,
+      'right-panel-active'
+    );
   }
 
   showSignUp() {
@@ -77,22 +127,21 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     // Handle the route parameter or query parameter to extract token and other data
-    this.route.queryParams.subscribe(params => {
-      const token = params['token'];
-      const message = params['message'];
-      const role = params['role'];
-      if (token) {
-        this.authService.saveToken(token);
-        this.authService.saveRole(role);
-        this.cartService.syncCartFromLocalStorage();
-        if (params['newUser'] === 'true') {
-          this.router.navigate(['/']);
-          localStorage.setItem('firstPwdSet', "false");
-        } else {
-          this.router.navigate(['/']);
-        }
-      }
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //   const token = params['token'];
+    //   const message = params['message'];
+    //   const role = params['role'];
+    //   if (token) {
+    //     this.authService.saveToken(token);
+    //     this.authService.saveRole(role);
+    //     if (params['newUser'] === 'true') {
+    //       this.router.navigate(['/']);
+    //       localStorage.setItem('firstPwdSet', 'false');
+    //     } else {
+    //       this.router.navigate(['/']);
+    //     }
+    //   }
+    // });
 
     if (this.isLogin) {
       this.router.navigate(['/']);
@@ -110,18 +159,18 @@ export class AuthComponent implements OnInit {
       const remember = this.loginForm.value.remember;
 
       this.authService.login(email, password, remember).subscribe(
-        response => {
+        (response) => {
           this.cartService.syncCartFromLocalStorage();
           this.authService.saveToken(response.token);
           localStorage.setItem('firstPwdSet', 'true');
           this.router.navigate(['/']);
         },
-        error => {
+        (error) => {
           if (error.status === 400 && error.error.violations) {
             this.displayServerErrors(error.error.violations);
           } else {
-          let msg = Object.values(error.error.errors).join(', ');
-          this.showErrorDialog(msg);
+            let msg = Object.values(error.error.errors).join(', ');
+            this.showErrorDialog(msg);
           }
         }
       );
@@ -144,21 +193,24 @@ export class AuthComponent implements OnInit {
       const password = this.registerForm.value.password.trim();
       const gender = this.registerForm.value.gender;
 
-      this.authService.register(firstName, lastName, email, password, gender).subscribe(
-        response => {
-          this.authService.saveToken(response.token);
-          localStorage.setItem('firstPwdSet', 'true');
-          this.router.navigate(['/']);
-        },
-        error => {
-          if (error.status === 400 && error.error.violations) {
-            this.displayServerErrors(error.error.violations);
-          } else {
-          let msg = Object.values(error.error.errors).join(', ');
-          this.showErrorDialog(msg);
+      this.authService
+        .register(firstName, lastName, email, password, gender)
+        .subscribe(
+          (response) => {
+            this.authService.saveToken(response.token);
+            localStorage.setItem('firstPwdSet', 'true');
+            this.router.navigate(['/']);
+            this.cartService.syncCartFromLocalStorage();
+          },
+          (error) => {
+            if (error.status === 400 && error.error.violations) {
+              this.displayServerErrors(error.error.violations);
+            } else {
+              let msg = Object.values(error.error.errors).join(', ');
+              this.showErrorDialog(msg);
+            }
           }
-        }
-      );
+        );
     }
   }
 
@@ -183,11 +235,13 @@ export class AuthComponent implements OnInit {
       width: '350px',
       height: '270px',
       data: { name: 'Send Reset Password' },
-      panelClass: 'custom-dialog-container'  // Apply the custom class here
+      panelClass: 'custom-dialog-container', // Apply the custom class here
     });
 
     dialogRef.afterOpened().subscribe(() => {
-      const dialogContainer = document.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const dialogContainer = document.querySelector(
+        '.cdk-overlay-pane'
+      ) as HTMLElement;
 
       // Hide the dialog initially
       dialogContainer.style.display = 'none';
@@ -201,7 +255,7 @@ export class AuthComponent implements OnInit {
       dialogContainer.style.display = 'block';
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       this.isDialogOpen = false;
     });

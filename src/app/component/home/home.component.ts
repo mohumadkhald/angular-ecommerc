@@ -10,6 +10,7 @@ import { UserService } from "../../service/user.service";
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { SetFirstPasswordComponent } from '../set-first-password/set-first-password.component';
 import { Subscription } from 'rxjs';
+import { CartService } from '../../service/cart.service';
 @Component({
     standalone: true,
     selector: 'app-home',
@@ -35,7 +36,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     public toastService: ToastService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
+        this.cartService.syncCartFromLocalStorage();
         if (params['newUser'] === 'true') {
           this.openSetFirstPwd();
         } else {

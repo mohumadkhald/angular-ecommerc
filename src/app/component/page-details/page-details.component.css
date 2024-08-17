@@ -102,6 +102,27 @@
     font-weight: bold;
 }
 
+.product-availability {
+    margin-bottom: 20px;
+}
+
+.product-availability h5 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.product-availability ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.product-availability li {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+
 .action-buttons {
     display: flex;
     align-items: center;

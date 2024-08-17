@@ -41,7 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-
+# to make file in git with last saved make if any change in file local not updated in git remote
 src/app/config.service.ts
 src/app/service/oauth2.service.ts
 

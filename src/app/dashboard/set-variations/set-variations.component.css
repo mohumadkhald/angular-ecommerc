@@ -25,6 +25,10 @@
     display: block;
   }
   
+  .variation-item {
+    display: flex; flex-direction: row; margin: 5px; gap: 20px;
+  }
+
   /* Input field styling */
   select,
   input[type="text"],
@@ -117,4 +121,8 @@
     background-color: #5a6268;
   }
   
-  
+  @media screen and (max-width: 992px) {
+    .variation-item {
+      display: flex; flex-direction: column; margin: 5px; gap: 20px;
+    }
+  }

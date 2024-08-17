@@ -17,9 +17,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AddressModalComponent } from '../../address-modal/address-modal.component';
+import { AddressModalComponent } from '../address-modal/address-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RemoveNotFoundItemStockModalComponent } from '../../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
+import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
 
 @Component({
   standalone: true,
