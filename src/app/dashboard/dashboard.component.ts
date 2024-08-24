@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -16,11 +16,12 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
 import { SubCategoriesService } from '../dashboard-service/sub-categories.service';
+import { OrdersService } from '../orders.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, NgIf, SidebarComponent],
+  imports: [RouterOutlet, RouterLink, NgIf, SidebarComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -32,6 +33,9 @@ export class DashboardComponent implements OnInit {
   subCatsCount: any;
   token!: string | null;
   private authSubscription!: Subscription;
+  ordersCount: number = 0;
+  totalUsers: any;
+  categories: any;
 
   constructor(
     private router: Router,
@@ -39,6 +43,7 @@ export class DashboardComponent implements OnInit {
     private categoriesService: CategoriesService,
     private SubCategoriesService: SubCategoriesService,
     private productService: ProductsService,
+    private ordersService: OrdersService,
     private authService: AuthService,
     private dialog: MatDialog,
     private cookieService: CookieService,
@@ -66,6 +71,7 @@ export class DashboardComponent implements OnInit {
           this.fetchCategoryCount();
           this.fetchSubCategoryCount();
           this.fetchProductCount();
+          this.fetchOrdersCount();
         }
       }
     );
@@ -80,9 +86,11 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchUserCount() {
-    this.usersService.getUsers(0, 10).subscribe(
+    this.usersService.getUsers(0, 5).subscribe(
       (users) => {
         this.userCount = users.totalElements;
+        this.totalUsers = users.content
+        console.log(this.totalUsers)
       },
       (error) => {}
     );
@@ -92,6 +100,7 @@ export class DashboardComponent implements OnInit {
     this.categoriesService.getAllCategories().subscribe(
       (cats) => {
         this.catsCount = cats.length;
+        this.categories = cats
       },
       (error) => {}
     );
@@ -114,6 +123,16 @@ export class DashboardComponent implements OnInit {
       },
       (error) => {}
 
+    );
+  }
+
+  fetchOrdersCount() {
+    const token = this.authService.getToken(); // Assuming you have a method to get the token
+    this.ordersService.getAllOrders().subscribe(
+      (orders) => {
+        this.ordersCount = orders.length;
+      },
+      (error) => {}
     );
   }
 

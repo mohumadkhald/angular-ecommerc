@@ -86,28 +86,29 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         if (isLoggedIn) {
           this.loadUserProfile();
           this.cartServerService.getCart().subscribe();
+          this.userService.username$.subscribe((username) => {
+            this.username = username || '';
+            this.loading = false;
+            this.cd.detectChanges();
+          });
+          this.userService.img$.subscribe((img) => {
+            this.img = img || '';
+            this.loading = false;
+            this.cd.detectChanges();
+          });
+      
+          this.userService.role$.subscribe((role) => {
+            this.role = role;
+            this.loading = false;
+            this.authService.saveRole(role);
+            this.cd.detectChanges();
+          });
         }
       }
     );
 
-    this.userService.username$.subscribe((username) => {
-      this.username = username || '';
-      this.loading = false;
-      this.cd.detectChanges();
-    });
 
-    this.userService.img$.subscribe((img) => {
-      this.img = img || '';
-      this.loading = false;
-      this.cd.detectChanges();
-    });
 
-    this.userService.role$.subscribe((role) => {
-      this.role = role;
-      this.loading = false;
-      this.authService.saveRole(role);
-      this.cd.detectChanges();
-    });
 
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
@@ -234,7 +235,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     document.body.removeChild(tempSpan);
   
     // Apply the width to the select element, adding padding for aesthetics
-    selectElement.style.width = `${selectedOptionWidth + 64}px`; // Adjust padding if necessary
+    selectElement.style.width = `${selectedOptionWidth + 50}px`; // Adjust padding if necessary
   }
 
   

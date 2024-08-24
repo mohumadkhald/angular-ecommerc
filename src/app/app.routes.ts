@@ -17,8 +17,8 @@ import { ProductsComponent } from './dashboard/products/products.component';
 import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.component';
 import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
 import { UsersComponent } from './dashboard/users/users.component';
-import { AdminGuard } from './utils/admin.guard';
 import { authGuardGuard } from "./utils/auth-guard.guard";
+import { OrderComponent } from './order/order.component';
 
 
 
@@ -55,6 +55,8 @@ export const routes: Routes = [
   { path: 'products/:id',component: PageDetailsComponent,title: "Product Details"},
   { path: 'products/seller/:id',component: ProductDetailsComponent,title: "Product Details"},
   { path: 'cart',component: CartComponent,title: "Cart"},
+  { path: 'orders',component: OrderComponent,title: "Orders"},
+
   { path: 'notfound', component: NotfoundComponent,title: "Not Found"},
   { path: '**', redirectTo: '/notfound' }
 ];

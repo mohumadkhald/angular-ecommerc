@@ -1,3 +1,4 @@
+
 <!-- app.component.html or main layout file -->
 <div class="layout" *ngIf="auth()">
     <app-sidebar *ngIf="!showStats"></app-sidebar>
@@ -37,7 +38,7 @@
                     <div class="stat st-it changeing">
                         <i class="fa fa-tag"></i>
                         <div class="inf">Total Orders</div>
-                        <span><a routerLink="orders">10</a></span>
+                        <span><a routerLink="orders">{{ ordersCount }}</a></span>
                     </div>
                 </div>
             </div>
@@ -46,3 +47,22 @@
         <router-outlet *ngIf="!showStats"></router-outlet>
     </div>
 </div>
+
+<div class="container last-elements">
+    <h2 class="text-center">Last 5 Users</h2>
+    <ul>
+      <li *ngFor="let user of totalUsers">
+        {{ user.username }} - {{ user.createdAt | date:'short' }}
+      </li>
+    </ul>
+    
+    <h2 class="text-center">Last 5 Categories</h2>
+    <ul>
+      <li *ngFor="let category of categories">
+        {{ category.categoryTitle }} - {{ category.createdAt | date:'short' }}
+      </li>
+    </ul>
+  
+    <!-- Repeat for SubCategories, Products, and Orders -->
+  </div>
+  

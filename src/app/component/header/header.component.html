@@ -29,18 +29,18 @@
 
     <div class="nav-right">
       <div class="ind hover">
-        <img src="../../../assets/amz/india.png" alt="india">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="india">
         <b class=" add">EN</b>
         <i class="fa-solid fa-caret-down"></i>
       </div>
       <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
-        <div  class="small" style="font-weight: bolder;">
+        <div class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" routerLink="/login" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)" class="signin no-login">
+          <div *ngIf="!auth();" routerLink="/login" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"
+            class="signin no-login">
             Sign in
           </div>
-          <div class="signin user" (click)="toggleMenu(true)"
-            (touchend)="toggleMenu(false)">
+          <div class="signin user" (click)="toggleMenu(true)" (touchend)="toggleMenu(false)">
             {{ username }}
           </div>
           <div style="display: block;">
@@ -61,7 +61,7 @@
           </div>
         </div>
       </div>
-      <div class="return  hover">
+      <div routerLink="orders" class="return  hover">
         <div class="add">
           <b>Orders</b>
         </div>

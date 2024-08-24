@@ -1,0 +1,31 @@
+<div class="order-management">
+    <h2>Order Management</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
+                <th>Status</th>
+                <th>Total Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of orders">
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.firstName }} {{ order.user.lastName }}</td>
+                <td>{{ order.orderDate | date:'medium' }}</td>
+                <td>{{ order.deliveryDate | date:'medium' }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.totalPrice | currency }}</td>
+                <td>
+                    <button (click)="viewOrderDetails(order)">View</button>
+                    <button (click)="updateOrderStatus(order, 'COMPLETED')">Mark as Completed</button>
+                    <button (click)="deleteOrder(order.id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
