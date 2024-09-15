@@ -2,14 +2,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { AuthService } from './service/auth.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrdersService {
-  private baseUrl = 'http://localhost:8080/api/orders'; // Update the base URL as needed
+  baseUrl: string = '';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService,
+    private configService: ConfigService) {
+      this.baseUrl = configService.getApiUri();
+  }
   private token = this.authService.getToken(); // Replace with your actual token
 
   getAllOrders(): Observable<any[]> {
