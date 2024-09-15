@@ -22,7 +22,7 @@ export class OrdersService {
       Authorization: `${this.token}`, // Replace with your actual token
     });
 
-    return this.http.get<any[]>(this.baseUrl, { headers }).pipe(map(response => response));
+    return this.http.get<any[]>(`${this.baseUrl}/orders`, { headers }).pipe(map(response => response));
   }
 
   updateOrder(order: any): Observable<any> {
