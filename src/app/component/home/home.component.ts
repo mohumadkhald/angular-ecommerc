@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit {
     });
   
     dialogRef.afterClosed().subscribe(() => {
-      window.location.reload()
+      // window.location.reload()
     });
   }
   

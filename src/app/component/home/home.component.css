@@ -1466,21 +1466,3 @@ tr td span {
   text-decoration: none;
   margin: 0 1em;
 }
-.toast-container {
-  position: fixed;
-  top: 6.5%;
-  right: .3%;
-  z-index: 9999;
-  color: white;
-  background-color: rgb(83, 147, 37);
-  opacity: 1;
-  padding: 15px;
-}
-
-.exit-toast {
-  background-color: red;
-  position: relative;
-  padding: 5px 10px;
-  top: -20px;
-  right: -20px;
-}

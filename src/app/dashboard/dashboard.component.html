@@ -47,7 +47,7 @@
     </div>
 </div>
 
-<div class="container last-elements-container">
+<div *ngIf="auth() && showStats" class="container last-elements-container">
     <div class="header">
       <h2>Last 5 Elements</h2>
       <button (click)="toggleVisibility()" class="toggle-btn">

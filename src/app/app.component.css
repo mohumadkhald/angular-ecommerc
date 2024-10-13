@@ -1,0 +1,29 @@
+.toast-container {
+    position: fixed;
+    top: 14%;
+    right: 1%;
+    z-index: 9999;
+    color: white;
+    background-color: rgb(61, 106, 29);
+    opacity: 1;
+    padding: 15px;
+  }
+  .toast-err {
+    position: fixed;
+    top: 6.5%;
+    right: .3%;
+    z-index: 9999;
+    color: white;
+    background-color: rgb(202, 23, 11);
+    opacity: 1;
+    padding: 15px;
+  }
+  
+  
+  .exit-toast {
+    background-color: red;
+    position: relative;
+    padding: 5px 10px;
+    top: -20px;
+    right: -20px;
+  }

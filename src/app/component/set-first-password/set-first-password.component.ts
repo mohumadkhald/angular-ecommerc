@@ -70,7 +70,7 @@ export class SetFirstPasswordComponent {
 
       this.http.patch(url, body, { headers }).subscribe(
         (response: any) => {
-          this.toastService.add(response.message);
+          setTimeout(() => this.toastService.add("the password set successes"), 3000);
           this.successMessage = response.message;
           localStorage.setItem("newUser", "false")
           this.dialogRef.close(); // Close the dialog only on success

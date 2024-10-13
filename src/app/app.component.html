@@ -1,3 +1,12 @@
 <app-header></app-header>
   <router-outlet></router-outlet>
 <app-footer></app-footer>
+<div *ngIf="toastService.toast" class="toast-container">
+  {{ toastService.toast }}
+  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
+</div>
+
+<div *ngIf="toastService.err" class="toast-err">
+  {{ toastService.err }}
+  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
+</div>

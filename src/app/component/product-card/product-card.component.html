@@ -14,9 +14,3 @@
     <button class="btn-add" (click)="open(product)" [disabled]="!product.inStock">Add to Cart</button>
   </div>
 </div>
-
-
-<div *ngIf="toastService.toast" class="toast-container">
-  {{ toastService.toast }}
-  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
-</div>

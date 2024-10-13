@@ -16,14 +16,3 @@
     rgba(166, 193, 238, 1)
   );
 }
-.toast-container {
-  position: fixed;
-  font-size: 32px;
-  top: 40.5%;
-  right: 30.3%;
-  z-index: 9999;
-  color: white;
-  background-color: rgb(185, 38, 19);
-  opacity: .6;
-  padding: 25px;
-}

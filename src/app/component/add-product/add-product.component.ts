@@ -33,10 +33,10 @@ export class AddProductComponent implements OnInit {
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
       productTitle: ['', Validators.required],
-      quantity: [null, Validators.required],
+      quantity: [0, [Validators.required, greaterThanZeroValidator()]],
       size: ['', Validators.required],
       color: ['', Validators.required],
-      price: [null, Validators.required],
+      price: [0, [Validators.required, greaterThanZeroValidator()]],
       subCategoryId: [0, [Validators.required, greaterThanZeroValidator()]]
     });
     this.loadSubCategories();

@@ -66,27 +66,7 @@
 }
 
 
-.toast-container {
-  position: fixed;
-  top: 6.5%;
-  right: .3%;
-  z-index: 9999;
-  color: white;
-  background-color: rgb(83, 147, 37);
-  opacity: 1;
-  padding: 15px;
-}
 
-.toast-err {
-  position: fixed;
-  top: 6.5%;
-  right: .3%;
-  z-index: 9999;
-  color: white;
-  background-color: rgb(202, 23, 11);
-  opacity: 1;
-  padding: 15px;
-}
 
   /* Additional styles for smaller screens using media query */
 @media screen and (max-width: 992px) {

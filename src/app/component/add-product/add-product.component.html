@@ -24,6 +24,8 @@
           <div class="error-message"
             *ngIf="productForm.get('quantity').invalid && (productForm.get('quantity').dirty || productForm.get('quantity').touched)">
             <small class="text-danger" *ngIf="productForm.get('quantity').errors.required">Quantity is required.</small>
+            <small class="text-danger" *ngIf="productForm.get('quantity').errors.greaterThanZero">Quantity Must more than 1
+              required.</small>
           </div>
         </div>
       </div>
@@ -70,6 +72,8 @@
           <div class="error-message"
             *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)">
             <small class="text-danger" *ngIf="productForm.get('price').errors.required">Price is required.</small>
+            <small class="text-danger" *ngIf="productForm.get('price').errors.greaterThanZero">Quantity Must more than 1
+              required.</small>
           </div>
         </div>
 
@@ -87,7 +91,7 @@
             <small class="text-danger" *ngIf="productForm.get('subCategoryId').errors.required">SubCategory is
               required.</small>
             <small class="text-danger" *ngIf="productForm.get('subCategoryId').errors.greaterThanZero">SubCategory is
-              required.</small>
+              required more than 0.</small>
           </div>
         </div>
       </div>
