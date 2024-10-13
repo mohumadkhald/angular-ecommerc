@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ToastService } from '../../service/toast.service';
 import { ConfigService } from '../../config.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-set-first-password',
@@ -32,6 +33,7 @@ export class SetFirstPasswordComponent {
   baseUrl: string;
 
   constructor(
+    private router: Router,
     public dialogRef: MatDialogRef<SetFirstPasswordComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
@@ -70,6 +72,7 @@ export class SetFirstPasswordComponent {
         (response: any) => {
           this.toastService.add(response.message);
           this.successMessage = response.message;
+          localStorage.setItem("newUser", "false")
           this.dialogRef.close(); // Close the dialog only on success
         },
         error => {

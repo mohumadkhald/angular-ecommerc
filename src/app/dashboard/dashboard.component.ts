@@ -26,6 +26,7 @@ import { OrdersService } from '../orders.service';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
+[x: string]: any;
   showStats: boolean = true;
   userCount: number = 0;
   catsCount: number = 0;
@@ -36,6 +37,9 @@ export class DashboardComponent implements OnInit {
   ordersCount: number = 0;
   totalUsers: any;
   categories: any;
+  subCats: any;
+  products: any;
+  orders: any;
 
   constructor(
     private router: Router,
@@ -111,6 +115,7 @@ export class DashboardComponent implements OnInit {
     this.SubCategoriesService.getAllSubCategories().subscribe(
       (subCats) => {
         this.subCatsCount = subCats.length;
+        this.subCats = subCats
       },
       (error) => {}
     );
@@ -120,6 +125,8 @@ export class DashboardComponent implements OnInit {
     this.productService.getAllProducts("createdAt", "desc", 0, 999999, [], [], 0, 10, "", "", '').subscribe(
       (products) => {
         this.prodsCount = products.totalElements;
+        this.products = products.content;
+        console.log(this.products)
       },
       (error) => {}
 
@@ -131,6 +138,7 @@ export class DashboardComponent implements OnInit {
     this.ordersService.getAllOrders().subscribe(
       (orders) => {
         this.ordersCount = orders.length;
+        this.orders = orders
       },
       (error) => {}
     );
@@ -138,5 +146,12 @@ export class DashboardComponent implements OnInit {
 
   auth(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+
+  showLastElements = true; // Initially hidden
+
+  toggleVisibility() {
+    this.showLastElements = !this.showLastElements;
   }
 }

@@ -1,4 +1,3 @@
-
 <!-- app.component.html or main layout file -->
 <div class="layout" *ngIf="auth()">
     <app-sidebar *ngIf="!showStats"></app-sidebar>
@@ -48,21 +47,66 @@
     </div>
 </div>
 
-<div class="container last-elements">
-    <h2 class="text-center">Last 5 Users</h2>
-    <ul>
-      <li *ngFor="let user of totalUsers">
-        {{ user.username }} - {{ user.createdAt | date:'short' }}
-      </li>
-    </ul>
-    
-    <h2 class="text-center">Last 5 Categories</h2>
-    <ul>
-      <li *ngFor="let category of categories">
-        {{ category.categoryTitle }} - {{ category.createdAt | date:'short' }}
-      </li>
-    </ul>
+<div class="container last-elements-container">
+    <div class="header">
+      <h2>Last 5 Elements</h2>
+      <button (click)="toggleVisibility()" class="toggle-btn">
+        {{ showLastElements ? 'Hide' : 'Show' }} Last 5
+      </button>
+    </div>
   
-    <!-- Repeat for SubCategories, Products, and Orders -->
+    <div *ngIf="showLastElements" class="last-elements-grid">
+      <div class="last-element">
+        <h3>Last 5 Users</h3>
+        <ul>
+          <li *ngFor="let user of totalUsers">
+            <span>{{ user.username }}</span>
+            <span class="date">{{ user.createdAt | date: 'short' }}</span>
+          </li>
+        </ul>
+      </div>
+  
+      <div class="last-element">
+        <h3>Last 5 Categories</h3>
+        <ul>
+          <li *ngFor="let category of categories">
+            <span>{{ category.categoryTitle }}</span>
+            <span class="date">{{ category.createdAt | date: 'short' }}</span>
+          </li>
+        </ul>
+      </div>
+  
+      <div class="last-element">
+        <h3>Last 5 Subcategories</h3>
+        <ul>
+          <li *ngFor="let subcategory of subCats">
+            <span>{{ subcategory.name }}</span>
+            <span class="date">{{ subcategory.createdAt | date: 'short' }}</span>
+          </li>
+        </ul>
+      </div>
+  
+      <div class="last-element">
+        <h3>Last 5 Products</h3>
+        <ul>
+          <li *ngFor="let product of products">
+            <span>{{ product.productTitle }}</span>
+            <span class="date">{{ product.createdAt | date: 'short' }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="last-element">
+        <div class="header-row">
+          <h3>Last 5 Orders</h3>
+          <span class="header-info">Delivery Date</span>
+        </div>
+        <ul>
+          <li *ngFor="let order of orders">
+            <span>{{ order.id }}</span>
+            <span class="date">{{ order.deliveryDate | date: 'short' }}</span>
+          </li>
+        </ul>
+      </div>      
+    </div>
   </div>
   

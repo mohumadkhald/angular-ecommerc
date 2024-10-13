@@ -107,9 +107,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
 
-
-
-
     this.loadCategories();
     this.categoryUpdateService.categoryUpdated$.subscribe(() => {
       this.loadCategories();

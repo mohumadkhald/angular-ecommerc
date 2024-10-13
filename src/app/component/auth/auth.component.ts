@@ -137,8 +137,8 @@ export class AuthComponent implements OnInit {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
         if (params['newUser'] === 'true') {
+          localStorage.setItem('firstPwdSet', 'true');
           this.router.navigate(['/']);
-          localStorage.setItem('firstPwdSet', 'false');
         } else {
           this.router.navigate(['/']);
         }
@@ -146,7 +146,7 @@ export class AuthComponent implements OnInit {
     });
 
     if (this.isLogin) {
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
     }
 
     setTimeout(() => {
@@ -164,7 +164,6 @@ export class AuthComponent implements OnInit {
         (response) => {
           this.cartService.syncCartFromLocalStorage();
           this.authService.saveToken(response.token);
-          localStorage.setItem('firstPwdSet', 'true');
           this.router.navigate(['/']);
         },
         (error) => {
@@ -202,7 +201,6 @@ export class AuthComponent implements OnInit {
         .subscribe(
           (response) => {
             this.authService.saveToken(response.token);
-            localStorage.setItem('firstPwdSet', 'true');
             this.router.navigate(['/']);
             this.cartService.syncCartFromLocalStorage();
           },
@@ -261,6 +259,7 @@ export class AuthComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
+      
       this.isDialogOpen = false;
     });
   }

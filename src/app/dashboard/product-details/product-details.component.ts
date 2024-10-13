@@ -7,16 +7,20 @@ import { Prod } from '../../interface/product-all-details';
 import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { SetVariationsComponent } from '../set-variations/set-variations.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinner],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent implements OnInit {
   product!: Prod;
+  loading: boolean = true;
+  productId!: number;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -28,19 +32,20 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.productId = this.route.snapshot.params['id'];
     this.loadProductDetails();
     this.router.routeReuseStrategy.shouldReuseRoute = () => false; // Prevent page reloading when navigating to same route
 
   }
 
   loadProductDetails(): void {
-    const productId = this.route.snapshot.params['id'];
-    this.productService.getProductDetails(productId).subscribe(
+    this.productService.getProductDetails(this.productId).subscribe(
       (data: Prod) => {
         this.product = data;
+        this.loading = false;
       },
       (error) => {
-        this.router.navigate(['notfound']);
+        this.loading = false;
         // this.router.navigate(['user/profile']);
         // console.log(error);
       }

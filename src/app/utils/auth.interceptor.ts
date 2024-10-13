@@ -22,7 +22,7 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedRequest).pipe(
     catchError((error) => {
-      if (error.status === 401) {
+      if (error.status === 401 || error.status === 403) {
         authService.showExpiredSessionDialog('Your Session Expired');
         authService.clearAuthState();
         userService.clearUsername();
