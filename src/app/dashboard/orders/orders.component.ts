@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { OrdersService } from '../../dashboard-service/orders.service';
 import { SidebarComponent } from "../sidebar/sidebar.component";
-import { OrdersService } from '../../orders.service';
 
 @Component({
   selector: 'app-orders',

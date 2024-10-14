@@ -2,21 +2,21 @@ import { CommonModule, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  NavigationStart,
-  Router,
-  RouterLink,
-  RouterOutlet,
+    NavigationStart,
+    Router,
+    RouterLink,
+    RouterOutlet,
 } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { Subscription } from 'rxjs';
 import { ExpiredSessionDialogComponent } from '../component/expired-session-dialog/expired-session-dialog.component';
 import { CategoriesService } from '../dashboard-service/categories.service';
+import { OrdersService } from '../dashboard-service/orders.service';
 import { ProductsService } from '../dashboard-service/products.service';
+import { SubCategoriesService } from '../dashboard-service/sub-categories.service';
 import { UsersService } from '../dashboard-service/users.service';
 import { AuthService } from '../service/auth.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { CookieService } from 'ngx-cookie-service';
-import { Subscription } from 'rxjs';
-import { SubCategoriesService } from '../dashboard-service/sub-categories.service';
-import { OrdersService } from '../orders.service';
 
 @Component({
   selector: 'app-dashboard',

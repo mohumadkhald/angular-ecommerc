@@ -1,26 +1,26 @@
 // cart.component.ts
 import { CommonModule, NgFor } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterLink } from '@angular/router';
-import { CartItem } from '../../interface/cat';
-import { AuthService } from '../../service/auth.service';
-import { CartServerService } from '../../service/cart-server.service';
-import { CartService } from '../../service/cart.service';
-import { ToastService } from '../../service/toast.service';
-import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
-import { Subscription } from 'rxjs';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { AddressModalComponent } from '../address-modal/address-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Router, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
+import { Subscription } from 'rxjs';
 import { ConfigService } from '../../config.service';
+import { CartItem } from '../../interface/cat';
+import { AuthService } from '../../service/auth.service';
+import { CartServerService } from '../../service/cart-server.service';
+import { CartService } from '../../service/cart.service';
+import { ToastService } from '../../service/toast.service';
+import { AddressModalComponent } from '../address-modal/address-modal.component';
+import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
+import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
 
 @Component({
   standalone: true,
@@ -57,16 +57,19 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.isLoggedIn$.subscribe(
-      (isLoggedIn) => {
-        if (isLoggedIn) {
-          this.loadCartItems();
-        } else {
-          this.cartItems = this.cartService.getCart();
-          this.updateTotalPrice();
+    if(this.auth()){
+      this.authSubscription = this.authService.isLoggedIn$.subscribe(
+        (isLoggedIn) => {
+          if (isLoggedIn) {
+            this.loadCartItems();
+          } else {
+            this.cartItems = this.cartService.getCart();
+            this.updateTotalPrice();
+          }
         }
-      }
-    );
+      );
+
+    }
 
     this.addressForm = this.fb.group({
       street: ['', Validators.required],
