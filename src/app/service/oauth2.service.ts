@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 })
 export class OAuth2Service {
 
-  private baseUrl = 'http://ec2-13-245-4-191.af-south-1.compute.amazonaws.com:8443';
+  private baseUrl = 'https://ec2-13-245-4-191.af-south-1.compute.amazonaws.com:8443';
   // private baseUrl = "http://localhost:8080";
     // private baseUrl = "http://192.168.49.2:30001"
 
