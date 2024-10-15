@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../service/orders.service';
+import { AuthService } from '../service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order',
@@ -11,11 +13,20 @@ import { OrdersService } from '../service/orders.service';
 })
 export class OrderComponent implements OnInit {
   orders: any[] = [];
+  private authSubscription!: Subscription;
 
-  constructor(private ordersService: OrdersService) {}
+  constructor(private ordersService: OrdersService, private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
-    this.loadOrders();
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        if (isLoggedIn) {
+          this.loadOrders();
+        }
+      }
+    );
+
   }
 
   loadOrders(): void {
