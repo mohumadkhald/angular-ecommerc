@@ -61,7 +61,7 @@ export class HomeComponent implements OnInit {
         // Store the new user flag in localStorage if present
         if (newUser === 'true') {
           localStorage.setItem('newUser', 'true');
-          this.router.navigate(['/']);
+          // this.router.navigate(['/']);
         } else {
           // this.router.navigate(['/']);
           localStorage.removeItem('newUser');
