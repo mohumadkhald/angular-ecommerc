@@ -61,7 +61,7 @@
           </div>
         </div>
       </div>
-      <div routerLink="orders" class="return  hover">
+      <div *ngIf="auth();" routerLink="orders" class="return  hover">
         <div class="add">
           <b>Orders</b>
         </div>

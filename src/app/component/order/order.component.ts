@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { OrdersService } from '../service/orders.service';
-import { AuthService } from '../service/auth.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../service/auth.service';
+import { OrdersService } from '../../service/orders.service';
 
 @Component({
   selector: 'app-order',

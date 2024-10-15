@@ -5,6 +5,7 @@ import { CartComponent } from "./component/cart/cart.component";
 import { ContactComponent } from "./component/contact/contact.component";
 import { HomeComponent } from "./component/home/home.component";
 import { NotfoundComponent } from "./component/notfound/notfound.component";
+import { OrderComponent } from './component/order/order.component';
 import { PageDetailsComponent } from './component/page-details/page-details.component';
 import { ProductListComponent } from "./component/product-list/product-list.component";
 import { ProfileComponent } from "./component/profile/profile.component";
@@ -18,7 +19,6 @@ import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.
 import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
 import { UsersComponent } from './dashboard/users/users.component';
 import { authGuardGuard } from "./utils/auth-guard.guard";
-import { OrderComponent } from './order/order.component';
 
 
 
