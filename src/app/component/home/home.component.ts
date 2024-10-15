@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
           localStorage.setItem('newUser', 'true');
           this.router.navigate(['/']);
         } else {
-          this.router.navigate(['/']);
+          // this.router.navigate(['/']);
           localStorage.removeItem('newUser');
         }
       }
