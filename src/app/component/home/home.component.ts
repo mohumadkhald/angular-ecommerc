@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
         this.cartService.syncCartFromLocalStorage();
+        this.cartService.clearCart();
   
         // Store the new user flag in localStorage if present
         if (newUser === 'true') {

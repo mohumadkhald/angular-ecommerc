@@ -163,6 +163,7 @@ export class AuthComponent implements OnInit {
       this.authService.login(email, password, remember).subscribe(
         (response) => {
           this.cartService.syncCartFromLocalStorage();
+          this.cartService.clearCart();
           this.authService.saveToken(response.token);
           this.router.navigate(['/']);
         },
@@ -203,6 +204,7 @@ export class AuthComponent implements OnInit {
             this.authService.saveToken(response.token);
             this.router.navigate(['/']);
             this.cartService.syncCartFromLocalStorage();
+            this.cartService.clearCart();
           },
           (error) => {
             if (error.status === 400 && error.error.violations) {

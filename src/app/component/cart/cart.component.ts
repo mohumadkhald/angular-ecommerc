@@ -57,7 +57,6 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(this.auth()){
       this.authSubscription = this.authService.isLoggedIn$.subscribe(
         (isLoggedIn) => {
           if (isLoggedIn) {
@@ -68,8 +67,6 @@ export class CartComponent implements OnInit, OnDestroy {
           }
         }
       );
-
-    }
 
     this.addressForm = this.fb.group({
       street: ['', Validators.required],
