@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   private modalRef?: NgbModalRef;
   private closeTimeoutId?: number;
   private authSubscription!: Subscription;
+  ps: any;
 
   constructor(
     private router: Router,
@@ -54,16 +55,18 @@ export class HomeComponent implements OnInit {
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
+        this.ps = this.cartService.getCart()
+        console.log(this.ps)
         this.cartService.syncCartFromLocalStorage();
         this.cartService.clearCart();
 
         // Store the new user flag in cookies if present
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
-          this.router.navigate(['/']);
+          // this.router.navigate(['/']);
 
         } else {
-          this.router.navigate(['/']);
+          // this.router.navigate(['/']);
           this.deleteCookie('newUser');
         }
       }
