@@ -55,8 +55,7 @@ export class HomeComponent implements OnInit {
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
-        this.ps = this.cartService.getCart()
-        console.log(this.ps)
+
         this.cartService.syncCartFromLocalStorage();
         this.cartService.clearCart();
 
@@ -66,12 +65,16 @@ export class HomeComponent implements OnInit {
           // this.router.navigate(['/']);
           this.cartService.syncCartFromLocalStorage();
           this.cartService.clearCart();
+          this.ps = this.cartService.getCart()
+          console.log(this.ps)
 
         } else {
           // this.router.navigate(['/']);
           this.deleteCookie('newUser');
           this.cartService.syncCartFromLocalStorage();
           this.cartService.clearCart();
+          this.ps = this.cartService.getCart()
+          console.log(this.ps)
         }
       }
     });
