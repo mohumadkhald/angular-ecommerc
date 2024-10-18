@@ -53,6 +53,10 @@ export class HomeComponent implements OnInit {
       const newUser = params['newUser'];
       this.ps = this.cartService.getCart()
       console.log(this.ps)
+      if (this.ps.length > 0) {
+        this.cartService.syncCartFromLocalStorage();
+        this.cartService.clearCart();
+      }
 
       if (token) {
         this.authService.saveToken(token);
