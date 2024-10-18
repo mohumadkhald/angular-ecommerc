@@ -65,8 +65,11 @@ export class HomeComponent implements OnInit {
           this.deleteCookie('newUser');
         }
       }
-      this.cartService.syncCartFromLocalStorage();
-      this.cartService.clearCart();
+      if(this.cartService.getCart().length > 0)
+      {
+        this.cartService.syncCartFromLocalStorage();
+        this.cartService.clearCart();
+      }
     });
 
     // Check and open the password dialog after a 3-second delay
