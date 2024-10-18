@@ -54,10 +54,6 @@ export class HomeComponent implements OnInit {
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
-
-        this.cartService.syncCartFromLocalStorage();
-        this.cartService.clearCart();
-
         // Store the new user flag in cookies if present
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
@@ -69,6 +65,8 @@ export class HomeComponent implements OnInit {
           this.deleteCookie('newUser');
         }
       }
+      this.cartService.syncCartFromLocalStorage();
+      this.cartService.clearCart();
     });
 
     // Check and open the password dialog after a 3-second delay
