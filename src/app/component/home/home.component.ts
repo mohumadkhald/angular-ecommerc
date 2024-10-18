@@ -51,13 +51,6 @@ export class HomeComponent implements OnInit {
       const token = params['token'];
       const role = params['role'];
       const newUser = params['newUser'];
-      this.ps = this.cartService.getCart()
-      console.log(this.ps)
-      if (this.ps.length > 0) {
-        this.cartService.syncCartFromLocalStorage();
-        this.cartService.clearCart();
-      }
-
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
@@ -68,11 +61,11 @@ export class HomeComponent implements OnInit {
         // Store the new user flag in cookies if present
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
-          // this.router.navigate(['/']);
+          this.router.navigate(['/']);
 
 
         } else {
-          // this.router.navigate(['/']);
+          this.router.navigate(['/']);
           this.deleteCookie('newUser');
         }
       }
