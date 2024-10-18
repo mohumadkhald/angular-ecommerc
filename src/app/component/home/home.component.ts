@@ -64,10 +64,14 @@ export class HomeComponent implements OnInit {
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
           // this.router.navigate(['/']);
+          this.cartService.syncCartFromLocalStorage();
+          this.cartService.clearCart();
 
         } else {
           // this.router.navigate(['/']);
           this.deleteCookie('newUser');
+          this.cartService.syncCartFromLocalStorage();
+          this.cartService.clearCart();
         }
       }
     });
