@@ -51,6 +51,8 @@ export class HomeComponent implements OnInit {
       const token = params['token'];
       const role = params['role'];
       const newUser = params['newUser'];
+      this.ps = this.cartService.getCart()
+      console.log(this.ps)
 
       if (token) {
         this.authService.saveToken(token);
@@ -63,18 +65,11 @@ export class HomeComponent implements OnInit {
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
           // this.router.navigate(['/']);
-          this.cartService.syncCartFromLocalStorage();
-          this.cartService.clearCart();
-          this.ps = this.cartService.getCart()
-          console.log(this.ps)
+
 
         } else {
           // this.router.navigate(['/']);
           this.deleteCookie('newUser');
-          this.cartService.syncCartFromLocalStorage();
-          this.cartService.clearCart();
-          this.ps = this.cartService.getCart()
-          console.log(this.ps)
         }
       }
     });
