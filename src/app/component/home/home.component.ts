@@ -45,42 +45,42 @@ export class HomeComponent implements OnInit {
     private cartService: CartService
   ) {}
 
-
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const token = params['token'];
       const role = params['role'];
       const newUser = params['newUser'];
-  
+
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
         this.cartService.syncCartFromLocalStorage();
         this.cartService.clearCart();
-  
-        // Store the new user flag in localStorage if present
+
+        // Store the new user flag in cookies if present
         if (newUser === 'true') {
-          localStorage.setItem('newUser', 'true');
-          // this.router.navigate(['/']);
+          this.setCookie('newUser', 'true', 1); // Expires in 1 day
+          this.router.navigate(['/']);
+
         } else {
-          // this.router.navigate(['/']);
-          localStorage.removeItem('newUser');
+          this.router.navigate(['/']);
+          this.deleteCookie('newUser');
         }
       }
     });
-  
+
     // Check and open the password dialog after a 3-second delay
     setTimeout(() => this.checkFirstPwdSet(), 3000);
   }
-  
+
   private checkFirstPwdSet(): void {
-    const firstPwdSet = localStorage.getItem('newUser');
+    const firstPwdSet = this.getCookie('newUser');
     if (firstPwdSet === 'true') {
-      localStorage.removeItem('newUser'); // Avoid re-triggering the dialog
+      this.deleteCookie('newUser'); // Avoid re-triggering the dialog
       this.openSetFirstPwd();
     }
   }
-  
+
   openSetFirstPwd(): void {
     const dialogRef = this.dialog.open(SetFirstPasswordComponent, {
       width: '500px',
@@ -88,10 +88,10 @@ export class HomeComponent implements OnInit {
       data: { name: 'Set Password For Email Address' },
       panelClass: 'custom-dialog-container',
     });
-  
+
     dialogRef.afterOpened().subscribe(() => {
       const dialogContainer = document.querySelector('.cdk-overlay-pane') as HTMLElement;
-  
+
       // Hide dialog initially and apply custom styles
       dialogContainer.style.display = 'none';
       this.renderer.setStyle(dialogContainer, 'position', 'relative');
@@ -99,12 +99,35 @@ export class HomeComponent implements OnInit {
       this.renderer.setStyle(dialogContainer, 'z-index', '100');
       dialogContainer.style.display = 'block'; // Show after styling
     });
-  
+
     dialogRef.afterClosed().subscribe(() => {
       // window.location.reload()
     });
   }
-  
 
-  
+  // Utility function to set cookies
+  private setCookie(name: string, value: string, days: number): void {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value}; ${expires}; path=/`;
+  }
+
+  // Utility function to get cookies
+  private getCookie(name: string): string | null {
+    const nameEQ = `${name}=`;
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      let c = cookie.trim();
+      if (c.startsWith(nameEQ)) {
+        return c.substring(nameEQ.length);
+      }
+    }
+    return null;
+  }
+
+  // Utility function to delete cookies
+  private deleteCookie(name: string): void {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
 }
