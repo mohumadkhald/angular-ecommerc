@@ -37,10 +37,16 @@ import { ModalSendResetPasswordComponent } from '../modal-send-reset-password/mo
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
+
 export class AuthComponent implements OnInit {
   @ViewChild('container') container!: ElementRef;
+
   registerForm: FormGroup;
   loginForm: FormGroup;
+  loading: boolean = true; // Spinner visibility
+  isLogin!: boolean; // Check if the user is logged in
+  formErrors: any = {}; // Store form errors
+  isDialogOpen: boolean = false; // Track if the modal is open
 
   constructor(
     private fb: FormBuilder,
@@ -52,134 +58,124 @@ export class AuthComponent implements OnInit {
     private oauth2Service: OAuth2Service,
     private cartService: CartService
   ) {
+    // Initialize forms with validation rules
     this.registerForm = this.fb.group({
-      firstName: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('^[^0-9]{3,}$'),
-          this.noLeadingTrailingSpaces,
-        ],
-      ],
-      lastName: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('^[^0-9]{3,}$'),
-          this.noLeadingTrailingSpaces,
-        ],
-      ],
-      email: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
-        ],
-      ],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$'),
-        ],
-      ],
+      firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
+      lastName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$')]],
       gender: ['', Validators.required],
       role: ['', Validators.required],
-
     });
 
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern('^(.+)@(.+)$')]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      remember: [],
+      remember: []
     });
   }
 
-  noLeadingTrailingSpaces(control: any) {
-    if (
-      control.value &&
-      (control.value.startsWith(' ') || control.value.endsWith(' '))
-    ) {
-      return { trimmed: true };
-    }
-    return null;
-  }
-
-  signIn() {
-    this.container.nativeElement.classList.remove('right-panel-active');
-  }
-
-  signUp() {
-    this.container.nativeElement.classList.add('right-panel-active');
-  }
-
-  showSignIn() {
-    this.renderer.removeClass(
-      this.container.nativeElement,
-      'right-panel-active'
-    );
-  }
-
-  showSignUp() {
-    this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
-  }
-
-  loading: boolean = true;
-  isLogin: boolean = this.authService.isLoggedIn();
-
   ngOnInit(): void {
-    // Handle the route parameter or query parameter to extract token and other data
+    this.isLogin = this.authService.isLoggedIn();
+
+    // Redirect if already logged in
+    if (this.isLogin) {
+      this.router.navigate(['/']);
+      return; // Exit to prevent unnecessary further processing
+    }
+
+    // Handle query params to toggle between login/register
     this.route.queryParams.subscribe((params) => {
+      const state = params['state'];
+      console.log("Current query parameters:", params); // Log the query parameters for debugging
+
+      // Show appropriate form based on the query parameter
+      if (state === 'register') {
+        setTimeout(() => {
+        this.showSignUp();
+        }, 600);
+      } else {
+        this.showSignIn(); // Default to sign-in if no state is provided
+      }
+
+      // Handle token if present (for navigation after registration)
       const token = params['token'];
-      const message = params['message'];
       const role = params['role'];
       if (token) {
         this.authService.saveToken(token);
         this.authService.saveRole(role);
         if (params['newUser'] === 'true') {
           localStorage.setItem('firstPwdSet', 'true');
-          this.router.navigate(['/']);
-        } else {
-          this.router.navigate(['/']);
         }
+        this.router.navigate(['/']);
       }
     });
 
-    if (this.isLogin) {
-      // this.router.navigate(['/']);
-    }
-
+    // Show loading spinner
     setTimeout(() => {
-      this.loading = false;
+      this.loading = false; // End loading after a specified time
     }, 500);
   }
 
+  // Form validation helper
+  noLeadingTrailingSpaces(control: any) {
+    const value = control.value || '';
+    return value.trim() !== value ? { trimmed: true } : null;
+  }
+
+  // Toggle to show Sign In form
+  showSignIn() {
+    this.router.navigate(['/auth'], { queryParams: { state: 'login' } });
+    this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
+  }
+
+  // Toggle to show Sign Up form
+  showSignUp() {
+    this.router.navigate(['/auth'], { queryParams: { state: 'register' } });
+    this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
+  }
+
+  // Login method
   login() {
     if (this.loginForm.valid) {
-      const email = this.loginForm.value.email.trim();
-      const password = this.loginForm.value.password.trim();
-      const remember = this.loginForm.value.remember;
-
-      this.authService.login(email, password, remember).subscribe(
+      const { email, password, remember } = this.loginForm.value;
+      this.authService.login(email.trim(), password.trim(), remember).subscribe(
         (response) => {
           this.cartService.syncCartFromLocalStorage();
           this.cartService.clearCart();
           this.authService.saveToken(response.token);
           this.router.navigate(['/']);
         },
-        (error) => {
-          if (error.status === 400 && error.error.violations) {
-            this.displayServerErrors(error.error.violations);
-          } else {
-            let msg = Object.values(error.error.errors).join(', ');
-            this.showErrorDialog(msg);
-          }
-        }
+        (error) => this.handleError(error)
       );
     }
   }
 
-  formErrors: any = {};
+  // Register method
+  register() {
+    if (this.registerForm.valid) {
+      const { firstName, lastName, email, password, gender, role } = this.registerForm.value;
+      this.authService.register(firstName.trim(), lastName.trim(), email.trim(), password.trim(), gender, role).subscribe(
+        (response) => {
+          this.authService.saveToken(response.token);
+          this.router.navigate(['/']);
+          this.cartService.syncCartFromLocalStorage();
+          this.cartService.clearCart();
+        },
+        (error) => this.handleError(error)
+      );
+    }
+  }
+
+  handleError(error: any) {
+    if (error.status === 400 && error.error.violations) {
+      this.displayServerErrors(error.error.violations);
+    } else {
+      const msg = Object.values(error.error.errors).join(', ');
+      this.showErrorDialog(msg);
+    }
+  }
+
   displayServerErrors(violations: any) {
     this.formErrors = {};
     violations.forEach((violation: any) => {
@@ -187,81 +183,26 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  register() {
-    if (this.registerForm.valid) {
-      const firstName = this.registerForm.value.firstName.trim();
-      const lastName = this.registerForm.value.lastName.trim();
-      const email = this.registerForm.value.email.trim();
-      const password = this.registerForm.value.password.trim();
-      const gender = this.registerForm.value.gender;
-      const role = this.registerForm.value.role;
-
-
-      this.authService
-        .register(firstName, lastName, email, password, gender, role)
-        .subscribe(
-          (response) => {
-            this.authService.saveToken(response.token);
-            this.router.navigate(['/']);
-            this.cartService.syncCartFromLocalStorage();
-            this.cartService.clearCart();
-          },
-          (error) => {
-            if (error.status === 400 && error.error.violations) {
-              this.displayServerErrors(error.error.violations);
-            } else {
-              let msg = Object.values(error.error.errors).join(', ');
-              this.showErrorDialog(msg);
-            }
-          }
-        );
-    }
-  }
-
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
       width: '350px',
       height: '200px',
-      data: { message: message },
+      data: { message },
     });
   }
 
-  isDialogOpen: boolean = false;
-
   openDialog(): void {
-    if (this.isDialogOpen) {
-      return; // Exit function if dialog is already open
-    }
+    if (this.isDialogOpen) return; // Exit if dialog is already open
 
     this.isDialogOpen = true;
-
     const dialogRef = this.dialog.open(ModalSendResetPasswordComponent, {
       width: '350px',
       height: '270px',
       data: { name: 'Send Reset Password' },
-      panelClass: 'custom-dialog-container', // Apply the custom class here
+      panelClass: 'custom-dialog-container',
     });
 
-    dialogRef.afterOpened().subscribe(() => {
-      const dialogContainer = document.querySelector(
-        '.cdk-overlay-pane'
-      ) as HTMLElement;
-
-      // Hide the dialog initially
-      dialogContainer.style.display = 'none';
-
-      // Apply new styles to the dialog container
-      this.renderer.setStyle(dialogContainer, 'position', 'relative');
-      this.renderer.setStyle(dialogContainer, 'top', '0px');
-      this.renderer.setStyle(dialogContainer, 'z-index', '100');
-
-      // Show the dialog after applying styles
-      dialogContainer.style.display = 'block';
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      
+    dialogRef.afterClosed().subscribe(() => {
       this.isDialogOpen = false;
     });
   }
@@ -272,5 +213,16 @@ export class AuthComponent implements OnInit {
 
   initiateFaceLogin() {
     this.oauth2Service.initiateFaceLogin();
+  }
+
+  // Navigation functions
+  navigateToSignIn() {
+    this.router.navigate(['/auth'], { queryParams: { state: 'login' } });
+    this.showSignIn();
+  }
+
+  navigateToSignUp() {
+    this.router.navigate(['/auth'], { queryParams: { state: 'register' } });
+    this.showSignUp();
   }
 }

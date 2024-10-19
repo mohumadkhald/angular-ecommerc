@@ -6,7 +6,7 @@
           <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
             <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="Generic placeholder image"
               class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1; max-height: 140px;">
-            <img *ngIf="!user.imageUrl" src="../../assets/model1.jpg" alt="Generic placeholder image"
+            <img *ngIf="!user.imageUrl" src="../../assets/no-user.jpg" alt="Generic placeholder image"
               class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1; max-height: 140px;">
             <button type="button" class="btn btn-outline-dark" (click)="open(user)" style="z-index: 1;">
               Edit profile

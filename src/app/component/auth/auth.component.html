@@ -3,8 +3,6 @@
   <div class="spinner-message">Loading, please wait...</div>
 </div>
 
-
-
 <div *ngIf="!loading" class="container" #container>
   <div class="form-container sign-up-container">
     <form [formGroup]="registerForm" (ngSubmit)="register()">
@@ -31,7 +29,8 @@
             spaces.</div>
           <div
             *ngIf="!registerForm.controls['firstName'].errors?.['trimmed'] && registerForm.controls['firstName'].errors?.['pattern']">
-            First Name must be at least 3 characters long and cannot contain numbers.</div>
+            First Name must be at least 3 characters long and cannot contain numbers.
+          </div>
         </div>
 
         <div
@@ -42,7 +41,8 @@
           </div>
           <div
             *ngIf="!registerForm.controls['lastName'].errors?.['trimmed'] && registerForm.controls['lastName'].errors?.['pattern']">
-            Last Name must be at least 3 characters long and cannot contain numbers.</div>
+            Last Name must be at least 3 characters long and cannot contain numbers.
+          </div>
         </div>
         <div *ngIf="formErrors['lastname']" class="text-danger">
           {{ formErrors['lastname'] }}
@@ -103,7 +103,6 @@
         <a (click)="initiateFaceLogin()" class="social facebook"><i class="fab fa-facebook-f"></i></a>
         <a href="#" class="social in"><i class="fab fa-linkedin-in"></i></a>
       </div>
-
       <span>or use your account</span>
       <input type="email" placeholder="Email" formControlName="email" />
       <div
@@ -139,12 +138,12 @@
       <div class="overlay-panel overlay-left">
         <h1>Welcome Back!</h1>
         <p>To keep connected with us please login with your personal info</p>
-        <button class="ghost" (click)="signIn()">Sign In</button>
+        <button class="ghost" (click)="showSignIn()">Sign In</button>
       </div>
       <div class="overlay-panel overlay-right">
         <h1>Hello, Friend!</h1>
-        <p>Enter your personal details and start journey with us</p>
-        <button class="ghost" (click)="signUp()">Sign Up</button>
+        <p>Enter your personal details and start your journey with us</p>
+        <button class="ghost" (click)="showSignUp()">Sign Up</button>
       </div>
     </div>
   </div>

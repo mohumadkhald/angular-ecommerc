@@ -26,12 +26,15 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
         authService.showExpiredSessionDialog('Your Session Expired');
         authService.clearAuthState();
         userService.clearUsername();
-        if (router.url !== '/login') {
+        if (router.url !== '/auth') {
           // router.navigate(['/login']).then(() => {
             setTimeout(() => {
               // window.location.reload();
-              router.navigate(['/login'])
+              router.navigate(['/auth'], { queryParams:{ state: 'login' } })
             }, 1500)
+            setTimeout(() => {
+              window.location.reload();
+            },2500)
           // });
         }
       }

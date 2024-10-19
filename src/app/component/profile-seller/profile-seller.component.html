@@ -9,7 +9,7 @@
             <div class="position-relative image-container" (mouseover)="showChangeImageButton = true" (mouseleave)="showChangeImageButton = false">
               <img *ngIf="user.imageUrl" [src]="user.imageUrl" alt="Generic placeholder image"
                 class="img-fluid img-thumbnail mt-4 mb-2 rounded-circle">
-              <img *ngIf="!user.imageUrl" src="../../assets/model1.jpg" alt="Generic placeholder image"
+              <img *ngIf="!user.imageUrl" src="../../assets/no-user.jpg" alt="Generic placeholder image"
                 class="img-fluid img-thumbnail mt-4 mb-2 rounded-circle">
               <button *ngIf="showChangeImageButton" (click)="triggerFileInput()" class="btn btn-outline-light btn-sm position-absolute change-image-btn">
                 Change Image

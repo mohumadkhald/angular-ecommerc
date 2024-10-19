@@ -1,29 +1,32 @@
 <div *ngIf="orders && orders.length > 0; else noOrders">
-    <div *ngFor="let order of orders" class="order-card">
-        <h2>Order ID: {{ order.id }}</h2>
-        <p>Status: {{ order.status }}</p>
-        <p>Order Date: {{ order.orderDate | date: 'short' }}</p>
-        <p>Delivery Date: {{ order.deliveryDate | date: 'short' }}</p>
-        <p>Total Price: ${{ order.totalPrice }}</p>
+    <div class="order-container">
+        <div *ngFor="let order of orders" class="order-card">
+            <h2>Order ID: {{ order.id }}</h2>
+            <p>Status: {{ order.status }}</p>
+            <p>Order Date: {{ order.orderDate | date: 'short' }}</p>
+            <p>Delivery Date: {{ order.deliveryDate | date: 'short' }}</p>
+            <p>Total Price: ${{ order.totalPrice }}</p>
 
-        <div class="shipping-address">
-            <h3>Shipping Address</h3>
-            <p>{{ order.shippingAddress.street }}</p>
-            <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }}</p>
-            <p>{{ order.shippingAddress.postalCode }}, {{ order.shippingAddress.country }}</p>
-        </div>
+            <div class="shipping-address">
+                <h3>Shipping Address</h3>
+                <p>{{ order.shippingAddress.street }}</p>
+                <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }}</p>
+                <p>{{ order.shippingAddress.postalCode }}, {{ order.shippingAddress.country }}</p>
+            </div>
 
-        <div class="order-items">
-            <h3>Order Items</h3>
-            <div *ngFor="let item of order.orderItems" class="order-item">
-                <img [src]="item.img" alt="{{ item.productName }}" class="product-img">
-                <div class="item-details">
-                    <p>Product Name: {{ item.productName }}</p>
-                    <p>Price: ${{ item.price }}</p>
-                    <div *ngFor="let variation of item.productVariations">
-                        <p>Color: {{ variation.color }}</p>
-                        <p>Size: {{ variation.size }}</p>
-                        <p>Quantity: {{ variation.quantity }}</p>
+            <div class="order-items">
+                <h3>Order Items</h3>
+                <div *ngFor="let item of order.orderItems" class="order-item">
+                    <img [src]="item.img" alt="{{ item.productName }}" class="product-img">
+                    <div class="item-details">
+                        <p>Product Name: {{ item.productName }}</p>
+                        <p>Price: ${{ item.price }}</p>
+                        <div *ngFor="let variation of item.productVariations">
+                            <p>Color: {{ variation.color }}</p>
+                            <p>Size: {{ variation.size }}</p>
+                            <p>Quantity: {{ variation.quantity }}</p>
+                            <p>Total Price: ${{ item.price * variation.quantity }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -32,5 +35,5 @@
 </div>
 
 <ng-template #noOrders>
-    <h2 class="text-cente text-danger">No orders found.</h2>
+    <h2 class="text-center text-danger">No orders found.</h2>
 </ng-template>

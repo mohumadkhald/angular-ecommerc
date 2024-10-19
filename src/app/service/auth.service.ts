@@ -307,9 +307,6 @@ export class AuthService {
     this.cookieService.delete(this.tokenKey, '/');
     this.cookieService.delete(this.roleKey, '/');
     this.cookieService.delete('tokenExpiry', '/');
-    setTimeout(() => {
-      window.location.reload();
-    },2000)
   }
 
   isLoggedIn(): boolean {

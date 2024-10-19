@@ -1,9 +1,18 @@
+.order-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap onto the next line as needed */
+}
+
 .order-card {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
-  margin-bottom: 24px;
+  margin: 12px; /* Space out the cards */
   background-color: #fff;
+  flex: 1 1 calc(30% - 24px); /* Grow to fill space, shrink if needed */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 348px; /* Prevent the card from getting too small */
+  max-width: 348px; /* Set a maximum width if needed */
 }
 
 .order-items {
@@ -14,6 +23,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .product-img {
@@ -35,25 +45,14 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .order-item {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-
-  .product-img {
-      margin-bottom: 8px;
-      width: 80px;
-      height: 80px;
+  .order-card {
+      flex: 1 1 calc(45% - 24px); /* Two cards per row */
   }
 }
 
 @media (max-width: 576px) {
   .order-card {
-      padding: 12px;
-  }
-
-  .product-img {
-      width: 60px;
-      height: 60px;
+      flex: 1 1 100%; /* Stack cards on smaller screens */
+      max-width: none; /* Remove max-width constraint */
   }
 }

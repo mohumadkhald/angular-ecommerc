@@ -210,11 +210,11 @@
                                     <div class="detailsReq">
                                         <h2 class="empty-cart">Your Cart is Empty</h2>
                                         <p class="product-today"><a routerLink="">Products Today</a></p>
-                                        <button *ngIf="!auth()" class="btnLog"><a
-                                                style="text-decoration: none; color: white" routerLink="/login">Sign in
+                                        <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }" class="btnLog"><a
+                                                style="text-decoration: none; color: white" routerLink="/auth" [queryParams]="{ state: 'login' }">Sign in
                                                 To Your Account</a></button>
-                                        <button *ngIf="!auth()" style="background-color: white;" class="btnLog"><a
-                                                style="text-decoration: none; color: black" routerLink="/register">Sign
+                                        <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'register' }" style="background-color: white;" class="btnLog"><a
+                                                style="text-decoration: none; color: black" routerLink="/auth" [queryParams]="{ state: 'register' }">Sign
                                                 Up Now</a></button>
                                     </div>
                                 </div>
