@@ -1,17 +1,17 @@
-<div *ngIf="productItem && productItem != null" class="container">
+<div *ngIf="productItem" class="container">
     <div class="product-details">
         <div class="product-images">
-            <img [src]="productItem.imageUrl" alt="Product Image">
+            <img [src]="productItem?.imageUrl" alt="Product Image" />
 
             <div class="thumbnail-images">
-                <!-- Display product variation images -->
-                <ng-container *ngFor="let variation of productItem.productVariations">
-                    <img [src]="variation.img" alt="Product Variation Thumbnail" *ngIf="variation.img" />
+                <ng-container *ngFor="let variation of productItem?.productVariations">
+                    <img [src]="variation?.img" alt="Product Variation Thumbnail" *ngIf="variation?.img" />
                 </ng-container>
             </div>
         </div>
+
         <div class="product-info mt-2">
-            <h1>{{ productItem.productTitle }}</h1>
+            <h1>{{ productItem?.productTitle }}</h1>
             <ul class="product-features">
                 <li>100% Quality</li>
                 <li>Free Shipping</li>
@@ -21,32 +21,33 @@
                 <li>Normal Delivery: 4-5 Days</li>
                 <li>Express Delivery: 2-3 Days</li>
             </ul>
+
             <div class="product-price">
                 <h5>Price</h5>
-                <h1>&#8377; {{ productItem.price }}</h1>
+                <h1>&#8377; {{ productItem?.price }}</h1>
             </div>
+
             <div class="product-availability">
-                <h5>Available Colors and Sizes:</h5>
+                <h5>Available Variations by Size:</h5>
                 <ul>
-                    <li *ngFor="let color of getColorKeys(productItem.colorsAndSizes)">
-                        {{ color | titlecase }}: 
-                        <span *ngFor="let size of productItem.colorsAndSizes[color]; let last = last">
-                            {{ size }}<span *ngIf="!last">, </span>
-                        </span>
+                    <li *ngFor="let size of getGroupedVariationsBySize() | keyvalue">
+                        <strong>Size: {{ size.key | titlecase }}</strong>
+                        <ul>
+                            <li *ngFor="let variation of size.value">
+                                Color: {{ variation.color | titlecase }}, Quantity: {{ variation.quantity }}
+                            </li>
+                        </ul>
                     </li>
-                    <!-- <ng-container *ngFor="let variation of productItem.productVariations">
-                        <li>{{ variation.quantity }}</li>
-                    </ng-container> -->
                 </ul>
             </div>
+
             <div class="action-buttons">
-                <button type="button" (click)="open(productItem)" class="btn btn-outline-primary">ADD TO CART</button>
+                <button type="button" (click)="addToCart()" class="btn btn-outline-primary">ADD TO CART</button>
                 <button type="button" class="btn btn-warning ml-3">BUY NOW</button>
             </div>
         </div>
     </div>
 </div>
-
 
 <div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
     <div class="product-details">

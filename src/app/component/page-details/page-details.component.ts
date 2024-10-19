@@ -14,12 +14,14 @@ import { ToastService } from '../../service/toast.service';
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })
+
 export class PageDetailsComponent {
-  productItem: any;
+  productItem: any = null; // Initialize to avoid null issues
   counter: number = 0;
   @Input() id!: number;
   cartItems: { product: any }[] = [];
   showNotFound: boolean = false;
+
   constructor(
     private productService: ProductService,
     private cartService: CartService,
@@ -27,6 +29,7 @@ export class PageDetailsComponent {
     private router: Router,
     public toastService: ToastService
   ) {}
+
   ngOnInit() {
     this.cartItems = this.cartService.getCart();
     this.productService.getProductById(this.id).subscribe(
@@ -37,28 +40,36 @@ export class PageDetailsComponent {
         }
       },
       (error) => {
-        if (error.status == 404) {
+        if (error.status === 404) {
           this.showNotFound = true;
-        }
-        if (error.status == 403) {
+        } else if (error.status === 403) {
           this.router.navigate(['notfound']);
         }
       }
     );
   }
-  addToCart(product: any): void {
-    this.cartService.addToCart(this.productItem);
+
+  // Group variations by size
+  getGroupedVariationsBySize() {
+    const grouped: { [size: string]: { color: string; quantity: number }[] } = {};
+
+    this.productItem?.productVariations?.forEach((variation: any) => {
+      const { color, size, quantity } = variation;
+      if (!grouped[size]) {
+        grouped[size] = [];
+      }
+      grouped[size].push({ color, quantity });
+    });
+
+    return grouped;
   }
 
-  get repeatArray(): any[] {
-    const count = Math.max(0, 3 - this.productItem.productVariations.length);
-    return new Array(count);
+  addToCart(): void {
+    if (this.productItem) {
+      this.cartService.addToCart(this.productItem);
+      this.toastService.add('Product added successfully to Cart');
+    }
   }
-
-  getColorKeys(colorsAndSizes: any): string[] {
-    return Object.keys(colorsAndSizes);
-  }
-
 
   open(product: any) {
     const modalRef = this.modalService.open(AddToCartModalComponent, {
@@ -72,7 +83,8 @@ export class PageDetailsComponent {
           this.toastService.add('Product added successfully to Cart');
         }
       },
-      (reason) => {}
+      () => {}
     );
   }
 }
+
