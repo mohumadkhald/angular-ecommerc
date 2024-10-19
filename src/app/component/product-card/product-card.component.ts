@@ -86,4 +86,5 @@ export class ProductCardComponent implements OnInit {
 
     return { inStockCount, outOfStockCount };
   }
+  
 }

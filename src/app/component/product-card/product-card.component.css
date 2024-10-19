@@ -102,7 +102,23 @@ a {
   cursor: pointer;
   text-decoration: none;
 }
+.price-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+.discounted-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #f04;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: grey;
+  font-size: 14px;
+}
 
 @media screen and (max-width: 400px) {
   button {

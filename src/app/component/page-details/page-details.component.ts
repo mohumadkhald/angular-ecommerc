@@ -14,7 +14,6 @@ import { ToastService } from '../../service/toast.service';
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })
-
 export class PageDetailsComponent {
   productItem: any = null; // Initialize to avoid null issues
   counter: number = 0;
@@ -51,7 +50,8 @@ export class PageDetailsComponent {
 
   // Group variations by size
   getGroupedVariationsBySize() {
-    const grouped: { [size: string]: { color: string; quantity: number }[] } = {};
+    const grouped: { [size: string]: { color: string; quantity: number }[] } =
+      {};
 
     this.productItem?.productVariations?.forEach((variation: any) => {
       const { color, size, quantity } = variation;
@@ -62,6 +62,16 @@ export class PageDetailsComponent {
     });
 
     return grouped;
+  }
+  
+  hasAvailableVariations(): boolean {
+    const variations = this.getGroupedVariationsBySize();
+    return (
+      variations &&
+      Object.keys(variations).some((key) =>
+        variations[key].some((variation) => variation.quantity > 0) // Check if any variation has quantity > 0
+      )
+    );
   }
 
   addToCart(): void {
@@ -87,4 +97,3 @@ export class PageDetailsComponent {
     );
   }
 }
-

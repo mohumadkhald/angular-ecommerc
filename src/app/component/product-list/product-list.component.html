@@ -10,7 +10,7 @@
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
           <a class="sub-links" routerLinkActive="active_link"
-            [routerLink]="['/categories', categoryTitle, subCategory.name]" [queryParams]="{ page: 1 }">
+            [routerLink]="['/categories', categoryTitle, subCategory.name]" [queryParams]="{ page: 1, inStock: true, notAvailable:true }">
             {{ subCategory.name | capitalize }}
           </a>
         </li>
@@ -20,11 +20,11 @@
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
         <label>
-          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span
+          <input checked type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span
             *ngIf="inStockCount">({{inStockCount}})</span>
         </label>
         <label>
-          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available <span
+          <input checked type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available <span
             *ngIf="outOfStockCount">({{outOfStockCount}})</span>
         </label>
       </div>
@@ -57,9 +57,13 @@
       <div class="size-filter">
         <h3 style="margin: 5px 0 5px;">Size</h3>
         <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
-            (change)="onSizeChange('small', $event)"> Small</label>
+            (change)="onSizeChange('small', $event)"> S </label>
         <label><input type="checkbox" [checked]="filters.sizes.includes('medium')"
-            (change)="onSizeChange('medium', $event)"> Medium</label>
+            (change)="onSizeChange('medium', $event)"> M </label>
+            <label><input type="checkbox" [checked]="filters.sizes.includes('large')"
+              (change)="onSizeChange('large', $event)"> L </label>
+          <label><input type="checkbox" [checked]="filters.sizes.includes('extra_large')"
+              (change)="onSizeChange('extra_large', $event)"> XL </label>
       </div>
     </div>
 
@@ -77,12 +81,13 @@
     <main class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+      <div style="padding: 50px;" *ngIf="subCategoryName && products.length == 0">No Any Products Found</div>
     </main>
-    <div class="cont-notfound" *ngIf="subCategoryName && products.length == 0">
+    <!-- <div class="cont-notfound" *ngIf="subCategoryName && products.length == 0">
       <div class="text-center">
         <h1 class="not-found-title"><span class="text-danger">Not Found Any Products</span></h1>
       </div>
-    </div>
+    </div> -->
     <!-- Pagination Component -->
     <app-pagination *ngIf="subCategoryName && products.length > 0 && totalPages.length > 1" [currentPage]="currentPage"
       [totalPages]="totalPages" (pageChange)="onPageChange($event)">

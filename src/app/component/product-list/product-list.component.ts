@@ -56,8 +56,8 @@ export class ProductListComponent implements OnInit {
   colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
 
   filters = {
-    inStock: false,
-    notAvailable: false,
+    inStock: true,
+    notAvailable: true,
     priceRange: 250,
     minPrice: 0,
     maxPrice: 25000,
@@ -313,7 +313,7 @@ screenWidth: any;
   }
 
   redirectToSubCategory(categoryTitle: any, name: string) {
-    this.router.navigate([`categories/${categoryTitle}/${name}`], { queryParams: { page: 1 } });
+    this.router.navigate([`categories/${categoryTitle}/${name}`], { queryParams: { page: 1, inStock: true, notAvailable:true } });
   }
   
   onSortChange(event: Event): void {
