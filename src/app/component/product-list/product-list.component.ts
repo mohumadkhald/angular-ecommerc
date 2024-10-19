@@ -313,9 +313,9 @@ screenWidth: any;
   }
 
   redirectToSubCategory(categoryTitle: any, name: string) {
-    this.router.navigate([`categories/${categoryTitle}/${name}`]);
+    this.router.navigate([`categories/${categoryTitle}/${name}`], { queryParams: { page: 1 } });
   }
-
+  
   onSortChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     let sortBy = 'createdAt';

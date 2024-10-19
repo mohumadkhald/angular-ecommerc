@@ -18,23 +18,48 @@ import { CartService } from '../../service/cart.service';
 
 export class AddToCartModalComponent {
   @Input() product: any;
+
   selectedSize: string = '';
   selectedColor: string = '';
   quantity: number = 1;
   submitted: boolean = false;
 
+  colors: string[] = [];
+
   constructor(
     public activeModal: NgbActiveModal,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
     private cartService: CartService,
     private authService: AuthService,
     private cartServerService: CartServerService,
   ) {}
 
+  colorsAndSizes: { [color: string]: string[] } = {}; // or appropriate type
+  availableColors: string[] = []; // to hold the keys of the object
+  sizes: string[] = []; // sizes available for the selected color
+
   ngOnInit(): void {
     this.cdr.detectChanges();
+    console.log(this.product);
+
+    // Assuming colorsAndSizes is populated from the product object
+    this.colorsAndSizes = this.product.colorsAndSizes;
+
+    // Convert the keys of colorsAndSizes to an array
+    this.availableColors = Object.keys(this.colorsAndSizes);
   }
+
+  onColorChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement; 
+    const color = selectElement.value;
+    
+    this.sizes = this.colorsAndSizes[color] || [];
+    this.selectedSize = ''; // Reset size when a new color is selected
+  }
+  populateColors(): void {
+    this.colors = Object.keys(this.product.productVariations || {});
+  }
+
 
   auth(): boolean {
     return this.authService.isLoggedIn();
@@ -47,15 +72,18 @@ export class AddToCartModalComponent {
   addToCart() {
     this.submitted = true;
 
-    if (!this.selectedSize || !this.selectedColor || !this.quantity) {
-      return;
+    if (!this.selectedSize || !this.selectedColor || this.quantity <= 0) {
+      return; // Validation fails, so we exit the method.
     }
 
     const productToAdd = {
-      ...this.product,
+      productId: this.product.productId,
+      title: this.product.productTitle,
+      imageUrl: this.product.imageUrl,
       size: this.selectedSize,
       color: this.selectedColor,
-      quantity: this.quantity
+      quantity: this.quantity,
+      price: this.product.price
     };
 
     if (!this.auth()) {

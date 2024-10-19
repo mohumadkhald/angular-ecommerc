@@ -97,7 +97,7 @@
             <div class="category-item" *ngFor="let subCategory of subCategories">
               <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)" style="cursor: pointer"
                 [src]="subCategory.img" [alt]="subCategory.name">
-              <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
+              <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a> 
             </div>
           </div>
         </div>

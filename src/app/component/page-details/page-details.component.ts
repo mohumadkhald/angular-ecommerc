@@ -3,6 +3,9 @@ import { CartService } from '../../service/cart.service';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../service/product.service';
 import { Router } from '@angular/router';
+import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-page-details',
@@ -20,7 +23,9 @@ export class PageDetailsComponent {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private router: Router
+    private modalService: NgbModal,
+    private router: Router,
+    public toastService: ToastService
   ) {}
   ngOnInit() {
     this.cartItems = this.cartService.getCart();
@@ -52,5 +57,22 @@ export class PageDetailsComponent {
 
   getColorKeys(colorsAndSizes: any): string[] {
     return Object.keys(colorsAndSizes);
+  }
+
+
+  open(product: any) {
+    const modalRef = this.modalService.open(AddToCartModalComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.product = product;
+    modalRef.result.then(
+      (result) => {
+        if (result === 'added') {
+          this.toastService.add('Product added successfully to Cart');
+        }
+      },
+      (reason) => {}
+    );
   }
 }
