@@ -79,6 +79,7 @@ export class ProductsComponent implements OnInit {
   discount!: number;
   currentEmailSeller: string = ''
   emailSellers: string[] = [];
+  currentSubCat: string = '';
 
 
   constructor(
@@ -164,6 +165,7 @@ export class ProductsComponent implements OnInit {
         this.currentPage - 1, // Adjust page number for API
         this.numElement,
         this.currentEmailSeller,
+        this.currentSubCat,
         this.nameQuery,
         available
       )
@@ -220,6 +222,12 @@ export class ProductsComponent implements OnInit {
   onEmailChange(email: string): void {
     this.currentEmailSeller = email;
     this.updateQueryParams({ email });
+    this.loadProducts();
+  }
+
+  onSubCatChange(subCategory: string): void {
+    this.currentSubCat = subCategory;
+    this.updateQueryParams({ subCategory });
     this.loadProducts();
   }
 

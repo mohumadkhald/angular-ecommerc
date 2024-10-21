@@ -59,6 +59,7 @@ export class SidebarComponent implements OnInit {
   inStockCount: number = 0;
   outOfStockCount: number = 0;
   emailQuery: string = '';
+  subCategory: string = '';
   nameQuery: string = '';
 screenWidth: any;
 
@@ -197,6 +198,7 @@ screenWidth: any;
           this.currentPage - 1, // Adjust page number for API
           this.numElement,
           this.emailQuery,
+          this.subCategory,
           this.nameQuery,
           available
         )

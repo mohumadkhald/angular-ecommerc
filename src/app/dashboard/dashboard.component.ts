@@ -122,7 +122,7 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchProductCount() {
-    this.productService.getAllProducts("createdAt", "desc", 0, 999999, [], [], 0, 10, "", "", '').subscribe(
+    this.productService.getAllProducts("createdAt", "desc", 0, 999999, [], [], 0, 10, "", '', "", '').subscribe(
       (products) => {
         this.prodsCount = products.totalElements;
         this.products = products.content;

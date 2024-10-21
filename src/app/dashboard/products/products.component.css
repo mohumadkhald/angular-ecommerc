@@ -47,7 +47,6 @@ app-pagination {
 /* Sort options */
 .manage-products-container .sort-options select {
   padding: 0.5rem;
-  font-size: 0.875rem;
 }
 .sort-options {
   margin: 0 5px;
@@ -68,14 +67,6 @@ app-pagination {
   cursor: pointer;
 }
 
-  
-select {
-  padding: 7px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  font-size: 14px;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

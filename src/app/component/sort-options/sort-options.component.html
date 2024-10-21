@@ -1,12 +1,18 @@
-<select (change)="onSortChange($event)" [ngModel]="currentSortOption">
+<div class="dropdown-container">
+  <select (change)="onSortChange($event)" [(ngModel)]="currentSortOption">
     <option value="createdAtDesc">Sort By: Featured Products</option>
     <option value="createdAtAsc">Sort By: Old Products</option>
     <option value="priceAsc">Price (Low to High)</option>
     <option value="priceDesc">Price (High to Low)</option>
   </select>
-  
+
   <select (change)="onEmailChange($event)" [(ngModel)]="currentEmailSeller">
     <option value="" selected>Select Products By Seller</option>
     <option *ngFor="let email of emailSellers" [value]="email">{{ email }}</option>
   </select>
-  
+
+  <select *ngIf="showSubCatDropdown" (change)="onSubCatChange($event)" [(ngModel)]="currentSubCat">
+    <option value="" selected>Products By SubCategory Name</option>
+    <option *ngFor="let subCat of subCats" [value]="subCat.name">{{ subCat.name }}</option>
+  </select>
+</div>

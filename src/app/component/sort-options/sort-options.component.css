@@ -1,8 +1,81 @@
-  
- select {
-    padding: 7px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 14px;
+/* General styling for select elements */
+select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 13px;
+  width: 100%; /* Full width on small screens */
+  box-sizing: border-box;
+  margin: 5px 0;
+  width: 300px;
+}
+
+/* Container for select elements */
+.dropdown-container {
+  display: flex;
+  flex-direction: column; /* Stack elements by default */
+  gap: 10px; /* Space between elements */
+}
+
+@media (min-width: 1580px) and (max-width: 1920px) {
+  .dropdown-container {
+    flex-direction: row; /* Align elements in a row */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    gap: 10px;
   }
+
+  select {
+    font-size: 16px;
+    flex: 1; /* Make each select element take equal space */
+    max-width: 40%; /* Limit the width to fit two per row */
+    margin: 0; /* Remove extra margins */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1580px) {
+  .dropdown-container {
+    flex-direction: row; /* Align elements in a row */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    gap: 10px;
+  }
+
+  select {
+    font-size: 14px;
+    flex: 1; /* Make each select element take equal space */
+    max-width: 32%; /* Limit the width to fit two per row */
+    margin: 0; /* Remove extra margins */
+  }
+}
+
+/* Media query for screens between 400px and 600px */
+@media (min-width: 400px) and (max-width: 768px) {
+  .dropdown-container {
+    flex-direction: row; /* Align elements in a row */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    gap: 10px;
+  }
+
+  select {
+    font-size: 10px;
+    flex: 1; /* Make each select element take equal space */
+    max-width: 31%; /* Limit the width to fit two per row */
+    margin: 0; /* Remove extra margins */
+  }
+}
+
+@media (max-width: 500px) {
+  .dropdown-container {
+    flex-direction: row; /* Align elements in a row */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    gap: 10px;
+  }
+
+  select {
+    font-size: 10px;
+    flex: 1; /* Make each select element take equal space */
+    max-width: 80%; /* Limit the width to fit two per row */
+    margin: 0; /* Remove extra margins */
+  }
+}
+

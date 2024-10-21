@@ -8,9 +8,9 @@
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <button class="filter-options" (click)="openFilterModal()">Filter</button>
-            <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
-                [currentEmailSeller]="currentEmailSeller"
-                (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)">
+            <app-sort-options class="sort-options" [currentSortOption]="currentSortOption" [showSubCatDropdown]="true" 
+                [currentEmailSeller]="currentEmailSeller" [currentSubCat]="currentSubCat"
+                (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)" (subCatChange)="onSubCatChange($event)">
             </app-sort-options>
 
         </div>

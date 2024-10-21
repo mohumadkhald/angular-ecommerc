@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProductsService } from '../../dashboard-service/products.service';
+import { SubCategoriesService } from '../../dashboard-service/sub-categories.service';
 
 @Component({
   selector: 'app-sort-options',
@@ -10,19 +11,27 @@ import { ProductsService } from '../../dashboard-service/products.service';
   templateUrl: './sort-options.component.html',
   styleUrl: './sort-options.component.css',
 })
-export class SortOptionsComponent implements OnInit  {
+export class SortOptionsComponent implements OnInit {
+  subCats: any;
+  emailSellers: any;
+
   @Input() currentSortOption: string = 'createdAtDesc';
   @Input() currentEmailSeller: string = '';
-  emailSellers: any;
+  @Input() currentSubCat: string = '';
+  @Input() showSubCatDropdown: boolean = false;
 
   @Output() sortChange = new EventEmitter<string>();
   @Output() emailChange = new EventEmitter<string>();
+  @Output() subCatChange = new EventEmitter<string>();
+  
 
-  constructor(private productsService: ProductsService){
-
-  }
+  constructor(
+    private productsService: ProductsService,
+    private subCateogyService: SubCategoriesService
+  ) {}
   ngOnInit(): void {
     this.getEmailsSellers();
+    this.getSubCats();
   }
 
   onSortChange(event: Event): void {
@@ -38,8 +47,15 @@ export class SortOptionsComponent implements OnInit  {
     }
   }
 
-  getEmailsSellers()
-  {
+  onSubCatChange(event: Event) {
+    const target = event.target as HTMLSelectElement | null;
+    if (target) {
+      const value = target.value;
+      this.subCatChange.emit(value);
+    }
+  }
+
+  getEmailsSellers() {
     this.productsService.getEmailsSellers().subscribe(
       (response: any) => {
         this.emailSellers = response;
@@ -49,5 +65,14 @@ export class SortOptionsComponent implements OnInit  {
       }
     );
   }
-  
+  getSubCats() {
+    this.subCateogyService.getAllSubCategories().subscribe(
+      (response: any) => {
+        this.subCats = response;
+      },
+      (error) => {
+        console.error('Error getting emails of sellers:', error);
+      }
+    );
+  }
 }
