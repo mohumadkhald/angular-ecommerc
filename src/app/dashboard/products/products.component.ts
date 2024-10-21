@@ -5,7 +5,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddProductComponent } from '../../component/add-product/add-product.component';
 import { PaginationComponent } from '../../component/pagination/pagination.component';
 import { ProductsService } from '../../dashboard-service/products.service';
-import { Prod } from '../../interface/product-all-details';
 import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { DashboardComponent } from '../dashboard.component';
@@ -20,6 +19,7 @@ import { ProductService } from '../../service/product.service';
 import { Title } from '@angular/platform-browser';
 import { CategoryService } from '../../service/category.service';
 import { MatDialog } from '@angular/material/dialog';
+import { EditProductComponent } from '../../component/edit-product /edit-product.component';
 
 @Component({
   selector: 'app-products',
@@ -36,6 +36,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
+
 export class ProductsComponent implements OnInit {
   currentSubCategoryImage: any;
   openSubLists: { [key: string]: boolean } = {};
@@ -63,7 +64,6 @@ export class ProductsComponent implements OnInit {
 
   loading: boolean = true;
   products: any = [];
-  emailQuery: string = '';
   nameQuery: string = '';
   sortBy = 'createdAt';
   sortDirection = 'desc';
@@ -76,6 +76,9 @@ export class ProductsComponent implements OnInit {
   totalPages: number[] = [];
   selectedProductIds: number[] = [];
   countProducts: number = 0;
+  discount!: number;
+  currentEmailSeller: string = ''
+  emailSellers: string[] = [];
 
 
   constructor(
@@ -86,41 +89,11 @@ export class ProductsComponent implements OnInit {
     public toastService: ToastService,
     private authService: AuthService,
     private dashboardComponent: DashboardComponent,
-    private categoryService: CategoryService,
-    private productService: ProductService,
-    private titleService: Title,
     private dialog: MatDialog
   ) {}
 
-  // ngOnInit(): void {
-  //   // Handle queryParams changes
-  //   this.route.queryParams.subscribe(
-  //     (params) => {
-  //       this.hasQueryParams = Object.keys(params).length > 0;
-
-  //       this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
-  //       this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
-  //       this.sortBy = params['sortBy'] || 'createdAt';
-  //       this.sortDirection = params['sortDirection'] || 'desc';
-  //       this.currentPage = +params['page'] || 1;
-
-  //       // Construct currentSortOption from sortBy and sortDirection
-  //       this.currentSortOption = `${this.sortBy}${this.sortDirection
-  //         .charAt(0)
-  //         .toUpperCase()}${this.sortDirection.slice(1)}`;
-
-  //       // Load products based on query params
-  //       this.loadProducts();
-  //     },
-  //     (error) => {}
-  //   );
-
-  //   // Initialize sortedProducts
-  //   this.sortedProducts = [...this.products];
-  // }
-
-
   ngOnInit(): void {
+    this.getEmailsSellers();
     // Handle paramMap changes
     this.route.paramMap.subscribe(
       (paramMap) => {
@@ -173,8 +146,6 @@ export class ProductsComponent implements OnInit {
     this.sortedProducts = [...this.products];
   }
 
-
-
   loadProducts(): void {
     let available: boolean | null = null;
     if (this.filters.inStock && !this.filters.notAvailable) {
@@ -193,7 +164,7 @@ export class ProductsComponent implements OnInit {
         this.filters.sizes,
         this.currentPage - 1, // Adjust page number for API
         this.numElement,
-        this.emailQuery,
+        this.currentEmailSeller,
         this.nameQuery,
         available
       )
@@ -202,7 +173,10 @@ export class ProductsComponent implements OnInit {
           this.loading = false;
           this.products = response.content;
           this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
-          this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1);
+          this.totalPages = Array.from(
+            { length: response.totalPages },
+            (_, i) => i + 1
+          );
           this.countProducts = response.totalElements;
           // this.updatePageTitle(); this is solve issue
         },
@@ -216,8 +190,7 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
   }
 
-  onSortChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
+  onSortChange(value: string): void { // Change parameter type to string directly
     let sortBy = 'createdAt';
     let sortDirection = 'desc';
 
@@ -240,8 +213,14 @@ export class ProductsComponent implements OnInit {
         break;
     }
 
-    this.currentSortOption = value;
-    this.updateQueryParams({ sortBy, sortDirection });
+    this.currentSortOption = value; // Update the current sort option
+    this.updateQueryParams({ sortBy, sortDirection }); // Update the query parameters
+    this.loadProducts(); // Reload products based on the new sort option
+}
+
+  onEmailChange(email: string): void {
+    this.currentEmailSeller = email;
+    this.updateQueryParams({ email });
     this.loadProducts();
   }
 
@@ -254,36 +233,39 @@ export class ProductsComponent implements OnInit {
   }
 
   deleteProduct(prodId: number): void {
-    this.productsService.deleteProduct(prodId).subscribe(
-      () => {
-        this.products = this.products.filter(
-          (product: { productId: number }) => product.productId !== prodId
-        );
-        this.dashboardComponent.fetchProductCount();
-      },
-      (error) => {}
-    );
+    if (confirm('Are you sure you want to delete this Product?')) {
+      this.productsService.deleteProduct(prodId).subscribe(
+        () => {
+          this.products = this.products.filter(
+            (product: { productId: number }) => product.productId !== prodId
+          );
+          this.dashboardComponent.fetchProductCount();
+        },
+        (error) => {}
+      );
+    }
   }
   deleteProducts(): void {
     if (this.selectedProductIds.length === 0) {
-      console.warn('No products selected for deletion.');
-      return;
-    }
-
-    this.productsService.deleteProducts(this.selectedProductIds).subscribe(
-      () => {
-        this.products = this.products.filter(
-          (product: { productId: number }) =>
-            !this.selectedProductIds.includes(product.productId)
+      this.toastService.warnnig('Not Selected any Products');
+    } else {
+      if (confirm('Are you sure you want to delete this products?')) {
+        this.productsService.deleteProducts(this.selectedProductIds).subscribe(
+          () => {
+            this.products = this.products.filter(
+              (product: { productId: number }) =>
+                !this.selectedProductIds.includes(product.productId)
+            );
+            this.selectedProductIds = []; // Clear the selection
+            this.dashboardComponent.fetchProductCount();
+            this.toastService.add('Products deleted successfully');
+          },
+          (error) => {
+            console.error('Error deleting products:', error);
+          }
         );
-        this.selectedProductIds = []; // Clear the selection
-        this.dashboardComponent.fetchProductCount();
-        this.toastService.add('Products deleted successfully');
-      },
-      (error) => {
-        console.error('Error deleting products:', error);
       }
-    );
+    }
   }
 
   detailsProduct(prodId: number): void {
@@ -311,18 +293,48 @@ export class ProductsComponent implements OnInit {
     );
   }
 
-  makeDiscount(discount: string): void {
-    const discountValue = Number(discount);
-    if (isNaN(discountValue)) {
-      console.warn('Invalid discount value.');
+  edit(product: any) {
+    const modalRef = this.modalService.open(EditProductComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.product = product;
+    modalRef.result
+
+    modalRef.componentInstance.productAdded.subscribe(() => {
+      this.loadProducts(); // Refresh the product list
+      this.dashboardComponent.fetchProductCount();
+    });
+
+    modalRef.result.then(
+      (result) => {
+        if (result === 'updated') {
+          this.toastService.add('Product Updated successfully');
+        }
+      },
+      (reason) => {}
+    );
+  }
+
+  onDiscountChange(newValue: number): void {
+    this.discount = newValue;
+    console.log('Discount value updated:', this.discount);
+  }
+
+  makeDiscount(): void {
+    const discountValue = this.discount;
+    if (isNaN(discountValue) || discountValue == null) {
+      this.toastService.warnnig('Invalid discount value.');
       return;
     }
-
+    if (discountValue < 0 || discountValue > 100) {
+      this.toastService.warnnig('Invalid discount value. It should be between 0 and 100.');
+      return;
+    }
     if (this.selectedProductIds.length === 0) {
-      console.warn('No products selected for discount.');
+      this.toastService.warnnig('Not Selected any Products');
       return;
     }
-
     this.productsService
       .setDiscount(this.selectedProductIds, discountValue)
       .subscribe(
@@ -332,7 +344,7 @@ export class ProductsComponent implements OnInit {
           this.toastService.add('Discount applied successfully');
         },
         (error) => {
-          console.error('Error applying discount:', error);
+          this.toastService.error(error.message);
         }
       );
   }
@@ -396,4 +408,17 @@ export class ProductsComponent implements OnInit {
       }
     });
   }
+
+  getEmailsSellers()
+  {
+    this.productsService.getEmailsSellers().subscribe(
+      (response: any) => {
+        this.emailSellers = response;
+      },
+      (error) => {
+        console.error('Error getting emails of sellers:', error);
+      }
+    );
+  }
+  
 }

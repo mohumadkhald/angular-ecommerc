@@ -10,7 +10,8 @@
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
           <a class="sub-links" routerLinkActive="active_link"
-            [routerLink]="['/categories', categoryTitle, subCategory.name]" [queryParams]="{ page: 1, inStock: true, notAvailable:true }">
+            [routerLink]="['/categories', categoryTitle, subCategory.name]"
+            [queryParams]="{ page: 1, inStock: true, notAvailable:true }">
             {{ subCategory.name | capitalize }}
           </a>
         </li>
@@ -24,8 +25,8 @@
             *ngIf="inStockCount">({{inStockCount}})</span>
         </label>
         <label>
-          <input checked type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available <span
-            *ngIf="outOfStockCount">({{outOfStockCount}})</span>
+          <input checked type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available
+          <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
         </label>
       </div>
       <div class="price-range mb-3 mt-5">
@@ -48,8 +49,7 @@
         <div class="color-options">
           <label *ngFor="let color of colorOptions" class="color-swatch">
             <input type="checkbox" [checked]="filters.colors.includes(color)" (change)="onColorChange(color, $event)">
-            <div class="color-indicator"
-              [ngStyle]="{'background': color}">
+            <div class="color-indicator" [ngStyle]="{'background': color}">
             </div>
           </label>
         </div>
@@ -60,10 +60,10 @@
             (change)="onSizeChange('small', $event)"> S </label>
         <label><input type="checkbox" [checked]="filters.sizes.includes('medium')"
             (change)="onSizeChange('medium', $event)"> M </label>
-            <label><input type="checkbox" [checked]="filters.sizes.includes('large')"
-              (change)="onSizeChange('large', $event)"> L </label>
-          <label><input type="checkbox" [checked]="filters.sizes.includes('extra_large')"
-              (change)="onSizeChange('extra_large', $event)"> XL </label>
+        <label><input type="checkbox" [checked]="filters.sizes.includes('large')"
+            (change)="onSizeChange('large', $event)"> L </label>
+        <label><input type="checkbox" [checked]="filters.sizes.includes('extra_large')"
+            (change)="onSizeChange('extra_large', $event)"> XL </label>
       </div>
     </div>
 
@@ -102,7 +102,7 @@
             <div class="category-item" *ngFor="let subCategory of subCategories">
               <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)" style="cursor: pointer"
                 [src]="subCategory.img" [alt]="subCategory.name">
-              <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a> 
+              <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
             </div>
           </div>
         </div>
@@ -113,7 +113,22 @@
 </div>
 <div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
   <div class="text-center">
-    <h1 class="not-found-title">Category <span class="text-danger">{{categoryTitle}} {{subCategoryName}}</span> Not
-      Found</h1>
+    <h1 class="not-found-title">Category
+      <span *ngIf="!subCategoryName" class="text-danger">{{categoryTitle}}
+      </span>
+      <span *ngIf="subCategoryName" class="text-danger">{{categoryTitle}}/{{categoryTitle}}
+      </span> Not
+      Found
+    </h1>
+  </div>
+</div>
+
+<div class="cont-empty" *ngIf="subCategories.length == 0">
+  <div class="text-center">
+    <h1 class="not-found-title">Category
+      <span *ngIf="!subCategoryName" class="text-danger">{{categoryTitle}}
+      </span>
+      not have any Sub_Category
+    </h1>
   </div>
 </div>

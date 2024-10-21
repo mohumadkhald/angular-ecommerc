@@ -22,6 +22,7 @@ import { CartService } from '../../service/cart.service';
 import { OAuth2Service } from '../../service/oauth2.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { ModalSendResetPasswordComponent } from '../modal-send-reset-password/modal-send-reset-password.component';
+import { ToastService } from '../../service/toast.service';
 
 @Component({
   selector: 'app-auth',
@@ -56,7 +57,8 @@ export class AuthComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private oauth2Service: OAuth2Service,
-    private cartService: CartService
+    private cartService: CartService,
+    private toast: ToastService
   ) {
     // Initialize forms with validation rules
     this.registerForm = this.fb.group({
@@ -145,6 +147,7 @@ export class AuthComponent implements OnInit {
           this.cartService.clearCart();
           this.authService.saveToken(response.token);
           this.router.navigate(['/']);
+          this.toast.add("Your Login Success Have a Nice Time")
         },
         (error) => this.handleError(error)
       );
@@ -161,6 +164,7 @@ export class AuthComponent implements OnInit {
           this.router.navigate(['/']);
           this.cartService.syncCartFromLocalStorage();
           this.cartService.clearCart();
+          this.toast.add("You Are Register Welcome To Ecommerc WebSite")
         },
         (error) => this.handleError(error)
       );

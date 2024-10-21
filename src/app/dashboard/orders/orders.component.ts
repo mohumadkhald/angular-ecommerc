@@ -54,7 +54,6 @@ export class OrdersComponent {
       this.orderService.deleteOrder(orderId).subscribe(
         () => {
           this.orders = this.orders.filter(order => order.id !== orderId);
-          console.log('Order deleted successfully');
         },
         (error) => {
           console.error('Error deleting order', error);

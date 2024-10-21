@@ -51,6 +51,8 @@
   display: inline-block;
   white-space: nowrap;
 }
+
+
 @media (min-width: 1024px) {
   .amazon i.menu {
     display: none;
@@ -336,6 +338,28 @@ label.sicon {
   left: 10px;
 }
 
+@media (min-width: 1600px) {
+  .nav-search {
+    width: 75%;
+    height: 2.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8.5em;
+    margin-right: 7.5em;
+    background-color: #fff;
+    border: 1px solid black;
+    border-radius: 10px;
+    transition: border 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+  }
+  .address {
+    width: 10em;
+    padding: 0.4em;
+    margin-left: 5em;
+    margin-top: .3em;
+  }
+  
+}
 @media (max-width: 1024px) {
 
 
@@ -348,7 +372,6 @@ label.sicon {
   padding: 10px;
   z-index: 1000;
   top: 50px;
-  margin-top: -20px;
 }
 
 /* Show dropdown-menu when hovering over the .sign element or the dropdown itself */

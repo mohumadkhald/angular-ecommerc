@@ -27,6 +27,7 @@ import { UserService } from '../../service/user.service';
 import { ToastService } from '../../service/toast.service';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
 import { Subscription } from 'rxjs';
+import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 
 @Component({
   selector: 'app-header',
@@ -36,8 +37,9 @@ import { Subscription } from 'rxjs';
     RouterLinkActive,
     MatProgressSpinner,
     FormsModule,
-    CommonModule
-  ],
+    CommonModule,
+    CapitalizePipe
+],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   // schemas: [CUSTOM_ELEMENTS_SCHEMA],

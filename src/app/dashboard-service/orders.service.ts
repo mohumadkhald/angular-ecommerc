@@ -30,6 +30,10 @@ export class OrdersService {
   }
 
   deleteOrder(orderId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${orderId}`);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.delete<any>(`${this.baseUrl}/orders/${orderId}`, { headers });
   }
 }

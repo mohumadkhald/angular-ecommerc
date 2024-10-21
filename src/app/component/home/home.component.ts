@@ -58,11 +58,12 @@ export class HomeComponent implements OnInit {
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
           this.router.navigate(['/']);
-
+          this.toastService.add("You Are Register to WebSite")
 
         } else {
           this.router.navigate(['/']);
           this.deleteCookie('newUser');
+          this.toastService.add("Welcome Back to WebSite")
         }
       }
       if(this.cartService.getCart().length > 0)

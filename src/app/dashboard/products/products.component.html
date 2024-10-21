@@ -2,35 +2,39 @@
     <mat-spinner></mat-spinner>
     <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading, please wait...</div>
 </div>
+
 <div *ngIf="auth() && !loading">
     <h1 class="text-center my-2">Manage Products</h1>
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-            <!-- <div style="margin: 10px; color: red; font-size: 20px;">The Total products is {{countProducts}}</div> -->
             <button class="filter-options" (click)="openFilterModal()">Filter</button>
             <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
-                (change)="onSortChange($event)"></app-sort-options>
+                [currentEmailSeller]="currentEmailSeller" [emailSellers]="emailSellers"
+                (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)">
+            </app-sort-options>
+
         </div>
+
         <div class="manage-products-container">
             <div class="button-group" style="display: flex; align-items: center; gap: 10px;">
                 <a class="btn btn-primary" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>
-                <a class="btn btn-danger" (click)="deleteProducts()"><i class="fas fa-trash-alt"></i> Delete
-                    Selected Products</a>
-                <a class="btn btn-info" (click)="makeDiscount(discountInput.value)"><i class="fa fa-plus"></i>
-                    Discount For Selected</a>
-                <input type="number" #discountInput placeholder="Discount %" class="form-control" style="width: 100px;">
+                <a class="btn btn-danger" (click)="deleteProducts()">
+                    <i class="fas fa-trash-alt"></i> Delete Selected Products
+                </a>
+                <a class="btn btn-info" (click)="makeDiscount()">
+                    <i class="fa fa-plus"></i> Discount For Selected
+                </a>
+                <input type="number" [(ngModel)]="discount" placeholder="Set Discount %" class="form-control"
+                    style="width: 100px;">
 
                 <div class="search-prod" style="display: flex; gap: 10px;">
-                    <input type="text" class="form-control" placeholder="Search Products By Email"
-                        (keydown.enter)="onSearch()" [(ngModel)]="emailQuery">
                     <input type="text" class="form-control" placeholder="Search Products By Name"
                         (keydown.enter)="onSearch()" [(ngModel)]="nameQuery">
                     <button class="btn btn-secondary" (click)="onSearch()">Search</button>
                 </div>
-
-
             </div>
         </div>
+
         <div class="table-responsive">
             <table *ngIf="products.length > 0; else noProducts"
                 class="main-table table table-striped table-bordered table-hover">
@@ -41,6 +45,7 @@
                             #ID
                         </th>
                         <th>Product Title</th>
+                        <th>Sub_Category Name</th>
                         <th>Price</th>
                         <th>Discount</th>
                         <th>Email Seller</th>
@@ -57,6 +62,7 @@
                             {{ product.productId }}
                         </td>
                         <td>{{ product.productTitle }}</td>
+                        <td>{{ product.subCategory.name }}</td>
                         <td>${{ product.price }}</td>
                         <td>{{ product.discountPercent }}%</td>
                         <td>{{ product.email }}</td>
@@ -67,7 +73,7 @@
                                 style="margin-right: 10px;">
                                 <i class="fa fa-circle-info"></i> Details
                             </a>
-                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;">
+                            <a (click)="edit(product)" class="btn btn-success btn-sm mr-1" style="margin-right: 10px;">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                             <a class="btn btn-danger btn-sm confirm" (click)="deleteProduct(product.productId)">
@@ -80,7 +86,9 @@
         </div>
 
         <app-pagination *ngIf="products.length > 0;" [currentPage]="currentPage" [totalPages]="totalPages"
-            (pageChange)="onPageChange($event)"></app-pagination>
+            (pageChange)="onPageChange($event)">
+        </app-pagination>
+
         <ng-template #noProducts>
             <div class="cont-notfound">
                 <div class="text-center">

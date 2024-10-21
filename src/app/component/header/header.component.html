@@ -88,7 +88,7 @@
       <div class="xshop">
         <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
           (click)="saveImg(category.img)" *ngFor="let category of categories">
-          {{ category.categoryTitle }}
+          {{ category.categoryTitle | capitalize }}
         </a>
       </div>
     </div>

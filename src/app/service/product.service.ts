@@ -8,6 +8,7 @@ import { ConfigService } from '../config.service';
   providedIn: 'root'
 })
 export class ProductService {
+
   private apiUrl: string;
 
   constructor(private http: HttpClient, private configService: ConfigService) {
@@ -62,6 +63,10 @@ export class ProductService {
 
   addProduct(formData: FormData): Observable<Product> {
     return this.http.post<Product>(`${this.apiUrl}/products`, formData);
+  }
+
+  editProduct(formData: FormData, id: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/products/${id}`, formData);
   }
 
   

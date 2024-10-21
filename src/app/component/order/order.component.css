@@ -43,6 +43,13 @@
   margin-top: 16px;
 }
 
+.cont-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .order-card {

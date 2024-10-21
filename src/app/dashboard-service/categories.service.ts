@@ -8,6 +8,7 @@ import { ConfigService } from '../config.service';
   providedIn: 'root',
 })
 export class CategoriesService {
+
   private apiUrl: string;
 
   constructor(
@@ -32,6 +33,15 @@ export class CategoriesService {
 
     return this.http.post(`${this.apiUrl}/categories`, category, { headers });
   }
+
+  editCategory(category: FormData, catId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(`${this.apiUrl}/categories/${catId}`, category, { headers });
+  }
+
 
   deleteCategory(catId: number): Observable<any> {
     const headers = new HttpHeaders({

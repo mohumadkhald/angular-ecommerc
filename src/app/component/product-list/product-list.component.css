@@ -266,6 +266,14 @@ app-pagination {
   height: 100vh;
 }
 
+.cont-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+
 .cont-notfound.show-container {
   display: flex;
   justify-content: center;

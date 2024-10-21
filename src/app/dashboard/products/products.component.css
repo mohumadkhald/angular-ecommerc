@@ -68,6 +68,15 @@ app-pagination {
   cursor: pointer;
 }
 
+  
+select {
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .manage-products-container {

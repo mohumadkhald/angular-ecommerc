@@ -27,6 +27,15 @@ export class SubCategoriesService {
 
     return this.http.post(`${this.apiUrl}/sub-categories`, category, { headers });
   }
+
+  editSubCategory(category: FormData, subCatId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.put(`${this.apiUrl}/sub-categories/${subCatId}`, category, { headers });
+  }
+  
   
   deleteSubCategory(catId: number): Observable<any> {
     const headers = new HttpHeaders({

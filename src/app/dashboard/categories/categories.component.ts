@@ -10,14 +10,14 @@ import { AddCategoryComponent } from '../add-category/add-category.component';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
 import { ProductListComponent } from '../../component/product-list/product-list.component';
 import { CategoryService } from '../../service/category.service';
-import { SidebarComponent } from "../sidebar/sidebar.component";
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
   imports: [CommonModule, SidebarComponent],
   templateUrl: './categories.component.html',
-  styleUrl: './categories.component.css'
+  styleUrl: './categories.component.css',
 })
 export class CategoriesComponent implements OnInit {
   categories: any[] = [];
@@ -33,7 +33,7 @@ export class CategoriesComponent implements OnInit {
     private dashboardComponent: DashboardComponent,
     private catService: CategoryService,
     private categoryUpdateService: CategoryUpdateService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -53,38 +53,46 @@ export class CategoriesComponent implements OnInit {
   }
 
   loadSubCategories(): void {
-    const categoryTitles = this.categories.map(category => category.categoryTitle);
-    
+    const categoryTitles = this.categories.map(
+      (category) => category.categoryTitle
+    );
+
     // Use a promise to handle sequential API calls
-    const promises = categoryTitles.map(title => 
+    const promises = categoryTitles.map((title) =>
       this.catService.getSubCategoriesByCategoryTitle(title).toPromise()
     );
 
     // Process each promise sequentially
-    Promise.all(promises).then(results => {
-      results.forEach((subCategories, index) => {
-        const title = categoryTitles[index];
-        this.subCategoryCounts[title] = subCategories.length;
-      });
-    }).catch(error => {
-
-    });
+    Promise.all(promises)
+      .then((results) => {
+        results.forEach((subCategories, index) => {
+          const title = categoryTitles[index];
+          this.subCategoryCounts[title] = subCategories.length;
+        });
+      })
+      .catch((error) => {});
   }
 
   deleteCategory(catId: number): void {
-    this.categoryService.deleteCategory(catId).subscribe(
-      (data) => {
-        this.categories = this.categories.filter(category => category.categoryId !== catId);
-        this.dashboardComponent.fetchCategoryCount();
-        this.categoryUpdateService.notifyCategoryUpdate();
-      },
-      (error) => {
-      }
-    );
+    if (confirm('Are you sure you want to delete this Category?')) {
+      this.categoryService.deleteCategory(catId).subscribe(
+        (data) => {
+          this.categories = this.categories.filter(
+            (category) => category.categoryId !== catId
+          );
+          this.dashboardComponent.fetchCategoryCount();
+          this.categoryUpdateService.notifyCategoryUpdate();
+        },
+        (error) => {}
+      );
+    }
   }
 
   open() {
-    const modalRef = this.modalService.open(AddCategoryComponent, { size: 'lg', centered: true });
+    const modalRef = this.modalService.open(AddCategoryComponent, {
+      size: 'lg',
+      centered: true,
+    });
 
     modalRef.componentInstance.categoryAdded.subscribe(() => {
       this.getAllCategories(); // Refresh the categories list
@@ -94,10 +102,28 @@ export class CategoriesComponent implements OnInit {
     });
 
     modalRef.result.then(
-      (result) => {
-      },
-      (reason) => {
-      }
+      (result) => {},
+      (reason) => {}
+    );
+  }
+
+  updat(cat: number) {
+    const modalRef = this.modalService.open(AddCategoryComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.cat = cat;
+    modalRef.result
+    modalRef.componentInstance.categoryAdded.subscribe(() => {
+      this.getAllCategories(); // Refresh the categories list
+      this.dashboardComponent.fetchCategoryCount(); // Update the category count
+      this.toastService.add('Category Updated successfully');
+      this.categoryUpdateService.notifyCategoryUpdate(); // Notify about the category update
+    });
+
+    modalRef.result.then(
+      (result) => {},
+      (reason) => {}
     );
   }
 

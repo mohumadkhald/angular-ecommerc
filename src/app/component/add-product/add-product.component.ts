@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryService } from '../../service/category.service';
@@ -15,6 +15,7 @@ import { ProductService } from '../../service/product.service';
 })
 export class AddProductComponent implements OnInit {
   @Output() productAdded = new EventEmitter<void>();
+  @Input() product!: any;
 
   productForm: FormGroup | any;
   selectedFile: File | null = null;
@@ -22,6 +23,10 @@ export class AddProductComponent implements OnInit {
   fileTouched = false;
   fileTouched1 = false;
   subCategories: any[] = [];
+  categories: any[] = [];
+  filteredSubCategories: any[] = [];
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,9 +42,14 @@ export class AddProductComponent implements OnInit {
       size: ['', Validators.required],
       color: ['', Validators.required],
       price: [0, [Validators.required, greaterThanZeroValidator()]],
-      subCategoryId: [0, [Validators.required, greaterThanZeroValidator()]]
+      discountPercent: [0, [Validators.required, zeroOrMoreValidator()]],
+      subCategoryId: [0, [Validators.required, greaterThanZeroValidator()]],
+      categoryId: [0, [Validators.required, greaterThanZeroValidator()]]
+
     });
     this.loadSubCategories();
+    this.loadCategories();
+
   }
 
   onSubmit(): void {
@@ -57,24 +67,45 @@ export class AddProductComponent implements OnInit {
     formData.append('size', this.productForm.get('size').value);
     formData.append('color', this.productForm.get('color').value);
     formData.append('price', this.productForm.get('price').value.toString());
+    formData.append('discountPercent', this.productForm.get('discountPercent').value.toString());
     formData.append('subCategoryId', this.productForm.get('subCategoryId').value);
+    formData.append('categoryId', this.productForm.get('categoryId').value);
     formData.append('image', this.selectedFile, this.selectedFile.name);
     formData.append('image1', this.selectedFile1, this.selectedFile1.name);
 
-    this.productService.addProduct(formData).subscribe(
-      () => {
-        this.productForm.reset();
-        this.selectedFile = null;
-        this.selectedFile1 = null;
-        this.fileTouched = false;
-        this.fileTouched1 = false;
-        this.productAdded.emit();
-        this.activeModal.close('added');
-      },
-      error => {
-        console.log('Error adding product:', error);
-      }
-    );
+    if(this.product){
+      this.productService.editProduct(formData, this.product.productId).subscribe(
+        () => {
+          this.productForm.reset();
+          this.selectedFile = null;
+          this.selectedFile1 = null;
+          this.fileTouched = false;
+          this.fileTouched1 = false;
+          this.productAdded.emit();
+          this.activeModal.close('updated');
+        },
+        error => {
+          console.log('Error adding product:', error);
+        }
+      );
+    } else {
+      this.productService.addProduct(formData).subscribe(
+        () => {
+          this.productForm.reset();
+          this.selectedFile = null;
+          this.selectedFile1 = null;
+          this.fileTouched = false;
+          this.fileTouched1 = false;
+          this.productAdded.emit();
+          this.activeModal.close('added');
+        },
+        error => {
+          console.log('Error adding product:', error);
+        }
+      );
+    }
+
+
   }
 
   markAllAsTouched(): void {
@@ -99,8 +130,27 @@ export class AddProductComponent implements OnInit {
     });
   }
 
+  loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe(categories => {
+      this.categories = categories;
+    });
+  }
+
   onClose(): void {
     this.activeModal.close();
+  }
+  onCategoryChange(event: any): void {
+    const categoryId = +event.target.value;
+    this.filteredSubCategories = this.subCategories.filter(
+      (subCategory) => subCategory.categoryId === categoryId
+    );
+
+    // Enable or disable the subcategory dropdown based on the result
+    if (this.filteredSubCategories.length > 0) {
+      this.productForm.get('subCategoryId')?.enable();
+    } else {
+      this.productForm.get('subCategoryId')?.disable();
+    }
   }
 }
 
@@ -108,5 +158,12 @@ function greaterThanZeroValidator(): any {
   return (control: AbstractControl): ValidationErrors | null => {
     const isValid = control.value > 0;
     return isValid ? null : { greaterThanZero: true };
+  };
+}
+
+function zeroOrMoreValidator(): any {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const isValid = control.value >= 0;
+    return isValid ? null : { greaterOrEquelThanZero: true };
   };
 }

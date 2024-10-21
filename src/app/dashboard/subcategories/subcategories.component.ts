@@ -17,7 +17,7 @@ import { AddSubCategoryComponent } from '../add-sub-category/add-sub-category.co
   standalone: true,
   imports: [CommonModule],
   templateUrl: './subcategories.component.html',
-  styleUrl: './subcategories.component.css'
+  styleUrl: './subcategories.component.css',
 })
 export class SubcategoriesComponent {
   subCategories: any[] = [];
@@ -31,8 +31,8 @@ export class SubcategoriesComponent {
     private modalService: NgbModal,
     public toastService: ToastService,
     private dashboardComponent: DashboardComponent,
-    private catService: CategoryService,
-  ) { }
+    private catService: CategoryService
+  ) {}
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -50,21 +50,25 @@ export class SubcategoriesComponent {
     );
   }
 
-
-
   deleteCategory(catId: number): void {
-    this.subCategoryService.deleteSubCategory(catId).subscribe(
-      (data) => {
-        this.subCategories = this.subCategories.filter(category => category.id !== catId);
-        this.dashboardComponent.fetchCategoryCount();
-      },
-      (error) => {
-      }
-    );
+    if (confirm('Are you sure you want to delete this SubCategory?')) {
+      this.subCategoryService.deleteSubCategory(catId).subscribe(
+        (data) => {
+          this.subCategories = this.subCategories.filter(
+            (category) => category.id !== catId
+          );
+          this.dashboardComponent.fetchCategoryCount();
+        },
+        (error) => {}
+      );
+    }
   }
 
   open() {
-    const modalRef = this.modalService.open(AddSubCategoryComponent, { size: 'lg', centered: true });
+    const modalRef = this.modalService.open(AddSubCategoryComponent, {
+      size: 'lg',
+      centered: true,
+    });
 
     modalRef.componentInstance.categoryAdded.subscribe(() => {
       this.getAllCategories(); // Refresh the categories list
@@ -73,10 +77,27 @@ export class SubcategoriesComponent {
     });
 
     modalRef.result.then(
-      (result) => {
-      },
-      (reason) => {
-      }
+      (result) => {},
+      (reason) => {}
+    );
+  }
+  update(category: any) {
+    const modalRef = this.modalService.open(AddSubCategoryComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.subCat = category;
+    modalRef.result
+
+    modalRef.componentInstance.categoryAdded.subscribe(() => {
+      this.getAllCategories(); // Refresh the categories list
+      this.dashboardComponent.fetchCategoryCount(); // Update the category count
+      this.toastService.add('Category Updated successfully');
+    });
+
+    modalRef.result.then(
+      (result) => {},
+      (reason) => {}
     );
   }
 

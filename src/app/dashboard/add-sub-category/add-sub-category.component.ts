@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -19,6 +19,7 @@ import { CategoriesService } from '../../dashboard-service/categories.service';
   styleUrl: './add-sub-category.component.css',
 })
 export class AddSubCategoryComponent {
+  @Input() subCat: any;
   @Output() categoryAdded = new EventEmitter<void>();
 
   categoryForm!: FormGroup;
@@ -38,11 +39,11 @@ export class AddSubCategoryComponent {
   ngOnInit(): void {
     this.categoryForm = this.fb.group({
       name: [
-        '',
+        this.subCat?.name ?? '',  // Default to an empty string if subCat or subCat.name is missing
         [Validators.required, Validators.pattern(/^(?!\s).*$/)],
       ],
       categoryId: [
-        '',
+        this.subCat?.categoryId ?? '',  // Default to an empty string if subCat or subCat.categoryId is missing
         [Validators.required, Validators.pattern(/^(?!\s).*$/)],
       ],
     });
@@ -81,22 +82,42 @@ export class AddSubCategoryComponent {
       formData.append('image', this.selectedFile);
     }
 
-    this.subCategoriesService.addSubCategory(formData).subscribe(
-      (response) => {
-        // Handle successful response
-        console.log('Category added successfully:', response);
-        this.categoryAdded.emit(); // Emit the event when a user is added
-        this.activeModal.close('success');
-      },
-      (error) => {
-        // Handle error response
-        if (error.status === 400 && error.error.violations) {
-          this.displayServerErrors(error.error.violations);
-        } else {
-          this.errMsg = error.error.errors.Sub_Category;
+    if(this.subCat){
+      this.subCategoriesService.editSubCategory(formData, this.subCat.id).subscribe(
+        (response) => {
+          // Handle successful response
+          console.log('Category added successfully:', response);
+          this.categoryAdded.emit(); // Emit the event when a user is added
+          this.activeModal.close('success');
+        },
+        (error) => {
+          // Handle error response
+          if (error.status === 400 && error.error.violations) {
+            this.displayServerErrors(error.error.violations);
+          } else {
+            this.errMsg = error.error.errors.Sub_Category;
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.subCategoriesService.addSubCategory(formData).subscribe(
+        (response) => {
+          // Handle successful response
+          console.log('Category added successfully:', response);
+          this.categoryAdded.emit(); // Emit the event when a user is added
+          this.activeModal.close('success');
+        },
+        (error) => {
+          // Handle error response
+          if (error.status === 400 && error.error.violations) {
+            this.displayServerErrors(error.error.violations);
+          } else {
+            this.errMsg = error.error.errors.Sub_Category;
+          }
+        }
+      );
+    }
+
   }
 
   displayValidationErrors() {

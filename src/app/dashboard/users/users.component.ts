@@ -2,13 +2,13 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PaginationComponent } from "../../component/pagination/pagination.component";
+import { PaginationComponent } from '../../component/pagination/pagination.component';
 import { UsersService } from '../../dashboard-service/users.service';
 import { AuthService } from '../../service/auth.service';
 import { ToastService } from '../../service/toast.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { DashboardComponent } from '../dashboard.component';
-import { SidebarComponent } from "../sidebar/sidebar.component";
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [NgFor, NgIf, PaginationComponent, SidebarComponent],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit, OnDestroy {
   users: any[] = [];
@@ -24,7 +24,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   currentPage = 1;
   totalPages: number[] = [];
   private authSubscription!: Subscription;
-
 
   constructor(
     private router: Router,
@@ -56,7 +55,10 @@ export class UsersComponent implements OnInit, OnDestroy {
       (data) => {
         this.users = data.content;
         this.currentPage = data.pageable.pageNumber + 1;
-        this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1);
+        this.totalPages = Array.from(
+          { length: data.totalPages },
+          (_, i) => i + 1
+        );
       },
       (error) => {
         console.error('Error fetching products', error);
@@ -64,15 +66,17 @@ export class UsersComponent implements OnInit, OnDestroy {
     );
   }
   deleteUser(userId: number): void {
-    this.usersService.deleteUser(userId).subscribe(
-      () => {
-        // Filter out the deleted user from the array
-        this.users = this.users.filter(user => user.id !== userId);
-        this.dashboardComponent.fetchUserCount(); // Update the user count
-      },
-      (error) => {
-      }
-    );
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.usersService.deleteUser(userId).subscribe(
+        () => {
+          // Filter out the deleted user from the array
+          this.users = this.users.filter((user) => user.id !== userId);
+          this.dashboardComponent.fetchUserCount(); // Update the user count
+          this.toastService.add('User Deleted successfully');
+        },
+        (error) => {}
+      );
+    }
   }
 
   detailsUser(userId: number): void {
@@ -80,7 +84,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   open() {
-    const modalRef = this.modalService.open(AddUserComponent, { size: 'lg', centered: true });
+    const modalRef = this.modalService.open(AddUserComponent, {
+      size: 'lg',
+      centered: true,
+    });
 
     modalRef.componentInstance.userAdded.subscribe(() => {
       this.fetchUsers(this.currentPage - 1); // Refresh the users list
@@ -93,8 +100,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.toastService.add('User added successfully');
         }
       },
-      (reason) => {
-      }
+      (reason) => {}
     );
   }
 

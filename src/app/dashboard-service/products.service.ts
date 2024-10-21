@@ -98,4 +98,12 @@ export class ProductsService {
     const url = `${this.apiUrl}/products/setDiscount?productIds=${productIds}&discount=${discount}`;
     return this.http.patch(url, { headers });
   }
+
+  getEmailsSellers() {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.get<any>(`${this.apiUrl}/products/emails`, { headers });
+  }
 }

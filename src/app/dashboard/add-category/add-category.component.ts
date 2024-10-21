@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CategoriesService } from '../../dashboard-service/categories.service';
@@ -15,7 +15,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AddCategoryComponent implements OnInit {
   @Output() categoryAdded = new EventEmitter<void>();
-
+  @Input() cat!: any;
   categoryForm!: FormGroup;
   selectedFile: File | null = null;
 
@@ -30,7 +30,7 @@ export class AddCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.categoryForm = this.fb.group({
-      categoryTitle: ['', [Validators.required, Validators.pattern(/^(?!\s).*$/)]],
+      categoryTitle: [this.cat?.categoryTitle ?? '', [Validators.required, Validators.pattern(/^(?!\s).*$/)]],
     });
 
     // Initialize formErrors based on the form controls
@@ -57,22 +57,42 @@ export class AddCategoryComponent implements OnInit {
       formData.append('image', this.selectedFile);
     }
 
-    this.categoriesService.addCategory(formData).subscribe(
-      (response) => {
-        // Handle successful response
-        console.log('Category added successfully:', response);
-        this.categoryAdded.emit(); // Emit the event when a user is added
-        this.activeModal.close('success');
-      },
-      (error) => {
-        // Handle error response
-        if (error.status === 400 && error.error.violations) {
-          this.displayServerErrors(error.error.violations);
-        } else {
-          this.errMsg=error.error.errors.Category;
-        }
-            }
-    );
+    if(this.cat){
+      this.categoriesService.editCategory(formData, this.cat.id).subscribe(
+        (response) => {
+          // Handle successful response
+          console.log('Category added successfully:', response);
+          this.categoryAdded.emit(); // Emit the event when a user is added
+          this.activeModal.close('success');
+        },
+        (error) => {
+          // Handle error response
+          if (error.status === 400 && error.error.violations) {
+            this.displayServerErrors(error.error.violations);
+          } else {
+            this.errMsg=error.error.errors.Category;
+          }
+              }
+      );
+    } else {
+      this.categoriesService.addCategory(formData).subscribe(
+        (response) => {
+          // Handle successful response
+          console.log('Category added successfully:', response);
+          this.categoryAdded.emit(); // Emit the event when a user is added
+          this.activeModal.close('success');
+        },
+        (error) => {
+          // Handle error response
+          if (error.status === 400 && error.error.violations) {
+            this.displayServerErrors(error.error.violations);
+          } else {
+            this.errMsg=error.error.errors.Category;
+          }
+              }
+      );
+    }
+
   }
 
   displayValidationErrors() {

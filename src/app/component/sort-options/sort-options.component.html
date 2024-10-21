@@ -3,4 +3,10 @@
     <option value="createdAtAsc">Sort By: Old Products</option>
     <option value="priceAsc">Price (Low to High)</option>
     <option value="priceDesc">Price (High to Low)</option>
-</select>
+  </select>
+  
+  <select (change)="onEmailChange($event)" [(ngModel)]="currentEmailSeller">
+    <option value="" selected>Select Email Of Seller</option>
+    <option *ngFor="let email of emailSellers" [value]="email">{{ email }}</option>
+  </select>
+  
