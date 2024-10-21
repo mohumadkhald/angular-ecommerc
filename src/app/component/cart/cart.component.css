@@ -66,6 +66,9 @@
 }
 
 
+input {
+  margin-bottom: 10px;
+}
 
 
   /* Additional styles for smaller screens using media query */

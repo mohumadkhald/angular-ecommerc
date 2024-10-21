@@ -3,9 +3,11 @@ import { CommonModule, NgFor } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,14 +34,14 @@ import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-
 export class CartComponent implements OnInit, OnDestroy {
   cartItems: { product: any }[] = [];
   totalprice: number = 0;
-  // shipping: number = 20;
   counter: number = 0;
-  cartItems1: CartItem[] = [];
+  cartItems1: any[] = []; // Replace with actual CartItem type
   private authSubscription!: Subscription;
   paymentForm!: FormGroup;
   addressForm!: FormGroup;
   shipping: number = 0;
   apiUrl: string;
+  cardVendor!: string;
 
   constructor(
     private cartService: CartService,
@@ -57,16 +59,16 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-      this.authSubscription = this.authService.isLoggedIn$.subscribe(
-        (isLoggedIn) => {
-          if (isLoggedIn) {
-            this.loadCartItems();
-          } else {
-            this.cartItems = this.cartService.getCart();
-            this.updateTotalPrice();
-          }
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        if (isLoggedIn) {
+          this.loadCartItems();
+        } else {
+          this.cartItems = this.cartService.getCart();
+          this.updateTotalPrice();
         }
-      );
+      }
+    );
 
     this.addressForm = this.fb.group({
       street: ['', Validators.required],
@@ -77,30 +79,27 @@ export class CartComponent implements OnInit, OnDestroy {
     });
 
     this.paymentForm = this.fb.group({
-      cardHolderName: ['', Validators.required],
+      cardHolderName: ['', Validators.required], // Required field for cardholder's name
       cardNumber: [
         '',
         [
-          Validators.required,
-          Validators.minLength(16),
-          Validators.maxLength(16),
+          Validators.required, // Card number is required
+          Validators.pattern(/^\d{13,19}$/), // Must be 13 to 19 digits
+          this.cardValidator(this.luhn, this.cardName), // Custom validator for additional card validation (e.g., Luhn algorithm)
         ],
       ],
-      expirationDate: [
-        '',
-        [Validators.required, Validators.minLength(5), Validators.maxLength(5)],
-      ],
-      cvv: [
-        '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(3)],
-      ],
+      expirationDate: ['', Validators.required], // Required field for expiration date
+      cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]], // Required field for CVV, must be 3 digits
     });
+    console.log(this.cardVendor);
   }
+
   ngOnDestroy(): void {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
   }
+
   private loadCartItems(): void {
     this.cartServerService.getCart().subscribe(
       (items) => {
@@ -147,6 +146,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.updateTotalPrice();
     this.cartItems = this.cartService.getCart();
   }
+
   removeItemCart(itemID: any): void {
     if (this.auth()) {
       this.cartServerService.deleteItem(itemID);
@@ -158,6 +158,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.cartService.removeFromCart(product);
     this.cartItems = this.cartService.getCart();
   }
+
   getCountOfItems() {
     if (this.auth()) {
       return this.cartServerService.getCountOfItems();
@@ -241,22 +242,19 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   private handleOrderError(errors: any) {
-    // Extract the product issues from the error response
     const productIssues = Object.keys(errors).map((key) => ({
-      title: key, // This should be the product title from the error response
-      message: errors[key].message, // The error message
-      requestedQuantity: errors[key].requestedQuantity, // The quantity requested in the order
-      availableQuantity: errors[key].availableQuantity, // The available quantity in stock
+      title: key,
+      message: errors[key].message,
+      requestedQuantity: errors[key].requestedQuantity,
+      availableQuantity: errors[key].availableQuantity,
     }));
 
-    // Find matching items in the cart based on the product title
     const cartItemsWithIssues = this.cartItems1.filter((item) =>
       productIssues.some((issue) => issue.title === item.productTitle)
     );
 
     console.log('Cart Items with Issues:', cartItemsWithIssues);
 
-    // Pass the cart items with issues, product issues, address, and payment information to the modal
     this.openNotFoundStockModal(
       cartItemsWithIssues,
       productIssues,
@@ -279,13 +277,11 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     );
 
-    // Pass the product issues, cart items with issues, payment info, and address to the modal component
     modalRef.componentInstance.productIssues = productIssues;
     modalRef.componentInstance.cartItemsWithIssues = cartItemsWithIssues;
     modalRef.componentInstance.paymentInfo = paymentInfo;
     modalRef.componentInstance.address = address;
 
-    // Handle the modal result
     modalRef.result.then(
       (result) => {
         console.log('Dialog was closed', result);
@@ -296,4 +292,85 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  luhn(input: string): boolean {
+    let notAllowed = '-';
+    let creditNumber = input
+      .split('')
+      .filter((num) => notAllowed.indexOf(num) < 0);
+
+    let len = creditNumber.length;
+    let revCredit = creditNumber.reverse();
+
+    let firstNums: number[] = [];
+    let otherNums: number[] = [];
+
+    for (let i = 0; i < revCredit.length; i++) {
+      const digit = Number(revCredit[i]); // Convert string to number
+      if (i % 2 === 0) {
+        firstNums.push(digit);
+      } else {
+        otherNums.push(Math.floor((digit * 2) / 10) + ((digit * 2) % 10));
+      }
+    }
+
+    let totalSum = 0;
+    if (firstNums && otherNums) {
+      let firstSum = firstNums.reduce((p, c) => p + c, 0);
+      let otherSum = otherNums.reduce((p, c) => p + c, 0);
+      totalSum = firstSum + otherSum;
+    }
+    return totalSum % 10 === 0;
+  }
+
+  cardName(cardNum: string): string {
+    let notAllowed = '-';
+    let creditNumber = cardNum
+      .split('')
+      .filter((num) => notAllowed.indexOf(num) < 0);
+    let len = creditNumber.length;
+
+    if (creditNumber[0] == '4' && (len === 13 || len === 16)) {
+      return 'Visa';
+    } else if (
+      len === 15 &&
+      Number(creditNumber[0]) === 3 &&
+      (creditNumber[1] === '4' || creditNumber[1] === '7')
+    ) {
+      return 'American Express';
+    } else if (
+      len === 16 &&
+      Number(creditNumber[0]) === 5 &&
+      Number(creditNumber[1]) >= 1 &&
+      Number(creditNumber[1]) <= 5
+    ) {
+      return 'MasterCard';
+    } else {
+      return 'Invalid';
+    }
+  }
+
+
+cardValidator(luhnFunc: (input: string) => boolean, cardNameFunc: (cardNum: string) => string): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const cardNumber = control.value;
+    if (!cardNumber) {
+      return null; // Don't validate if there's no input
+    }
+
+    const isValidCard = luhnFunc(cardNumber); // Use the passed luhn function
+    const cardVendor = cardNameFunc(cardNumber); // Use the passed cardName function
+    this.cardVendor = this.cardName(cardNumber);
+
+    if (!isValidCard) {
+      return { invalidCard: true }; // Custom error key
+    }
+
+    if (cardVendor === 'Invalid') {
+      return { invalidVendor: true }; // Custom error key
+    }
+
+    return null; // Valid card
+  };
+}
 }

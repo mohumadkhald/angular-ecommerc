@@ -15,7 +15,8 @@
                                     <hr>
                                     <div class="empty-item d-flex justify-content-between align-items-center mb-3">
                                         <div class="col-7 btn btn-danger">
-                                            <p style="margin: 0 0 2px;" class="mb item-count">You Have {{ getCountOfItems() }} Items in your cart
+                                            <p style="margin: 0 0 2px;" class="mb item-count">You Have {{
+                                                getCountOfItems() }} Items in your cart
                                             </p>
                                         </div>
                                         <button class="col-4 btn btn-danger" (click)="clearCart()">Clear Cart</button>
@@ -115,63 +116,70 @@
                                                     class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
                                             </div>
                                             <p class="small mb-2">Card type</p>
-                                            <a href="#!" class="text-white"><i
+                                            <a *ngIf="cardVendor === 'Mastercard'" class="text-white"><i
                                                     class="fab fa-cc-mastercard fa-2x me-2"></i></a>
-                                            <a href="#!" class="text-white"><i
+                                            <a *ngIf="cardVendor === 'Visa'" class="text-white"><i
                                                     class="fab fa-cc-visa fa-2x me-2"></i></a>
-                                            <a href="#!" class="text-white"><i
-                                                    class="fab fa-cc-amex fa-2x me-2"></i></a>
-                                            <a href="#!" class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a>
+                                            <!-- <a class="text-white"><i class="fab fa-cc-amex fa-2x me-2"></i></a>
+                                            <a class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a> -->
                                             <form [formGroup]="paymentForm" class="mt-4">
-                                                <div class="form-outline form-white mb-4">
-                                                    <label class="form-label" for="typeName">Name</label>
-                                                    <input type="text" id="typeName" formControlName="cardHolderName"
-                                                        class="form-control form-control-lg"
-                                                        placeholder="Enter your Name" />
-                                                    <div *ngIf="paymentForm.get('cardHolderName')?.invalid && paymentForm.get('cardHolderName')?.touched"
-                                                        class="text-light bg-danger m-2">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="cardHolderName">Card Holder
+                                                        Name</label>
+                                                    <input type="text" formControlName="cardHolderName"
+                                                        class="form-control" placeholder="John Doe" required />
+                                                    <div class="text-light bg-danger m-2"
+                                                        *ngIf="paymentForm.get('cardHolderName')?.invalid && (paymentForm.get('cardHolderName')?.touched || paymentForm.get('cardHolderName')?.dirty)">
                                                         Card Holder Name is required.
                                                     </div>
                                                 </div>
-                                                <div class="form-outline form-white mb-4">
-                                                    <label class="form-label" for="typeText">Card Number</label>
-                                                    <input type="text" id="typeText" formControlName="cardNumber"
-                                                        class="form-control form-control-lg"
-                                                        placeholder="1234 5678 9012 3457" minlength="16"
-                                                        maxlength="16" />
-                                                    <div *ngIf="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched"
+                                                <div class="form-group">
+                                                    <label class="form-label" for="cardNumber">Card Number</label>
+                                                    <input type="text" formControlName="cardNumber" class="form-control"
+                                                        placeholder="1234 5678 9012 3456" required />
+                                                    <div class="text-light bg-danger m-2"
+                                                        *ngIf="paymentForm.get('cardNumber')?.invalid && (paymentForm.get('cardNumber')?.touched || paymentForm.get('cardNumber')?.dirty)">
+                                                        <ng-container
+                                                            *ngIf="paymentForm.get('cardNumber')?.errors?.['required']">
+                                                            Card Number is required.
+                                                        </ng-container>
+                                                        <ng-container
+                                                            *ngIf="paymentForm.get('cardNumber')?.errors?.['pattern']">
+                                                            Card Number must be 13-19 digits.
+                                                        </ng-container>
+                                                        <ng-container
+                                                            *ngIf="paymentForm.get('cardNumber')?.errors?.['invalidCard']">
+                                                            Card Number is invalid. Please check and try again.
+                                                        </ng-container>
+                                                        <ng-container
+                                                            *ngIf="paymentForm.get('cardNumber')?.errors?.['invalidVendor']">
+                                                            Card vendor not recognized. Please check the card number.
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label class="form-label" for="typeExp">Expiration</label>
+                                                    <input type="text" id="typeExp" formControlName="expirationDate"
+                                                        class="form-control" placeholder="MM/YY" minlength="5"
+                                                        maxlength="5" />
+                                                    <div *ngIf="paymentForm.get('expirationDate')?.invalid && paymentForm.get('expirationDate')?.touched"
                                                         class="text-light bg-danger m-2">
-                                                        Card Number must be 16 digits.
+                                                        Expiration Date must be in MM/YY format.
                                                     </div>
                                                 </div>
-                                                <div class="row mb-4">
-                                                    <div class="col-md-6">
-                                                        <div class="form-outline form-white">
-                                                            <label class="form-label" for="typeExp">Expiration</label>
-                                                            <input type="text" id="typeExp"
-                                                                formControlName="expirationDate"
-                                                                class="form-control form-control-lg" placeholder="MM/YY"
-                                                                minlength="5" maxlength="5" />
-                                                            <div *ngIf="paymentForm.get('expirationDate')?.invalid && paymentForm.get('expirationDate')?.touched"
-                                                                class="text-light bg-danger m-2">
-                                                                Expiration Date must be in MM/YY format.
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-outline form-white">
-                                                            <label class="form-label" for="typeCvv">Cvv</label>
-                                                            <input type="password" id="typeCvv" formControlName="cvv"
-                                                                class="form-control form-control-lg"
-                                                                placeholder="&#9679;&#9679;&#9679;" minlength="3"
-                                                                maxlength="3" />
-                                                            <div *ngIf="paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched"
-                                                                class="text-light bg-danger m-2">
-                                                                CVV must be 3 digits.
-                                                            </div>
-                                                        </div>
+
+                                                <div class="form-group">
+                                                    <label class="form-label" for="cvv">CVV</label>
+                                                    <input type="text" formControlName="cvv" class="form-control"
+                                                        placeholder="123" required />
+                                                    <div class="text-light bg-danger m-2"
+                                                        *ngIf="paymentForm.get('cvv')?.invalid && (paymentForm.get('cvv')?.touched || paymentForm.get('cvv')?.dirty)">
+                                                        CVV is required and must be 3 digits.
                                                     </div>
                                                 </div>
+
                                                 <button type="button" class="btn btn-info btn-block btn-lg"
                                                     [disabled]="!paymentForm.valid" (click)="handleCheckout()">
                                                     <div class="d-flex justify-content-between">
@@ -210,11 +218,14 @@
                                     <div class="detailsReq">
                                         <h2 class="empty-cart">Your Cart is Empty</h2>
                                         <p class="product-today"><a routerLink="">Products Today</a></p>
-                                        <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }" class="btnLog"><a
-                                                style="text-decoration: none; color: white" routerLink="/auth" [queryParams]="{ state: 'login' }">Sign in
+                                        <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
+                                            class="btnLog"><a style="text-decoration: none; color: white"
+                                                routerLink="/auth" [queryParams]="{ state: 'login' }">Sign in
                                                 To Your Account</a></button>
-                                        <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'register' }" style="background-color: white;" class="btnLog"><a
-                                                style="text-decoration: none; color: black" routerLink="/auth" [queryParams]="{ state: 'register' }">Sign
+                                        <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'register' }"
+                                            style="background-color: white;" class="btnLog"><a
+                                                style="text-decoration: none; color: black" routerLink="/auth"
+                                                [queryParams]="{ state: 'register' }">Sign
                                                 Up Now</a></button>
                                     </div>
                                 </div>
