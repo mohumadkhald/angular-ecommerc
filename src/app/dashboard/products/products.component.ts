@@ -93,7 +93,6 @@ export class ProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getEmailsSellers();
     // Handle paramMap changes
     this.route.paramMap.subscribe(
       (paramMap) => {
@@ -409,16 +408,4 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  getEmailsSellers()
-  {
-    this.productsService.getEmailsSellers().subscribe(
-      (response: any) => {
-        this.emailSellers = response;
-      },
-      (error) => {
-        console.error('Error getting emails of sellers:', error);
-      }
-    );
-  }
-  
 }

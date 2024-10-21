@@ -76,7 +76,9 @@
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
       <button class="filter-options" (click)="openFilterModal()">Filter</button>
       <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
-        (change)="onSortChange($event)"></app-sort-options>
+        [currentEmailSeller]="currentEmailSeller" (sortChange)="onSortChange($event)"
+        (emailChange)="onEmailChange($event)">
+      </app-sort-options>
     </div>
     <main class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">

@@ -6,7 +6,7 @@
   </select>
   
   <select (change)="onEmailChange($event)" [(ngModel)]="currentEmailSeller">
-    <option value="" selected>Select Email Of Seller</option>
+    <option value="" selected>Select Products By Seller</option>
     <option *ngFor="let email of emailSellers" [value]="email">{{ email }}</option>
   </select>
   

@@ -15,23 +15,9 @@ export class ProductService {
     this.apiUrl = configService.getApiUri();
    }
 
-  // getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[]): Observable<PaginatedResponse<Product[]>> {
-  //   return this.http.get<PaginatedResponse<Product[]>>(`${this.apiUrl}/product-category/${subCategoryName}`, {
-  //     params: {
-  //       sortBy: sortBy,
-  //       sortDirection: sortDirection,
-  //       minPrice: minPrice.toString(),
-  //       maxPrice: maxPrice.toString(),
-  //       page: page.toString(),
-  //       pageSize: pageSize.toString(),
-  //     }
-  //   }).pipe(
-  //     map(response => response)
-  //   );
-  // }
-
-  getProducts(subCategoryName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[], available: any): Observable<PaginatedResponse<Product[]>> {
+  getProducts(subCategoryName: string, email: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[], available: any): Observable<PaginatedResponse<Product[]>> {
     let params = new HttpParams()
+      .set('email', email)
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)
       .set('minPrice', minPrice.toString())

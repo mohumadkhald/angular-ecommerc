@@ -9,7 +9,7 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <button class="filter-options" (click)="openFilterModal()">Filter</button>
             <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
-                [currentEmailSeller]="currentEmailSeller" [emailSellers]="emailSellers"
+                [currentEmailSeller]="currentEmailSeller"
                 (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)">
             </app-sort-options>
 

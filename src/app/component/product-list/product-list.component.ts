@@ -1,5 +1,11 @@
 import { CurrencyPipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
 import { FormsModule } from '@angular/forms';
@@ -22,7 +28,7 @@ import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.
 import { CustomRangeSliderComponent } from '../custom-range-slider/custom-range-slider.component';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
-import { ModelFilterComponent } from "../model-filter/model-filter.component";
+import { ModelFilterComponent } from '../model-filter/model-filter.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { SortOptionsComponent } from '../sort-options/sort-options.component';
 
@@ -47,7 +53,7 @@ import { SortOptionsComponent } from '../sort-options/sort-options.component';
     PaginationComponent,
     SortOptionsComponent,
     ModelFilterComponent,
-],
+  ],
 })
 export class ProductListComponent implements OnInit {
   currentSubCategoryImage: any;
@@ -84,7 +90,8 @@ export class ProductListComponent implements OnInit {
   numElement: number = 20;
   inStockCount: number = 0;
   outOfStockCount: number = 0;
-screenWidth: any;
+  screenWidth: any;
+  currentEmailSeller: string = '';
 
   constructor(
     private router: Router,
@@ -94,7 +101,7 @@ screenWidth: any;
     private modalService: NgbModal,
     private titleService: Title,
     public toastService: ToastService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -180,8 +187,8 @@ screenWidth: any;
             this.showNotFound = false;
           },
           (error) => {
-            if(error.status === 404) {
-                this.showNotFound = true;
+            if (error.status === 404) {
+              this.showNotFound = true;
             }
             if (error.status === 401) {
               this.showExpiredSessionDialog(
@@ -196,7 +203,6 @@ screenWidth: any;
   }
   showNotFound: boolean = false;
 
-
   loadProducts(): void {
     if (this.subCategoryName) {
       let available: boolean | null = null;
@@ -209,6 +215,7 @@ screenWidth: any;
       this.productService
         .getProducts(
           this.subCategoryName,
+          this.currentEmailSeller,
           this.sortBy,
           this.sortDirection,
           this.filters.minPrice,
@@ -238,8 +245,8 @@ screenWidth: any;
           },
           (error) => {
             if (error.status === 404) {
-                this.loading = false;
-                this.showNotFound = true;
+              this.loading = false;
+              this.showNotFound = true;
             }
             if (error.status === 401) {
               this.showExpiredSessionDialog(
@@ -313,11 +320,13 @@ screenWidth: any;
   }
 
   redirectToSubCategory(categoryTitle: any, name: string) {
-    this.router.navigate([`categories/${categoryTitle}/${name}`], { queryParams: { page: 1, inStock: true, notAvailable:true } });
+    this.router.navigate([`categories/${categoryTitle}/${name}`], {
+      queryParams: { page: 1, inStock: true, notAvailable: true },
+    });
   }
-  
-  onSortChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
+
+  onSortChange(value: string): void {
+    // Change parameter type to string directly
     let sortBy = 'createdAt';
     let sortDirection = 'desc';
 
@@ -340,8 +349,14 @@ screenWidth: any;
         break;
     }
 
-    this.currentSortOption = value;
-    this.updateQueryParams({ sortBy, sortDirection });
+    this.currentSortOption = value; // Update the current sort option
+    this.updateQueryParams({ sortBy, sortDirection }); // Update the query parameters
+    this.loadProducts(); // Reload products based on the new sort option
+  }
+
+  onEmailChange(email: string): void {
+    this.currentEmailSeller = email;
+    this.updateQueryParams({ email });
     this.loadProducts();
   }
 
@@ -395,15 +410,14 @@ screenWidth: any;
     this.loadProducts();
   }
   scrollLeft(slider: HTMLElement) {
-    const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
+    const scrollAmount = slider.offsetWidth - slider.offsetWidth * 0.01;
     slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
   }
-  
+
   scrollRight(slider: HTMLElement) {
-    const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
+    const scrollAmount = slider.offsetWidth - slider.offsetWidth * 0.01;
     slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
-
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -415,7 +429,6 @@ screenWidth: any;
       // this.dialogRef.close();
     }
   }
-  
 
   openFilterModal() {
     const dialogRef = this.dialog.open(ModelFilterComponent, {
@@ -427,16 +440,15 @@ screenWidth: any;
         subCategoryName: this.subCategoryName,
         colorOptions: this.colorOptions,
         inStockCount: this.inStockCount,
-        outOfStockCount: this.outOfStockCount
-      }
+        outOfStockCount: this.outOfStockCount,
+      },
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
+
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.filters = { ...this.filters, ...result.filters };
         this.loadProducts(); // Re-load products with updated filters
       }
     });
   }
-  
 }
