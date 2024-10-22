@@ -136,7 +136,9 @@
                                                 <div class="form-group">
                                                     <label class="form-label" for="cardNumber">Card Number</label>
                                                     <input type="text" formControlName="cardNumber" class="form-control"
-                                                        placeholder="1234 5678 9012 3456" required />
+                                                        placeholder="1234-5678-9012-3456"
+                                                        (input)="onCardNumberInput($event)" maxlength="23" required />
+
                                                     <div class="text-light bg-danger m-2"
                                                         *ngIf="paymentForm.get('cardNumber')?.invalid && (paymentForm.get('cardNumber')?.touched || paymentForm.get('cardNumber')?.dirty)">
                                                         <ng-container
@@ -148,7 +150,7 @@
                                                             Card Number must be 13-19 digits.
                                                         </ng-container>
                                                         <ng-container
-                                                            *ngIf="paymentForm.get('cardNumber')?.errors?.['invalidCard']">
+                                                            *ngIf="!paymentForm.get('cardNumber')?.errors?.['pattern'] && paymentForm.get('cardNumber')?.errors?.['invalidCard']">
                                                             Card Number is invalid. Please check and try again.
                                                         </ng-container>
                                                         <ng-container
@@ -157,6 +159,7 @@
                                                         </ng-container>
                                                     </div>
                                                 </div>
+
 
 
                                                 <div class="form-group">

@@ -84,7 +84,6 @@ export class CartComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required, // Card number is required
-          Validators.pattern(/^\d{13,19}$/), // Must be 13 to 19 digits
           this.cardValidator(this.luhn, this.cardName), // Custom validator for additional card validation (e.g., Luhn algorithm)
         ],
       ],
@@ -350,27 +349,49 @@ export class CartComponent implements OnInit, OnDestroy {
     }
   }
 
-
-cardValidator(luhnFunc: (input: string) => boolean, cardNameFunc: (cardNum: string) => string): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
-    const cardNumber = control.value;
-    if (!cardNumber) {
-      return null; // Don't validate if there's no input
+  onCardNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+  
+    // Group digits into sets of 4 and join with hyphens
+    value = value.replace(/(.{4})/g, '$1-').trim();
+    
+    // Remove trailing hyphen if the value ends with one
+    if (value.endsWith('-')) {
+      value = value.slice(0, -1);
     }
+  
+    // Set the formatted value back to the input field
+    input.value = value;
+  
+    // Update the form control value without resetting validation
+    this.paymentForm.get('cardNumber')?.setValue(value, { emitEvent: false });
+  }
+  
 
-    const isValidCard = luhnFunc(cardNumber); // Use the passed luhn function
-    const cardVendor = cardNameFunc(cardNumber); // Use the passed cardName function
-    this.cardVendor = this.cardName(cardNumber);
+  cardValidator(
+    luhnFunc: (input: string) => boolean,
+    cardNameFunc: (cardNum: string) => string
+  ): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const cardNumber = control.value;
+      if (!cardNumber) {
+        return null; // Don't validate if there's no input
+      }
 
-    if (!isValidCard) {
-      return { invalidCard: true }; // Custom error key
-    }
+      const isValidCard = luhnFunc(cardNumber); // Use the passed luhn function
+      const cardVendor = cardNameFunc(cardNumber); // Use the passed cardName function
+      this.cardVendor = this.cardName(cardNumber);
 
-    if (cardVendor === 'Invalid') {
-      return { invalidVendor: true }; // Custom error key
-    }
+      if (!isValidCard) {
+        return { invalidCard: true }; // Custom error key
+      }
 
-    return null; // Valid card
-  };
-}
+      if (cardVendor === 'Invalid') {
+        return { invalidVendor: true }; // Custom error key
+      }
+
+      return null; // Valid card
+    };
+  }
 }

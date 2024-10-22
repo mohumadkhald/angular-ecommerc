@@ -22,22 +22,22 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedRequest).pipe(
     catchError((error) => {
-      // if (error.status === 401 || error.status === 403) {
-      //   authService.showExpiredSessionDialog('Your Session Expired');
-      //   authService.clearAuthState();
-      //   userService.clearUsername();
-      //   if (router.url !== '/auth') {
-      //     // router.navigate(['/login']).then(() => {
-      //       setTimeout(() => {
-      //         // window.location.reload();
-      //         router.navigate(['/auth'], { queryParams:{ state: 'login' } })
-      //       }, 1500)
-      //       setTimeout(() => {
-      //         window.location.reload();
-      //       },2500)
-      //     // });
-      //   }
-      // }
+      if (error.status === 401 || error.status === 403) {
+        authService.showExpiredSessionDialog('Your Session Expired');
+        authService.clearAuthState();
+        userService.clearUsername();
+        if (router.url !== '/auth') {
+          // router.navigate(['/login']).then(() => {
+            setTimeout(() => {
+              // window.location.reload();
+              router.navigate(['/auth'], { queryParams:{ state: 'login' } })
+            }, 1500)
+            setTimeout(() => {
+              window.location.reload();
+            },2500)
+          // });
+        }
+      }
       return throwError(() => error);
     })
   );

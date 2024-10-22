@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
     const firstPwdSet = this.getCookie('newUser');
     if (firstPwdSet === 'true') {
       this.deleteCookie('newUser'); // Avoid re-triggering the dialog
-      this.openSetFirstPwd();
+      // this.openSetFirstPwd();
     }
   }
 
