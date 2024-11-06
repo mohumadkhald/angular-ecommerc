@@ -6,7 +6,7 @@
     <option value="priceDesc">Price (High to Low)</option>
   </select>
 
-  <select (change)="onEmailChange($event)" [(ngModel)]="currentEmailSeller">
+  <select *ngIf="showEmailDropdown" (change)="onEmailChange($event)" [(ngModel)]="currentEmailSeller">
     <option value="" selected>Select Products By Seller</option>
     <option *ngFor="let email of emailSellers" [value]="email">{{ email }}</option>
   </select>

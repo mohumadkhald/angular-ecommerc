@@ -19,6 +19,8 @@ export class SortOptionsComponent implements OnInit {
   @Input() currentEmailSeller: string = '';
   @Input() currentSubCat: string = '';
   @Input() showSubCatDropdown: boolean = false;
+  @Input() showEmailDropdown: boolean = true;
+
 
   @Output() sortChange = new EventEmitter<string>();
   @Output() emailChange = new EventEmitter<string>();

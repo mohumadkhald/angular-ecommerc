@@ -22,6 +22,7 @@
 // }
 
 export interface Product {
+  colorsAndSizes: any;
   productId: number;
   productTitle: string;
   imageUrl: string;

@@ -371,7 +371,7 @@ label.sicon {
   color: white;
   padding: 10px;
   z-index: 1000;
-  top: 50px;
+  top: 30px;
 }
 
 /* Show dropdown-menu when hovering over the .sign element or the dropdown itself */

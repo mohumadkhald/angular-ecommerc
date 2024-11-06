@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,8 +15,7 @@ import { SortOptionsComponent } from '../sort-options/sort-options.component';
   templateUrl: './result-search.component.html',
   styleUrl: './result-search.component.css',
   imports: [
-    NgFor,
-    NgIf,
+    CommonModule,
     ProductCardComponent,
     FormsModule,
     PaginationComponent,
@@ -61,21 +60,24 @@ export class ResultSearchComponent implements OnInit {
       this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
       this.sortBy = params['sortBy'] || 'createdAt';
       this.sortDirection = params['sortDirection'] || 'desc';
+      this.currentPage = +params['page'] || 1;
 
       // Construct currentSortOption from sortBy and sortDirection
       this.currentSortOption = `${this.sortBy}${this.sortDirection
         .charAt(0)
         .toUpperCase()}${this.sortDirection.slice(1)}`;
-
-      this.getProducts(
-        this.categoryTitle,
-        this.productName,
-        this.sortBy,
-        this.sortDirection,
-        this.filters.minPrice,
-        this.filters.maxPrice
-      );
+        this.getProducts(
+          this.categoryTitle,
+          this.productName,
+          this.sortBy,
+          this.sortDirection,
+          this.filters.minPrice,
+          this.filters.maxPrice,
+          this.currentPage-1,
+          10
+        );
     });
+
   }
 
   getProducts(
@@ -86,7 +88,7 @@ export class ResultSearchComponent implements OnInit {
     minPrice: number = 0,
     maxPrice: number = 25000,
     page: number = 0,
-    pageSize: number = 5
+    pageSize: number = 10
   ): void {
     this.productService
       .getProductsByCategoryAndProductName(

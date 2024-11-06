@@ -87,11 +87,12 @@ export class ProductListComponent implements OnInit {
   selectedSort: string = 'createdAtDesc';
   currentSortOption!: string;
   private hasQueryParams = false;
-  numElement: number = 20;
+  numElement: any;
   inStockCount: number = 0;
   outOfStockCount: number = 0;
   screenWidth: any;
   currentEmailSeller: string = '';
+  display: boolean = false;
 
   constructor(
     private router: Router,
@@ -104,7 +105,10 @@ export class ProductListComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+
+
   ngOnInit(): void {
+    this.onFilterChange();
     // Handle paramMap changes
     this.route.paramMap.subscribe(
       (paramMap) => {
@@ -140,6 +144,7 @@ export class ProductListComponent implements OnInit {
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
         this.currentPage = +params['page'] || 1;
+        this.numElement = params['pageSize'] || 20
 
         // Initialize inStock and notAvailable filters
         this.filters.inStock = params['inStock'] === 'true';
@@ -230,6 +235,18 @@ export class ProductListComponent implements OnInit {
           (response: PaginatedResponse<Product[]>) => {
             this.loading = false;
             this.products = response.content;
+            if(response.content)
+            {
+              for(let i = 0; i < response.content.length; i++)
+              {
+                if(response.content[i].colorsAndSizes['no_color'])
+                {
+                  this.display = false;
+                } else {
+                  this.display = true;
+                }
+              }
+            }
             this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
             this.totalPages = Array.from(
               { length: response.totalPages },
@@ -363,8 +380,8 @@ export class ProductListComponent implements OnInit {
   onFilterChange(): void {
     // Update query params with availability filters
     this.updateQueryParams({
-      inStock: this.filters.inStock ? 'true' : null,
-      notAvailable: this.filters.notAvailable ? 'true' : null,
+      inStock: this.filters.inStock ? 'true' : 'false',
+      notAvailable: this.filters.notAvailable ? 'true' : 'false',
     });
     this.loadProducts();
   }
@@ -451,4 +468,13 @@ export class ProductListComponent implements OnInit {
       }
     });
   }
+
+  onSizeElementChange(event: Event) {
+    const target = event.target as HTMLSelectElement | null;
+    const value = target?.value
+    let pageSize = value
+    this.updateQueryParams({ pageSize }); // Update the query parameters
+    this.loadProducts(); // Reload products based on the new sort option
+  }
+  
 }

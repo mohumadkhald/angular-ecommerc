@@ -9,6 +9,7 @@
 
 
   export interface CartItem {
+    totalPriceDiscounted: number;
     itemID: number;
     productId: number;
     color: string;

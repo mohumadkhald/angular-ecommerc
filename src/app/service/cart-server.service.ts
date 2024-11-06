@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { CartItem } from '../interface/cat';
@@ -9,7 +9,6 @@ import { ConfigService } from '../config.service';
   providedIn: 'root'
 })
 export class CartServerService implements OnInit {
-
   apiUrl: string;
   cartItems: CartItem[] = [];
 
@@ -63,7 +62,6 @@ export class CartServerService implements OnInit {
     // Make HTTP POST request to add product to cart
     this.http.post<void>(`${this.apiUrl}/cart`, product, { headers }).subscribe(
       (res) => {
-        console.log(res);
         this.cartItems.length++
       },
       (error) => {
@@ -84,8 +82,6 @@ export class CartServerService implements OnInit {
     // Make HTTP DELETE request to remove the item from the cart
     this.http.delete<void>(`${this.apiUrl}/cart/${itemId}`, { headers }).subscribe(
       (res) => {
-        // Log the response
-        console.log(`${this.apiUrl}/${itemId}`);
   
         // Find the index of the item in the local cartItems array
         const index = this.cartItems.findIndex(item => item.itemID === itemId);
@@ -101,6 +97,36 @@ export class CartServerService implements OnInit {
     );
   }
   
+  increaseQuantity(itemId: any) {
+    const params = new HttpParams().set('state', 'INCREASE');
+    
+    // Make HTTP PATCH request to update the quantity
+    this.http.patch<void>(`${this.apiUrl}/cart/${itemId}`, {}, { params }).subscribe(
+      (res) => {
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+  
+  decreaseQuantity(item: CartItem) {
+    const params = new HttpParams().set('state', 'DECREASE');
+  
+    if (item.quantity > 1) {
+      // Decrease the quantity if it's greater than 1
+      this.http.patch<void>(`${this.apiUrl}/cart/${item.itemID}`, {}, { params }).subscribe(
+        (res) => {
+          this.getCart(); // Refresh the cart items
+        },
+        (error) => {
+        }
+      );
+    } else {
+      // Remove the item if the quantity is 1 or less
+      this.deleteItem(item.itemID);
+    }
+  }
 
   clearCart() {
     // Get JWT token from AuthService

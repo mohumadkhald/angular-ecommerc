@@ -42,6 +42,7 @@ export class CartComponent implements OnInit, OnDestroy {
   shipping: number = 0;
   apiUrl: string;
   cardVendor!: string;
+  totalpriceDiscounted: number = 0;
 
   constructor(
     private cartService: CartService,
@@ -126,6 +127,10 @@ export class CartComponent implements OnInit, OnDestroy {
             (total, item) => total + item.totalPrice,
             0
           );
+          this.totalpriceDiscounted = items.reduce(
+            (total, item) => total + item.totalPriceDiscounted,
+            0
+          );
         },
         (error) => {}
       );
@@ -135,15 +140,30 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   increaseQuantity(product: any): void {
-    this.cartService.increaseQuantity(product);
-    this.updateTotalPrice();
-    this.cartItems = this.cartService.getCart();
+    if(this.auth())
+    {
+      this.cartServerService.increaseQuantity(product);
+      this.updateTotalPrice();
+      this.cartItems = this.cartService.getCart();
+    } else {
+      this.cartService.increaseQuantity(product);
+      this.updateTotalPrice();
+      this.cartItems = this.cartService.getCart();
+    }
+
   }
 
   decreaseQuantity(product: any): void {
-    this.cartService.decreaseQuantity(product);
-    this.updateTotalPrice();
-    this.cartItems = this.cartService.getCart();
+    if(this.auth())
+      {
+        this.cartServerService.decreaseQuantity(product);
+        this.updateTotalPrice();
+        this.cartItems = this.cartService.getCart();
+      } else {
+        this.cartService.decreaseQuantity(product);
+        this.updateTotalPrice();
+        this.cartItems = this.cartService.getCart();
+      }
   }
 
   removeItemCart(itemID: any): void {

@@ -10,8 +10,8 @@
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
           <a class="sub-links" routerLinkActive="active_link"
-            [routerLink]="['/categories', categoryTitle, subCategory.name]"
-            [queryParams]="{ page: 1, inStock: true, notAvailable:true }">
+            [routerLink]="['/categories', categoryTitle, subCategory.name]" [routerLinkActiveOptions]="{ exact: true }"
+            [queryParams]="{ page: 1 }" queryParamsHandling="merge">
             {{ subCategory.name | capitalize }}
           </a>
         </li>
@@ -21,11 +21,11 @@
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
         <label>
-          <input checked type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span
-            *ngIf="inStockCount">({{inStockCount}})</span>
+          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock
+          <span *ngIf="inStockCount">({{inStockCount}})</span>
         </label>
         <label>
-          <input checked type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available
+          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available
           <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
         </label>
       </div>
@@ -44,7 +44,7 @@
         </app-custom-range-slider>
         <p>Range: $0 - $25000</p>
       </div>
-      <div class="color-filter">
+      <div *ngIf="display == true" class="color-filter">
         <h3 style="margin: 0 5px;">Color</h3>
         <div class="color-options">
           <label *ngFor="let color of colorOptions" class="color-swatch">
@@ -54,7 +54,7 @@
           </label>
         </div>
       </div>
-      <div class="size-filter">
+      <div *ngIf="display == true" class="size-filter">
         <h3 style="margin: 5px 0 5px;">Size</h3>
         <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
             (change)="onSizeChange('small', $event)"> S </label>
@@ -70,11 +70,21 @@
   </div>
 
   <div style="height: 600px; width: 85%;" class="content-wrapper" *ngIf="subCategories.length > 0">
-    <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper"
-      [ngStyle]="{'background-image': subCategoryName ? 'url(' + currentSubCategoryImage + ')' : 'url(' + currentCategoryImage + ')'}">
+    <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper">
+      <img [src]="currentCategoryImage" alt="Category Image" />
     </div>
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
       <button class="filter-options" (click)="openFilterModal()">Filter</button>
+      <select (change)="onSizeElementChange($event)" [(ngModel)]="numElement">
+        <option value="20" selected>Numbers of Products in page</option>
+        <option [value]="5">5 Products In page</option>
+        <option [value]="10">10 Products In page</option>
+        <option [value]="30">30 Products In page</option>
+        <option [value]="40">40 Products In page</option>
+        <option [value]="50">50 Products In page</option>
+        <option [value]="100">100 Products In page</option>
+        <option [value]="150">150 Products In page</option>
+      </select>
       <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
         [currentEmailSeller]="currentEmailSeller" (sortChange)="onSortChange($event)"
         (emailChange)="onEmailChange($event)">
@@ -85,11 +95,6 @@
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
       <div style="padding: 50px;" *ngIf="subCategoryName && products.length == 0">No Any Products Found</div>
     </main>
-    <!-- <div class="cont-notfound" *ngIf="subCategoryName && products.length == 0">
-      <div class="text-center">
-        <h1 class="not-found-title"><span class="text-danger">Not Found Any Products</span></h1>
-      </div>
-    </div> -->
     <!-- Pagination Component -->
     <app-pagination *ngIf="subCategoryName && products.length > 0 && totalPages.length > 1" [currentPage]="currentPage"
       [totalPages]="totalPages" (pageChange)="onPageChange($event)">
@@ -118,7 +123,7 @@
     <h1 class="not-found-title">Category
       <span *ngIf="!subCategoryName" class="text-danger">{{categoryTitle}}
       </span>
-      <span *ngIf="subCategoryName" class="text-danger">{{categoryTitle}}/{{categoryTitle}}
+      <span *ngIf="subCategoryName" class="text-danger">{{categoryTitle}}/{{subCategoryName}}
       </span> Not
       Found
     </h1>

@@ -1,48 +1,51 @@
-<div class="modal-header" style="background-color: #007bff; padding: 5px; color: white;">
-  <h6 class="modal-title">Add To Cart</h6>
-</div>
+<div *ngIf="haveSpec">
+  <div class="modal-header" style="background-color: #007bff; padding: 5px; color: white;">
+    <h6 class="modal-title">Add To Cart</h6>
+  </div>
 
-<div class="modal-body">
-  <div class="row">
-    <div class="col-md-6">
-      <img [src]="product.imageUrl" [alt]="product.productTitle" class="img-fluid">
-    </div>
-    <div class="col-md-6">
-      <h1>{{ product.productTitle }}</h1>
-      <p>{{ product.description }}</p>
-      <p><strong>Price: </strong>{{ product.price | currency }}</p>
-
-      <div class="form-group">
-        <label for="colorSelect">Color</label>
-        <select id="colorSelect" class="form-control mt-2" [(ngModel)]="selectedColor" (change)="onColorChange($event)">
-          <option value="" disabled selected>Select Color</option>
-          <option *ngFor="let color of availableColors" [value]="color">{{ color | titlecase }}</option>
-        </select>
-        <div *ngIf="submitted && !selectedColor" class="text-danger mt-1">Color is required.</div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <img [src]="product.imageUrl" [alt]="product.productTitle" class="img-fluid">
       </div>
+      <div class="col-md-6">
+        <h1>{{ product.productTitle }}</h1>
+        <p>{{ product.description }}</p>
+        <p><strong>Price: </strong>{{ product.price | currency }}</p>
+        <p style="color: red;"><strong>Price After Discount: </strong>{{ product.discountPrice | currency }}</p>
+        <div class="form-group">
+          <label for="colorSelect">Color</label>
+          <select id="colorSelect" class="form-control mt-2" [(ngModel)]="selectedColor"
+            (change)="onColorChange($event)">
+            <option value="" disabled selected>Select Color</option>
+            <option *ngFor="let color of availableColors" [value]="color">{{ color | titlecase }}</option>
+          </select>
+          <div *ngIf="submitted && !selectedColor" class="text-danger mt-1">Color is required.</div>
+        </div>
 
-      <div class="form-group">
-        <label for="sizeSelect" class="mt-2">Size</label>
-        <select id="sizeSelect" class="form-control mt-2" [(ngModel)]="selectedSize" [disabled]="!sizes.length" (change)="onSizeChange()">
-          <option value="" disabled selected>Select Size</option>
-          <option *ngFor="let size of sizes" [value]="size">{{ size | titlecase }}</option>
-        </select>
-        <div *ngIf="submitted && !selectedSize" class="text-danger mt-1">Size is required.</div>
-      </div>
+        <div class="form-group">
+          <label for="sizeSelect" class="mt-2">Size</label>
+          <select id="sizeSelect" class="form-control mt-2" [(ngModel)]="selectedSize" [disabled]="!sizes.length"
+            (change)="onSizeChange()">
+            <option value="" disabled selected>Select Size</option>
+            <option *ngFor="let size of sizes" [value]="size">{{ size | titlecase }}</option>
+          </select>
+          <div *ngIf="submitted && !selectedSize" class="text-danger mt-1">Size is required.</div>
+        </div>
 
-      <div class="form-group">
-        <label class="mt-2" for="quantity">Quantity</label>
-        <input type="number" id="quantity" class="form-control" [(ngModel)]="quantity" min="1" [max]="maxQuantity">
-        <div *ngIf="submitted && quantity <= 0" class="text-danger mt-1">Quantity must be greater than 0.</div>
-        <div *ngIf="submitted && !validateQuantity()" class="text-danger mt-1">
-          Quantity exceeds available stock ({{ maxQuantity }} available).
+        <div class="form-group">
+          <label class="mt-2" for="quantity">Quantity</label>
+          <input type="number" id="quantity" class="form-control" [(ngModel)]="quantity" min="1" [max]="maxQuantity">
+          <div *ngIf="submitted && quantity <= 0" class="text-danger mt-1">Quantity must be greater than 0.</div>
+          <div *ngIf="submitted && !validateQuantity()" class="text-danger mt-1">
+            Quantity exceeds available stock ({{ maxQuantity }} available).
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-  <button type="button" class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
+  </div>
 </div>

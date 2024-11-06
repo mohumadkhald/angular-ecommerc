@@ -145,6 +145,32 @@
     align-items: center;
     height: 50vh;
   }
+
+  .quantity-row {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adds space between the label and input */
+    width: 100%; /* Optional: can adjust based on layout */
+    max-width: 80px; /* Ensures compact layout */
+    margin: 0px 15px;
+  }
+  
+  .quantity-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .quantity-input {
+    width: 70px;
+    padding: 5px;
+    font-size: 14px;
+  }
+  
+  .err-q {
+    position: absolute; bottom: 20px; left: 0px;
+    width: 250px;
+  }
   
 @media (min-width: 770px) and ( max-width:1200px) {
     .thumbnail-images img {

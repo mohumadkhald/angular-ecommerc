@@ -50,7 +50,6 @@ export class DashboardComponent implements OnInit {
     private ordersService: OrdersService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private cookieService: CookieService,
   ) {}
 
   ngOnInit(): void {
@@ -150,8 +149,36 @@ export class DashboardComponent implements OnInit {
 
 
   showLastElements = true; // Initially hidden
+  showLastUsers = true; // Initially hidden
+  showLastCats = true; // Initially hidden
+  showLastSubCats = true; // Initially hidden
+  showLastProducts = true; // Initially hidden
+  showLastOrders = true; // Initially hidden
 
   toggleVisibility() {
     this.showLastElements = !this.showLastElements;
+  }
+
+  toggle(which: string)
+  {
+    if(which == 'all')
+    {
+      this.showLastElements = !this.showLastElements;
+    } else if(which == 'user')
+    {
+      this.showLastUsers =!this.showLastUsers;
+    } else if(which == 'cat')
+    {
+      this.showLastCats =!this.showLastCats;
+    } else if(which == 'sub')
+    {
+      this.showLastSubCats =!this.showLastSubCats;
+    } else if(which == 'product')
+    {
+      this.showLastProducts =!this.showLastProducts;
+    } else if(which == 'order')
+    {
+      this.showLastOrders =!this.showLastOrders;
+    }
   }
 }

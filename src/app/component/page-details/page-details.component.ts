@@ -6,11 +6,14 @@ import { Router } from '@angular/router';
 import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../service/toast.service';
+import { CartServerService } from '../../service/cart-server.service';
+import { AuthService } from '../../service/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-page-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })
@@ -20,13 +23,18 @@ export class PageDetailsComponent {
   @Input() id!: number;
   cartItems: { product: any }[] = [];
   showNotFound: boolean = false;
+  maxQuantity: any;
+  quantity: number = 1;
+  submitted: boolean = false;
 
   constructor(
     private productService: ProductService,
     private cartService: CartService,
     private modalService: NgbModal,
     private router: Router,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private cartServerService: CartServerService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -96,4 +104,46 @@ export class PageDetailsComponent {
       () => {}
     );
   }
+
+
+  validateQuantity2(): boolean {
+    const variation = this.productItem.productVariations.find(
+      (v: any) => v.color === "no_color" && v.size === "NO_SIZE"
+    );
+    this.maxQuantity = variation ? variation.quantity : 0;
+    return this.quantity <= this.maxQuantity;
+  }
+  open2(product: any) {
+    this.submitted = true;
+    if (
+      this.quantity <= 0 ||
+      !this.validateQuantity2()
+    ) {
+      return; // Validation failed
+    }
+
+    const productToAdd = {
+      productId: product.productId,
+      title: product.productTitle,
+      imageUrl: product.imageUrl,
+      quantity: this.quantity,
+      price: product.price,
+      color: "no_color",
+      size: "NO_SIZE"
+    };
+
+    if (!this.auth()) {
+      this.cartService.addToCart(productToAdd);
+      this.toastService.add('Product added successfully to Cart');
+    } else {
+      this.cartServerService.addToCart(productToAdd);
+      this.toastService.add('Product added successfully to Cart');
+    }
+
+  }
+  auth(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+
 }

@@ -58,7 +58,7 @@ export class AddCategoryComponent implements OnInit {
     }
 
     if(this.cat){
-      this.categoriesService.editCategory(formData, this.cat.id).subscribe(
+      this.categoriesService.editCategory(formData, this.cat.categoryId).subscribe(
         (response) => {
           // Handle successful response
           console.log('Category added successfully:', response);

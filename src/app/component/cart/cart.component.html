@@ -35,7 +35,7 @@
                                                         </div>
                                                         <div class="ms-3 product-title">
                                                             <h3>{{ item.productTitle }}</h3>
-                                                            <p style="display: flex;" class="small mb-0 me-3">
+                                                            <p *ngIf="!auth()" style="display: flex;" class="small mb-0 me-3">
                                                                 <button style="width: 30px; height: 30px; padding: 0;"
                                                                     class="btn btn-primary me-3"
                                                                     (click)="increaseQuantity(item.productId)">+</button>
@@ -45,11 +45,21 @@
                                                                     class="btn btn-primary"
                                                                     (click)="decreaseQuantity(item.productId)">-</button>
                                                             </p>
+                                                            <p *ngIf="auth()" style="display: flex;" class="small mb-0 me-3">
+                                                                <button style="width: 30px; height: 30px; padding: 0;"
+                                                                    class="btn btn-primary me-3"
+                                                                    (click)="increaseQuantity(item.itemID)">+</button>
+                                                                <span style="margin-left: -8px;margin-right: 5px;">{{
+                                                                    item.quantity }}</span>
+                                                                <button style="width: 30px; height: 30px; padding: 0;"
+                                                                    class="btn btn-primary"
+                                                                    (click)="decreaseQuantity(item)">-</button>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                     <div class="ms-3 spec">
                                                         <div>
-                                                            <h5 class="fw-normal mb-0">Size: {{ item.size }} {{
+                                                            <h5 *ngIf="item.size != 'NO_SIZE'" class="fw-normal mb-0">Size: {{ item.size }} {{
                                                                 item.color }}</h5>
                                                         </div>
                                                         <div style="width: 120px;">
@@ -194,7 +204,12 @@
                                                 <hr class="my-4">
                                                 <div class="d-flex justify-content-between">
                                                     <p class="mb-2">Subtotal</p>
-                                                    <p class="mb-2">{{ totalprice | currency }}</p>
+                                                    <p style="text-decoration: line-through;" class="mb-2">{{ totalprice | currency }}</p>
+                                                    <p *ngIf="totalpriceDiscounted == totalprice" class="mb-2">{{ totalprice | currency }}</p>
+                                                </div>
+                                                <div *ngIf="totalpriceDiscounted != totalprice" class="d-flex justify-content-between">
+                                                    <p class="mb-2">Subtotal After Discount</p>
+                                                    <p class="mb-2">{{ totalpriceDiscounted | currency }}</p>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <p class="mb-2">Shipping</p>
@@ -202,7 +217,8 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between mb-4">
                                                     <p class="mb-2">Total (Incl. taxes)</p>
-                                                    <p class="mb-2">{{ totalprice + shipping | currency }}</p>
+                                                    <p *ngIf="totalpriceDiscounted != totalprice" class="mb-2">{{ totalpriceDiscounted + shipping | currency }}</p>
+                                                    <p *ngIf="totalpriceDiscounted == totalprice" class="mb-2">{{ totalprice + shipping | currency }}</p>
                                                 </div>
                                             </form>
                                         </div>

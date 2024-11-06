@@ -204,7 +204,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     const categoryTitle = this.selectedCategory || 'all';
     const productName = this.searchText || '';
     this.router.navigate(['search'], {
-      queryParams: { category: categoryTitle, search: productName },
+      queryParams: { category: categoryTitle, search: productName, page: 1 },
     });
   }
 

@@ -18,6 +18,7 @@ import { CartService } from '../../service/cart.service';
 
 export class AddToCartModalComponent {
   @Input() product: any;
+  @Input() haveSpec: boolean = true;
 
   selectedSize: string = '';
   selectedColor: string = '';
@@ -39,6 +40,7 @@ export class AddToCartModalComponent {
   ngOnInit(): void {
     this.cdr.detectChanges();
     console.log(this.product);
+    console.log(this.haveSpec)
 
     // Extract available colors from productVariations with quantity > 0
     this.availableColors = [

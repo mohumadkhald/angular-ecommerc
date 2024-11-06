@@ -7,6 +7,26 @@ body {
   color: #dc8109 !important; /* Use only if necessary */
 }
 
+/* General styling for select elements */
+select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 13px;
+  width: 100%; /* Full width on small screens */
+  box-sizing: border-box;
+  margin: 5px 0;
+  width: 200px;
+}
+
+/* Container for select elements */
+.dropdown-container {
+  display: flex;
+  flex-direction: column; /* Stack elements by default */
+  gap: 10px; /* Space between elements */
+}
+
 .sort-options {
   margin: 0 5px;
   margin-bottom: 10px;
@@ -61,12 +81,19 @@ body {
 .title-wrapper {
   margin: 0;
   position: relative;
-  overflow: hidden;
-  height: 500px;
-  width: 100%; /* Make sure it takes the full width of the viewport */
-  background-size: cover; /* Cover ensures the image covers the entire area */
-  background-repeat: no-repeat;
-  background-position: center;
+  height: 500px; /* Fixed height, adjust as needed */
+  width: 100%; /* Full width of the parent */
+  overflow: hidden; /* Hide any overflow content */
+}
+
+.title-wrapper img {
+  width: 100%; /* Make the image take the full width */
+  height: 100%; /* Make the image take the full height */
+  object-fit: cover; /* Cover ensures the image covers the entire area */
+  object-position: center; /* Center the image within the area */
+  position: absolute; /* Position it absolutely within the wrapper */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
 }
 
 a {
