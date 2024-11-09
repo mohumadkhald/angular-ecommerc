@@ -23,13 +23,12 @@ select {
 /* Container for select elements */
 .dropdown-container {
   display: flex;
-  flex-direction: column; /* Stack elements by default */
+  flex-direction: row; /* Stack elements by default */
   gap: 10px; /* Space between elements */
 }
 
 .sort-options {
-  margin: 0 5px;
-  margin-bottom: 10px;
+  margin: 0 0 5px 0;
   margin-left: auto; /* This pushes the sort options to the right */
   align-self: flex-end;
 }
@@ -142,6 +141,7 @@ input[type="range"] {
   flex-wrap: wrap;
   background-color: #fff;
   padding: 5px;
+  margin-top: 10px;
 }
 
 app-product-card {
@@ -261,7 +261,7 @@ button:hover {
 .sidebar {
   width: 240px; /* Adjust width as needed */
   padding: 20px;
-  margin: 10px;
+  /* margin: 10px; */
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

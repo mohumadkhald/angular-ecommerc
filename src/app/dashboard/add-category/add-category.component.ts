@@ -61,7 +61,6 @@ export class AddCategoryComponent implements OnInit {
       this.categoriesService.editCategory(formData, this.cat.categoryId).subscribe(
         (response) => {
           // Handle successful response
-          console.log('Category added successfully:', response);
           this.categoryAdded.emit(); // Emit the event when a user is added
           this.activeModal.close('success');
         },
@@ -78,7 +77,6 @@ export class AddCategoryComponent implements OnInit {
       this.categoriesService.addCategory(formData).subscribe(
         (response) => {
           // Handle successful response
-          console.log('Category added successfully:', response);
           this.categoryAdded.emit(); // Emit the event when a user is added
           this.activeModal.close('success');
         },
@@ -101,7 +99,6 @@ export class AddCategoryComponent implements OnInit {
       const control = this.categoryForm.get(field);
       if (control && control.invalid && (control.touched || control.dirty)) {
         this.formErrors[field] = this.getErrorMessage(field);
-        console.log(`Error for ${field}:`, this.formErrors[field]); // Debugging line
       }
     }
   }

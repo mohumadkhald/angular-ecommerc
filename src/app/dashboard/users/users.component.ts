@@ -37,7 +37,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
-        console.log('Auth status changed:', isLoggedIn);
         if (isLoggedIn) {
           this.fetchUsers(this.currentPage - 1);
         }
@@ -61,7 +60,6 @@ export class UsersComponent implements OnInit, OnDestroy {
         );
       },
       (error) => {
-        console.error('Error fetching products', error);
       }
     );
   }

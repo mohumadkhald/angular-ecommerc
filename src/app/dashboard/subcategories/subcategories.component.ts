@@ -45,7 +45,6 @@ export class SubcategoriesComponent {
         this.subCategories = subCategoriesData;
       },
       (error) => {
-        console.error('Error fetching categories', error);
       }
     );
   }

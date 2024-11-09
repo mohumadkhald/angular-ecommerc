@@ -86,8 +86,8 @@ export class ProductListComponent implements OnInit {
   sortDirection = 'desc';
   selectedSort: string = 'createdAtDesc';
   currentSortOption!: string;
+  currentElementSizeOption!: string
   private hasQueryParams = false;
-  numElement: any;
   inStockCount: number = 0;
   outOfStockCount: number = 0;
   screenWidth: any;
@@ -144,7 +144,7 @@ export class ProductListComponent implements OnInit {
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
         this.currentPage = +params['page'] || 1;
-        this.numElement = params['pageSize'] || 20
+        this.currentElementSizeOption = params['pageSize'] || 20
 
         // Initialize inStock and notAvailable filters
         this.filters.inStock = params['inStock'] === 'true';
@@ -226,7 +226,7 @@ export class ProductListComponent implements OnInit {
           this.filters.minPrice,
           this.filters.maxPrice,
           this.currentPage - 1, // Adjust page number for API
-          this.numElement,
+          this.currentElementSizeOption,
           this.filters.colors,
           this.filters.sizes,
           available
@@ -367,29 +367,40 @@ export class ProductListComponent implements OnInit {
     }
 
     this.currentSortOption = value; // Update the current sort option
-    this.updateQueryParams({ sortBy, sortDirection }); // Update the query parameters
+    const page = 1;
+    this.updateQueryParams({ sortBy, sortDirection, page }); // Update the query parameters
+    this.loadProducts(); // Reload products based on the new sort option
+  }
+
+  onSizeElementChange(value: string) {
+    const pageSize = value
+    const page = 1;
+    this.updateQueryParams({ pageSize, page }); // Update the query parameters
     this.loadProducts(); // Reload products based on the new sort option
   }
 
   onEmailChange(email: string): void {
     this.currentEmailSeller = email;
-    this.updateQueryParams({ email });
+    const page = 1;
+    this.updateQueryParams({ email, page });
     this.loadProducts();
   }
 
   onFilterChange(): void {
     // Update query params with availability filters
+    const page = 1;
     this.updateQueryParams({
       inStock: this.filters.inStock ? 'true' : 'false',
-      notAvailable: this.filters.notAvailable ? 'true' : 'false',
+      notAvailable: this.filters.notAvailable ? 'true' : 'false', page
     });
     this.loadProducts();
   }
 
   onPriceRangeChange(): void {
+    const page = 1;
     this.updateQueryParams({
       minPrice: this.filters.minPrice,
-      maxPrice: this.filters.maxPrice,
+      maxPrice: this.filters.maxPrice, page
     });
     this.loadProducts();
   }
@@ -404,7 +415,8 @@ export class ProductListComponent implements OnInit {
         this.filters.colors.splice(index, 1);
       }
     }
-    this.updateQueryParams({ colors: this.filters.colors.join(',') });
+    const page = 1;
+    this.updateQueryParams({ colors: this.filters.colors.join(','), page });
     this.loadProducts();
   }
 
@@ -418,7 +430,8 @@ export class ProductListComponent implements OnInit {
         this.filters.sizes.splice(index, 1);
       }
     }
-    this.updateQueryParams({ sizes: this.filters.sizes.join(',') });
+    const page = 1;
+    this.updateQueryParams({ sizes: this.filters.sizes.join(','), page });
     this.loadProducts();
   }
 
@@ -469,12 +482,6 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  onSizeElementChange(event: Event) {
-    const target = event.target as HTMLSelectElement | null;
-    const value = target?.value
-    let pageSize = value
-    this.updateQueryParams({ pageSize }); // Update the query parameters
-    this.loadProducts(); // Reload products based on the new sort option
-  }
+
   
 }

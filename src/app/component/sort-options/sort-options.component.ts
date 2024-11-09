@@ -14,18 +14,17 @@ import { SubCategoriesService } from '../../dashboard-service/sub-categories.ser
 export class SortOptionsComponent implements OnInit {
   subCats: any;
   emailSellers: any;
-
+  @Input() currentElementSizeOption: string = '';
   @Input() currentSortOption: string = 'createdAtDesc';
   @Input() currentEmailSeller: string = '';
   @Input() currentSubCat: string = '';
   @Input() showSubCatDropdown: boolean = false;
   @Input() showEmailDropdown: boolean = true;
 
-
+  @Output() elementChange = new EventEmitter<string>();
   @Output() sortChange = new EventEmitter<string>();
   @Output() emailChange = new EventEmitter<string>();
   @Output() subCatChange = new EventEmitter<string>();
-  
 
   constructor(
     private productsService: ProductsService,
@@ -34,6 +33,11 @@ export class SortOptionsComponent implements OnInit {
   ngOnInit(): void {
     this.getEmailsSellers();
     this.getSubCats();
+  }
+
+  onSizeElementChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value; // Get the selected value
+    this.elementChange.emit(value); // Emit the selected value as a string
   }
 
   onSortChange(event: Event): void {

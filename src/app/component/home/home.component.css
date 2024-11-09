@@ -1,3 +1,43 @@
+.main-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.back_ground_img {
+  width: 100%;
+  height: auto;
+  transition: opacity 0.5s ease;
+}
+
+.left_img_button, .right_img_button {
+  cursor: pointer;
+  font-size: 24px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.left_img_button {
+  left: 10px;
+}
+
+.right_img_button {
+  right: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
 body {
   font-family: 'Mukta', sans-serif;
   margin: 0;
@@ -817,7 +857,122 @@ img.last:hover {
   padding: 20px 20px 0px 10px;
 }
 
+@media (max-width: 1600px) {
+  .boxs {
+    max-width: 1420px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+  .box2 > div > div:first-child {
+    height: 50px;
+    padding: 10px 20px 10px 10px;
+}
+}
+
+@media (max-width: 1400px) {
+  .boxs {
+    max-width: 1120px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+  .box2 > div > div:first-child {
+    height: 50px;
+    padding: 10px 20px 10px 10px;
+}
+
+.box2 > div > div:first-child h2 {
+    font-size: 1.3rem;
+    line-height: -10px;
+    line-height-step: 10px;
+}
+}
+@media (max-width: 1200px) {
+  .boxs {
+    max-width: 950px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+}
+
+@media (max-width: 1024px) {
+  .boxs {
+    max-width: 950px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+}
+
+@media (max-width: 992px) {
+  .boxs {
+    max-width: 700px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+
+  .box2 > div > div:first-child {
+    height: 50px;
+    padding: 10px 20px 10px 10px;
+}
+
+.box2 > div > div:first-child h2 {
+    font-size: 1.3rem;
+    line-height: -10px;
+    line-height-step: 10px;
+}
+}
+
 @media (max-width: 768px) {
+  .boxs {
+    max-width: 540px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+
+  .box2 > div > div:first-child {
+      height: 50px;
+      padding: 10px 20px 10px 10px;
+  }
+
+  .box2 > div > div:first-child h2 {
+      font-size: 1.3rem;
+      line-height: -10px;
+      line-height-step: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .boxs {
+    max-width: 500px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+  .box2 > div > div:first-child {
+    height: 50px;
+    padding: 10px 20px 10px 10px;
+}
+
+.box2 > div > div:first-child h2 {
+    font-size: 1.3rem;
+    line-height: -10px;
+    line-height-step: 10px;
+}
+}
+
+@media (max-width: 500px) {
+  .boxs {
+    max-width: 420px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+
   .box2 > div > div:first-child {
       height: 50px;
       padding: 10px 20px 10px 10px;
@@ -831,6 +986,12 @@ img.last:hover {
 }
 
 @media (max-width: 425px) {
+  .boxs {
+    max-width: 350px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
   .box2 > div > div:first-child {
       height: 50px;
       padding: 10px 20px 10px 10px;
@@ -843,6 +1004,24 @@ img.last:hover {
   }
 }
 
+@media (max-width: 350px) {
+  .boxs {
+    max-width: 280px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+}
+
+@media (max-width: 300px) {
+  .boxs {
+    max-width: 240px;
+    height: 100%;
+    padding: .5rem;
+    z-index: 5;
+  }
+}
+
 .box2 h2 {
   font-size: 21px;
   display: inline;
@@ -851,7 +1030,6 @@ img.last:hover {
 }
 
 .box2 div span {
-  padding-left: 20px;
   color: #007185;
 }
 
@@ -862,7 +1040,7 @@ img.last:hover {
 .blockbuster_deals > div > div:last-child {
   width: 100%;
   display: flex;
-  height: 290px;
+  height: 300px;
   overflow-y: hidden;
   overflow-x: scroll;
   scroll-behavior: smooth;

@@ -5,16 +5,14 @@
 
 <div *ngIf="auth() && !loading">
     <h1 class="text-center my-2">Manage Products</h1>
+    <button class="filter-options" (click)="openFilterModal()">Filter</button>
+    <app-sort-options class="sort-options" style="position: relative; left: -10px;" [currentSortOption]="currentSortOption"
+        [currentElementSizeOption]="currentElementSizeOption" [showSubCatDropdown]="true"
+        [currentEmailSeller]="currentEmailSeller" [currentSubCat]="currentSubCat" (sortChange)="onSortChange($event)"
+        (elementChange)="onSizeElementChange($event)" (emailChange)="onEmailChange($event)"
+        (subCatChange)="onSubCatChange($event)">
+    </app-sort-options>
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-            <button class="filter-options" (click)="openFilterModal()">Filter</button>
-            <app-sort-options class="sort-options" [currentSortOption]="currentSortOption" [showSubCatDropdown]="true" 
-                [currentEmailSeller]="currentEmailSeller" [currentSubCat]="currentSubCat"
-                (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)" (subCatChange)="onSubCatChange($event)">
-            </app-sort-options>
-
-        </div>
-
         <div class="manage-products-container">
             <div class="button-group" style="display: flex; align-items: center; gap: 10px;">
                 <a class="btn btn-primary" (click)="open()"><i class="fa fa-plus"></i> Add New Product</a>

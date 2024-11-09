@@ -71,7 +71,6 @@ export class ProductsComponent implements OnInit {
   sortedProducts: Array<{ name: any; price: any }> = [];
   currentSortOption!: string;
   private hasQueryParams = false;
-  numElement: number = 10;
   currentPage = 1;
   totalPages: number[] = [];
   selectedProductIds: number[] = [];
@@ -80,6 +79,7 @@ export class ProductsComponent implements OnInit {
   currentEmailSeller: string = ''
   emailSellers: string[] = [];
   currentSubCat: string = '';
+  currentElementSizeOption!: string;
 
 
   constructor(
@@ -124,6 +124,7 @@ export class ProductsComponent implements OnInit {
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
         this.currentPage = +params['page'] || 1;
+        this.currentElementSizeOption = params['pageSize'] || 20;
 
         // Initialize inStock and notAvailable filters
         this.filters.inStock = params['inStock'] === 'true';
@@ -163,7 +164,7 @@ export class ProductsComponent implements OnInit {
         this.filters.colors,
         this.filters.sizes,
         this.currentPage - 1, // Adjust page number for API
-        this.numElement,
+        this.currentElementSizeOption,
         this.currentEmailSeller,
         this.currentSubCat,
         this.nameQuery,
@@ -268,7 +269,6 @@ export class ProductsComponent implements OnInit {
             this.toastService.add('Products deleted successfully');
           },
           (error) => {
-            console.error('Error deleting products:', error);
           }
         );
       }
@@ -325,7 +325,6 @@ export class ProductsComponent implements OnInit {
 
   onDiscountChange(newValue: number): void {
     this.discount = newValue;
-    console.log('Discount value updated:', this.discount);
   }
 
   makeDiscount(): void {
@@ -415,5 +414,13 @@ export class ProductsComponent implements OnInit {
       }
     });
   }
+
+  onSizeElementChange(value: string) {
+    const pageSize = value
+    const page = 1;
+    this.updateQueryParams({ pageSize, page }); // Update the query parameters
+    this.loadProducts(); // Reload products based on the new sort option
+  }
+
 
 }

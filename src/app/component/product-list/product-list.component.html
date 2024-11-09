@@ -75,21 +75,11 @@
     </div>
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
       <button class="filter-options" (click)="openFilterModal()">Filter</button>
-      <select (change)="onSizeElementChange($event)" [(ngModel)]="numElement">
-        <option value="20" selected>Numbers of Products in page</option>
-        <option [value]="5">5 Products In page</option>
-        <option [value]="10">10 Products In page</option>
-        <option [value]="30">30 Products In page</option>
-        <option [value]="40">40 Products In page</option>
-        <option [value]="50">50 Products In page</option>
-        <option [value]="100">100 Products In page</option>
-        <option [value]="150">150 Products In page</option>
-      </select>
-      <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
-        [currentEmailSeller]="currentEmailSeller" (sortChange)="onSortChange($event)"
-        (emailChange)="onEmailChange($event)">
-      </app-sort-options>
     </div>
+    <app-sort-options *ngIf="subCategoryName" class="sort-options" [currentSortOption]="currentSortOption" [currentElementSizeOption]="currentElementSizeOption"
+    [currentEmailSeller]="currentEmailSeller" (elementChange)="onSizeElementChange($event)" (sortChange)="onSortChange($event)"
+    (emailChange)="onEmailChange($event)">
+  </app-sort-options>
     <main class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>

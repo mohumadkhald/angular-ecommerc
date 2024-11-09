@@ -50,12 +50,10 @@ export class AddUserComponent {
     this.userService.addUser(this.userForm.value)
       .subscribe({
         next: (response) => {
-          console.log('User added successfully', response);
           this.userAdded.emit(); // Emit the event when a user is added
           this.activeModal.close('added');
         },
         error: (error) => {
-          console.error('Error adding user', error);
           if (error.status === 400 && error.error.violations) {
             this.displayServerErrors(error.error.violations);
           } else {

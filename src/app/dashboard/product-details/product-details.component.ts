@@ -66,7 +66,6 @@ export class ProductDetailsComponent implements OnInit {
         }
       },
       (reason) => {
-        console.log('Modal dismissed:', reason);
       }
     );
   }

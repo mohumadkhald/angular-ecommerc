@@ -18,7 +18,7 @@ export class ProductsService {
     this.apiUrl = configService.getApiUri();
    }
 
-  getAllProducts(sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, colors: string[], sizes: string[], page: number, pageSize: number, emailQuery: string, subCat: string, nameQuery: string, available: any): Observable<any> {
+  getAllProducts(sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, colors: string[], sizes: string[], page: number, pageSize: any, emailQuery: string, subCat: string, nameQuery: string, available: any): Observable<any> {
     let params = new HttpParams()
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)

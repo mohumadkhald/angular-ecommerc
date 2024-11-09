@@ -58,7 +58,6 @@ export class AddSubCategoryComponent {
         this.categories = categoriesData;
       },
       (error) => {
-        console.error('Error fetching categories', error);
       }
     );
   }
@@ -86,7 +85,6 @@ export class AddSubCategoryComponent {
       this.subCategoriesService.editSubCategory(formData, this.subCat.id).subscribe(
         (response) => {
           // Handle successful response
-          console.log('Category added successfully:', response);
           this.categoryAdded.emit(); // Emit the event when a user is added
           this.activeModal.close('success');
         },
@@ -103,7 +101,6 @@ export class AddSubCategoryComponent {
       this.subCategoriesService.addSubCategory(formData).subscribe(
         (response) => {
           // Handle successful response
-          console.log('Category added successfully:', response);
           this.categoryAdded.emit(); // Emit the event when a user is added
           this.activeModal.close('success');
         },

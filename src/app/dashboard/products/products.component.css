@@ -51,7 +51,7 @@ app-pagination {
 .sort-options {
   margin: 0 5px;
   margin-bottom: 10px;
-  margin-left: auto; /* This pushes the sort options to the right */
+  margin-left: 20px; /* This pushes the sort options to the right */
   align-self: flex-end;
 }
 
@@ -166,7 +166,7 @@ app-pagination {
   .container-lg,
   .container-md,
   .container-sm {
-    max-width: 1240px;
+    max-width: 1180px;
   }
 }
 
@@ -185,7 +185,7 @@ app-pagination {
   .container-lg,
   .container-md,
   .container-sm {
-    max-width: 1024px;
+    max-width: 900px;
   }
 }
 

@@ -55,7 +55,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
-        console.log('Auth status changed:', isLoggedIn);
         if (isLoggedIn) {
           this.showStats = this.router.url === '/dashboard';
           this.router.events.subscribe(
@@ -93,7 +92,6 @@ export class DashboardComponent implements OnInit {
       (users) => {
         this.userCount = users.totalElements;
         this.totalUsers = users.content
-        console.log(this.totalUsers)
       },
       (error) => {}
     );
@@ -121,11 +119,10 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchProductCount() {
-    this.productService.getAllProducts("createdAt", "desc", 0, 999999, [], [], 0, 10, "", '', "", '').subscribe(
+    this.productService.getAllProducts("createdAt", "desc", 0, 999999, [], [], 0, 5, "", '', "", '').subscribe(
       (products) => {
         this.prodsCount = products.totalElements;
         this.products = products.content;
-        console.log(this.products)
       },
       (error) => {}
 
@@ -148,7 +145,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  showLastElements = true; // Initially hidden
+  showLastElements = false; // Initially hidden
   showLastUsers = true; // Initially hidden
   showLastCats = true; // Initially hidden
   showLastSubCats = true; // Initially hidden

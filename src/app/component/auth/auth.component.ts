@@ -89,15 +89,11 @@ export class AuthComponent implements OnInit {
     // Handle query params to toggle between login/register
     this.route.queryParams.subscribe((params) => {
       const state = params['state'];
-      console.log("Current query parameters:", params); // Log the query parameters for debugging
-
       // Show appropriate form based on the query parameter
       if (state === 'register') {
         setTimeout(() => {
         this.showSignUp();
         }, 600);
-      } else {
-        this.showSignIn(); // Default to sign-in if no state is provided
       }
 
       // Handle token if present (for navigation after registration)
