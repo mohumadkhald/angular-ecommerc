@@ -94,6 +94,8 @@ export class AuthComponent implements OnInit {
         setTimeout(() => {
         this.showSignUp();
         }, 600);
+      } else {
+        this.showSignIn();
       }
 
       // Handle token if present (for navigation after registration)
