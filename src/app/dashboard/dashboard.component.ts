@@ -17,11 +17,13 @@ import { SubCategoriesService } from '../dashboard-service/sub-categories.servic
 import { UsersService } from '../dashboard-service/users.service';
 import { AuthService } from '../service/auth.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEye, faEyeSlash, fas } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, NgIf, SidebarComponent, CommonModule],
+  imports: [FontAwesomeModule, RouterOutlet, RouterLink, NgIf, SidebarComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -42,6 +44,7 @@ export class DashboardComponent implements OnInit {
   orders: any;
 
   constructor(
+    library: FaIconLibrary,
     private router: Router,
     private usersService: UsersService,
     private categoriesService: CategoriesService,
@@ -50,7 +53,10 @@ export class DashboardComponent implements OnInit {
     private ordersService: OrdersService,
     private authService: AuthService,
     private dialog: MatDialog,
-  ) {}
+  ) {
+    library.addIcons(faEye, faEyeSlash);
+  }
+
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(

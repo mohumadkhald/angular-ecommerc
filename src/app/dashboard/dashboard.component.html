@@ -90,7 +90,9 @@
         <div class="row">
           <h3 class="col-6">Last 5 SubCats</h3>
           <button (click)="toggle('sub')" class="toggle-btn offset-3 col-3">
-            <!-- <fa-icon [icon]="showLastSubCats ? 'eye-slash' : 'eye'"></fa-icon> -->
+            <fa-icon [icon]="showLastSubCats ? 'eye-slash' : 'eye'"></fa-icon>
+            <!-- <fa-icon [icon]="['fas', 'coffee']"></fa-icon> -->
+
             {{ showLastSubCats ? 'Hide' : 'Show' }} Last 5
           </button>          
         </div>
