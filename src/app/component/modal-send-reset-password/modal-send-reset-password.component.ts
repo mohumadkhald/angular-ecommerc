@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.component";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import { ConfigService } from '../../config.service';
