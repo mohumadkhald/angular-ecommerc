@@ -1,17 +1,38 @@
-<div *ngIf="productItem" class="container">
+<div *ngIf="productItem" class="container product-container">
     <div class="product-details">
-        <div class="product-images">
-            <img [src]="productItem?.imageUrl" alt="Product Image" />
-
+        <section class="product-images">
+            <!-- Thumbnail images on the left -->
             <div class="thumbnail-images">
                 <ng-container *ngFor="let variation of productItem?.productVariations">
-                    <img [src]="variation?.img" alt="Product Variation Thumbnail" *ngIf="variation?.img" />
+                    <img [src]="variation?.img" alt="Product Variation Thumbnail" *ngIf="variation?.img"
+                        class="thumbnail" (mouseover)="hoverImage(variation.img)" />
                 </ng-container>
             </div>
-        </div>
 
-        <div class="product-info mt-2">
-            <h1>{{ productItem?.productTitle }}</h1>
+            <div class="main-image-container">
+
+                <img (mousemove)="mouseMove($event)" (mouseenter)="toggleLens(true)"
+                (mouseleave)="toggleLens(false)" [src]="selectedVariation?.img || productItem?.imageUrl" alt="Product Image" class="main-image" />
+
+                <!-- Lens for magnification -->
+                <div class="lens" *ngIf="isHovering" [ngStyle]="{
+               'background-image': 'url(' + (selectedVariation?.img || productItem?.imageUrl) + ')',
+               'background-size': '1000%',
+               'background-position': lensPosition
+           }"></div> <!-- No comments in ngStyle -->
+
+                <!-- Thumbnail images below the main image -->
+                <div class="thumbnail-image">
+                    <ng-container *ngFor="let variation of productItem?.productVariations">
+                        <img [src]="variation?.img" alt="Product Variation Thumbnail" *ngIf="variation?.img"
+                            class="thumbnail" (mouseover)="hoverImage(variation.img)" />
+                    </ng-container>
+                </div>
+            </div>
+        </section>
+        <!-- Rest of the product info... -->
+        <section class="product-info">
+            <h1 class="product-title">{{ productItem?.productTitle }}</h1>
             <ul class="product-features">
                 <li>100% Quality</li>
                 <li>Free Shipping</li>
@@ -24,11 +45,11 @@
 
             <div class="product-price">
                 <h5>Price</h5>
-                <h1>&#8377; {{ productItem?.price }}</h1>
+                <h1>₹ {{ productItem?.price }}</h1>
             </div>
 
-            <div *ngIf="productItem.productVariations[0]?.color !== 'no_color'" class="product-availability">
-                <h5>Available Variations by Size:</h5>
+            <div class="product-availability" *ngIf="productItem.productVariations[0]?.color !== 'no_color'">
+                <h5>Available Variations:</h5>
                 <ul>
                     <li *ngFor="let size of getGroupedVariationsBySize() | keyvalue">
                         <strong>Size: {{ size.key | titlecase }}</strong>
@@ -40,35 +61,44 @@
                     </li>
                 </ul>
             </div>
+
             <div class="action-buttons">
-                <div style="position: relative; left: 150px;">
-                    <div *ngIf="submitted && quantity <= 0" class="err-q text-danger">
-                        Quantity must be greater than 0.</div>
-                    <div *ngIf="submitted && !validateQuantity2()" class="err-q text-danger mt-1">
-                        Quantity exceeds available stock ({{ maxQuantity }} available).
-                    </div>
-                    <div class="form-group quantity-row mt-1" style="position: absolute; bottom: 60px; right: 15px;"
-                        *ngIf="productItem.productVariations[0]?.color === 'no_color'">
-                        <label for="quantity" class="quantity-label">Qty:</label>
-                        <input value="0" class="form-control quantity-input" type="number" id="quantity"
-                            [(ngModel)]="quantity" min="1" [max]="maxQuantity" />
-                    </div>
+                <div class="quantity-input-wrapper" *ngIf="productItem.productVariations[0]?.color === 'no_color'">
+                    <label for="quantity">Qty:</label>
+                    <input value="0" class="quantity-input" type="number" id="quantity" [(ngModel)]="quantity" min="1"
+                        [max]="maxQuantity" />
                 </div>
-    
                 <button *ngIf="productItem.productVariations[0]?.color !== 'no_color'" type="button"
                     [disabled]="!hasAvailableVariations()" (click)="open(productItem)" class="btn btn-outline-primary">
                     ADD TO CART
                 </button>
                 <button class="btn btn-outline-primary" *ngIf="productItem.productVariations[0]?.color === 'no_color'"
                     (click)="open2(productItem)" [disabled]="!productItem.inStock">Add to Cart</button>
-                <button type="button" class="btn btn-warning ml-3">BUY NOW</button>
+                <button type="button" class="btn btn-warning">BUY NOW</button>
+                <div *ngIf="submitted && quantity <= 0" class="error text-danger">Quantity must be greater than 0.</div>
+                <div *ngIf="submitted && !validateQuantity2()" class="error text-danger">
+                    Quantity exceeds available stock ({{ maxQuantity }} available).
+                </div>
             </div>
-
-        </div>
+        </section>
     </div>
 </div>
 
-<div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
+<section class="recommended-products m-5">
+    <h2>Recommended for You</h2>
+    <div class="recommended-container">
+        <ng-container *ngFor="let item of generateRecommendations()">
+            <div class="recommended-item">
+                <img [src]="item.imageUrl" alt="{{ item.productTitle }}">
+                <h5>{{ item.productTitle }}</h5>
+                <h6>&#8377; {{ item.price }}</h6>
+                <button (click)="open(item)" class="btn btn-outline-primary">Add to Cart</button>
+            </div>
+        </ng-container>
+    </div>
+</section>
+
+<div *ngIf="showNotFound" class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
     <div class="product-details">
         <h1>Not Found This Product</h1>
     </div>

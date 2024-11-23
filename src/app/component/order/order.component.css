@@ -38,17 +38,38 @@
   flex: 1;
 }
 
-.shipping-address,
-.item-details {
-  margin-top: 16px;
-}
-
 .cont-empty {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 60vh;
 }
+
+
+.order-items {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem; /* Spacing between items */
+}
+
+.order-item {
+  display: inline-block;
+  min-width: 300px; /* Adjust based on item width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  background-color: #fff;
+  padding: .5rem;
+}
+
+.product-img {
+  max-width: 100px;
+  height: auto;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

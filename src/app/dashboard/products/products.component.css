@@ -9,6 +9,11 @@ app-pagination {
   white-space: nowrap; /* Prevent text wrapping */
   word-wrap: break-word;
 }
+.main-table th {
+  background-color: #343a40; /* Dark header background */
+  color: #fff; /* White text for header */
+  }
+
 /* Base styling for the container */
 .manage-products-container {
   display: flex;

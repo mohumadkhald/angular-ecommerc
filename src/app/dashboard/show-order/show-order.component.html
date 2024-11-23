@@ -1,0 +1,56 @@
+<div class="modal-header">
+  <h4 class="modal-title">Order Details</h4>
+  <button
+    class="btn btn-close bg-danger text-light"
+    style="margin-right: 5px;"
+    (click)="close()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <!-- Order Summary -->
+  <div class="mb-4">
+    <h5>Order ID: {{ order.id }}</h5>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <p><strong>Order Date:</strong> {{ order.orderDate | date:'medium' }}</p>
+    <p><strong>Delivery Date:</strong> {{ order.deliveryDate | date:'medium' }}</p>
+    <p><strong>Total Price:</strong> ${{ order.totalPrice }}</p>
+  </div>
+
+  <!-- Shipping Address -->
+  <div class="mb-4">
+    <h5>Shipping Address:</h5>
+    <p>{{ order.shippingAddress.street }}, {{ order.shippingAddress.city }}</p>
+    <p>{{ order.shippingAddress.state }}, {{ order.shippingAddress.country }}</p>
+    <p><strong>Postal Code:</strong> {{ order.shippingAddress.postalCode }}</p>
+  </div>
+
+  <!-- Payment Information -->
+  <div class="mb-4">
+    <h5>Payment Information:</h5>
+    <p><strong>Cardholder Name:</strong> {{ order.paymentInfo.cardHolderName }}</p>
+    <p><strong>Card Number:</strong> {{ order.paymentInfo.cardNumber }}</p>
+    <p><strong>Expiration Date:</strong> {{ order.paymentInfo.expirationDate }}</p>
+  </div>
+
+  <!-- Order Items -->
+  <div>
+    <h5>Order Items:</h5>
+    <ul>
+      <li *ngFor="let item of order.orderItems">
+        <div>
+          <img
+            [src]="item.img"
+            alt="{{ item.productName }}"
+            style="width: 50px; height: 50px; margin-right: 10px; object-fit: cover;"
+          />
+          <span>
+            {{ item.productName }} - Price: ${{ item.price }},
+            <strong>Discount:</strong> {{ item.discount }}%,
+            <strong>Total:</strong> ${{ item.totalPrice }}
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,60 +1,151 @@
-
 .container {
-    width: 1200px;
+    max-width: 1200px;
     width: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin: 0 auto;
+    padding: 10px;
 }
 
-/* Product details container */
 .product-details {
-    margin: 5% auto;
     display: flex;
-    width: 1200px;
+    flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 20px;
     background-color: #fff;
+    padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .product-images {
-    margin-top: 5px;
-    flex: 1;
+    flex: 1 1 300px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
+    object-fit:contain;
 }
 
-.product-images img {
+.product-images img.main-image {
+    margin-top: 20px;
     width: 100%;
-    height: auto;
     max-height: 400px;
-    object-fit: cover;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    object-fit: contain;
     transition: transform 0.3s ease;
 }
 
-.product-images img:hover {
+.thumbnail-image {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.thumbnail-image img {
+    width: 80px;
+    height: auto;
+    margin: 0 5px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+
+.thumbnail-images img:hover {
     transform: scale(1.1);
 }
 
-.thumbnail-images {
-    margin-top: 1vh;
+.product-info {
+    flex: 1 1 400px;
+    margin-left: 20px;
+}
+
+.product-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.product-features {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px;
+}
+
+.product-features li {
+    margin-bottom: 5px;
+}
+
+.product-price {
+    margin-bottom: 20px;
+}
+
+.product-price h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.action-buttons {
     display: flex;
-    justify-content: center;
+    margin-top: 20px;
+}
+
+.action-buttons button {
+    margin-right: 10px;
+}
+
+.recommended-products {
+    margin-top: 40px;
+}
+
+.recommended-container {
+    display: flex;
+    overflow-x: auto; 
+    padding: 10px 0;
+    gap: 10px; /* Use this instead for spacing between items */
+}
+
+.recommended-item {
+    min-width: 200px;
+    text-align: center;
+    border: 1px solid #ddd; 
+    border-radius: 5px;
+    padding: 10px; 
+}
+
+.recommended-item img {
+    width: 100%; /* Ensure the image is responsive */
+    height: auto; /* Preserve aspect ratio */
+}
+
+.product-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Changed to flex-start */
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-images {
+    display: flex;
+    flex-direction: row; /* Changed to row */
+    align-items: flex-start; /* Align images to the top */
+    object-fit:contain;
+}
+
+.main-image-container {
+    flex: 0 0 60%; /* Use a percentage for the main image width */
+}
+
+
+.thumbnail-images {
+    flex: 0 0 20%; /* Use a percentage for thumbnail images */
+    display: flex;
+    flex-direction: column; /* Change to column */
+    justify-content: center; /* Align thumbnails in center */
+    margin-left: 20px; /* Add space between main and thumbnails */
 }
 
 .thumbnail-images img {
-    width: 150px;
+    width: 50%; /* Make thumbnails responsive */
     height: auto;
-    margin: 0 5px;
+    margin: 5px 0; /* Add space between thumbnails */
     cursor: pointer;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -66,176 +157,139 @@
 }
 
 .product-info {
-    flex: 1;
-    padding: 0 50px;
-    max-width: 700px;
-}
-
-.product-info h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.product-features {
-    list-style-type: none;
-    padding-left: 0;
-    margin-bottom: 20px;
-}
-
-.product-features li {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.product-price {
-    margin-bottom: 20px;
-}
-
-.product-price h5 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.product-price h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.product-availability {
-    margin-bottom: 20px;
-}
-
-.product-availability h5 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.product-availability ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
-}
-
-.product-availability li {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
+    flex: 1; /* Allow product info to take available space */
+    margin-left: 20px;
 }
 
 
 .action-buttons {
     display: flex;
-    align-items: center;
-}
-
-.action-buttons button {
-    margin-right: 10px;
-}
-
-.cont-notfound {
-    display: none; /* Default to none */
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    flex-wrap: wrap;
+    gap: 15px;
   }
   
-  .cont-notfound.show-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-  }
-
-  .quantity-row {
+  .quantity-input-wrapper {
     display: flex;
     align-items: center;
-    gap: 5px; /* Adds space between the label and input */
-    width: 100%; /* Optional: can adjust based on layout */
-    max-width: 80px; /* Ensures compact layout */
-    margin: 0px 15px;
-  }
-  
-  .quantity-label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #555;
+    gap: 10px;
   }
   
   .quantity-input {
-    width: 70px;
+    width: 60px;
     padding: 5px;
-    font-size: 14px;
   }
-  
-  .err-q {
-    position: absolute; bottom: 20px; left: 0px;
-    width: 250px;
+
+
+.error {
+    margin-bottom: 10px;
   }
-  
-@media (min-width: 770px) and ( max-width:1200px) {
-    .thumbnail-images img {
-        flex: 0 0 auto;
-        width: 25%;
-    }
 
-    .product-images {
-        margin-bottom: 20px;
-    }
+/* Lens for magnification */
+.lens {
+    position: absolute;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 200px; /* Size of the lens */
+    height: 200px; /* Size of the lens */
+    pointer-events: none; /* Prevent interaction on the lens */
+    overflow: hidden; /* Crucial for clipping the magnified image */
+    background: rgba(255, 255, 255, 0.5); /* Optional: semi-transparent background for styling */
+}
 
 
-    .action-buttons button {
-        margin-bottom: 10px;
-    }
+  @media (max-width: 1100px) {
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .quantity-input {
+        width: 150px;
+        padding: 5px;
+        margin-left: 10px;
+      }
+}
+@media (max-width: 770px) {
+
+    .action-buttons {
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .quantity-input {
+        width: 200px;
+        padding: 5px;
+        margin-left: 25px;
+      }
 }
 @media (max-width: 768px) {
     .product-details {
         flex-direction: column;
         align-items: center;
-        margin: 15px;
-    }
-
-    .thumbnail-images img {
-        flex: 0 0 auto;
-        width: 20%;
     }
 
     .product-info {
-        margin: 10px;
-        padding: 10px;
-        text-align: center;
+        margin-left: 0;
+        width: 100%;
     }
 
-    .product-images {
-        margin-bottom: 20px;
+    .thumbnail-images {
+        flex: 0 0 20%; /* Use a percentage for thumbnail images */
+        display: flex;
+        flex-direction: column; /* Change to column */
+        justify-content: center; /* Align thumbnails in center */
+        margin-left: 20px; /* Add space between main and thumbnails */
     }
+    
+    .thumbnail-image img {
+        width: 50%; /* Make thumbnails responsive */
+        height: auto;
+        margin: 5px 0; /* Add space between thumbnails */
+        cursor: pointer;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+    }
+}
 
-    .action-buttons {
+
+@media (max-width: 450px) {
+    .product-details {
         flex-direction: column;
         align-items: center;
     }
 
-    .action-buttons button {
-        margin-bottom: 10px;
+    .product-info {
+        margin-left: 0;
+        width: 100%;
     }
-}
 
-@media (max-width: 576px) {
     .thumbnail-images {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        -webkit-overflow-scrolling: touch; /* Enables smooth scrolling on iOS */
+        flex: 0 0 20%; /* Use a percentage for thumbnail images */
+        display: flex;
+        flex-direction: column; /* Change to column */
+        justify-content: center; /* Align thumbnails in center */
+        margin-left: 20px; /* Add space between main and thumbnails */
     }
+    
+    .thumbnail-image img {
+        width: 50%; /* Make thumbnails responsive */
+        height: auto;
+        margin: 5px 0; /* Add space between thumbnails */
+        cursor: pointer;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+    }
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
 
-    .thumbnail-images img {
-        flex: 0 0 auto;
-        width: 50%;
-    }
-
-    .product-info h1 {
-        font-size: 1.8rem;
-    }
-
-    .product-price h1 {
-        font-size: 2rem;
-    }
+      .quantity-input {
+        width: 200px;
+        padding: 5px;
+        margin-left: 25px;
+      }
 }

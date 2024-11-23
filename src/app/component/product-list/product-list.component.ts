@@ -1,4 +1,11 @@
-import { CurrencyPipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
+import {
+  CommonModule,
+  CurrencyPipe,
+  NgClass,
+  NgForOf,
+  NgIf,
+  NgStyle,
+} from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -38,13 +45,10 @@ import { SortOptionsComponent } from '../sort-options/sort-options.component';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
   imports: [
-    NgForOf,
-    NgIf,
     ProductCardComponent,
     FormsModule,
+    CommonModule,
     CurrencyPipe,
-    NgClass,
-    NgStyle,
     RouterLink,
     RouterLinkActive,
     MatProgressSpinner,
@@ -86,13 +90,14 @@ export class ProductListComponent implements OnInit {
   sortDirection = 'desc';
   selectedSort: string = 'createdAtDesc';
   currentSortOption!: string;
-  currentElementSizeOption!: string
+  currentElementSizeOption!: string;
   private hasQueryParams = false;
   inStockCount: number = 0;
   outOfStockCount: number = 0;
   screenWidth: any;
   currentEmailSeller: string = '';
   display: boolean = false;
+  currentCategoryId: any;
 
   constructor(
     private router: Router,
@@ -105,10 +110,7 @@ export class ProductListComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-
-
   ngOnInit(): void {
-    this.onFilterChange();
     // Handle paramMap changes
     this.route.paramMap.subscribe(
       (paramMap) => {
@@ -144,7 +146,7 @@ export class ProductListComponent implements OnInit {
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
         this.currentPage = +params['page'] || 1;
-        this.currentElementSizeOption = params['pageSize'] || 20
+        this.currentElementSizeOption = params['pageSize'] || 20;
 
         // Initialize inStock and notAvailable filters
         this.filters.inStock = params['inStock'] === 'true';
@@ -165,6 +167,9 @@ export class ProductListComponent implements OnInit {
 
     // Initialize sortedProducts
     this.sortedProducts = [...this.products];
+    if (this.subCategoryName) {
+      this.onFilterChange();
+    }
   }
 
   showErrorDialog(message: string): void {
@@ -182,6 +187,8 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  showNotFound: boolean = false;
+
   loadSubCategories(): void {
     if (this.categoryTitle) {
       this.categoryService
@@ -193,7 +200,9 @@ export class ProductListComponent implements OnInit {
           },
           (error) => {
             if (error.status === 404) {
-              this.showNotFound = true;
+              setTimeout(() => {
+                this.showNotFound = true;
+              }, 200);
             }
             if (error.status === 401) {
               this.showExpiredSessionDialog(
@@ -206,7 +215,6 @@ export class ProductListComponent implements OnInit {
         );
     }
   }
-  showNotFound: boolean = false;
 
   loadProducts(): void {
     if (this.subCategoryName) {
@@ -235,16 +243,19 @@ export class ProductListComponent implements OnInit {
           (response: PaginatedResponse<Product[]>) => {
             this.loading = false;
             this.products = response.content;
-            if(response.content)
-            {
-              for(let i = 0; i < response.content.length; i++)
-              {
-                if(response.content[i].colorsAndSizes['no_color'])
-                {
+            if (response.content && response.content.length > 0) {
+              // Check if products have no color
+              for (let i = 0; i < response.content.length; i++) {
+                if (
+                  response.content[i].colorsAndSizes['no_color'] &&
+                  response.content.length > 1
+                ) {
                   this.display = false;
                 } else {
                   this.display = true;
                 }
+                // send catID to sort component to get sellers in this category
+                this.currentCategoryId = response.content[0].subCategory.id;
               }
             }
             this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
@@ -373,10 +384,16 @@ export class ProductListComponent implements OnInit {
   }
 
   onSizeElementChange(value: string) {
-    const pageSize = value
+    const pageSize = value;
     const page = 1;
     this.updateQueryParams({ pageSize, page }); // Update the query parameters
     this.loadProducts(); // Reload products based on the new sort option
+  }
+
+  onCategoryChange(catId: any): void {
+    const page = 1;
+    this.updateQueryParams({ page });
+    this.loadProducts();
   }
 
   onEmailChange(email: string): void {
@@ -391,7 +408,8 @@ export class ProductListComponent implements OnInit {
     const page = 1;
     this.updateQueryParams({
       inStock: this.filters.inStock ? 'true' : 'false',
-      notAvailable: this.filters.notAvailable ? 'true' : 'false', page
+      notAvailable: this.filters.notAvailable ? 'true' : 'false',
+      page,
     });
     this.loadProducts();
   }
@@ -400,7 +418,8 @@ export class ProductListComponent implements OnInit {
     const page = 1;
     this.updateQueryParams({
       minPrice: this.filters.minPrice,
-      maxPrice: this.filters.maxPrice, page
+      maxPrice: this.filters.maxPrice,
+      page,
     });
     this.loadProducts();
   }
@@ -481,7 +500,4 @@ export class ProductListComponent implements OnInit {
       }
     });
   }
-
-
-  
 }

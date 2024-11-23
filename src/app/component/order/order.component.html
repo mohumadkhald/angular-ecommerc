@@ -16,16 +16,19 @@
 
             <div class="order-items">
                 <h3>Order Items</h3>
-                <div *ngFor="let item of order.orderItems" class="order-item">
-                    <img [src]="item.img" alt="{{ item.productName }}" class="product-img">
-                    <div class="item-details">
-                        <p>Product Name: {{ item.productName }}</p>
-                        <p>Price: ${{ item.price }}</p>
-                        <div *ngFor="let variation of item.productVariations">
-                            <p>Color: {{ variation.color }}</p>
-                            <p>Size: {{ variation.size }}</p>
-                            <p>Quantity: {{ variation.quantity }}</p>
-                            <p>Total Price: ${{ item.price * variation.quantity }}</p>
+                <div class="scroll-container">
+                    <div *ngFor="let item of order.orderItems" class="order-item">
+                        <img [src]="item.img" alt="{{ item.productName }}" class="product-img">
+                        <div class="item-details">
+                            <p>{{ item.productName }}</p>
+                            <p>Price: ${{ item.price }}</p>
+                            <p>Discount: {{ item.discount }}</p>
+                            <div *ngFor="let variation of item.productVariations">
+                                <p>Color: {{ variation.color }}</p>
+                                <p>Size: {{ variation.size }}</p>
+                                <p>Quantity: {{ variation.quantity }}</p>
+                                <p>Total Price: ${{ item.totalPrice * variation.quantity }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -33,6 +36,7 @@
         </div>
     </div>
 </div>
+
 
 <ng-template #noOrders>
     <h2 class="cont-empty text-center text-danger">No any orders found.</h2>

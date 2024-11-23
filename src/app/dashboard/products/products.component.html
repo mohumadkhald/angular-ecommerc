@@ -8,8 +8,9 @@
     <button class="filter-options" (click)="openFilterModal()">Filter</button>
     <app-sort-options class="sort-options" style="position: relative; left: -10px;" [currentSortOption]="currentSortOption"
         [currentElementSizeOption]="currentElementSizeOption" [showSubCatDropdown]="true"
-        [currentEmailSeller]="currentEmailSeller" [currentSubCat]="currentSubCat" (sortChange)="onSortChange($event)"
-        (elementChange)="onSizeElementChange($event)" (emailChange)="onEmailChange($event)"
+        [currentEmailSeller]="currentEmailSeller" (emailChange)="onEmailChange($event)" [showEmailDropdown] = true
+        [currentSubCat]="currentSubCat" (sortChange)="onSortChange($event)"
+        (elementChange)="onSizeElementChange($event)"
         (subCatChange)="onSubCatChange($event)">
     </app-sort-options>
     <div class="container">

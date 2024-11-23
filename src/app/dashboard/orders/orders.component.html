@@ -1,31 +1,36 @@
-<div class="order-management">
-    <h2>Order Management</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>User</th>
-                <th>Order Date</th>
-                <th>Delivery Date</th>
-                <th>Status</th>
-                <th>Total Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let order of orders">
-                <td>{{ order.id }}</td>
-                <td>{{ order.user.firstName }} {{ order.user.lastName }}</td>
-                <td>{{ order.orderDate | date:'medium' }}</td>
-                <td>{{ order.deliveryDate | date:'medium' }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.totalPrice | currency }}</td>
-                <td>
-                    <button (click)="viewOrderDetails(order)">View</button>
-                    <button (click)="updateOrderStatus(order, 'COMPLETED')">Mark as Completed</button>
-                    <button (click)="deleteOrder(order.id)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container">
+    <div class="table-responsive mt-3">
+        <table class="main-table table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Order Date</th>
+                    <th>Delivery Date</th>
+                    <th>Status</th>
+                    <th>Total Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.user.firstName }} {{ order.user.lastName }}</td>
+                    <td>{{ order.orderDate | date:'medium' }}</td>
+                    <td>{{ order.deliveryDate | date:'medium' }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.totalPrice | currency }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm mr-1" (click)="viewOrderDetails(order)">View</button>
+                        <button class="btn btn-success btn-sm mr-1" (click)="updateOrderStatus(order, 'DELIVERED')">Mark
+                            as Completed</button>
+                        <button class="btn btn-warning btn-sm mr-1"
+                            (click)="updateOrderStatus(order, 'CANCELED')">Cancel</button>
+                        <button class="btn btn-danger btn-sm" (click)="deleteOrder(order.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>

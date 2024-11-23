@@ -91,7 +91,6 @@ export class CartComponent implements OnInit, OnDestroy {
       expirationDate: ['', Validators.required], // Required field for expiration date
       cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]], // Required field for CVV, must be 3 digits
     });
-    console.log(this.cardVendor);
   }
 
   ngOnDestroy(): void {

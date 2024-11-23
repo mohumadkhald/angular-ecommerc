@@ -1,23 +1,201 @@
-.order-management {
-    width: 100%;
-    margin: 20px auto;
+.table-responsive {
+  overflow-x: auto; /* Add horizontal scroll for small screens */
+  margin-bottom: 20px;
+}
+
+.main-table {
+  width: 100%; /* Ensure table spans full width of the container */
+  border-collapse: collapse; /* Remove gaps between table cells */
+}
+
+.main-table th,
+.main-table td {
+  vertical-align: middle;
+  white-space: nowrap; /* Prevent text wrapping */
+  word-wrap: break-word;
+  padding: 10px; /* Adjust padding for better spacing */
+  text-align: center; /* Center-align the text for a cleaner look */
+}
+
+.main-table th {
+  background-color: #343a40; /* Dark header background */
+  color: #fff; /* White text for header */
   }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
+
+.main-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9; /* Light background for alternating rows */
+}
+
+.main-table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+/* Buttons spacing */
+.main-table td .btn {
+  margin: 2px; /* Add small margins between buttons */
+}
+
+@media (min-width: 1400px) and (max-width: 1600px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
-  th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
-  
-  th {
-    background-color: #f4f4f4;
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 1180px;
   }
-  
-  button {
-    margin-right: 10px;
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
   }
-  
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1100px) and (max-width: 1200px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 850px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1100px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm {
+    max-width: 750px;
+  }
+}
+@media (min-width: 850px) and (max-width: 992px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 625px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 850px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 550px;
+  }
+}
+
+@media (min-width: 720px) and (max-width: 768px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 630px) and (max-width: 720px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 660px;
+  }
+}
+
+@media (min-width: 580px) and (max-width: 630px) {
+  .main-table th,
+  .main-table td {
+    font-size: 0.875rem; /* Smaller text */
+    padding: 0.5rem; /* Smaller padding */
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+  .container,
+  .container-md,
+  .container-sm {
+    max-width: 600px;
+  }
+}

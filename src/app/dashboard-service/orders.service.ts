@@ -26,7 +26,7 @@ export class OrdersService {
   }
 
   updateOrder(order: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${order.id}`, order);
+    return this.http.put(`${this.baseUrl}/orders/${order.id}/status`, order);
   }
 
   deleteOrder(orderId: number): Observable<any> {

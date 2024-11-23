@@ -17,6 +17,7 @@ export class SortOptionsComponent implements OnInit {
   @Input() currentElementSizeOption: string = '';
   @Input() currentSortOption: string = 'createdAtDesc';
   @Input() currentEmailSeller: string = '';
+  @Input() currentCategory: any = '';
   @Input() currentSubCat: string = '';
   @Input() showSubCatDropdown: boolean = false;
   @Input() showEmailDropdown: boolean = true;
@@ -24,6 +25,7 @@ export class SortOptionsComponent implements OnInit {
   @Output() elementChange = new EventEmitter<string>();
   @Output() sortChange = new EventEmitter<string>();
   @Output() emailChange = new EventEmitter<string>();
+  @Output() categoryChange = new EventEmitter<string>();
   @Output() subCatChange = new EventEmitter<string>();
 
   constructor(
@@ -62,7 +64,10 @@ export class SortOptionsComponent implements OnInit {
   }
 
   getEmailsSellers() {
-    this.productsService.getEmailsSellers().subscribe(
+    // Set currentCategory to 0 if it's not defined or null
+    const category = this.currentCategory || 0;
+  
+    this.productsService.getEmailsSellers(category).subscribe(
       (response: any) => {
         this.emailSellers = response;
       },
@@ -71,6 +76,7 @@ export class SortOptionsComponent implements OnInit {
       }
     );
   }
+  
   getSubCats() {
     this.subCateogyService.getAllSubCategories().subscribe(
       (response: any) => {

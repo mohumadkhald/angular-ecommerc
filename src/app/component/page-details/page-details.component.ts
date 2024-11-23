@@ -26,6 +26,9 @@ export class PageDetailsComponent {
   maxQuantity: any;
   quantity: number = 1;
   submitted: boolean = false;
+  selectedVariation: any;
+  isHovering: boolean = false;
+  lensPosition = '0% 0%'; // Positioning for background zoom
 
   constructor(
     private productService: ProductService,
@@ -43,6 +46,7 @@ export class PageDetailsComponent {
       (res) => {
         if (res) {
           this.productItem = res;
+          this.showNotFound = false;
           console.log(this.productItem);
         }
       },
@@ -145,5 +149,37 @@ export class PageDetailsComponent {
     return this.authService.isLoggedIn();
   }
 
+  selectVariation(variation: any) {
+    this.selectedVariation = variation; // Save the selected variation
+  }
 
+  hoverImage(imageUrl: string) {
+    this.selectedVariation = { img: imageUrl }; // Update the selected variation
+}
+  generateRecommendations() {
+    if (!this.productItem) return [];
+
+    // Generate 10 recommendations based on the product item
+    const recommendations = Array(10).fill(this.productItem);
+    return recommendations;
+  }
+
+  mouseMove(event: MouseEvent) {
+    const lens = document.querySelector('.lens') as HTMLElement;
+    if (lens) {
+      const { clientX, clientY } = event;
+      // Center the lens on cursor
+      lens.style.left = `${clientX - lens.offsetWidth / 2}px`; 
+      lens.style.top = `${clientY - lens.offsetHeight / 2}px`;
+
+      // Set the background position based on the lens position
+      const lensX = (clientX / lens.offsetWidth) * 100;
+      const lensY = (clientY / lens.offsetHeight) * 100;
+      this.lensPosition = `${lensX}% ${lensY}%`;
+    }
+  }
+
+  toggleLens(state: boolean) {
+    this.isHovering = state;
+  }
 }

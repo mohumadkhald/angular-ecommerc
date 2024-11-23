@@ -40,7 +40,8 @@ import { ToastService } from '../../service/toast.service';
 })
 
 export class AuthComponent implements OnInit {
-  @ViewChild('container') container!: ElementRef;
+  @ViewChild('container', { static: false })
+  container!: ElementRef;
 
   registerForm: FormGroup;
   loginForm: FormGroup;
@@ -93,11 +94,14 @@ export class AuthComponent implements OnInit {
       if (state === 'register') {
         setTimeout(() => {
         this.showSignUp();
-        }, 600);
-      } else {
-        this.showSignIn();
+        }, 200);
       }
 
+      if (state === 'login') {
+        setTimeout(() => {
+        this.showSignIn();
+        }, 200);
+      }
       // Handle token if present (for navigation after registration)
       const token = params['token'];
       const role = params['role'];
@@ -125,14 +129,15 @@ export class AuthComponent implements OnInit {
 
   // Toggle to show Sign In form
   showSignIn() {
-    this.router.navigate(['/auth'], { queryParams: { state: 'login' } });
-    this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
+    if (this.container) {
+      this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
+    }
   }
 
-  // Toggle to show Sign Up form
   showSignUp() {
-    this.router.navigate(['/auth'], { queryParams: { state: 'register' } });
-    this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
+    if (this.container) {
+      this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
+    }
   }
 
   // Login method
@@ -162,7 +167,7 @@ export class AuthComponent implements OnInit {
           this.router.navigate(['/']);
           this.cartService.syncCartFromLocalStorage();
           this.cartService.clearCart();
-          this.toast.add("You Are Register Welcome To Ecommerc WebSite")
+          this.toast.add("You Are Register Welcome To Commerce WebSite")
         },
         (error) => this.handleError(error)
       );
@@ -219,12 +224,10 @@ export class AuthComponent implements OnInit {
 
   // Navigation functions
   navigateToSignIn() {
-    this.router.navigate(['/auth'], { queryParams: { state: 'login' } });
     this.showSignIn();
   }
 
   navigateToSignUp() {
-    this.router.navigate(['/auth'], { queryParams: { state: 'register' } });
     this.showSignUp();
   }
 }

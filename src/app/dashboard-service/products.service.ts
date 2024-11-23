@@ -100,11 +100,11 @@ export class ProductsService {
     return this.http.patch(url, { headers });
   }
 
-  getEmailsSellers() {
+  getEmailsSellers(_catId: any) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}/products/emails`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/products/${_catId}/emails`, { headers });
   }
 }

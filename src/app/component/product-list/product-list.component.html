@@ -5,7 +5,7 @@
 <div *ngIf="!loading && !showNotFound && subCategories.length > 0" class="main-container">
   <div class="sidebar">
     <div class="subCategory">
-      <h2>{{ categoryTitle }}</h2>
+      <h3>{{ categoryTitle }}</h3>
       <ul>
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
@@ -66,7 +66,6 @@
             (change)="onSizeChange('extra_large', $event)"> XL </label>
       </div>
     </div>
-
   </div>
 
   <div style="height: 600px; width: 85%;" class="content-wrapper" *ngIf="subCategories.length > 0">
@@ -76,10 +75,12 @@
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
       <button class="filter-options" (click)="openFilterModal()">Filter</button>
     </div>
-    <app-sort-options *ngIf="subCategoryName" class="sort-options" [currentSortOption]="currentSortOption" [currentElementSizeOption]="currentElementSizeOption"
-    [currentEmailSeller]="currentEmailSeller" (elementChange)="onSizeElementChange($event)" (sortChange)="onSortChange($event)"
-    (emailChange)="onEmailChange($event)">
-  </app-sort-options>
+    <app-sort-options *ngIf="subCategoryName" class="sort-options" [currentSortOption]="currentSortOption"
+      [currentElementSizeOption]="currentElementSizeOption" [currentEmailSeller]="currentEmailSeller" 
+      [currentCategory]="currentCategoryId"
+      (elementChange)="onSizeElementChange($event)" (sortChange)="onSortChange($event)"
+      (emailChange)="onEmailChange($event)" (categoryChange)="onCategoryChange($event)">
+    </app-sort-options>
     <main class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>

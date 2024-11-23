@@ -116,10 +116,10 @@ export class ProductCardComponent implements OnInit {
 
     if (!this.auth()) {
       this.cartService.addToCart(productToAdd);
-      this.toastService.add('Product added successfully to Cart');
+      this.toastService.add('Product '+ product.productTitle + 'added successfully to Cart');
     } else {
       this.cartServerService.addToCart(productToAdd);
-      this.toastService.add('Product added successfully to Cart');
+      this.toastService.add('Product '+ product.productTitle + 'added successfully to Cart');
     }
 
   }
