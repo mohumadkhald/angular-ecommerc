@@ -6,9 +6,9 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { ExpiredSessionDialogComponent } from '../component/expired-session-dialog/expired-session-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from './user.service';
-import { ConfigService } from '../config.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -224,7 +224,7 @@ export class AuthService {
         email,
         password,
         gender,
-        role
+        role,
       })
       .pipe(
         tap((response: any) => {
@@ -254,16 +254,21 @@ export class AuthService {
     return this.http.put(`${this.baseUrl}/auth/profile`, user, { headers });
   }
 
-  changePhoto(image: File): Observable<any> {
+  changePhoto(image: File, url: string): Observable<any> {
     const formData = new FormData();
     formData.append('image', image);
+
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
     return this.http
-      .patch<any>(`${this.baseUrl}/auth/photo`, formData, { headers })
+      .patch<any>(
+        `${this.baseUrl}/auth/photo?url=${url}`,
+        formData,
+        { headers }
+      )
       .pipe(
         catchError((error) => {
           console.error('Change photo error:', error);
@@ -282,11 +287,11 @@ export class AuthService {
           headers: new HttpHeaders({
             Authorization: `Bearer ${token}`,
           }),
-          observe: 'response' // Observe the full HTTP response
+          observe: 'response', // Observe the full HTTP response
         }
       )
       .pipe(
-        tap(response => {
+        tap((response) => {
           if (response.status === 200) {
             this.clearAuthState();
             this.loggedIn.next(false);
@@ -300,8 +305,7 @@ export class AuthService {
         })
       );
   }
-  
-  
+
   clearAuthState(): void {
     console.log('Clearing authentication state...');
     this.cookieService.delete(this.tokenKey, '/');
@@ -346,11 +350,17 @@ export class AuthService {
     return this.cookieService.get(this.roleKey);
   }
 
-  showExpiredSessionDialog(message: string): void {
-    this.dialog.open(ExpiredSessionDialogComponent, {
+  showExpiredSessionDialog(
+    message: string
+  ): MatDialogRef<ExpiredSessionDialogComponent> {
+    const dialogRef = this.dialog.open(ExpiredSessionDialogComponent, {
       width: '350px',
       height: '200px',
+      panelClass: 'expired-session-dialog',
       data: { message },
+      disableClose: true,
     });
+
+    return dialogRef; // ✅ return it
   }
 }

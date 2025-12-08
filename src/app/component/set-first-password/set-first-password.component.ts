@@ -1,14 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ToastService } from '../../service/toast.service';
-import { ConfigService } from '../../config.service';
 import { Router } from '@angular/router';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   selector: 'app-set-first-password',
@@ -18,19 +30,21 @@ import { Router } from '@angular/router';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    CommonModule, FormsModule, ReactiveFormsModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './set-first-password.component.html',
-  styleUrl: './set-first-password.component.css'
+  styleUrl: './set-first-password.component.css',
 })
-
-
 export class SetFirstPasswordComponent {
-  changePwdForm: FormGroup;
+  setPwdForm: FormGroup;
+  // changePwdForm: FormGroup;
   responseMessage: string = '';
   successMessage: string = '';
   confirmPasswordBlurred: boolean = false;
   baseUrl: string;
+  errMsg: any;
 
   constructor(
     private router: Router,
@@ -43,22 +57,35 @@ export class SetFirstPasswordComponent {
   ) {
     this.baseUrl = configService.getApiUri();
     this.dialogRef.disableClose = true;
-    this.changePwdForm = this.fb.group({
-      email: [{ value: data.email, disabled: true }],
-      password: ['', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$')]],
-      confirmPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+    this.setPwdForm = this.fb.group(
+      {
+        email: [{ value: data.email, disabled: true }],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$'),
+          ],
+        ],
+        confirmPassword: ['', Validators.required],
+      },
+      { validator: this.passwordMatchValidator }
+    );
   }
 
-  passwordMatchValidator: ValidatorFn = (group: AbstractControl): { [key: string]: any } | null => {
+  passwordMatchValidator: ValidatorFn = (
+    group: AbstractControl
+  ): { [key: string]: any } | null => {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
-    return password && confirmPassword && password === confirmPassword ? null : { 'mismatch': true };
+    return password && confirmPassword && password === confirmPassword
+      ? null
+      : { mismatch: true };
   };
 
   onOkClick(): void {
-    if (this.changePwdForm.valid) {
-      const formValue = this.changePwdForm.getRawValue();
+    if (this.setPwdForm.valid) {
+      const formValue = this.setPwdForm.getRawValue();
       const url = `${this.baseUrl}/auth/setFirstPwd`;
       const body = {
         password: formValue.password,
@@ -70,12 +97,15 @@ export class SetFirstPasswordComponent {
 
       this.http.patch(url, body, { headers }).subscribe(
         (response: any) => {
-          setTimeout(() => this.toastService.add("the password set successes"), 3000);
+          setTimeout(
+            () => this.toastService.add('The Password Set Success', 'success'),
+            3000
+          );
           this.successMessage = response.message;
-          localStorage.setItem("newUser", "false")
+          localStorage.setItem('newUser', 'false');
           this.dialogRef.close(); // Close the dialog only on success
         },
-        error => {
+        (error) => {
           console.error('Error setting password:', error);
           if (error.error.errors) {
             this.responseMessage = Object.values(error.error.errors).join(', ');
@@ -95,11 +125,14 @@ export class SetFirstPasswordComponent {
     this.confirmPasswordBlurred = false;
   }
 
-  removeToast(): void {
-    this.toastService.remove();
+  close() {
+    this.dialogRef.close();
   }
 
-  showToast(): void {
-    this.toastService.add('This is a toast message.');
+  disableAutocomplete(elementId: string) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.setAttribute('autocomplete', 'off');
+    }
   }
 }

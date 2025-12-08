@@ -31,6 +31,8 @@ export class AddCategoryComponent implements OnInit {
   ngOnInit(): void {
     this.categoryForm = this.fb.group({
       categoryTitle: [this.cat?.categoryTitle ?? '', [Validators.required, Validators.pattern(/^(?!\s).*$/)]],
+      // categoryDescription: [this.cat?.categoryDescription ?? '', Validators.required],
+
     });
 
     // Initialize formErrors based on the form controls

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service';
@@ -9,6 +9,9 @@ import { CommonModule } from '@angular/common';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { ProductService } from '../../service/product.service';
 import { UserService } from '../../service/user.service';
+import { SetFirstPasswordComponent } from '../set-first-password/set-first-password.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ChangePwdComponent } from '../change-pwd/change-pwd.component';
 
 @Component({
   selector: 'app-profile-admin',
@@ -34,6 +37,8 @@ export class ProfileAdminComponent {
     private router: Router,
     private modalService: NgbModal,
     public toastService: ToastService,
+    private dialog: MatDialog,
+    private renderer: Renderer2,
     private productService: ProductService
   ) {}
 
@@ -45,11 +50,8 @@ export class ProfileAdminComponent {
   loadUserProfile() {
     if (this.authService.isLoggedIn()) {
       this.userService.loadProfile().subscribe(
-
         (response) => {
-
           this.user = response;
-
         },
 
         (error) => {
@@ -85,12 +87,14 @@ export class ProfileAdminComponent {
     const modalRef = this.modalService.open(AddProductComponent, {
       size: 'lg',
       centered: true,
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false, // Prevent closing with the Esc key
     });
 
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('Product added successfully');
+          this.toastService.add('Product added successfully', 'success');
           this.loadProducts(); // Reload products after adding a new one
         }
       },
@@ -113,13 +117,19 @@ export class ProfileAdminComponent {
   }
 
   uploadImage(file: File) {
-    this.authService.changePhoto(file).subscribe(
+    this.authService.changePhoto(file,this.user.imageUrl).subscribe(
       (response) => {
-        this.toastService.add('Image updated successfully');
-        this.user.imageUrl = response.message; // Update user image URL
+        this.toastService.add('Image updated successfully', 'success');
+        // this.user.imageUrl = response.message; // Update user image URL
+        console.log(this.user.imageUrl)
+
+        // REFRESH PROFILE HERE
+        this.userService.refreshProfile().subscribe((updated) => {
+          this.user = updated;
+        });
       },
       (error) => {
-        this.toastService.add('Image upload failed');
+        this.toastService.add('Image upload failed', 'error');
       }
     );
   }
@@ -135,8 +145,13 @@ export class ProfileAdminComponent {
       .then(
         (result) => {
           if (result === 'updated') {
-            this.toastService.add('User edit success');
-            this.loadUserProfile(); // Reload user profile after update
+            this.toastService.add('User edit success', 'success');
+
+            // REFRESH PROFILE HERE
+            this.userService.refreshProfile().subscribe((updated) => {
+              this.user = updated;
+            });
+            // this.loadUserProfile(); // Reload user profile after update
           }
         },
         (reason) => {
@@ -150,5 +165,59 @@ export class ProfileAdminComponent {
 
   redirectToDetails(id: number) {
     this.router.navigate([`products/seller/${id}`]);
+  }
+
+  openSetFirstPwd(): void {
+    const dialogRef = this.dialog.open(SetFirstPasswordComponent, {
+      width: '500px',
+      height: '400px',
+      data: { name: 'Set Password For Email Address' },
+      panelClass: 'custom-dialog-container',
+    });
+
+    dialogRef.afterOpened().subscribe(() => {
+      const dialogContainer = document.querySelector(
+        '.cdk-overlay-pane'
+      ) as HTMLElement;
+
+      // Hide dialog initially and apply custom styles
+      dialogContainer.style.display = 'none';
+      this.renderer.setStyle(dialogContainer, 'position', 'relative');
+      this.renderer.setStyle(dialogContainer, 'top', '0px');
+      this.renderer.setStyle(dialogContainer, 'z-index', '100');
+      dialogContainer.style.display = 'block'; // Show after styling
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // window.location.reload()
+      this.loadUserProfile();
+    });
+  }
+
+  openChangePwd(): void {
+    const dialogRef = this.dialog.open(ChangePwdComponent, {
+      width: '500px',
+      height: '520px',
+      data: { name: 'Change Password' },
+      panelClass: 'custom-dialog-container',
+    });
+
+    dialogRef.afterOpened().subscribe(() => {
+      const dialogContainer = document.querySelector(
+        '.cdk-overlay-pane'
+      ) as HTMLElement;
+
+      // Hide dialog initially and apply custom styles
+      dialogContainer.style.display = 'none';
+      this.renderer.setStyle(dialogContainer, 'position', 'relative');
+      this.renderer.setStyle(dialogContainer, 'top', '0px');
+      this.renderer.setStyle(dialogContainer, 'z-index', '100');
+      dialogContainer.style.display = 'block'; // Show after styling
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // window.location.reload()
+      this.loadUserProfile();
+    });
   }
 }

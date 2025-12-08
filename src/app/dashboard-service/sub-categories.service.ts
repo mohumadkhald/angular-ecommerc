@@ -2,8 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { AuthService } from '../service/auth.service';
-import { ConfigService } from '../config.service';
-
+import { ConfigService } from '../service/config.service';
 @Injectable({
   providedIn: 'root'
 })

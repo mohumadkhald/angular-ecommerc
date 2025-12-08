@@ -15,7 +15,8 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { ToastService } from '../../service/toast.service';
-import { ConfigService } from '../../config.service';
+import { ConfigService } from '../../service/config.service';
+
 
 @Component({
   selector: 'app-modal-content',
@@ -78,7 +79,7 @@ export class ModalChangePwdComponent {
 
       this.http.post(url, body).subscribe(
         (response: any) => {
-          this.toastService.add(response.message);
+          this.toastService.add(response.message, 'success');
           this.successMessage = response.message;
           setTimeout(() => {
             this.dialogRef.close();
@@ -105,11 +106,5 @@ export class ModalChangePwdComponent {
     this.confirmPasswordBlurred = false;
   }
 
-  removeToast(): void {
-    this.toastService.remove();
-  }
 
-  showToast(): void {
-    this.toastService.add('This is a toast message.');
-  }
 }

@@ -71,11 +71,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (newUser === 'true') {
           this.setCookie('newUser', 'true', 1); // Expires in 1 day
           this.router.navigate(['/']);
-          this.toastService.add('You Are Welcome to WebSite');
+          this.toastService.add('You Are Welcome to WebSite', 'success');
         } else {
           this.router.navigate(['/']);
           this.deleteCookie('newUser');
-          this.toastService.add('Welcome Back to WebSite');
+          this.toastService.add('Welcome Back to WebSite', 'success');
         }
       }
       if (this.cartService.getCart().length > 0) {

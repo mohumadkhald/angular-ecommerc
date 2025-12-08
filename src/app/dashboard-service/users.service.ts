@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth.service';
-import { ConfigService } from '../config.service';
+import { ConfigService } from '../service/config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +47,7 @@ export class UsersService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(this.apiUrl, user, { headers });
+    return this.http.post(`${this.apiUrl}/users`, user, { headers });
   }
 
   updateUserStatus(userId: number, params: any): Observable<any> {

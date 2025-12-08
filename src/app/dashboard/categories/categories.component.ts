@@ -95,10 +95,13 @@ export class CategoriesComponent implements OnInit {
     });
 
     modalRef.componentInstance.categoryAdded.subscribe(() => {
-      this.getAllCategories(); // Refresh the categories list
-      this.dashboardComponent.fetchCategoryCount(); // Update the category count
-      this.toastService.add('Category Added successfully');
-      this.categoryUpdateService.notifyCategoryUpdate(); // Notify about the category update
+      this.dashboardComponent.fetchCategoryCount();
+      this.toastService.add('Category Added successfully', 'success');
+      // Emit update event once
+      this.categoryUpdateService.notifyCategoryUpdate();
+      this.categoryService.refreshCategories().subscribe((updated) => {
+        this.categories = updated;
+      }); // Refresh category cache
     });
 
     modalRef.result.then(
@@ -107,18 +110,21 @@ export class CategoriesComponent implements OnInit {
     );
   }
 
-  updat(cat: number) {
+  update(cat: number) {
     const modalRef = this.modalService.open(AddCategoryComponent, {
       size: 'lg',
       centered: true,
     });
     modalRef.componentInstance.cat = cat;
-    modalRef.result
+    modalRef.result;
     modalRef.componentInstance.categoryAdded.subscribe(() => {
       this.getAllCategories(); // Refresh the categories list
       this.dashboardComponent.fetchCategoryCount(); // Update the category count
-      this.toastService.add('Category Updated successfully');
+      this.toastService.add('Category Updated successfully', 'success');
       this.categoryUpdateService.notifyCategoryUpdate(); // Notify about the category update
+      this.categoryService.refreshCategories().subscribe((updated) => {
+        this.categories = updated;
+      }); // Refresh category cache
     });
 
     modalRef.result.then(

@@ -4,41 +4,48 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ToastService {
-  toast: string | null = null;
-  err: string | null = null;
-  warn: string | null = null;
+  toastMessages: { message: string, type: 'success' | 'error' | 'warning' }[] = [];
+  timeoutMap = new Map<string, any>();
+  removeDelay = 8000; // Initial delay for the first message
+  incrementDelay = 3000; // Incremental delay for each subsequent message
 
-  timeoutId: any;
-
-  add(message: string) {
-    this.toast = message;
-    this.clearTimeout();
-    this.timeoutId = setTimeout(() => this.remove(), 3000); // Automatically remove toast after 3 seconds
+  // Single method for adding messages of any type
+  add(message: string, type: 'success' | 'error' | 'warning') {
+    this.toastMessages.push({ message, type });
+    this.setAutoRemove(message, type);
   }
 
-  error(message: string) {
-    this.err = message;
-    this.clearTimeout();
-    this.timeoutId = setTimeout(() => this.remove(), 3000); // Automatically remove toast after 3 seconds
+  // Auto remove message after an incremental delay
+  private setAutoRemove(message: string, type: string) {
+    // Set the timeout for this message based on the current delay
+    const timeoutId = setTimeout(() => this.remove(message, type), this.removeDelay);
+    
+    // Store the timeout ID for this message
+    this.timeoutMap.set(message, timeoutId);
+    
+    // After removing the message, update the delay for the next message
+    this.removeDelay += this.incrementDelay;
   }
 
-  warnnig(message: string) {
-    this.warn = message;
-    this.clearTimeout();
-    this.timeoutId = setTimeout(() => this.remove(), 3000); // Automatically remove toast after 3 seconds
+  // Remove message from the list
+  remove(message: string, type: string): void {
+    const index = this.toastMessages.findIndex((msg) => msg.message === message && msg.type === type);
+    if (index > -1) {
+      this.toastMessages.splice(index, 1);
+    }
   }
 
-  remove() {
-    this.toast = null;
-    this.err = null
-    this.warn = null;
-    this.clearTimeout();
-  }
-
-  private clearTimeout() {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-      this.timeoutId = null;
+  // Get the background color based on message type
+  getMessageColor(type: 'success' | 'error' | 'warning'): string {
+    switch (type) {
+      case 'error':
+        return 'rgb(202, 23, 11)'; // Red for error
+      case 'warning':
+        return 'rgb(187, 117, 13)'; // Yellow for warning
+      case 'success':
+        return 'rgb(61, 106, 29)'; // Green for success
+      default:
+        return 'rgb(0, 0, 0)'; // Default (black) color if type is unknown
     }
   }
 }

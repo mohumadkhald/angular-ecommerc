@@ -39,9 +39,6 @@ export class AddToCartModalComponent {
 
   ngOnInit(): void {
     this.cdr.detectChanges();
-    console.log(this.product);
-    console.log(this.haveSpec)
-
     // Extract available colors from productVariations with quantity > 0
     this.availableColors = [
       ...new Set(
@@ -99,7 +96,7 @@ export class AddToCartModalComponent {
     const productToAdd = {
       productId: this.product.productId,
       title: this.product.productTitle,
-      imageUrl: this.product.imageUrl,
+      imageUrl: this.product.imageUrls[0],
       size: this.selectedSize,
       color: this.selectedColor,
       quantity: this.quantity,

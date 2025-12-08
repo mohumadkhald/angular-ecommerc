@@ -3,10 +3,10 @@ import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { CartItem } from '../interface/cat';
 import { AuthService } from './auth.service';
-import { ConfigService } from '../config.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartServerService implements OnInit {
   apiUrl: string;
@@ -20,27 +20,27 @@ export class CartServerService implements OnInit {
     this.apiUrl = configService.getApiUri();
   }
 
-
   ngOnInit(): void {
     this.getCart().subscribe();
   }
 
-  private countSubject: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+  private countSubject: BehaviorSubject<number | null> = new BehaviorSubject<
+    number | null
+  >(null);
   public count$: Observable<number | null> = this.countSubject.asObservable();
 
   setCount(count: number): void {
     this.countSubject.next(count);
   }
 
-  
   getCart(): Observable<CartItem[]> {
     const jwtToken = this.authService.getToken();
-    
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
+      Authorization: `Bearer ${jwtToken}`,
     });
-    
+
     return this.http.get<CartItem[]>(`${this.apiUrl}/cart`, { headers }).pipe(
       tap((res) => {
         this.cartItems = res;
@@ -48,35 +48,31 @@ export class CartServerService implements OnInit {
       })
     );
   }
-  
+
   addToCart(product: any): void {
     // Get JWT token from AuthService
     const jwtToken = this.authService.getToken();
-    
+
     // Prepare headers with Authorization token
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
+      Authorization: `Bearer ${jwtToken}`,
     });
-    
+
     // Make HTTP POST request to add product to cart
     this.http.post<void>(`${this.apiUrl}/cart`, product, { headers }).subscribe(
       (res) => {
-        this.cartItems.length++
+        this.cartItems.length++;
       },
-      (error) => {
-      }
+      (error) => {}
     );
   }
 
-  deleteItem(itemId: any) {
-    // Get JWT token from AuthService
+  deleteItem(itemId: number): any {
     const jwtToken = this.authService.getToken();
-  
-    // Prepare headers with Authorization token
+
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
+      Authorization: `Bearer ${jwtToken}`,
     });
   
     // Make HTTP DELETE request to remove the item from the cart
@@ -96,63 +92,51 @@ export class CartServerService implements OnInit {
       }
     );
   }
-  
-  increaseQuantity(itemId: any) {
+
+  increaseQuantity(itemId: number) {
     const params = new HttpParams().set('state', 'INCREASE');
-    
-    // Make HTTP PATCH request to update the quantity
-    this.http.patch<void>(`${this.apiUrl}/cart/${itemId}`, {}, { params }).subscribe(
-      (res) => {
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
+
+    return this.http.patch(
+      `${this.apiUrl}/cart/${itemId}`,
+      {},
+      { params, responseType: 'text' }
     );
   }
-  
-  decreaseQuantity(item: CartItem) {
-    const params = new HttpParams().set('state', 'DECREASE');
-  
-    if (item.quantity > 1) {
-      // Decrease the quantity if it's greater than 1
-      this.http.patch<void>(`${this.apiUrl}/cart/${item.itemID}`, {}, { params }).subscribe(
-        (res) => {
-          this.getCart(); // Refresh the cart items
-        },
-        (error) => {
-        }
-      );
-    } else {
-      // Remove the item if the quantity is 1 or less
-      this.deleteItem(item.itemID);
+
+  decreaseQuantity(itemId: number, qty: number): any {
+    if (qty <= 1) {
+      return this.deleteItem(itemId);
     }
+
+    const params = new HttpParams().set('state', 'DECREASE');
+    return this.http.patch(
+      `${this.apiUrl}/cart/${itemId}`,
+      {},
+      { params, responseType: 'text' }
+    );
   }
 
   clearCart() {
     // Get JWT token from AuthService
     const jwtToken = this.authService.getToken();
-  
+
     // Prepare headers with Authorization token
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtToken}`
+      Authorization: `Bearer ${jwtToken}`,
     });
-  
+
     // Make HTTP DELETE request to clear the cart
     this.http.delete<void>(`${this.apiUrl}/cart`, { headers }).subscribe(
       (res) => {
-        
         // Clear the local cartItems array using splice
         this.cartItems.splice(0, this.cartItems.length);
-
       },
-      (error) => {
-      }
+      (error) => {}
     );
   }
-  
+
   getCountOfItems(): number {
     return this.cartItems.length;
   }
 }
-

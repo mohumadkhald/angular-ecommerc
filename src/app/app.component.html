@@ -1,17 +1,14 @@
-<app-header></app-header>
-  <router-outlet></router-outlet>
-<app-footer></app-footer>
-<div *ngIf="toastService.toast" class="toast-container">
-  {{ toastService.toast }}
-  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
+<app-header class="header"></app-header>
+<router-outlet class="content"></router-outlet>
+<app-footer class="footer"></app-footer>
+<div *ngIf="toastService.toastMessages.length > 0" class="toast-container">
+  <div *ngFor="let messageObj of toastService.toastMessages" class="toast-message"
+    [ngStyle]="{'background-color': toastService.getMessageColor(messageObj.type)}">
+    {{ messageObj.message }}
+    <button class="exit-toast" (click)="toastService.remove(messageObj.message, messageObj.type)">X</button>
+  </div>
 </div>
 
-<div *ngIf="toastService.err" class="toast-err">
-  {{ toastService.err }}
-  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
-</div>
-
-<div *ngIf="toastService.warn" class="toast-warn">
-  {{ toastService.warn }}
-  <!-- <button class="exit-toast" (click)="removeToast()">X</button> -->
-</div>
+<!-- <button (click)="notify()">
+  Show Notification
+</button> -->

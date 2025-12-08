@@ -1,13 +1,21 @@
-<div style="font-size: 20px; padding: 15px; margin: 15px;">All products Found like <span style="font-size: 24x; color: red;">{{productName}}</span></div>
+<div style="font-size: 20px; padding: 15px; margin: 15px;">All products found in <span
+    style="font-size: 24x; color: red;">{{categoryTitle}}</span> like <span
+    style="font-size: 24x; color: red;">{{productName}}</span></div>
 
 <div class="main-container">
   <div class="sidebar">
     <div class="filters">
       <h2>Filter</h2>
       <div class="availability">
-        <h3>Availability</h3>
-        <label><input type="checkbox" [(ngModel)]="filters.inStock"> In Stock (26)</label>
-        <label><input type="checkbox" [(ngModel)]="filters.notAvailable"> Not Available (3)</label>
+        <h3 style="margin: 5px 0;">Availability</h3>
+        <label>
+          <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock
+          <span *ngIf="inStockCount">({{inStockCount}})</span>
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available
+          <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
+        </label>
       </div>
       <div class="price-range mb-3 mt-5">
         <span class="range" style="color: red; font-weight: bold; width: 100px; font-size: 12px;">Price Range: </span>
@@ -48,9 +56,13 @@
     </div>
   </div>
   <div style="height: 600px; width: 100%;" class="content-wrapper">
-    <div class="sort-options">
-      <app-sort-options [showEmailDropdown]="false"  [currentSortOption]="currentSortOption" (change)="onSortChange($event)"></app-sort-options>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <button class="filter-options" (click)="openFilterModal()">Filter</button>
     </div>
+    <app-sort-options class="sort-options" [currentSortOption]="currentSortOption"
+      [currentElementSizeOption]="currentElementSizeOption" [currentCategory]="currentCategoryId"
+      [showEmailDropdown]=false (elementChange)="onSizeElementChange($event)" (sortChange)="onSortChange($event)">
+    </app-sort-options>
     <main class="product-list">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
     </main>

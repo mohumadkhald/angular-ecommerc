@@ -19,4 +19,10 @@ export class ShowOrderComponent {
   close(): void {
     this.activeModal.close();
   }
+
+    getItemTotal(item: any): number {
+    return item.productVariations.reduce((sum: number, v: any) => {
+      return sum + v.quantity;
+    }, 0);
+  }
 }

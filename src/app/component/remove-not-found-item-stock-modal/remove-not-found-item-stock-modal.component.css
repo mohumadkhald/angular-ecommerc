@@ -1,92 +1,135 @@
+/* MODAL HEADER */
 .modal-header {
-    background-color: #dc3545;
-    color: white;
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .modal-title {
-    margin: 0;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .modal-body {
-    padding: 15px;
-    max-height: 60vh;
-    overflow-y: auto;
-  }
-  
+  background-color: #dc3545;
+  color: white;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* MODAL BODY */
+.modal-body {
+  padding: 20px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+/* CART ITEM */
+.cart-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.item-image {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+/* Item Info */
+.item-details {
+  flex: 1;
+}
+
+.item-details h4 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.item-details p {
+  margin: 3px 0;
+  font-size: 14px;
+}
+
+/* ISSUE BOX */
+.issue {
+  padding: 15px;
+  background: #fff0f0;
+  border-left: 4px solid #dc3545;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.issue h2 {
+  margin-top: 0;
+  font-size: 17px;
+}
+
+.issue-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* MODAL FOOTER */
+.modal-footer {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 6px;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+
+  /* Cart item goes vertical */
   .cart-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+    flex-direction: column;
+    text-align: center;
   }
-  
+
   .item-image {
-    max-width: 80px;
-    max-height: 80px;
-    object-fit: cover;
-    margin-right: 15px;
+    margin-bottom: 10px;
   }
-  
-  .issue {
-    margin-bottom: 15px;
+
+  .item-details {
+    text-align: center;
   }
-  
+
+  /* Issue details vertical */
   .issue-details {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
+    flex-direction: column;
+    text-align: left;
+    gap: 5px;
   }
-  
+
+  /* Footer buttons vertical */
   .modal-footer {
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
+    flex-direction: column;
   }
-  
-  .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-  }
-  
-  .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  }
-  
+
   .btn {
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
+    width: 100%;
   }
-  
-  @media (max-width: 768px) {
-    .modal-header, .modal-footer {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .modal-footer {
-      margin-top: 15px;
-    }
-  
-    .btn {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  }
-  
+}

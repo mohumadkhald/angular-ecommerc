@@ -8,7 +8,7 @@
             <form (ngSubmit)="saveVariations(variationForm)" #variationForm="ngForm">
                 <div *ngFor="let variation of variations; let i = index" class="variation-item"
                     style="display: flex; flex-direction: row; margin: 5px; gap: 20px;">
-                    <div>
+                    <div *ngIf="color != 'no_color' ">
                         <label>
                             Size:
                             <select [(ngModel)]="variation.size" name="size{{i}}" required #size="ngModel">
@@ -23,7 +23,7 @@
                             </div>
                         </label>
                     </div>
-                    <div>
+                    <div *ngIf="color != 'no_color' ">
                         <label>
                             Color:
                             <select [(ngModel)]="variation.color" name="color{{i}}" required #color="ngModel">
@@ -40,7 +40,7 @@
                     </div>
                     <div>
                         <label>
-                            Quantity:
+                            Total Quantity before Update is : <strong>{{lastQuantity}}</strong>
                             <input type="number" [(ngModel)]="variation.quantity" name="quantity{{i}}" required min="1"
                                 #quantity="ngModel" />
                             <div *ngIf="formSubmitted && quantity.invalid" class="text-danger">
@@ -51,7 +51,7 @@
                             </div>
                         </label>
                     </div>
-                    <div>
+                    <!-- <div>
                         <label>
                             Image:
                             <input type="file" (change)="onImageSelected($event, i)" />
@@ -59,11 +59,11 @@
                                 Image is required.
                             </div>
                         </label>
-                    </div>
+                    </div> -->
                     <button type="button" class="mt-4" style="height: 30px;" (click)="removeVariation(i)"
                         *ngIf="variations.length > 1">Remove</button>
                 </div>
-                <button type="button" (click)="addVariation()">Add Another Variation</button>
+                <button *ngIf="color != 'no_color'" type="button" (click)="addVariation()">Add Another Variation</button>
                 <button type="submit">Save Variations</button>
             </form>
         </div>

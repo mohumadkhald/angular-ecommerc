@@ -23,7 +23,7 @@ import { authGuardGuard } from "./utils/auth-guard.guard";
 
 
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", children: [
+  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", canActivate: [authGuardGuard], children: [
     { path: 'users', component: UsersComponent, title: "Users" },
     { path: 'categories', component: CategoriesComponent, title: "Categories" },
     { path: 'subcategories', component: SubcategoriesComponent, title: "Subcategories" },
@@ -47,7 +47,8 @@ export const routes: Routes = [
   { path:'user/profile',component:ProfileComponent,title: "Profile", canActivate: [authGuardGuard] },
   { path: 'about', component: AboutComponent,title: "About"},
   { path: 'contact', component: ContactComponent,title: "Contact"},
-  { path: 'auth', component: AuthComponent, title: 'Auth' },
+  { path: 'auth/:state', component: AuthComponent, title: 'Auth' },
+  { path: 'auth', redirectTo: 'auth/login', pathMatch: 'full' }, // default to login
   // { path: 'register', component: AuthComponent, data: { action: 'register' }, title: 'Register' },
 
   { path: 'logout', component: AuthComponent, title: "Logout"},

@@ -1,53 +1,80 @@
+.header {
+    width: 100%;
+    height: 40px;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.content {
+    display: block;
+    padding-top: 100px; /* adjust as needed */
+}
+
+/* Toast Container for General Messages */
 .toast-container {
-    position: fixed;
-    top: 12%;
-    right: 1%;
-    z-index: 9999;
-    color: white;
-    background-color: rgb(61, 106, 29);
-    opacity: 1;
-    padding: 15px;
-  }
-  .toast-err {
-    position: fixed;
-    top: 10.5%;
-    right: .3%;
-    z-index: 9999;
-    color: white;
-    background-color: rgb(202, 23, 11);
-    opacity: 1;
-    padding: 15px;
-  }
+  position: fixed;
+  top: 17%;
+  right: 1%; /* Adjusted to align better */
+  z-index: 999; /* Ensure it is above all other elements */
+  pointer-events: auto; /* Allow interaction with toasts */
+  color: white;
+  padding: 5px;
+  max-width: 600px; /* Optional: limit width for better UI */
+}
 
-  .toast-warn {
-    position: fixed;
-    top: 10.5%;
-    right: .3%;
-    z-index: 9999;
-    color: white;
-    background-color: rgb(187, 117, 13);
-    opacity: 1;
-    padding: 15px;
-  }
-  
-  
-  .exit-toast {
-    background-color: red;
-    position: relative;
-    padding: 5px 10px;
-    top: -20px;
-    right: -20px;
-  }
+.toast-message {
+  background-color: rgb(61, 106, 29);
+  color: white;
+  padding: 15px;
+  margin: 5px 0; /* Add vertical margin between messages */
+  border-radius: 5px; /* Rounded corners for better visuals */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow */
+}
 
+/* Exit Button */
+.exit-toast {
+  background-color: red;
+  border: none;
+  color: white;
+  font-size: 12px;
+  padding: 1px 6px;
+  margin-right: -15px;
+  margin-left: 15px;
+  cursor: pointer;
+  position: relative;
+  top: -15px;
+  z-index: 999;
+  float: right;
+  cursor: pointer;
+}
+.footer {
+    bottom: 0;
+    left: 0;
+    margin-bottom: 200px;
+    margin-top: 50px;
+}
+    @media (max-width: 1080px) {
+      .content {
+          display: block;
+          padding-top: 120px; /* adjust as needed */
+      }
+    }
     /* Responsive Adjustments */
     @media (max-width: 992px) {
+      .content {
+          display: block;
+          padding-top: 120px; /* adjust as needed */
+      }
+
       .toast-container {
         position: fixed;
         top: 13%;
         right: 1%;
         z-index: 9999;
         color: white;
-        background-color: rgb(61, 106, 29);
         opacity: 1;
         padding: 15px;
       }
@@ -77,13 +104,69 @@
       .exit-toast {
         background-color: red;
         position: relative;
-        padding: 5px 10px;
-        top: -20px;
-        right: -20px;
+        padding: 3px 8px;
+        top: -15px;
+        right: 0px;
       }
     }
     
     @media (max-width: 480px) {
+      .content {
+          display: block;
+          padding-top: 120px; /* adjust as needed */
+      }
+
+
+      .toast-container {
+        position: fixed;
+        top: 13%;
+        right: 1%;
+        z-index: 9999;
+        color: white;
+        opacity: 1;
+        padding: 2px;
+        margin: 2px;
+      }
+      .toast-message {
+        background-color: rgb(61, 106, 29);
+        color: white;
+        padding: 5px;
+        margin: 5px 0; /* Add vertical margin between messages */
+        border-radius: 5px; /* Rounded corners for better visuals */
+        font-size: 10px;
+      }
+
+      .toast-err {
+        position: fixed;
+        top: 13.5%;
+        right: .3%;
+        z-index: 9999;
+        color: white;
+        background-color: rgb(202, 23, 11);
+        opacity: 1;
+        padding: 15px;
+      }
+    
+      .toast-warn {
+        position: fixed;
+        top: 13.5%;
+        right: .3%;
+        z-index: 9999;
+        color: white;
+        background-color: rgb(187, 117, 13);
+        opacity: 1;
+        padding: 15px;
+      }
+      
+      
+      .exit-toast {
+        background-color: red;
+        position: relative;
+        padding: 0px 3px;
+        top: -7px;
+        right: 8px;
+      }
+
       .toggle-btn {
         padding: 8px 12px;
         font-size: 14px;

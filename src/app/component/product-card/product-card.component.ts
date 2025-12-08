@@ -59,12 +59,14 @@ export class ProductCardComponent implements OnInit {
     const modalRef = this.modalService.open(AddToCartModalComponent, {
       size: 'lg',
       centered: true,
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false,    // Prevent closing with the Esc key
     });
     modalRef.componentInstance.product = product;
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('Product added successfully to Cart');
+          this.toastService.add('Product added successfully to Cart', 'success');
         }
       },
       (reason) => {}
@@ -107,7 +109,7 @@ export class ProductCardComponent implements OnInit {
     const productToAdd = {
       productId: product.productId,
       title: product.productTitle,
-      imageUrl: product.imageUrl,
+      imageUrl: product.imageUrls[0],
       quantity: this.quantity,
       price: product.price,
       color: "no_color",
@@ -116,20 +118,12 @@ export class ProductCardComponent implements OnInit {
 
     if (!this.auth()) {
       this.cartService.addToCart(productToAdd);
-      this.toastService.add('Product '+ product.productTitle + 'added successfully to Cart');
+      this.toastService.add('Product '+ product.productTitle + ' added to Cart', 'success');
     } else {
       this.cartServerService.addToCart(productToAdd);
-      this.toastService.add('Product '+ product.productTitle + 'added successfully to Cart');
+      this.toastService.add('Product '+ product.productTitle + ' added to Cart', 'success');
     }
 
-  }
-
-  removeToast(): void {
-    this.toastService.remove();
-  }
-
-  showToast(): void {
-    this.toastService.add('This is a toast message.');
   }
 
   // Method to get the count of in-stock and out-of-stock products

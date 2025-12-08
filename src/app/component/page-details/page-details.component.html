@@ -3,32 +3,25 @@
         <section class="product-images">
             <!-- Thumbnail images on the left -->
             <div class="thumbnail-images">
-                <ng-container *ngFor="let variation of productItem?.productVariations">
-                    <img [src]="variation?.img" alt="Product Variation Thumbnail" *ngIf="variation?.img"
-                        class="thumbnail" (mouseover)="hoverImage(variation.img)" />
+                <ng-container *ngFor="let variation of productItem?.imageUrls; let i = index">
+                    <img [src]="variation" alt="Product Variation Thumbnail" *ngIf="variation" class="thumbnail"
+                        (mouseover)="hoverImage(variation, i)" />
                 </ng-container>
             </div>
 
             <div class="main-image-container">
 
-                <img (mousemove)="mouseMove($event)" (mouseenter)="toggleLens(true)"
-                (mouseleave)="toggleLens(false)" [src]="selectedVariation?.img || productItem?.imageUrl" alt="Product Image" class="main-image" />
+                <img (mousemove)="mouseMove($event)" (mouseenter)="toggleLens(true)" (mouseleave)="toggleLens(false)"
+                    [src]="selectedVariation?.img || productItem?.imageUrls[0]" class="main-image" />
 
-                <!-- Lens for magnification -->
                 <div class="lens" *ngIf="isHovering" [ngStyle]="{
-               'background-image': 'url(' + (selectedVariation?.img || productItem?.imageUrl) + ')',
-               'background-size': '1000%',
-               'background-position': lensPosition
-           }"></div> <!-- No comments in ngStyle -->
-
-                <!-- Thumbnail images below the main image -->
-                <div class="thumbnail-image">
-                    <ng-container *ngFor="let variation of productItem?.productVariations">
-                        <img [src]="variation?.img" alt="Product Variation Thumbnail" *ngIf="variation?.img"
-                            class="thumbnail" (mouseover)="hoverImage(variation.img)" />
-                    </ng-container>
+          'background-image': 'url(' + (selectedVariation?.img || productItem?.imageUrls[0]) + ')',
+          'background-size': '400%', 
+          'background-position': lensPosition
+       }">
                 </div>
             </div>
+
         </section>
         <!-- Rest of the product info... -->
         <section class="product-info">
@@ -76,6 +69,7 @@
                     (click)="open2(productItem)" [disabled]="!productItem.inStock">Add to Cart</button>
                 <button type="button" class="btn btn-warning">BUY NOW</button>
                 <div *ngIf="submitted && quantity <= 0" class="error text-danger">Quantity must be greater than 0.</div>
+                <div *ngIf="!productItem.inStock" class="error text-danger"> out of Stock </div>
                 <div *ngIf="submitted && !validateQuantity2()" class="error text-danger">
                     Quantity exceeds available stock ({{ maxQuantity }} available).
                 </div>
@@ -84,19 +78,39 @@
     </div>
 </div>
 
-<section class="recommended-products m-5">
+<section *ngIf="productItem" class="recommended-products m-5">
     <h2>Recommended for You</h2>
-    <div class="recommended-container">
-        <ng-container *ngFor="let item of generateRecommendations()">
-            <div class="recommended-item">
-                <img [src]="item.imageUrl" alt="{{ item.productTitle }}">
-                <h5>{{ item.productTitle }}</h5>
-                <h6>&#8377; {{ item.price }}</h6>
-                <button (click)="open(item)" class="btn btn-outline-primary">Add to Cart</button>
-            </div>
-        </ng-container>
+    <div class="d-flex align-items-center position-relative">
+
+        <!-- Left Button -->
+        <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="startIndex === 0">&#8249;</button>
+
+        <div class="recommended-container no-scroll">
+            <ng-container *ngIf="recommendedProducts$ | async as recommendedProducts">
+                <ng-container
+                    *ngFor="let item of recommendedProducts.slice(startIndex, startIndex + itemsPerPage); let i = index">
+                    <div class="recommended-item">
+                        <div *ngIf="item.discountPercent > 0" class="offer-badge">Offer</div>
+                        <img [src]="item.imageUrls[0]" alt="{{ item.productTitle }}"
+                            (click)="redirectToDetails(item.productId)">
+                        <h5 [routerLink]="['/products', item.productId]">{{ item.productTitle }}</h5>
+                        <h6><span class="text-danger">₹{{ item.price }}</span></h6>
+                        <button (click)="open(item)" class="btn btn-outline-primary">Add to Cart</button>
+                    </div>
+                </ng-container>
+                <!-- Show All button after last visible item -->
+                <div *ngIf="maxReached" class="recommended-item show-all-btn">
+                    <button class="btn btn-primary" (click)="goToAllProducts()">Show All</button>
+                </div>
+            </ng-container>
+        </div>
+
+        <!-- Right Button -->
+        <button class="scroll-btn right" (click)="scrollRight()" [disabled]="maxReached">&#8250;</button>
     </div>
 </section>
+
+
 
 <div *ngIf="showNotFound" class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
     <div class="product-details">

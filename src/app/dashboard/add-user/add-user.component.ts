@@ -54,6 +54,7 @@ export class AddUserComponent {
           this.activeModal.close('added');
         },
         error: (error) => {
+          console.log(error)
           if (error.status === 400 && error.error.violations) {
             this.displayServerErrors(error.error.violations);
           } else {

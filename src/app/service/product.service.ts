@@ -2,14 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from "rxjs";
 import { PaginatedResponse, Product } from "../interface/product";
-import { ConfigService } from '../config.service';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-
   private apiUrl: string;
+  
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.apiUrl = configService.getApiUri();
@@ -56,7 +56,7 @@ export class ProductService {
   }
 
   
-  getProductsByCategoryAndProductName(categoryName: string, productName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: number, colors: string[], sizes: string[]): Observable<PaginatedResponse<Product[]>>  {
+  getProductsByCategoryAndProductName(categoryName: string, productName: string, sortBy: string, sortDirection: string, minPrice: number, maxPrice: number, page: number, pageSize: any, colors: string[], sizes: string[], available: any): Observable<PaginatedResponse<Product[]>>  {
     let params = new HttpParams()
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)
@@ -64,6 +64,9 @@ export class ProductService {
       .set('maxPrice', maxPrice.toString())
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
+      if (available !== null) {
+        params = params.set('available', available.toString());
+      }
   
     colors.forEach(color => {
       params = params.append('color', color);
@@ -79,5 +82,11 @@ export class ProductService {
   getProductsByCreatedBy(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/products/find/created-by`).pipe(map(response => response));
   }
+
+
+  getRecommendationsProducts(id: number) {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/${id}/suggestion`).pipe(map(response => response));
+  }
+
 }
 

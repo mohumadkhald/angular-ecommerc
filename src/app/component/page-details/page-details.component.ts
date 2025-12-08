@@ -1,19 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CartService } from '../../service/cart.service';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../service/product.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../service/toast.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
+import { Product } from '../../interface/product';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-page-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })
@@ -29,8 +31,34 @@ export class PageDetailsComponent {
   selectedVariation: any;
   isHovering: boolean = false;
   lensPosition = '0% 0%'; // Positioning for background zoom
+  recommendedProducts$!: Observable<Product[]>;
+
+  startIndex: number = 0;
+  itemsPerPage: number = 6;
+  maxReached: boolean = false;
+
+  scrollLeft() {
+    this.startIndex = Math.max(0, this.startIndex - this.itemsPerPage);
+    this.updateMaxReached();
+  }
+
+  scrollRight() {
+    this.startIndex += 1;
+    this.updateMaxReached();
+  }
+
+  updateMaxReached() {
+    this.recommendedProducts$.subscribe((items) => {
+      this.maxReached = this.startIndex + this.itemsPerPage >= items.length + 1;
+    });
+  }
+
+  goToAllProducts() {
+    this.router.navigate(['/categories', this.productItem.subCategory.categoryName, this.productItem.subCategory.name]); // Change to your desired route
+  }
 
   constructor(
+    private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartService,
     private modalService: NgbModal,
@@ -42,24 +70,45 @@ export class PageDetailsComponent {
 
   ngOnInit() {
     this.cartItems = this.cartService.getCart();
-    this.productService.getProductById(this.id).subscribe(
-      (res) => {
-        if (res) {
-          this.productItem = res;
-          this.showNotFound = false;
-          console.log(this.productItem);
-        }
-      },
-      (error) => {
-        if (error.status === 404) {
-          this.showNotFound = true;
-        } else if (error.status === 403) {
-          this.router.navigate(['notfound']);
-        }
-      }
-    );
-  }
 
+    this.route.params.subscribe((params) => {
+      const id = +params['id']; // Convert to number if needed
+      this.id = id;
+
+      this.productService.getProductById(id).subscribe(
+        (res) => {
+          if (res) {
+            this.productItem = res;
+            this.showNotFound = false;
+            this.recommendedProducts$ =
+              this.productService.getRecommendationsProducts(
+                this.productItem.subCategory.id
+              );
+
+            const savedIndex = sessionStorage.getItem(
+              `mainImageIndex-${this.id}`
+            );
+            if (savedIndex !== null) {
+              this.mainImageIndex = parseInt(savedIndex, 10);
+              this.selectedVariation = {
+                img: this.productItem.imageUrls[this.mainImageIndex],
+              };
+            } else {
+              this.mainImageIndex = 0;
+              this.selectedVariation = { img: this.productItem.imageUrls[0] };
+            }
+          }
+        },
+        (error) => {
+          if (error.status === 404) {
+            this.showNotFound = true;
+          } else if (error.status === 403) {
+            this.router.navigate(['notfound']);
+          }
+        }
+      );
+    });
+  }
   // Group variations by size
   getGroupedVariationsBySize() {
     const grouped: { [size: string]: { color: string; quantity: number }[] } =
@@ -75,13 +124,13 @@ export class PageDetailsComponent {
 
     return grouped;
   }
-  
+
   hasAvailableVariations(): boolean {
     const variations = this.getGroupedVariationsBySize();
     return (
       variations &&
-      Object.keys(variations).some((key) =>
-        variations[key].some((variation) => variation.quantity > 0) // Check if any variation has quantity > 0
+      Object.keys(variations).some(
+        (key) => variations[key].some((variation) => variation.quantity > 0) // Check if any variation has quantity > 0
       )
     );
   }
@@ -89,7 +138,7 @@ export class PageDetailsComponent {
   addToCart(): void {
     if (this.productItem) {
       this.cartService.addToCart(this.productItem);
-      this.toastService.add('Product added successfully to Cart');
+      this.toastService.add('Product added successfully to Cart', 'success');
     }
   }
 
@@ -97,32 +146,33 @@ export class PageDetailsComponent {
     const modalRef = this.modalService.open(AddToCartModalComponent, {
       size: 'lg',
       centered: true,
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false, // Prevent closing with the Esc key
     });
     modalRef.componentInstance.product = product;
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('Product added successfully to Cart');
+          this.toastService.add(
+            'Product added successfully to Cart',
+            'success'
+          );
         }
       },
       () => {}
     );
   }
 
-
   validateQuantity2(): boolean {
     const variation = this.productItem.productVariations.find(
-      (v: any) => v.color === "no_color" && v.size === "NO_SIZE"
+      (v: any) => v.color === 'no_color' && v.size === 'NO_SIZE'
     );
     this.maxQuantity = variation ? variation.quantity : 0;
     return this.quantity <= this.maxQuantity;
   }
   open2(product: any) {
     this.submitted = true;
-    if (
-      this.quantity <= 0 ||
-      !this.validateQuantity2()
-    ) {
+    if (this.quantity <= 0 || !this.validateQuantity2()) {
       return; // Validation failed
     }
 
@@ -132,18 +182,17 @@ export class PageDetailsComponent {
       imageUrl: product.imageUrl,
       quantity: this.quantity,
       price: product.price,
-      color: "no_color",
-      size: "NO_SIZE"
+      color: 'no_color',
+      size: 'NO_SIZE',
     };
 
     if (!this.auth()) {
       this.cartService.addToCart(productToAdd);
-      this.toastService.add('Product added successfully to Cart');
+      this.toastService.add('Product added successfully to Cart', 'success');
     } else {
       this.cartServerService.addToCart(productToAdd);
-      this.toastService.add('Product added successfully to Cart');
+      this.toastService.add('Product added successfully to Cart', 'success');
     }
-
   }
   auth(): boolean {
     return this.authService.isLoggedIn();
@@ -152,34 +201,47 @@ export class PageDetailsComponent {
   selectVariation(variation: any) {
     this.selectedVariation = variation; // Save the selected variation
   }
+  mainImageIndex: number = 0;
 
-  hoverImage(imageUrl: string) {
-    this.selectedVariation = { img: imageUrl }; // Update the selected variation
-}
+  hoverImage(imageUrl: string, index: number) {
+    this.selectedVariation = { img: imageUrl };
+    this.mainImageIndex = index;
+    sessionStorage.setItem(`mainImageIndex-${this.id}`, index.toString());
+  }
+
   generateRecommendations() {
     if (!this.productItem) return [];
-
-    // Generate 10 recommendations based on the product item
-    const recommendations = Array(10).fill(this.productItem);
-    return recommendations;
+    return this.productService.getRecommendationsProducts(
+      this.productItem.subCat.id
+    );
   }
 
-  mouseMove(event: MouseEvent) {
-    const lens = document.querySelector('.lens') as HTMLElement;
-    if (lens) {
-      const { clientX, clientY } = event;
-      // Center the lens on cursor
-      lens.style.left = `${clientX - lens.offsetWidth / 2}px`; 
-      lens.style.top = `${clientY - lens.offsetHeight / 2}px`;
+mouseMove(event: MouseEvent) {
+  const lens = document.querySelector('.lens') as HTMLElement;
+  const img = event.target as HTMLElement;
 
-      // Set the background position based on the lens position
-      const lensX = (clientX / lens.offsetWidth) * 100;
-      const lensY = (clientY / lens.offsetHeight) * 100;
-      this.lensPosition = `${lensX}% ${lensY}%`;
-    }
-  }
+  const rect = img.getBoundingClientRect();
+
+  // Cursor position inside the image
+  const x = event.clientX - rect.left;
+  const y = event.clientY*1.1 - rect.top;
+
+  // Position the lens
+  lens.style.left = `${event.clientX - lens.offsetWidth*3.2}px`;
+  lens.style.top = `${event.clientY - lens.offsetHeight*1.1}px`;
+
+  // background position (%) — correct formula
+  const lensX = (x / rect.width) * 100;
+  const lensY = (y / rect.height) * 100;
+
+  this.lensPosition = `${lensX}% ${lensY}%`;
+}
 
   toggleLens(state: boolean) {
     this.isHovering = state;
+  }
+
+  redirectToDetails(id: number) {
+    this.router.navigate([`products/${id}`]);
   }
 }

@@ -20,7 +20,7 @@
                         <td><img [width]="100" [src]="category.img"></td>
                         <td>{{ getCountOfSubCats(category.categoryTitle) }}</td>
                         <td>
-                            <a (click)="updat(category)" class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
+                            <a (click)="update(category)" class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i class="fa fa-edit"></i>
                                 Edit</a>
                             <a class="btn btn-danger btn-sm confirm" (click)="deleteCategory(category.categoryId)"><i
                                     class="fas fa-trash-alt"></i> Delete</a>

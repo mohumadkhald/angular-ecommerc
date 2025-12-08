@@ -1,0 +1,61 @@
+<div class="bg-primary custom-class">
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h2 class="text-center text-light mt-4" mat-dialog-title>{{data.name}}</h2>
+    <form [formGroup]="changePwdForm">
+        <div mat-dialog-content>
+            <div>
+                <input placeholder="Enter Old Password" matInput type="password" formControlName="oldPassword">
+                <div *ngIf="changePwdForm.get('oldPassword')?.hasError('required') && changePwdForm.get('oldPassword')?.touched"
+                    class="err-msg">
+                    Old Password is required
+                </div>
+                <div *ngIf="responseMessage" class="err-msg">{{ responseMessage }}</div>
+                <!-- <div *ngIf="changePwdForm.get('oldPassword')?.hasError('pattern') && changePwdForm.get('oldPassword')?.touched"
+                    class="err-msg">
+                    Password must contain at least one digit, one lowercase, and one uppercase letter, and be at
+                    least 8
+                    characters long
+                </div> -->
+            </div>
+            <div>
+                <input placeholder="Enter New Password" matInput type="password" formControlName="password">
+                <div *ngIf="changePwdForm.get('password')?.hasError('required') && changePwdForm.get('password')?.touched"
+                    class="err-msg">
+                    Password is required
+                </div>
+                <div *ngIf="changePwdForm.get('password')?.hasError('pattern') && changePwdForm.get('password')?.touched"
+                    class="err-msg">
+                    Password must contain at least one digit, one lowercase, and one uppercase letter, and be at
+                    least 8
+                    characters long
+                </div>
+            </div>
+            <div>
+                <input placeholder="Enter Confirm Password" matInput type="password" formControlName="confirmPassword"
+                    [ngClass]="{
+                    'margin-top-40': !changePwdForm.get('password')?.touched || !changePwdForm.get('password')?.errors,
+                    'margin-top-0': changePwdForm.get('password')?.touched && changePwdForm.get('password')?.errors
+                  }" (blur)="onConfirmPasswordBlur()" (focus)="onConfirmPasswordFocus()">
+                <div *ngIf="changePwdForm.get('confirmPassword')?.hasError('required') && changePwdForm.get('confirmPassword')?.touched"
+                    class="err-msg">
+                    Confirm Password is required
+                </div>
+                <div *ngIf="!changePwdForm.get('confirmPassword')?.hasError('required') && confirmPasswordBlurred && changePwdForm.errors?.['mismatch']"
+                    class="err-msg">
+                    Passwords do not match
+                </div>
+            </div>
+        </div>
+        <div class="mybtn">
+            <div></div>
+            <button [ngClass]="{
+                'margin-top-10': !changePwdForm.get('password')?.touched || !changePwdForm.get('password')?.errors && !changePwdForm.get('confirmPassword')?.errors,
+                'margin-top-0': changePwdForm.get('password')?.touched && changePwdForm.get('password')?.errors
+              }" class="btn btn-send" [disabled]="!changePwdForm.valid" (click)="onOkClick()">Set Password
+            </button>
+            <div></div>
+        </div>
+    </form>
+</div>

@@ -1,6 +1,19 @@
-
-import { ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output, Renderer2 } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  Output,
+  Renderer2,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../service/user.service';
@@ -12,7 +25,7 @@ import { AuthService } from '../../service/auth.service';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './edit-user-modal.component.html',
-  styleUrl: './edit-user-modal.component.css'
+  styleUrl: './edit-user-modal.component.css',
 })
 export class EditUserModalComponent {
   @Input() user: any; // Input property for receiving user details
@@ -31,18 +44,29 @@ export class EditUserModalComponent {
 
   ngOnInit() {
     this.originalUser = { ...this.user };
+    console.log(this.originalUser);
     this.createForm();
   }
 
   createForm() {
     this.userForm = this.fb.group({
-      firstName: [this.user.firstName, [Validators.required, Validators.pattern(/^\S.*$/)]],
-      lastName: [this.user.lastName, [Validators.required, Validators.pattern(/^\S.*$/)]],
+      firstName: [
+        this.user.firstName,
+        [Validators.required, Validators.pattern(/^\S.*$/)],
+      ],
+      lastName: [
+        this.user.lastName,
+        [Validators.required, Validators.pattern(/^\S.*$/)],
+      ],
       gender: [this.user.gender, Validators.required],
-      email: [this.user.email, [Validators.required, Validators.email, Validators.pattern(/^\S.*$/)]],
-      oldPassword: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
-      password: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+      email: [
+        this.user.email,
+        [Validators.required, Validators.email, Validators.pattern(/^\S.*$/)],
+      ],
+      // oldPassword: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
+      // password: ['', [Validators.required, Validators.pattern(/^\S.*$/)]],
     });
+    this.userForm.get('email')?.disable();
   }
 
   saveChanges() {
@@ -63,11 +87,13 @@ export class EditUserModalComponent {
         console.log(error);
         if (error.status === 400 && error.error.violations) {
           this.displayServerErrors(error.error.violations);
-          console.log(error)
+          console.log(error);
         } else {
-          this.errMsg = error.error.message || 'An error occurred while updating the profile';
+          this.errMsg =
+            error.error.message ||
+            'An error occurred while updating the profile';
         }
-      }
+      },
     });
   }
 
@@ -81,7 +107,6 @@ export class EditUserModalComponent {
 
   displayServerErrors(violations: any) {
     this.formErrors = {};
-    console.log(this.formErrors)
     violations.forEach((violation: any) => {
       this.formErrors[violation.fieldName] = violation.message;
     });
@@ -94,11 +119,11 @@ export class EditUserModalComponent {
         return 'This field cannot be empty or start with a space.';
       case 'gender':
         return 'Gender is required.';
-      case 'email':
-        return 'Enter a valid email.';
-      case 'oldPassword':
-      case 'password':
-        return 'Password cannot be empty or start with a space.';
+      // case 'email':
+      //   return 'Enter a valid email.';
+      // case 'oldPassword':
+      // case 'password':
+      //   return 'Password cannot be empty or start with a space.';
       default:
         return 'This field is required.';
     }
@@ -114,5 +139,35 @@ export class EditUserModalComponent {
   close() {
     Object.assign(this.user, this.originalUser);
     this.activeModal.dismiss('cancel');
+  }
+
+  isEditingEmail = false;
+  emailChanged = false;
+  originalEmail: string = '';
+
+  enableEmailEdit(): void {
+    
+    this.isEditingEmail = true;
+    this.userForm.get('email')?.enable();
+  }
+
+  onEmailChange(): void {
+    const currentEmail = this.userForm.get('email')?.value;
+    this.emailChanged = currentEmail && currentEmail !== this.originalEmail;
+  }
+
+  verifyEmail(): void {
+    const email = this.userForm.get('email')?.value;
+    if (!email) return;
+
+    // Example placeholder for real API call
+    console.log('Verification email sent to:', email);
+
+    // Example: disable editing again after clicking verify
+    this.isEditingEmail = false;
+    this.userForm.get('email')?.disable();
+
+    // Optional success message
+    alert('Verification code sent to ' + email);
   }
 }

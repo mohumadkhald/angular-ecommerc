@@ -14,7 +14,7 @@ export interface ProductVariation {
   export interface Prod {
     productId: number;
     productTitle: string;
-    imageUrl: string;
+    imageUrls: [5];
     sku: string | null;
     price: number;
     discountPercent: number;

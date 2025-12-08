@@ -7,6 +7,7 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -14,15 +15,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { ConfigService } from '../../config.service';
 import { CartItem } from '../../interface/cat';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
 import { ToastService } from '../../service/toast.service';
 import { AddressModalComponent } from '../address-modal/address-modal.component';
-import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired-session-dialog.component';
 import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   standalone: true,
@@ -39,7 +39,7 @@ export class CartComponent implements OnInit, OnDestroy {
   private authSubscription!: Subscription;
   paymentForm!: FormGroup;
   addressForm!: FormGroup;
-  shipping: number = 0;
+  shipping: number = 20;
   apiUrl: string;
   cardVendor!: string;
   totalpriceDiscounted: number = 0;
@@ -88,7 +88,7 @@ export class CartComponent implements OnInit, OnDestroy {
           this.cardValidator(this.luhn, this.cardName), // Custom validator for additional card validation (e.g., Luhn algorithm)
         ],
       ],
-      expirationDate: ['', Validators.required], // Required field for expiration date
+      expirationDate: ['', [Validators.required, expirationDateValidator()]], // Required field for expiration date
       cvv: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]], // Required field for CVV, must be 3 digits
     });
   }
@@ -98,71 +98,90 @@ export class CartComponent implements OnInit, OnDestroy {
       this.authSubscription.unsubscribe();
     }
   }
+previousValue = '';
 
-  private loadCartItems(): void {
-    this.cartServerService.getCart().subscribe(
-      (items) => {
-        this.cartItems1 = items;
-        this.updateTotalPrice();
-      },
-      (error) => {}
-    );
+onExpInput(event: any) {
+  const input = event.target;
+  let value: string = input.value;
+
+  // Remove all non-digit characters
+  let digits = value.replace(/\D/g, '');
+
+  // Limit to 4 digits (MMYY)
+  if (digits.length > 4) {
+    digits = digits.substring(0, 4);
   }
 
-  showExpiredSessionDialog(message: string, path: string): void {
-    this.dialog.open(ExpiredSessionDialogComponent, {
-      width: '350px',
-      height: '200px',
-      data: { message: message, path: path },
+  // Auto-insert slash only if typing forward
+  let newValue = digits;
+  const cursorPos = input.selectionStart || 0;
+  const isDeleting = digits.length < this.previousValue.replace(/\D/g, '').length;
+
+  if (!isDeleting && digits.length > 2) {
+    newValue = digits.substring(0, 2) + '/' + digits.substring(2);
+  } else if (!isDeleting && digits.length === 2 && !value.includes('/')) {
+    newValue = digits + '/';
+  }
+
+  input.value = newValue;
+  this.paymentForm.get('expirationDate')?.setValue(newValue, { emitEvent: false });
+
+  // Set cursor after slash if just inserted
+  let newCursorPos = cursorPos;
+  if (!isDeleting && digits.length === 2 && cursorPos === 2) {
+    newCursorPos = 3;
+  }
+
+  input.setSelectionRange(newCursorPos, newCursorPos);
+  this.previousValue = newValue;
+}
+
+
+  private loadCartItems(): void {
+    this.cartServerService.getCart().subscribe((items) => {
+      this.cartItems1 = items;
+      this.updateTotalPrice(); // recalculates without extra requests
     });
   }
 
   private updateTotalPrice(): void {
     if (this.auth()) {
-      this.cartServerService.getCart().subscribe(
-        (items) => {
-          this.cartItems1 = items;
-          this.totalprice = items.reduce(
-            (total, item) => total + item.totalPrice,
-            0
-          );
-          this.totalpriceDiscounted = items.reduce(
-            (total, item) => total + item.totalPriceDiscounted,
-            0
-          );
-        },
-        (error) => {}
+      this.totalprice = this.cartItems1.reduce(
+        (total, item) => total + item.totalPrice,
+        0
+      );
+
+      this.totalpriceDiscounted = this.cartItems1.reduce(
+        (total, item) => total + item.totalPriceDiscounted,
+        0
       );
     } else {
       this.totalprice = this.cartService.getTotalPrice();
     }
   }
 
-  increaseQuantity(product: any): void {
-    if(this.auth())
-    {
-      this.cartServerService.increaseQuantity(product);
-      this.updateTotalPrice();
-      this.cartItems = this.cartService.getCart();
+  increaseQuantity(itemId: number): void {
+    if (this.auth()) {
+      this.cartServerService.increaseQuantity(itemId).subscribe(() => {
+        this.loadCartItems(); // <---- ALWAYS refresh here
+      });
     } else {
-      this.cartService.increaseQuantity(product);
-      this.updateTotalPrice();
-      this.cartItems = this.cartService.getCart();
+      this.cartService.increaseQuantity(itemId);
+      this.cartService.getCart();
     }
-
   }
 
-  decreaseQuantity(product: any): void {
-    if(this.auth())
-      {
-        this.cartServerService.decreaseQuantity(product);
-        this.updateTotalPrice();
-        this.cartItems = this.cartService.getCart();
-      } else {
-        this.cartService.decreaseQuantity(product);
-        this.updateTotalPrice();
-        this.cartItems = this.cartService.getCart();
-      }
+  decreaseQuantity(item: CartItem): void {
+    if (this.auth()) {
+      this.cartServerService
+        .decreaseQuantity(item.itemID, item.quantity)
+        .subscribe(() => {
+          this.loadCartItems();
+        });
+    } else {
+      this.cartService.decreaseQuantity(item);
+      this.cartService.getCart();
+    }
   }
 
   removeItemCart(itemID: any): void {
@@ -198,18 +217,16 @@ export class CartComponent implements OnInit, OnDestroy {
     return this.authService.isLoggedIn();
   }
 
-  removeToast(): void {
-    this.toastService.remove();
-  }
-
-  showToast(): void {
-    this.toastService.add('This is a toast message.');
-  }
+  // removeToast(): void {
+  //   this.toastService.remove();
+  // }
 
   openAddressModal() {
     const modalRef = this.modalService.open(AddressModalComponent, {
       size: 'lg',
       centered: true,
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false, // Prevent closing with the Esc key
     });
 
     modalRef.result.then(
@@ -242,13 +259,12 @@ export class CartComponent implements OnInit, OnDestroy {
         paymentInfo: this.paymentForm.value,
         address: this.addressForm.value,
         orderDate: new Date().toISOString(),
-        deliveryDate: null,
       };
 
       this.http.post(`${this.apiUrl}/orders`, order).subscribe(
         (response) => {
           console.log('Order submitted successfully', response);
-          this.toastService.add('Order Success');
+          this.toastService.add('Order Success', 'success');
           this.loadCartItems();
         },
         (error) => {
@@ -260,12 +276,14 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   private handleOrderError(errors: any) {
+    console.log('Order Errors:', errors);
     const productIssues = Object.keys(errors).map((key) => ({
       title: key,
       message: errors[key].message,
       requestedQuantity: errors[key].requestedQuantity,
       availableQuantity: errors[key].availableQuantity,
     }));
+    console.log('Product Issues:', productIssues);
 
     const cartItemsWithIssues = this.cartItems1.filter((item) =>
       productIssues.some((issue) => issue.title === item.productTitle)
@@ -292,6 +310,8 @@ export class CartComponent implements OnInit, OnDestroy {
       {
         size: 'lg',
         centered: true,
+        backdrop: 'static', // Prevent closing when clicking outside
+        keyboard: false, // Prevent closing with the Esc key
       }
     );
 
@@ -299,6 +319,7 @@ export class CartComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.cartItemsWithIssues = cartItemsWithIssues;
     modalRef.componentInstance.paymentInfo = paymentInfo;
     modalRef.componentInstance.address = address;
+    modalRef.componentInstance.numItems = this.cartItems1.length;
 
     modalRef.result.then(
       (result) => {
@@ -371,22 +392,21 @@ export class CartComponent implements OnInit, OnDestroy {
   onCardNumberInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, ''); // Remove non-digit characters
-  
+
     // Group digits into sets of 4 and join with hyphens
     value = value.replace(/(.{4})/g, '$1-').trim();
-    
+
     // Remove trailing hyphen if the value ends with one
     if (value.endsWith('-')) {
       value = value.slice(0, -1);
     }
-  
+
     // Set the formatted value back to the input field
     input.value = value;
-  
+
     // Update the form control value without resetting validation
     this.paymentForm.get('cardNumber')?.setValue(value, { emitEvent: false });
   }
-  
 
   cardValidator(
     luhnFunc: (input: string) => boolean,
@@ -413,4 +433,37 @@ export class CartComponent implements OnInit, OnDestroy {
       return null; // Valid card
     };
   }
+}
+function expirationDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+
+    if (!value) return null; // required validator will handle empty
+
+    // Match MM/YY format
+    const regex = /^(0[1-9]|1[0-2])\/(\d{2}|\d{4})$/;
+    if (!regex.test(value)) return { invalidFormat: true };
+
+    // Split month/year
+    const [monthStr, yearStr] = value.split('/');
+    const month = parseInt(monthStr, 10);
+    let year = parseInt(yearStr, 10);
+
+    // If year is two digits, convert to 4 digits
+    if (year < 100) {
+      const currentYear = new Date().getFullYear();
+      const prefix = Math.floor(currentYear / 100) * 100; // e.g., 2000
+      year += prefix;
+    }
+
+    const now = new Date();
+    const expiration = new Date(year, month - 1, 1); // set to first day of month
+
+    // Expiration must be >= current month
+    if (expiration < new Date(now.getFullYear(), now.getMonth(), 1)) {
+      return { expired: true };
+    }
+
+    return null; // valid
+  };
 }

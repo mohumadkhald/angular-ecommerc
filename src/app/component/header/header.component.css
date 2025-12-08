@@ -20,7 +20,6 @@
   border-radius: 5px;
   text-align: center;
   white-space: nowrap;
-  margin: -8px 0 0;
 }
 
 .sticky {
@@ -68,7 +67,7 @@
   background-color: #232f3e;
   color: white;
   padding: 10px;
-  z-index: 1000;
+  z-index: 999;
 }
 
 /* Show dropdown-menu when hovering over the .sign element or the dropdown itself */

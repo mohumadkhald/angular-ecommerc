@@ -65,7 +65,7 @@ export class SortOptionsComponent implements OnInit {
 
   getEmailsSellers() {
     // Set currentCategory to 0 if it's not defined or null
-    const category = this.currentCategory || 0;
+    const category = this.currentCategory || 1;
   
     this.productsService.getEmailsSellers(category).subscribe(
       (response: any) => {

@@ -1,12 +1,21 @@
-<div *ngIf="user && user != null">
+<div *ngIf="loading" class="spinner-container" style="margin: 30vh 50vw">
+  <mat-spinner></mat-spinner>
+  <div class="spinner-message" style="width: 200px; margin-top: 20px;">
+    Loading, please wait...
+  </div>
+</div>
+
+<div *ngIf="!loading && user">
   <ng-container *ngIf="user.role === 'ADMIN'; else sellerTemplate">
     <app-profile-admin></app-profile-admin>
   </ng-container>
+
   <ng-template #sellerTemplate>
     <ng-container *ngIf="user.role === 'SELLER'; else userTemplate">
       <app-profile-seller></app-profile-seller>
     </ng-container>
   </ng-template>
+
   <ng-template #userTemplate>
     <app-profile-user></app-profile-user>
   </ng-template>

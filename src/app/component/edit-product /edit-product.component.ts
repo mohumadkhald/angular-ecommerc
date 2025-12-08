@@ -15,7 +15,7 @@ import { ProductService } from '../../service/product.service';
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NgClass, NgStyle, NgFor, NgIf],
+  imports: [ReactiveFormsModule, CommonModule, NgFor, NgIf],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css',
 })
@@ -24,7 +24,7 @@ export class EditProductComponent implements OnInit {
   @Input() product!: any;
 
   productForm: FormGroup | any;
-  selectedFile: File | null = null;
+  // selectedFile: File | null = null;
   fileTouched = false;
   subCategories: any[] = [];
   categories: any[] = [];
@@ -72,7 +72,8 @@ export class EditProductComponent implements OnInit {
   onSubmit(): void {
     this.fileTouched = true;
 
-    if (this.productForm.invalid || !this.selectedFile) {
+    // || !this.selectedFile
+    if (this.productForm.invalid) {
       this.markAllAsTouched();
       return;
     }
@@ -89,7 +90,7 @@ export class EditProductComponent implements OnInit {
       this.productForm.get('subCategoryId').value
     );
     formData.append('categoryId', this.productForm.get('categoryId').value);
-    formData.append('image', this.selectedFile, this.selectedFile.name);
+    // formData.append('image', this.selectedFile, this.selectedFile.name);
 
     if (this.product) {
       this.productService
@@ -97,7 +98,7 @@ export class EditProductComponent implements OnInit {
         .subscribe(
           () => {
             this.productForm.reset();
-            this.selectedFile = null;
+            // this.selectedFile = null;
             this.fileTouched = false;
             this.productAdded.emit();
             this.activeModal.close('updated');
@@ -116,12 +117,12 @@ export class EditProductComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any, fileType: string): void {
-    const file = event.target.files[0] as File;
-    if (fileType === 'image') {
-      this.selectedFile = file;
-    }
-  }
+  // onFileSelected(event: any, fileType: string): void {
+  //   const file = event.target.files[0] as File;
+  //   if (fileType === 'image') {
+  //     this.selectedFile = file;
+  //   }
+  // }
 
   loadSubCategories(callback?: () => void): void {
     this.categoryService.getAllSubCategories().subscribe((subCategories) => {

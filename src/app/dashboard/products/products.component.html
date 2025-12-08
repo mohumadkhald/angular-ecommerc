@@ -6,12 +6,11 @@
 <div *ngIf="auth() && !loading">
     <h1 class="text-center my-2">Manage Products</h1>
     <button class="filter-options" (click)="openFilterModal()">Filter</button>
-    <app-sort-options class="sort-options" style="position: relative; left: -10px;" [currentSortOption]="currentSortOption"
-        [currentElementSizeOption]="currentElementSizeOption" [showSubCatDropdown]="true"
-        [currentEmailSeller]="currentEmailSeller" (emailChange)="onEmailChange($event)" [showEmailDropdown] = true
-        [currentSubCat]="currentSubCat" (sortChange)="onSortChange($event)"
-        (elementChange)="onSizeElementChange($event)"
-        (subCatChange)="onSubCatChange($event)">
+    <app-sort-options class="sort-options" style="position: relative; left: -10px;"
+        [currentSortOption]="currentSortOption" [currentElementSizeOption]="currentElementSizeOption"
+        [showSubCatDropdown]="true" [currentEmailSeller]="currentEmailSeller" (emailChange)="onEmailChange($event)"
+        [showEmailDropdown]=true [currentSubCat]="currentSubCat" (sortChange)="onSortChange($event)"
+        (elementChange)="onSizeElementChange($event)" (subCatChange)="onSubCatChange($event)">
     </app-sort-options>
     <div class="container">
         <div class="manage-products-container">
@@ -65,7 +64,7 @@
                         <td>${{ product.price }}</td>
                         <td>{{ product.discountPercent }}%</td>
                         <td>{{ product.email }}</td>
-                        <td><img width="50" height="50" [src]="product.imageUrl"></td>
+                        <td><img width="50" height="50" [src]="product.imageUrls[0]"></td>
                         <td>{{ product.allQuantity }}</td>
                         <td>
                             <a class="btn btn-primary btn-sm mr-1" (click)="detailsProduct(product.productId)"

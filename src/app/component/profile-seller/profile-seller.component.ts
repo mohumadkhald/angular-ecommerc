@@ -84,7 +84,7 @@ export class ProfileSellerComponent implements OnInit {
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('Product added successfully');
+          this.toastService.add('Product added successfully', 'success');
           this.loadProducts(); // Reload products after adding a new one
         }
       },
@@ -107,13 +107,16 @@ export class ProfileSellerComponent implements OnInit {
   }
 
   uploadImage(file: File) {
-    this.authService.changePhoto(file).subscribe(
+    this.authService.changePhoto(file, this.user.imageUrl).subscribe(
       (response) => {
-        this.toastService.add('Image updated successfully');
-        this.user.imageUrl = response.message; // Update user image URL
+        this.toastService.add('Image updated successfully', 'success');
+                // REFRESH PROFILE HERE
+        this.userService.refreshProfile().subscribe((updated) => {
+          this.user = updated;
+        });
       },
       (error) => {
-        this.toastService.add('Image upload failed');
+        this.toastService.add('Image upload failed', 'success');
       }
     );
   }
@@ -128,7 +131,7 @@ export class ProfileSellerComponent implements OnInit {
       .then(
         (result) => {
           if (result === 'updated') {
-            this.toastService.add('User edit success');
+            this.toastService.add('User edit success', 'success');
             this.loadUserProfile(); // Reload user profile after update
           }
         },
@@ -137,7 +140,7 @@ export class ProfileSellerComponent implements OnInit {
         }
       )
       .catch((error) => {
-        console.error('Modal error:', error);
+        this.toastService.add('User not Updated', 'error');
       });
   }
 

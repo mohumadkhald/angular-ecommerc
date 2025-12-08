@@ -1,7 +1,7 @@
 import { Injectable, HostListener, OnInit } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ConfigService } from '../config.service';
+import { ConfigService } from './config.service';
 import { Router } from '@angular/router';
 
 @Injectable({

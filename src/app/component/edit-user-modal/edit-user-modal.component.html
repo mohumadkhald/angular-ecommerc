@@ -38,33 +38,38 @@
           </div>
           <div class="form-group col-md-12">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" formControlName="email" required>
+            <div class="input-group">
+              <input type="email" class="form-control" id="email" formControlName="email" [disabled]="!isEditingEmail"
+                (input)="onEmailChange()">
+
+              <!-- Button: toggle between Change/Verify -->
+              <div class="input-group-append" *ngIf="originalUser.emailVerified">
+                <button type="button" class="btn btn-outline-primary" (click)="enableEmailEdit()">
+                  Change
+                </button>
+              </div>
+
+              <div class="input-group-append" *ngIf="!originalUser.emailVerified">
+                <button type="button" class="btn btn-outline-success" (click)="verifyEmail()">
+                  Verify
+                </button>
+              </div>
+            </div>
+
             <div *ngIf="formErrors['email']" class="text-danger">
               {{ formErrors['email'] }}
             </div>
           </div>
-        </div>
-        <input type="text" style="display:none">
-        <input type="password" style="display:none">
-        <div class="form-row">
-          <div class="form-group col-md-12">
-            <label for="old-passwd">Old Password</label>
-            <input type="password" class="form-control" id="old-passwd" formControlName="oldPassword"
-              (focus)="disableAutocomplete('old-passwd')" autocomplete="new-password" required>
-            <div *ngIf="formErrors['oldPassword']" class="text-danger">
-              {{ formErrors['oldPassword'] }}
+
+          <!-- <div class="form-group col-md-12">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" formControlName="email" required>
+            <div *ngIf="formErrors['email']" class="text-danger">
+              {{ formErrors['email'] }}
             </div>
-            <div *ngIf="errMsg" class="text-danger">{{ errMsg }}</div>
-          </div>
-          <div class="form-group col-md-12">
-            <label for="new-passwd">New Password</label>
-            <input type="password" class="form-control" id="new-passwd" formControlName="password"
-              (focus)="disableAutocomplete('new-passwd')" autocomplete="new-password" required>
-            <div *ngIf="formErrors['password']" class="text-danger">
-              {{ formErrors['password'] }}
-            </div>
-          </div>
+          </div> -->
         </div>
+
       </div>
     </div>
 

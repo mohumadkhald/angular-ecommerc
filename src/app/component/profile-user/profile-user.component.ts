@@ -53,7 +53,7 @@ export class ProfileUserComponent implements OnInit {
       .then(
         (result) => {
           if (result === 'updated') {
-            this.toastService.add('User edit success');
+            this.toastService.add('User edit success', 'success');
             this.loadUserProfile(); // Reload user profile after update
           }
         },
@@ -62,7 +62,7 @@ export class ProfileUserComponent implements OnInit {
         }
       )
       .catch((error) => {
-        console.error('Modal error:', error);
+        this.toastService.add('User not Updated', 'error');
       });
   }
 }

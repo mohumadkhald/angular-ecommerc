@@ -38,6 +38,7 @@ import { ExpiredSessionDialogComponent } from '../expired-session-dialog/expired
 import { ModelFilterComponent } from '../model-filter/model-filter.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { SortOptionsComponent } from '../sort-options/sort-options.component';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -70,7 +71,7 @@ export class ProductListComponent implements OnInit {
     notAvailable: true,
     priceRange: 250,
     minPrice: 0,
-    maxPrice: 25000,
+    maxPrice: 250000,
     colors: [] as string[],
     sizes: [] as string[],
   };
@@ -98,6 +99,7 @@ export class ProductListComponent implements OnInit {
   currentEmailSeller: string = '';
   display: boolean = false;
   currentCategoryId: any;
+  isloading: boolean = false;
 
   constructor(
     private router: Router,
@@ -107,86 +109,80 @@ export class ProductListComponent implements OnInit {
     private modalService: NgbModal,
     private titleService: Title,
     public toastService: ToastService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    // Handle paramMap changes
-    this.route.paramMap.subscribe(
-      (paramMap) => {
-        this.categoryTitle = paramMap.get('categoryTitle');
-        this.subCategoryName = paramMap.get('subCategoryName');
-        this.loadSubCategories();
-        this.currentCategoryImage = localStorage.getItem('imgCat');
-        this.updatePageTitle();
-        this.hasQueryParams = false;
+    // Trigger only when category changes
+    this.route.paramMap.subscribe((paramMap) => {
+      this.loading = true;
+      this.isloading = true;
+      this.products = [];
 
-        // Load products if no query params present
-        if (!this.hasQueryParams) {
-          setTimeout(() => {
-            this.loadProducts();
-          }, 200);
-        }
-      },
-      (error) => {}
-    );
+      this.categoryTitle = paramMap.get('categoryTitle');
+      this.subCategoryName = paramMap.get('subCategoryName');
 
-    // Handle queryParams changes
-    this.route.queryParams.subscribe(
-      (params) => {
-        this.hasQueryParams = Object.keys(params).length > 0;
-        this.currentPage = params['page'] ? +params['page'] : 1;
+      this.loadSubCategories();
+      this.currentCategoryImage = localStorage.getItem('imgCat');
 
-        this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
-        this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
-        this.filters.colors = params['colors']
-          ? params['colors'].split(',')
-          : [];
-        this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
-        this.sortBy = params['sortBy'] || 'createdAt';
-        this.sortDirection = params['sortDirection'] || 'desc';
-        this.currentPage = +params['page'] || 1;
-        this.currentElementSizeOption = params['pageSize'] || 20;
+      this.updatePageTitle();
 
-        // Initialize inStock and notAvailable filters
-        this.filters.inStock = params['inStock'] === 'true';
-        this.filters.notAvailable = params['notAvailable'] === 'true';
+      // Remove: setTimeout + loadProducts()
+      // Remove: any call inside onFilterChange()
+    });
 
-        // Construct currentSortOption from sortBy and sortDirection
-        this.currentSortOption = `${this.sortBy}${this.sortDirection
-          .charAt(0)
-          .toUpperCase()}${this.sortDirection.slice(1)}`;
+    // Query params should handle loading products ONLY
+    this.route.queryParams.subscribe((params) => {
+      this.hasQueryParams = Object.keys(params).length > 0;
 
-        // Load products based on query params
-        if (this.hasQueryParams) {
-          this.loadProducts();
-        }
-      },
-      (error) => {}
-    );
+      this.currentPage = params['page'] ? +params['page'] : 1;
 
-    // Initialize sortedProducts
-    this.sortedProducts = [...this.products];
-    if (this.subCategoryName) {
-      this.onFilterChange();
+      this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
+      this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
+      this.filters.colors = params['colors'] ? params['colors'].split(',') : [];
+      this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
+
+      this.sortBy = params['sortBy'] || 'createdAt';
+      this.sortDirection = params['sortDirection'] || 'desc';
+      this.currentElementSizeOption = params['pageSize'] || 20;
+
+      this.filters.inStock = params['inStock'] === 'true';
+      this.filters.notAvailable = params['notAvailable'] === 'true';
+
+      this.currentSortOption = `${this.sortBy}${this.sortDirection
+        .charAt(0)
+        .toUpperCase()}${this.sortDirection.slice(1)}`;
+
+      // Load products only ONCE here
+      if (this.subCategoryName) {
+        this.loadProducts();
+      }
+    });
+  }
+
+  isActive(subCategory: any): boolean {
+    try {
+      const urlTree = this.router.parseUrl(this.router.url);
+      const primary = urlTree.root.children['primary'];
+      const segments = primary?.segments.map((s) => s.path) || [];
+
+      // expected structure: ['categories', '{categoryTitle}', '{subCategoryName}']
+      if (segments.length >= 3 && segments[0] === 'categories') {
+        const currentCategory = segments[1];
+        const currentSub = segments[2];
+        return (
+          currentCategory === this.categoryTitle &&
+          currentSub === subCategory.name
+        );
+      }
+      return false;
+    } catch (e) {
+      // fallback (and helpful for debugging)
+      console.error('isActive error', e);
+      return false;
     }
   }
-
-  showErrorDialog(message: string): void {
-    this.dialog.open(ErrorDialogComponent, {
-      width: '350px',
-      height: '200px',
-      data: { message: message },
-    });
-  }
-  showExpiredSessionDialog(message: string, path: string): void {
-    this.dialog.open(ExpiredSessionDialogComponent, {
-      width: '350px',
-      height: '200px',
-      data: { message: message, path: path },
-    });
-  }
-
   showNotFound: boolean = false;
 
   loadSubCategories(): void {
@@ -195,21 +191,17 @@ export class ProductListComponent implements OnInit {
         .getSubCategoriesByCategoryTitle(this.categoryTitle)
         .subscribe(
           (subCategories) => {
+            this.loading = false;
             this.subCategories = subCategories;
             this.showNotFound = false;
+            this.isloading = false;
           },
           (error) => {
             if (error.status === 404) {
               setTimeout(() => {
+                this.loading = false;
                 this.showNotFound = true;
               }, 200);
-            }
-            if (error.status === 401) {
-              this.showExpiredSessionDialog(
-                'Session expired. Please log in again.',
-                '/login'
-              );
-            } else {
             }
           }
         );
@@ -217,6 +209,7 @@ export class ProductListComponent implements OnInit {
   }
 
   loadProducts(): void {
+    this.isloading = true;
     if (this.subCategoryName) {
       let available: boolean | null = null;
       if (this.filters.inStock && !this.filters.notAvailable) {
@@ -241,15 +234,12 @@ export class ProductListComponent implements OnInit {
         )
         .subscribe(
           (response: PaginatedResponse<Product[]>) => {
-            this.loading = false;
             this.products = response.content;
             if (response.content && response.content.length > 0) {
+              this.loading = false;
               // Check if products have no color
               for (let i = 0; i < response.content.length; i++) {
-                if (
-                  response.content[i].colorsAndSizes['no_color'] &&
-                  response.content.length > 1
-                ) {
+                if (response.content.length > 1) {
                   this.display = false;
                 } else {
                   this.display = true;
@@ -270,23 +260,15 @@ export class ProductListComponent implements OnInit {
             );
             this.inStockCount = stockCounts.inStockCount;
             this.outOfStockCount = stockCounts.outOfStockCount;
+            this.isloading = false;
           },
           (error) => {
             if (error.status === 404) {
-              this.loading = false;
               this.showNotFound = true;
-            }
-            if (error.status === 401) {
-              this.showExpiredSessionDialog(
-                'Session expired. Please log in again.',
-                '/login'
-              );
-            } else {
             }
           }
         );
     } else {
-      this.loading = false;
       this.products = [];
       // Reset counts if no products are loaded
       this.inStockCount = 0;
@@ -308,19 +290,6 @@ export class ProductListComponent implements OnInit {
       centered: true,
     });
     modalRef.componentInstance.product = product;
-  }
-
-  selectCategory(event: Event, Category: any): void {
-    event.stopPropagation();
-    this.categoryTitle = Category.categoryTitle;
-    this.currentCategoryImage =
-      Category.img || 'default-category-image-url.jpg';
-    this.currentCategoryName =
-      this.categories.find((category) => category.categoryId)?.categoryTitle ||
-      'Category';
-    localStorage.setItem('currentCategoryImage', this.currentCategoryImage);
-    this.updatePageTitle();
-    this.router.navigate([], { queryParams: {} }); // Reset query params when selecting a new category
   }
 
   private updatePageTitle() {
@@ -384,6 +353,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onSizeElementChange(value: string) {
+    this.isloading = true;
     const pageSize = value;
     const page = 1;
     this.updateQueryParams({ pageSize, page }); // Update the query parameters
@@ -397,6 +367,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onEmailChange(email: string): void {
+    this.isloading = true;
     this.currentEmailSeller = email;
     const page = 1;
     this.updateQueryParams({ email, page });
@@ -404,6 +375,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onFilterChange(): void {
+    this.isloading = true;
     // Update query params with availability filters
     const page = 1;
     this.updateQueryParams({
@@ -415,6 +387,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onPriceRangeChange(): void {
+    this.isloading = true;
     const page = 1;
     this.updateQueryParams({
       minPrice: this.filters.minPrice,
@@ -425,6 +398,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onColorChange(color: string, event: Event): void {
+    this.isloading = true;
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
       this.filters.colors.push(color);
@@ -440,6 +414,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onSizeChange(size: string, event: Event): void {
+    this.isloading = true;
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
       this.filters.sizes.push(size);

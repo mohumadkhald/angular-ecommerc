@@ -1,15 +1,163 @@
+/* Container for all orders */
+.order-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px;
+}
+
+/* Individual order card */
+.order-card {
+  flex: 1 1 calc(33% - 32px);
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 10px;
+  min-width: 300px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Order header */
+.order-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+
+.status {
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+/* Pending = Yellow */
+.status.pending {
+  color: #b08900;
+  background-color: #fff3cd;
+  border: 1px solid #ffe69c;
+}
+
+/* Delivered = Green */
+.status.delivered {
+  color: #0f5132;
+  background-color: #d1e7dd;
+  border: 1px solid #badbcc;
+}
+
+/* Canceled = Red */
+.status.canceled, .status.cancelled, .status.failed {
+  color: #842029;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+}
+
+/* Shipping info */
+.shipping-address {
+  margin: 10px 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.shipping-address h3 {
+  margin-bottom: 4px;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Divider */
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 12px 0;
+}
+
+
+/* Product image */
+.product-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+
+.product-name {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+/* Variations horizontal scroll */
+.variation-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-top: 8px;
+}
+
+.variation-card {
+  min-width: 85px;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 3px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+/* Empty container */
+.cont-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .order-card {
+    flex: 1 1 calc(45% - 32px);
+  }
+}
+
+@media (max-width: 576px) {
+  .order-card {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .order-item {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-img {
+    margin-bottom: 8px;
+  }
+}
+
 .order-container {
   display: flex;
   flex-wrap: wrap; /* Allow cards to wrap onto the next line as needed */
+  margin-bottom: 60px
 }
 
 .order-card {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
-  margin: 12px; /* Space out the cards */
+  margin: 9px; /* Space out the cards */
   background-color: #fff;
-  flex: 1 1 calc(30% - 24px); /* Grow to fill space, shrink if needed */
+  flex: 1 1 calc(30% - 18px); /* Grow to fill space, shrink if needed */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   min-width: 348px; /* Prevent the card from getting too small */
   max-width: 348px; /* Set a maximum width if needed */
@@ -24,10 +172,11 @@
   align-items: center;
   margin-bottom: 16px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
 .product-img {
-  width: 100px;
+  width: 120px;
   height: 100px;
   object-fit: cover;
   margin-right: 16px;
@@ -58,17 +207,24 @@
 
 .order-item {
   display: inline-block;
-  min-width: 300px; /* Adjust based on item width */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  min-width: 310px; /* Adjust based on item width */
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   background-color: #fff;
-  padding: .5rem;
+  padding: 1rem;
+  /* border: #697574 1px solid; */
 }
 
-.product-img {
-  max-width: 100px;
-  height: auto;
+
+
+.variation-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
+
 
 
 /* Responsive adjustments */

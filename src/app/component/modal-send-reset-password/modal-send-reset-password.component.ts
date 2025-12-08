@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { HttpClient } from "@angular/common/http";
 import {ModalChangePwdComponent} from "../modal-change-pwd/modal-change-pwd.component";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import { ConfigService } from '../../config.service';
+import { ConfigService } from '../../service/config.service';
 
 @Component({
   selector: 'app-modal-send-reset-password',
@@ -65,7 +65,7 @@ export class ModalSendResetPasswordComponent {
       const url = `${this.baseUrl}/auth/send-reset?email=${encodeURIComponent(email)}`;
       this.http.post(url, {})
         .subscribe((response: any) => {
-          console.log('Reset email sent successfully:', response);
+          console.log('Reset password sent successfully:', response);
           this.responseMessage = response.message;
           this.loading = false;
           this.dialogRef.close();

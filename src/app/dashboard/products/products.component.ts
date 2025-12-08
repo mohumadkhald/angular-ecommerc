@@ -255,7 +255,7 @@ export class ProductsComponent implements OnInit {
   }
   deleteProducts(): void {
     if (this.selectedProductIds.length === 0) {
-      this.toastService.warnnig('Not Selected any Products');
+      this.toastService.add('Not Selected any Products', "warning");
     } else {
       if (confirm('Are you sure you want to delete this products?')) {
         this.productsService.deleteProducts(this.selectedProductIds).subscribe(
@@ -266,7 +266,7 @@ export class ProductsComponent implements OnInit {
             );
             this.selectedProductIds = []; // Clear the selection
             this.dashboardComponent.fetchProductCount();
-            this.toastService.add('Products deleted successfully');
+            this.toastService.add('Products deleted successfully', 'success');
           },
           (error) => {
           }
@@ -283,6 +283,8 @@ export class ProductsComponent implements OnInit {
     const modalRef = this.modalService.open(AddProductComponent, {
       size: 'lg',
       centered: true,
+      backdrop: 'static', // Prevent closing when clicking outside
+      keyboard: false,    // Prevent closing with the Esc key
     });
 
     modalRef.componentInstance.productAdded.subscribe(() => {
@@ -293,7 +295,7 @@ export class ProductsComponent implements OnInit {
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('Product added successfully');
+          this.toastService.add('Product added successfully', 'success');
         }
       },
       (reason) => {}
@@ -316,7 +318,7 @@ export class ProductsComponent implements OnInit {
     modalRef.result.then(
       (result) => {
         if (result === 'updated') {
-          this.toastService.add('Product Updated successfully');
+          this.toastService.add('Product Updated successfully', 'success');
         }
       },
       (reason) => {}
@@ -330,15 +332,15 @@ export class ProductsComponent implements OnInit {
   makeDiscount(): void {
     const discountValue = this.discount;
     if (isNaN(discountValue) || discountValue == null) {
-      this.toastService.warnnig('Invalid discount value.');
+      this.toastService.add('Invalid discount value.', 'warning');
       return;
     }
     if (discountValue < 0 || discountValue > 100) {
-      this.toastService.warnnig('Invalid discount value. It should be between 0 and 100.');
+      this.toastService.add('Invalid discount value. It should be between 0 and 100.', 'warning');
       return;
     }
     if (this.selectedProductIds.length === 0) {
-      this.toastService.warnnig('Not Selected any Products');
+      this.toastService.add('Not Selected any Products', 'warning');
       return;
     }
     this.productsService
@@ -346,11 +348,10 @@ export class ProductsComponent implements OnInit {
       .subscribe(
         () => {
           this.loadProducts(); // Refresh the product list
-          this.selectedProductIds = []; // Clear the selection
-          this.toastService.add('Discount applied successfully');
+          this.toastService.add('Discount applied successfully', 'success');
         },
         (error) => {
-          this.toastService.error(error.message);
+          this.toastService.add(error.message, "error");
         }
       );
   }

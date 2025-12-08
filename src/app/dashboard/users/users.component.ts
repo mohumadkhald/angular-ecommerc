@@ -52,6 +52,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   fetchUsers(page: number = 0, pageSize: number = 10): void {
     this.usersService.getUsers(page, pageSize).subscribe(
       (data) => {
+        this.dashboardComponent.fetchUserCount(); // Update the user count
         this.users = data.content;
         this.currentPage = data.pageable.pageNumber + 1;
         this.totalPages = Array.from(
@@ -70,7 +71,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           // Filter out the deleted user from the array
           this.users = this.users.filter((user) => user.id !== userId);
           this.dashboardComponent.fetchUserCount(); // Update the user count
-          this.toastService.add('User Deleted successfully');
+          this.toastService.add('User Deleted successfully', 'success');
         },
         (error) => {}
       );
@@ -95,7 +96,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('User added successfully');
+          this.toastService.add('User added successfully', 'success');
         }
       },
       (reason) => {}

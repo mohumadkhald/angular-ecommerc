@@ -34,10 +34,13 @@
                 </div>
                 <div class="card-body p-4 text-black">
                     <div class="mb-5">
-                        <p class="lead fw-normal mb-1">About</p>
+                        <button class="btn bg-primary text-light" *ngIf="user.needPassword" (click)="openSetFirstPwd()">Set First Password</button>
+                        <button class="btn bg-primary text-light" *ngIf="!user.needPassword" (click)="openChangePwd()">Change Password</button>
+                        <p class="lead fw-normal mb-1 mt-2">About</p>
                         <div class="p-4 rounded" style="background-color: #f8f9fa;">
                             <p class="font-italic mb-1">Web Developer</p>
                             <p class="font-italic mb-1">Lives in New York</p>
+                            <p class="font-italic mb-0">{{ user.email }}</p>
                             <p class="font-italic mb-0">{{ user.role }}</p>
                         </div>
                     </div>
@@ -57,7 +60,7 @@
                             <h2 style="margin: 0px; cursor: pointer;" class="text"
                                 (click)="redirectToDetails(product.productId)"> {{ product.productTitle | capitalize }}
                             </h2>
-                            <img [src]="product.imageUrl" alt="image 1" (click)="redirectToDetails(product.productId)"
+                            <img [src]="product.imageUrls[0]" alt="image 1" (click)="redirectToDetails(product.productId)"
                                 class="w-100 rounded-3">
                         </div>
                     </div>

@@ -38,7 +38,6 @@ import { ToastService } from '../../service/toast.service';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-
 export class AuthComponent implements OnInit {
   @ViewChild('container', { static: false })
   container!: ElementRef;
@@ -63,10 +62,30 @@ export class AuthComponent implements OnInit {
   ) {
     // Initialize forms with validation rules
     this.registerForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
-      lastName: ['', [Validators.required, Validators.pattern('^[^0-9]{3,}$'), this.noLeadingTrailingSpaces]],
+      firstName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[^0-9]{3,}$'),
+          this.noLeadingTrailingSpaces,
+        ],
+      ],
+      lastName: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[^0-9]{3,}$'),
+          this.noLeadingTrailingSpaces,
+        ],
+      ],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$')]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$'),
+        ],
+      ],
       gender: ['', Validators.required],
       role: ['', Validators.required],
     });
@@ -74,51 +93,66 @@ export class AuthComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      remember: []
+      remember: [],
     });
   }
 
   ngOnInit(): void {
     this.isLogin = this.authService.isLoggedIn();
 
-    // Redirect if already logged in
+    // ✅ 1. Redirect immediately if already logged in
     if (this.isLogin) {
-      this.router.navigate(['/']);
-      return; // Exit to prevent unnecessary further processing
+      this.router.navigateByUrl('/');
+      return;
     }
 
-    // Handle query params to toggle between login/register
-    this.route.queryParams.subscribe((params) => {
-      const state = params['state'];
-      // Show appropriate form based on the query parameter
-      if (state === 'register') {
-        setTimeout(() => {
-        this.showSignUp();
-        }, 200);
+    // ✅ 2. Show form based on path param (/auth/login or /auth/register)
+    this.route.paramMap.subscribe((params) => {
+      const state = params.get('state');
+      if (state === 'register') this.showSignUp();
+      else this.showSignIn(); // default = login
+    });
+
+    // ✅ 3. Read query params instantly (for token or errors)
+    const params = this.route.snapshot.queryParams;
+    const token = params['token'];
+    const role = params['role'];
+    const newUser = params['newUser'];
+
+    // ✅ 4. Handle Google/OAuth2 callback token
+    if (token) {
+      this.authService.saveToken(token);
+      if (role) this.authService.saveRole(role);
+
+      if (newUser === 'true') {
+        localStorage.setItem('firstPwdSet', 'true');
       }
 
-      if (state === 'login') {
-        setTimeout(() => {
-        this.showSignIn();
-        }, 200);
-      }
-      // Handle token if present (for navigation after registration)
-      const token = params['token'];
-      const role = params['role'];
-      if (token) {
-        this.authService.saveToken(token);
-        this.authService.saveRole(role);
-        if (params['newUser'] === 'true') {
-          localStorage.setItem('firstPwdSet', 'true');
-        }
-        this.router.navigate(['/']);
+      this.router.navigateByUrl('/');
+      return;
+    }
+
+    // ✅ 5. Handle errors dynamically
+    this.route.queryParams.subscribe((qp) => {
+      const state = qp['state'] || 'login'; // default to login if missing
+      const decoded = decodeURIComponent(window.location.href);
+      const match = decoded.match(/error=([^&]+)/);
+
+      if (match) {
+        const message = decodeURIComponent(match[1]);
+        this.showErrorDialog(message);
+
+        // ✅ Clean URL & fix state (show correct form after alert)
+        this.router.navigate(['/auth', state], { replaceUrl: true });
+
+        // ✅ Also update the visible form instantly
+        if (state === 'register') this.showSignUp();
+        else this.showSignIn();
       }
     });
 
-    // Show loading spinner
-    setTimeout(() => {
-      this.loading = false; // End loading after a specified time
-    }, 500);
+    // ✅ 6. End loading spinner quickly
+    this.loading = false;
   }
 
   // Form validation helper
@@ -128,16 +162,33 @@ export class AuthComponent implements OnInit {
   }
 
   // Toggle to show Sign In form
+
   showSignIn() {
     if (this.container) {
-      this.renderer.removeClass(this.container.nativeElement, 'right-panel-active');
+      this.renderer.removeClass(
+        this.container.nativeElement,
+        'right-panel-active'
+      );
     }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { state: 'login' },
+      queryParamsHandling: '', // reset query params
+    });
   }
 
   showSignUp() {
     if (this.container) {
-      this.renderer.addClass(this.container.nativeElement, 'right-panel-active');
+      this.renderer.addClass(
+        this.container.nativeElement,
+        'right-panel-active'
+      );
     }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { state: 'register' },
+      queryParamsHandling: '',
+    });
   }
 
   // Login method
@@ -150,7 +201,7 @@ export class AuthComponent implements OnInit {
           this.cartService.clearCart();
           this.authService.saveToken(response.token);
           this.router.navigate(['/']);
-          this.toast.add("Your Login Success Have a Nice Time")
+          this.toast.add('Your Login Success Have a Nice Time', 'success');
         },
         (error) => this.handleError(error)
       );
@@ -160,17 +211,30 @@ export class AuthComponent implements OnInit {
   // Register method
   register() {
     if (this.registerForm.valid) {
-      const { firstName, lastName, email, password, gender, role } = this.registerForm.value;
-      this.authService.register(firstName.trim(), lastName.trim(), email.trim(), password.trim(), gender, role).subscribe(
-        (response) => {
-          this.authService.saveToken(response.token);
-          this.router.navigate(['/']);
-          this.cartService.syncCartFromLocalStorage();
-          this.cartService.clearCart();
-          this.toast.add("You Are Register Welcome To Commerce WebSite")
-        },
-        (error) => this.handleError(error)
-      );
+      const { firstName, lastName, email, password, gender, role } =
+        this.registerForm.value;
+      this.authService
+        .register(
+          firstName.trim(),
+          lastName.trim(),
+          email.trim(),
+          password.trim(),
+          gender,
+          role
+        )
+        .subscribe(
+          (response) => {
+            this.authService.saveToken(response.token);
+            this.router.navigate(['/']);
+            this.cartService.syncCartFromLocalStorage();
+            this.cartService.clearCart();
+            this.toast.add(
+              'You Are Register Welcome To Commerce WebSite',
+              'success'
+            );
+          },
+          (error) => this.handleError(error)
+        );
     }
   }
 

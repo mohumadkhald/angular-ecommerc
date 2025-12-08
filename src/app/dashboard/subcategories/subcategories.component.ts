@@ -72,7 +72,7 @@ export class SubcategoriesComponent {
     modalRef.componentInstance.categoryAdded.subscribe(() => {
       this.getAllCategories(); // Refresh the categories list
       this.dashboardComponent.fetchCategoryCount(); // Update the category count
-      this.toastService.add('Category Added successfully');
+      this.toastService.add('Category Added successfully', 'success');
     });
 
     modalRef.result.then(
@@ -91,7 +91,7 @@ export class SubcategoriesComponent {
     modalRef.componentInstance.categoryAdded.subscribe(() => {
       this.getAllCategories(); // Refresh the categories list
       this.dashboardComponent.fetchCategoryCount(); // Update the category count
-      this.toastService.add('Category Updated successfully');
+      this.toastService.add('Category Updated successfully', 'success');
     });
 
     modalRef.result.then(

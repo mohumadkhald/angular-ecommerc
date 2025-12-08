@@ -14,6 +14,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { AuthInterceptor } from './utils/auth.interceptor';
 import {NgxImgZoomModule} from "ngx-img-zoom";
 import { provideToastr } from 'ngx-toastr';
+import { delayInterceptor } from './delay.interceptor';
+import { httpCacheInterceptor } from './http-cache.interceptor';
 
 
 export const appConfig: ApplicationConfig = {
@@ -30,6 +32,8 @@ export const appConfig: ApplicationConfig = {
     NgxImgZoomModule,
     provideAnimations(),
     provideHttpClient(withInterceptors([
+      delayInterceptor,
+      // httpCacheInterceptor,
       AuthInterceptor
     ])), provideAnimationsAsync(), provideAnimationsAsync(),
   ]

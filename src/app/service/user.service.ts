@@ -1,19 +1,24 @@
 import { Injectable, OnInit } from '@angular/core';
-import {BehaviorSubject, catchError, Observable, of} from 'rxjs';
-import {tap} from "rxjs/operators";
-import {AuthService} from "./auth.service";
+import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService implements OnInit {
-  private usernameSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  private imgSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private usernameSubject: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  private imgSubject: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
   private roleSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  public username$: Observable<string | null> = this.usernameSubject.asObservable();
+  public username$: Observable<string | null> =
+    this.usernameSubject.asObservable();
   public img$: Observable<string | null> = this.imgSubject.asObservable();
   public role$: Observable<any> = this.roleSubject.asObservable();
 
@@ -26,7 +31,7 @@ export class UserService implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if(this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.loadProfile().subscribe();
     }
   }
@@ -47,35 +52,48 @@ export class UserService implements OnInit {
     this.roleSubject.next(role);
   }
 
+  private profileCache$?: Observable<any>;
+
   loadProfile(): Observable<any> {
-    return this.authService.loadProfile().pipe(
-      tap(response => {
-        if (response) {
-          this.setUsername(`${response.firstName} ${response.lastName}`);
-          this.setImg(response.imageUrl);
-          this.setRole(response.role);
-          this.authService.saveRole(response.role)
-          this.profileLoaded = true;
-        }
-      }),
-      catchError(error => {
-        console.log(error)
-        this.clearUsername();
-        return of(null);
-      })
-    );
+    if (!this.profileCache$) {
+      this.profileCache$ = this.authService.loadProfile().pipe(
+        tap((response) => {
+          if (response) {
+            this.setUsername(`${response.firstName} ${response.lastName}`);
+            this.setImg(response.imageUrl);
+            this.setRole(response.role);
+            this.authService.saveRole(response.role);
+            this.profileLoaded = true;
+          }
+        }),
+        catchError((error) => {
+          console.log(error);
+          this.clearUsername();
+          return of(null);
+        }),
+        shareReplay(1) // <<=== cache result for all future subscribers
+      );
+    }
+
+    return this.profileCache$;
   }
+
+  refreshProfile(): Observable<any> {
+    this.profileCache$ = undefined;
+    return this.loadProfile();
+  }
+
 
   updateProfile(user: any): Observable<any> {
     return this.authService.updateProfile(user).pipe(
-      tap(response => {
+      tap((response) => {
         if (response) {
           this.setUsername(`${response.firstName} ${response.lastName}`);
           this.setImg(response.imageUrl);
           this.setRole(response.role);
         }
       }),
-      catchError(error => {
+      catchError((error) => {
         return of(null);
       })
     );

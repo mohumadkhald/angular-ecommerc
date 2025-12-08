@@ -78,11 +78,16 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.selectedCategory = params['category'] || 'all';
-      this.searchText = params['search'] || '';
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //   this.selectedCategory = params['category'] || 'all';
+    //   this.searchText = params['search'] || '';
+    // });
 
+    // this.loadCategories();
+    this.categoryUpdateService.categoryUpdated$.subscribe(() => {
+      this.loadCategories();
+    });
+    
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
         if (isLoggedIn) {
@@ -109,10 +114,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
 
-    this.loadCategories();
-    this.categoryUpdateService.categoryUpdated$.subscribe(() => {
-      this.loadCategories();
-    });
+
   }
 
   ngAfterViewInit(): void {
@@ -206,7 +208,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     if(productName != '')
     {
       this.router.navigate(['search'], {
-        queryParams: { category: categoryTitle, search: productName, page: 1 },
+        queryParams: { category: categoryTitle, search: productName, page: 1, inStock: true, notAvailable: true },
       });
     }
   }

@@ -1,6 +1,6 @@
 <div class="bg-primary custom-class">
   <h2 class="bg-primary text-center text-light" mat-dialog-title>{{data.name}}</h2>
-  <p *ngIf="!successMessage" class="text-center bg-success text-light p-2">The Code Sent To Email Address</p>
+  <p *ngIf="!responseMessage" class="text-center bg-success text-light p-2">The Code Sent To Email Address</p>
   <p *ngIf="successMessage" class="text-center mt-2 success-msg">{{ successMessage }}</p>
   <form [formGroup]="changePwdForm">
     <div mat-dialog-content>

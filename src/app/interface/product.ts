@@ -25,7 +25,7 @@ export interface Product {
   colorsAndSizes: any;
   productId: number;
   productTitle: string;
-  imageUrl: string;
+  imageUrls: [5];
   price: number;
   discountPercent: number;
   color: string;

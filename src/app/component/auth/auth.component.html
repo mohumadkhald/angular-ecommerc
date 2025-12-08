@@ -3,16 +3,21 @@
   <div class="spinner-message">Loading, please wait...</div>
 </div>
 
+<!-- The container needs to be visible for @ViewChild -->
 <div *ngIf="!loading" class="container" #container>
+  <!-- Sign Up Form -->
   <div class="form-container sign-up-container">
     <form [formGroup]="registerForm" (ngSubmit)="register()">
       <h1>Create Account</h1>
+
       <div class="social-container">
         <a (click)="initiateGoogleLogin()" class="social google"><i class="fab fa-google-plus-g"></i></a>
         <a (click)="initiateFaceLogin()" class="social facebook"><i class="fab fa-facebook-f"></i></a>
         <a href="#" class="social in"><i class="fab fa-linkedin-in"></i></a>
       </div>
+
       <span>or use your email for registration</span>
+
       <div style="display: grid; grid-template-columns: auto auto; gap: 10px">
         <input type="text" placeholder="First Name" formControlName="firstName" />
         <input type="text" placeholder="Last Name" formControlName="lastName" />
@@ -91,19 +96,23 @@
       </select>
 
       <button class="btn btn-success mt-3" type="submit" [disabled]="registerForm.invalid">Sign Up</button>
-      <a class="text-primary tggle" (click)="showSignIn()">Sign In</a>
+      <a class="text-primary toggle" (click)="showSignIn()">Already have an account? Sign In</a>
     </form>
   </div>
 
+  <!-- Sign In Form -->
   <div class="form-container sign-in-container">
     <form [formGroup]="loginForm" (ngSubmit)="login()">
       <h1>Sign in</h1>
+
       <div class="social-container">
         <a (click)="initiateGoogleLogin()" class="social google"><i class="fab fa-google-plus-g"></i></a>
         <a (click)="initiateFaceLogin()" class="social facebook"><i class="fab fa-facebook-f"></i></a>
         <a href="#" class="social in"><i class="fab fa-linkedin-in"></i></a>
       </div>
+
       <span>or use your account</span>
+
       <input type="email" placeholder="Email" formControlName="email" />
       <div
         *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
@@ -127,22 +136,24 @@
         <label class="remember-me-label" for="remember">Remember Me</label>
         <input type="checkbox" id="remember" formControlName="remember" class="remember-me-checkbox">
       </div>
+
       <a mat-button (click)="openDialog()">Forgot your password?</a>
       <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Sign In</button>
       <a class="text-success tggle" (click)="showSignUp()">Sign Up</a>
     </form>
   </div>
 
+  <!-- Overlay -->
   <div class="overlay-container">
     <div class="overlay">
       <div class="overlay-panel overlay-left">
         <h1>Welcome Back!</h1>
-        <p>To keep connected with us please login with your personal info</p>
+        <p>To keep connected, please sign in with your personal info</p>
         <button class="ghost" (click)="showSignIn()">Sign In</button>
       </div>
       <div class="overlay-panel overlay-right">
         <h1>Hello, Friend!</h1>
-        <p>Enter your personal details and start your journey with us</p>
+        <p>Enter your details and start your journey with us</p>
         <button class="ghost" (click)="showSignUp()">Sign Up</button>
       </div>
     </div>

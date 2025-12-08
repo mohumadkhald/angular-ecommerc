@@ -9,11 +9,13 @@
       <ul>
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
-          <a class="sub-links" routerLinkActive="active_link"
-            [routerLink]="['/categories', categoryTitle, subCategory.name]" [routerLinkActiveOptions]="{ exact: true }"
-            [queryParams]="{ page: 1 }" queryParamsHandling="merge">
+          <a class="sub-links" [class.active_link]="isActive(subCategory)"
+            [routerLink]="['/categories', categoryTitle, subCategory.name]"
+            [queryParams]="{ page: 1, inStock: true, notAvailable: true }" queryParamsHandling="merge">
             {{ subCategory.name | capitalize }}
           </a>
+
+
         </li>
       </ul>
     </div>
@@ -44,7 +46,7 @@
         </app-custom-range-slider>
         <p>Range: $0 - $25000</p>
       </div>
-      <div *ngIf="display == true" class="color-filter">
+      <div class="color-filter">
         <h3 style="margin: 0 5px;">Color</h3>
         <div class="color-options">
           <label *ngFor="let color of colorOptions" class="color-swatch">
@@ -54,7 +56,7 @@
           </label>
         </div>
       </div>
-      <div *ngIf="display == true" class="size-filter">
+      <div class="size-filter">
         <h3 style="margin: 5px 0 5px;">Size</h3>
         <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
             (change)="onSizeChange('small', $event)"> S </label>
@@ -76,12 +78,16 @@
       <button class="filter-options" (click)="openFilterModal()">Filter</button>
     </div>
     <app-sort-options *ngIf="subCategoryName" class="sort-options" [currentSortOption]="currentSortOption"
-      [currentElementSizeOption]="currentElementSizeOption" [currentEmailSeller]="currentEmailSeller" 
-      [currentCategory]="currentCategoryId"
-      (elementChange)="onSizeElementChange($event)" (sortChange)="onSortChange($event)"
-      (emailChange)="onEmailChange($event)" (categoryChange)="onCategoryChange($event)">
+      [currentElementSizeOption]="currentElementSizeOption" [currentEmailSeller]="currentEmailSeller"
+      [currentCategory]="currentCategoryId" (elementChange)="onSizeElementChange($event)"
+      (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)"
+      (categoryChange)="onCategoryChange($event)">
     </app-sort-options>
-    <main class="product-list"
+    <div *ngIf="isloading" style="margin: 30vh 50vw" class="spinner-container">
+      <mat-spinner></mat-spinner>
+      <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading</div>
+    </div>
+    <main *ngIf="!isloading" class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">
       <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
       <div style="padding: 50px;" *ngIf="subCategoryName && products.length == 0">No Any Products Found</div>
@@ -121,7 +127,7 @@
   </div>
 </div>
 
-<div class="cont-empty" *ngIf="subCategories.length == 0">
+<div class="cont-empty" *ngIf="!showNotFound && subCategories.length == 0">
   <div class="text-center">
     <h1 class="not-found-title">Category
       <span *ngIf="!subCategoryName" class="text-danger">{{categoryTitle}}
