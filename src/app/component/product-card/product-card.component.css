@@ -83,7 +83,6 @@
 }
 
 button {
-  margin-top: 5px;
   padding: 8px 12px;
   background-color: #f04;
   color: #fff;
@@ -179,13 +178,14 @@ p {
 
   button {
     width: 100%;
-    margin-top: 0px;
-    position: relative;
+    position: absolute;
+    bottom: 10px;
   }
 
   .discount-badge, .stock-status {
-    font-size: 10px;
-    padding: 2px 5px;
+    font-size: 18px;
+    padding: 5px 7px;
+    margin: 5px;
   }
   
 }
@@ -226,6 +226,8 @@ p {
   .product {
     height: 340px;
     margin: 5px;
+    width: calc(100% - 15px);
+
   }
 
   .product img {
@@ -259,6 +261,8 @@ p {
   .product {
     height: 340px;
     margin: 5px;
+    width: calc(100% - 10px);
+
   }
 
   .product img {
@@ -291,14 +295,24 @@ p {
 
 
 @media screen and (max-width: 400px) {
+    .product {
+    height: 320px;
+    margin: 5px;
+    width: calc(100% - 5px);
+
+  }
   .product-title {
     font-size: 12px;
   }
 
   .quantity-input {
-    width: 40px;
+    width: 45px;
     font-size: 11px;
     margin-left: 5px;
+  }
+
+    .product img {
+    max-height: 180px;
   }
 
   button {

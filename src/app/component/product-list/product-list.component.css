@@ -150,7 +150,7 @@ app-product-card {
   width: calc(20%);
 }
 .product {
-  width: calc(20% - 20px);
+  width: calc(20% - 10px);
   background: #fff;
   border: 1px solid #ddd;
   box-shadow: 5px 5px 13px rgba(145, 143, 143, 0.4);
@@ -538,7 +538,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   }
 
 }
-@media (max-width: 550px) {
+@media (max-width: 600px) {
   .sidebar {
     width: 50%;
     display: none;
@@ -621,7 +621,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   }
   .category-item img {
     width: 100%; /* Adjust width as needed */
-    height: 100px;
+    height: 80px;
   }
   
 }
