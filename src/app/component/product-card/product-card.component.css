@@ -1,3 +1,4 @@
+/* --- Product Card Base --- */
 .product {
   width: calc(100% - 20px);
   background: #fff;
@@ -14,7 +15,7 @@
 }
 
 .product:hover {
-  box-shadow: 8px 8px 20px rgba(72, 71, 71, 0.7)
+  box-shadow: 8px 8px 20px rgba(72, 71, 71, 0.7);
 }
 
 .image-container {
@@ -23,19 +24,21 @@
 
 .product img {
   width: 100%;
-  height: 280px;
+  height: auto; /* Use auto for responsive height */
+  max-height: 280px;
+  object-fit: cover;
 }
 
 .product-title {
   display: inline-block;
-  width: 100%;  /* Take all available width */
-  white-space: normal;  /* Allow text to wrap */
-  word-wrap: break-word;  /* Ensure words break properly */
-  font-size: clamp(12px, 1.5vw, 14px);  /* Adjust font size based on width */
-  line-height: 1.2;
+  width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 1.3;
   text-align: start;
+  margin: 10px 5px;
 }
-
 
 .discount-badge {
   position: absolute;
@@ -43,9 +46,9 @@
   left: 10px;
   background-color: red;
   color: white;
-  padding: 5px 10px;
+  padding: 3px 8px;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   z-index: 1;
 }
@@ -54,9 +57,9 @@
   position: absolute;
   bottom: 10px;
   left: 10px;
-  padding: 5px 10px;
+  padding: 3px 8px;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.7);
@@ -75,18 +78,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 50px 5px;
+  margin: 10px 5px 5px;
+  flex-wrap: wrap; /* Wrap on small screens */
 }
 
 button {
-  margin-top: 10px;
-  padding: 10px 20px;
+  margin-top: 5px;
+  padding: 8px 12px;
   background-color: #f04;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  flex: 1 1 auto;
+  min-width: 100px; /* Ensure clickable on small screens */
 }
 
 button:hover {
@@ -98,29 +104,18 @@ button:disabled {
   cursor: not-allowed;
 }
 
-h2 {
-  font-size: 18px;
-  margin: 10px 5px;
-}
-
 p {
-  font-size: 16px;
-  margin: 0;
+  font-size: 14px;
+  margin: 2px 0;
 }
 
-a {
-  color: black;
-  cursor: pointer;
-  text-decoration: none;
-}
 .price-info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .discounted-price {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #f04;
 }
@@ -128,43 +123,154 @@ a {
 .original-price {
   text-decoration: line-through;
   color: grey;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .quantity-row {
   display: flex;
   align-items: center;
-  gap: 5px; /* Adds space between the label and input */
-  width: 100%; /* Optional: can adjust based on layout */
-  max-width: 80px; /* Ensures compact layout */
-  margin: 0px 15px;
+  gap: 5px;
+  max-width: 100px;
 }
 
 .quantity-label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   color: #555;
 }
 
 .quantity-input {
-  width: 70px;
-  padding: 5px;
-  font-size: 14px;
+  width: 60px;
+  padding: 4px;
+  font-size: 12px;
 }
 
 .err-q {
-  position: absolute; bottom: 60px; right: 100px;
+  position: absolute;
+  bottom: 60px;
+  right: 10px;
+  font-size: 12px;
+  color: red;
+}
+
+/* --- Responsive for Small Screens --- */
+@media screen and (max-width: 1280px) {
+  .product {
+    height: 340px;
+    margin: 5px;
+  }
+
+  .product img {
+    height: 200px;
+  }
+
+  .product-title {
+    font-size: 14px;
+  }
+
+  .product-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quantity-row {
+    max-width: 80px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .discount-badge, .stock-status {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+}
+@media screen and (max-width: 1092px) {
+  .product {
+    height: 340px;
+    margin: 5px;
+  }
+
+  .product img {
+    max-height: 200px;
+  }
+
+  .product-title {
+    font-size: 14px;
+  }
+
+  .product-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quantity-row {
+    max-width: 80px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .discount-badge, .stock-status {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .product {
+    height: 340px;
+    margin: 5px;
+  }
+
+  .product img {
+    max-height: 200px;
+  }
+
+  .product-title {
+    font-size: 14px;
+  }
+
+  .product-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quantity-row {
+    max-width: 80px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .discount-badge, .stock-status {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
 }
 
 @media screen and (max-width: 400px) {
+  .product-title {
+    font-size: 12px;
+  }
+
+  .quantity-input {
+    width: 50px;
+    font-size: 11px;
+  }
+
   button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #f04;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 5px;
+    font-size: 12px;
+  }
+
+  .discount-badge, .stock-status {
+    font-size: 9px;
+    padding: 2px 4px;
   }
 }
