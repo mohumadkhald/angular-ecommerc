@@ -10,6 +10,7 @@ import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.
 import { CartServerService } from '../../service/cart-server.service';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
+import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 @Component({
   selector: 'app-product-card',
   standalone: true,
@@ -22,7 +23,8 @@ import { FormsModule } from '@angular/forms';
     NgIf,
     StarRatingComponent,
     NgbRatingModule,
-    FormsModule
+    FormsModule,
+    CapitalizePipe
   ],
 })
 export class ProductCardComponent implements OnInit {
