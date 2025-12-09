@@ -39,6 +39,7 @@ import { ModelFilterComponent } from '../model-filter/model-filter.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { SortOptionsComponent } from '../sort-options/sort-options.component';
 import { AuthService } from '../../service/auth.service';
+import { keyframes } from '@angular/animations';
 
 @Component({
   selector: 'app-product-list',
@@ -94,7 +95,7 @@ export class ProductListComponent implements OnInit {
   currentElementSizeOption!: string;
   private hasQueryParams = false;
   inStockCount: number = 0;
-  outOfStockCount: number = 0;
+  outOfStockCount!: number;
   screenWidth: any;
   currentEmailSeller: string = '';
   display: boolean = false;
@@ -127,9 +128,12 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryImage = localStorage.getItem('imgCat');
 
       this.updatePageTitle();
+      this.hasQueryParams = false;
 
-      // Remove: setTimeout + loadProducts()
-      // Remove: any call inside onFilterChange()
+      // Delay so queryParams subscription fires first
+      setTimeout(() => {
+        this.loadProducts();
+      }, 50);
     });
 
     // Query params should handle loading products ONLY
@@ -153,10 +157,12 @@ export class ProductListComponent implements OnInit {
       this.currentSortOption = `${this.sortBy}${this.sortDirection
         .charAt(0)
         .toUpperCase()}${this.sortDirection.slice(1)}`;
-
-      // Load products only ONCE here
-      if (this.subCategoryName) {
-        this.loadProducts();
+      if (params['inStock'] == 'false' && params['notAvailable'] == 'false') {
+        this.products = [];
+        this.inStockCount = 0;
+        this.outOfStockCount = 0;
+        this.isloading = false;
+        return;
       }
     });
   }
@@ -208,9 +214,37 @@ export class ProductListComponent implements OnInit {
     }
   }
 
+  loadStockCounts(): void {
+    this.productService
+      .getProducts(
+        this.subCategoryName || '',
+        this.currentEmailSeller,
+        this.sortBy,
+        this.sortDirection,
+        0, // no minPrice
+        99999, // no maxPrice
+        0, // page
+        9999, // large size to get all
+        [], // no colors
+        [], // no sizes
+        null // no availability filtering
+      )
+      .subscribe((response) => {
+        const fullList = response.content;
+
+        const stockCounts = ProductCardComponent.getStockCounts(fullList);
+        this.inStockCount = stockCounts.inStockCount;
+        this.outOfStockCount = stockCounts.outOfStockCount;
+      });
+  }
+
   loadProducts(): void {
     this.isloading = true;
-    if (this.subCategoryName) {
+
+    if (
+      (this.subCategoryName && this.filters.inStock == true) ||
+      this.filters.notAvailable == true
+    ) {
       let available: boolean | null = null;
       if (this.filters.inStock && !this.filters.notAvailable) {
         available = true;
@@ -220,13 +254,13 @@ export class ProductListComponent implements OnInit {
 
       this.productService
         .getProducts(
-          this.subCategoryName,
+          this.subCategoryName || '',
           this.currentEmailSeller,
           this.sortBy,
           this.sortDirection,
           this.filters.minPrice,
           this.filters.maxPrice,
-          this.currentPage - 1, // Adjust page number for API
+          this.currentPage - 1,
           this.currentElementSizeOption,
           this.filters.colors,
           this.filters.sizes,
@@ -234,32 +268,30 @@ export class ProductListComponent implements OnInit {
         )
         .subscribe(
           (response: PaginatedResponse<Product[]>) => {
+            // Store visible products
             this.products = response.content;
+
+            // ❗ ALWAYS fetch full stock data separately
+            this.loadStockCounts();
+
             if (response.content && response.content.length > 0) {
               this.loading = false;
-              // Check if products have no color
-              for (let i = 0; i < response.content.length; i++) {
-                if (response.content.length > 1) {
-                  this.display = false;
-                } else {
-                  this.display = true;
-                }
-                // send catID to sort component to get sellers in this category
-                this.currentCategoryId = response.content[0].subCategory.id;
+
+              if (response.content.length > 1) {
+                this.display = false;
+              } else {
+                this.display = true;
               }
+
+              this.currentCategoryId = response.content[0].subCategory.id;
             }
-            this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
+
+            this.currentPage = response.pageable.pageNumber + 1;
             this.totalPages = Array.from(
               { length: response.totalPages },
               (_, i) => i + 1
             );
 
-            // Update stock counts
-            const stockCounts = ProductCardComponent.getStockCounts(
-              this.products
-            );
-            this.inStockCount = stockCounts.inStockCount;
-            this.outOfStockCount = stockCounts.outOfStockCount;
             this.isloading = false;
           },
           (error) => {
@@ -270,7 +302,6 @@ export class ProductListComponent implements OnInit {
         );
     } else {
       this.products = [];
-      // Reset counts if no products are loaded
       this.inStockCount = 0;
       this.outOfStockCount = 0;
     }
@@ -383,6 +414,13 @@ export class ProductListComponent implements OnInit {
       notAvailable: this.filters.notAvailable ? 'true' : 'false',
       page,
     });
+    if (this.filters.inStock == false && this.filters.notAvailable == false) {
+      this.products = [];
+      this.inStockCount = 0;
+      this.outOfStockCount = 0;
+      this.isloading = false;
+      return;
+    }
     this.loadProducts();
   }
 
