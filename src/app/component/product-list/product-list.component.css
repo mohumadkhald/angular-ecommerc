@@ -582,7 +582,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   
 }
 
-@media (max-width: 350px) {
+@media (max-width: 380px) {
   .sidebar {
     width: 50%;
     display: none;
