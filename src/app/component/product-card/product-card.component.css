@@ -30,14 +30,14 @@
 }
 
 .product-title {
-  display: inline-block;
   width: 100%;
   white-space: normal;
   word-wrap: break-word;
-  font-size: clamp(14px, 2.5vw, 16px);
+  font-size: clamp(16px, 2.5vw, 16px);
   line-height: 1.3;
-  text-align: start;
   margin: 10px 5px;
+  font-weight: bold;
+  color: #000;
 }
 
 .discount-badge {
@@ -146,9 +146,9 @@ p {
 
 .err-q {
   position: absolute;
-  bottom: 60px;
+  bottom: 110px;
   right: 10px;
-  font-size: 12px;
+  font-size: 14px;
   color: red;
 }
 

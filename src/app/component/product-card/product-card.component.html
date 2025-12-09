@@ -15,7 +15,7 @@
   <div *ngIf="submitted && quantity <= 0" class="err-q text-danger">
     Quantity must be greater than 0.</div>
   <div *ngIf="submitted && !validateQuantity2()" class="err-q text-danger mt-1">
-    Quantity exceeds available stock ({{ maxQuantity }} available).
+    available stock ({{ maxQuantity }})
   </div>
   <div class="form-group quantity-row mt-1" style="position: absolute; bottom: 60px; right: 15px;"
     *ngIf="product.productVariations[0]?.color === 'no_color'">
