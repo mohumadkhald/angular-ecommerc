@@ -154,6 +154,40 @@ p {
 }
 
 /* --- Responsive for Small Screens --- */
+@media screen and (max-width: 1980px) {
+  .product {
+    height: 400px;
+    margin: 5px;
+  }
+
+  .product img {
+    height: 250px;
+  }
+
+  .product-title {
+    font-size: 18px;
+  }
+
+  .product-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quantity-row {
+    max-width: 100px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 0px;
+    position: relative;
+  }
+
+  .discount-badge, .stock-status {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+}
 @media screen and (max-width: 1280px) {
   .product {
     height: 340px;

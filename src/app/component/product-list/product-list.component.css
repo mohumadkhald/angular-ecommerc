@@ -356,6 +356,29 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   }
 
 }
+@media (max-width: 1480px) {
+  app-product-card {
+    width: calc(25.00%);
+  }
+  .slider-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .category-item {
+    flex: 0 0 auto;
+    text-align: center;
+    width: 205px;
+  }
+  .category-item img {
+    width: 100%; /* Adjust width as needed */
+    height: 200px;
+  }
+
+}
 @media screen and (max-width: 1280px) {
   app-product-card {
     width: calc(25%);
