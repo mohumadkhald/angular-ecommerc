@@ -296,15 +296,9 @@ p {
 
 @media screen and (max-width: 400px) {
     .product {
-<<<<<<< HEAD
     height: 320px;
     margin: 5px;
     width: calc(100% - 5px);
-
-=======
-    height: 340px;
-    margin: 5px;
->>>>>>> 3371542604ecf7c3080f4955104df0eb38f4e91f
   }
   .product-title {
     font-size: 12px;
@@ -317,11 +311,8 @@ p {
   }
 
     .product img {
-<<<<<<< HEAD
     max-height: 180px;
-=======
-    max-height: 220px;
->>>>>>> 3371542604ecf7c3080f4955104df0eb38f4e91f
+
   }
 
   button {
