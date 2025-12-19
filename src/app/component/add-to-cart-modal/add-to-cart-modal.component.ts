@@ -1,7 +1,7 @@
-import { CommonModule, NgForOf, NgStyle } from "@angular/common";
+import { CommonModule, NgForOf, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
-import { FormsModule } from "@angular/forms";
-import { NgbActiveModal, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from '@angular/forms';
+import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
@@ -9,13 +9,10 @@ import { CartService } from '../../service/cart.service';
 @Component({
   selector: 'app-add-to-cart-modal',
   standalone: true,
-  imports: [
-  FormsModule, NgbModule, NgForOf, NgStyle, CommonModule
-  ],
+  imports: [FormsModule, NgbModule, NgForOf, NgStyle, CommonModule],
   templateUrl: './add-to-cart-modal.component.html',
-  styleUrl: './add-to-cart-modal.component.css'
+  styleUrl: './add-to-cart-modal.component.css',
 })
-
 export class AddToCartModalComponent {
   @Input() product: any;
   @Input() haveSpec: boolean = true;
@@ -101,11 +98,15 @@ export class AddToCartModalComponent {
       color: this.selectedColor,
       quantity: this.quantity,
       price: this.product.price,
+      discount: this.product.discountPercent,
+      discountedPrice: this.product.discountPrice,
     };
 
     if (!this.auth()) {
       this.cartService.addToCart(productToAdd);
     } else {
+      console.log('Adding to cart server-side', this.product);
+      console.log('Adding to server cart: ', productToAdd);
       this.cartServerService.addToCart(productToAdd);
     }
 

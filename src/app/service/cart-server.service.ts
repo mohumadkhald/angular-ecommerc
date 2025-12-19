@@ -34,18 +34,25 @@ export class CartServerService implements OnInit {
   }
 
   getCart(): Observable<CartItem[]> {
-    const jwtToken = this.authService.getToken();
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwtToken}`,
-    });
-
-    return this.http.get<CartItem[]>(`${this.apiUrl}/cart`, { headers }).pipe(
+    return this.http.get<CartItem[]>(`${this.apiUrl}/cart`).pipe(
       tap((res) => {
         this.cartItems = res;
         this.setCount(this.cartItems.length);
       })
+    );
+  }
+
+  getTotalPrice(): number {
+    return this.cartItems.reduce(
+      (total, item) => total + item.totalPrice,
+      0
+    );
+  }
+
+  getTotalDiscountedPrice(): number {
+    return this.cartItems.reduce(
+      (total, item) => total + item.totalPriceDiscounted,
+      0
     );
   }
 
@@ -68,30 +75,9 @@ export class CartServerService implements OnInit {
     );
   }
 
-  deleteItem(itemId: number): any {
-    const jwtToken = this.authService.getToken();
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${jwtToken}`,
-    });
-  
-    // Make HTTP DELETE request to remove the item from the cart
-    this.http.delete<void>(`${this.apiUrl}/cart/${itemId}`, { headers }).subscribe(
-      (res) => {
-  
-        // Find the index of the item in the local cartItems array
-        const index = this.cartItems.findIndex(item => item.itemID === itemId);
-  
-        // If the item is found, remove it from the local cartItems array
-        if (index !== -1) {
-          this.cartItems.splice(index, 1);
-        }
-  
-      },
-      (error) => {
-      }
-    );
-  }
+deleteItem(itemId: number): Observable<void> {
+  return this.http.delete<void>(`${this.apiUrl}/cart/${itemId}`);
+}
 
   increaseQuantity(itemId: number) {
     const params = new HttpParams().set('state', 'INCREASE');
@@ -117,17 +103,8 @@ export class CartServerService implements OnInit {
   }
 
   clearCart() {
-    // Get JWT token from AuthService
-    const jwtToken = this.authService.getToken();
-
-    // Prepare headers with Authorization token
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwtToken}`,
-    });
-
     // Make HTTP DELETE request to clear the cart
-    this.http.delete<void>(`${this.apiUrl}/cart`, { headers }).subscribe(
+    this.http.delete<void>(`${this.apiUrl}/cart`).subscribe(
       (res) => {
         // Clear the local cartItems array using splice
         this.cartItems.splice(0, this.cartItems.length);

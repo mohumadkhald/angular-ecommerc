@@ -37,6 +37,13 @@
   color: #666;
 }
 
+.cart-spec-discount {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;border: 4.5px solid red; width: 25%; color: brown; font-weight: bolder;
+}
+
+
 .cart-price {
   font-size: 0.85rem;
   font-weight: bold;
@@ -161,6 +168,21 @@
     box-sizing: border-box;
     font-size: 10px;
   }
+
+  .cart-price {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #dc3545;
+}
+.cart-spec {
+  font-size: 0.65rem;
+  color: #666;
+}
+.cart-spec-discount {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;border: 4.5px solid red; width: 40%; color: brown; font-weight: bolder;
+}
   .cart-mobile {
     align-items: center;
   }
@@ -183,4 +205,13 @@
   .btnLog {
     width: 100%;
   }
+}
+
+/* ## Media Queries for Page Details Component */
+@media (max-width: 400px) {
+  .cart-spec-discount {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;border: 4.5px solid red; width: 70%; color: brown; font-weight: bolder;
+}
 }

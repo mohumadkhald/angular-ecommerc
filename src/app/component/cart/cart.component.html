@@ -37,14 +37,20 @@
                                                         <!-- RIGHT: DETAILS (50%) -->
                                                         <div class="cart-right">
 
-                                                            <h3 class="cart-title">{{ item.productTitle }}</h3>
+                                                            <h3 class="cart-title">{{ item.productTitle | capitalize }}</h3>
 
                                                             <p class="cart-spec" *ngIf="item.size != 'NO_SIZE'">
                                                                 Size: {{ item.size }} | Color: {{ item.color }}
                                                             </p>
+                                                            <p class="cart-spec-discount" style="" *ngIf="item.discount > 0">
+                                                            {{ item.discount }}% OFF
+                                                            </p>
 
                                                             <p class="cart-price">
-                                                                {{ item.totalPriceDiscounted | currency }}
+                                                                Price: {{ item.price | currency }}
+                                                            </p>
+                                                            <p class="cart-price">
+                                                                Total: {{ item.totalPriceDiscounted | currency }}
                                                             </p>
 
                                                             <!-- QUANTITY -->
@@ -60,7 +66,7 @@
 
                                                             <!-- REMOVE -->
                                                             <button class="btn btn-sm btn-danger w-100 mt-2"
-                                                                (click)="removeItemCart(item.itemID)">
+                                                                (click)="removeItem(item)">
                                                                 Remove
                                                             </button>
 
@@ -79,20 +85,34 @@
 
                                                         <!-- LEFT: IMAGE (50%) -->
                                                         <div class="cart-left">
-                                                            <img [src]="item.product.imageUrl" alt="product" class="cart-img" />
+                                                            <img [src]="item.product.imageUrl" alt="product"
+                                                                class="cart-img" />
                                                         </div>
 
                                                         <!-- RIGHT: DETAILS (50%) -->
                                                         <div class="cart-right">
 
-                                                            <h3 class="cart-title">{{ item.product.title }}</h3>
+                                                            <h3 class="cart-title">{{ item.product.title | capitalize }}</h3>
 
                                                             <p class="cart-spec" *ngIf="item.product.size != 'NO_SIZE'">
-                                                                Size: {{ item.product.size }} | Color: {{ item.product.color }}
+                                                                Size: {{ item.product.size }} | Color: {{
+                                                                item.product.color }}
+                                                            </p>
+
+                                                            <p class="cart-spec" *ngIf="item.product.discount > 0">
+                                                                Discount: {{ item.product.discount }}% OFF
                                                             </p>
 
                                                             <p class="cart-price">
                                                                 {{ item.product.price | currency }}
+                                                            </p>
+
+                                                            <p class="cart-price" *ngIf="item.product.discount > 0">
+                                                                Price After Discount:
+                                                                {{
+                                                                (item.product.price - (item.product.price *
+                                                                item.product.discount / 100))
+                                                                | currency }}
                                                             </p>
 
                                                             <!-- QUANTITY -->
@@ -108,7 +128,7 @@
 
                                                             <!-- REMOVE -->
                                                             <button class="btn btn-sm btn-danger w-100 mt-2"
-                                                                (click)="clearCart()">
+                                                                (click)="removeFromCart(item.product)">
                                                                 Remove
                                                             </button>
 
@@ -222,15 +242,13 @@
                                                 <hr class="my-4">
                                                 <div class="d-flex justify-content-between">
                                                     <p class="mb-2">Subtotal</p>
-                                                    <p *ngIf="totalpriceDiscounted != totalprice"
-                                                        style="text-decoration: line-through;" class="mb-2">{{
+                                                    <p style="text-decoration: line-through;" class="mb-2">{{
                                                         totalprice
                                                         | currency }}</p>
                                                     <p *ngIf="totalpriceDiscounted == totalprice" class="mb-2">{{
                                                         totalprice | currency }}</p>
                                                 </div>
-                                                <div *ngIf="totalpriceDiscounted != totalprice"
-                                                    class="d-flex justify-content-between">
+                                                <div class="d-flex justify-content-between">
                                                     <p class="mb-2">Subtotal After Discount</p>
                                                     <p class="mb-2">{{ totalpriceDiscounted | currency }}</p>
                                                 </div>

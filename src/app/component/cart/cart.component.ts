@@ -23,10 +23,11 @@ import { ToastService } from '../../service/toast.service';
 import { AddressModalComponent } from '../address-modal/address-modal.component';
 import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
 import { ConfigService } from '../../service/config.service';
+import { CapitalizePipe } from "../../pipe/capitalize.pipe";
 
 @Component({
   standalone: true,
-  imports: [NgFor, CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [NgFor, CommonModule, RouterLink, ReactiveFormsModule, CapitalizePipe],
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
@@ -98,44 +99,46 @@ export class CartComponent implements OnInit, OnDestroy {
       this.authSubscription.unsubscribe();
     }
   }
-previousValue = '';
+  previousValue = '';
 
-onExpInput(event: any) {
-  const input = event.target;
-  let value: string = input.value;
+  onExpInput(event: any) {
+    const input = event.target;
+    let value: string = input.value;
 
-  // Remove all non-digit characters
-  let digits = value.replace(/\D/g, '');
+    // Remove all non-digit characters
+    let digits = value.replace(/\D/g, '');
 
-  // Limit to 4 digits (MMYY)
-  if (digits.length > 4) {
-    digits = digits.substring(0, 4);
+    // Limit to 4 digits (MMYY)
+    if (digits.length > 4) {
+      digits = digits.substring(0, 4);
+    }
+
+    // Auto-insert slash only if typing forward
+    let newValue = digits;
+    const cursorPos = input.selectionStart || 0;
+    const isDeleting =
+      digits.length < this.previousValue.replace(/\D/g, '').length;
+
+    if (!isDeleting && digits.length > 2) {
+      newValue = digits.substring(0, 2) + '/' + digits.substring(2);
+    } else if (!isDeleting && digits.length === 2 && !value.includes('/')) {
+      newValue = digits + '/';
+    }
+
+    input.value = newValue;
+    this.paymentForm
+      .get('expirationDate')
+      ?.setValue(newValue, { emitEvent: false });
+
+    // Set cursor after slash if just inserted
+    let newCursorPos = cursorPos;
+    if (!isDeleting && digits.length === 2 && cursorPos === 2) {
+      newCursorPos = 3;
+    }
+
+    input.setSelectionRange(newCursorPos, newCursorPos);
+    this.previousValue = newValue;
   }
-
-  // Auto-insert slash only if typing forward
-  let newValue = digits;
-  const cursorPos = input.selectionStart || 0;
-  const isDeleting = digits.length < this.previousValue.replace(/\D/g, '').length;
-
-  if (!isDeleting && digits.length > 2) {
-    newValue = digits.substring(0, 2) + '/' + digits.substring(2);
-  } else if (!isDeleting && digits.length === 2 && !value.includes('/')) {
-    newValue = digits + '/';
-  }
-
-  input.value = newValue;
-  this.paymentForm.get('expirationDate')?.setValue(newValue, { emitEvent: false });
-
-  // Set cursor after slash if just inserted
-  let newCursorPos = cursorPos;
-  if (!isDeleting && digits.length === 2 && cursorPos === 2) {
-    newCursorPos = 3;
-  }
-
-  input.setSelectionRange(newCursorPos, newCursorPos);
-  this.previousValue = newValue;
-}
-
 
   private loadCartItems(): void {
     this.cartServerService.getCart().subscribe((items) => {
@@ -146,17 +149,12 @@ onExpInput(event: any) {
 
   private updateTotalPrice(): void {
     if (this.auth()) {
-      this.totalprice = this.cartItems1.reduce(
-        (total, item) => total + item.totalPrice,
-        0
-      );
-
-      this.totalpriceDiscounted = this.cartItems1.reduce(
-        (total, item) => total + item.totalPriceDiscounted,
-        0
-      );
+      this.totalprice = this.cartServerService.getTotalPrice();
+      this.totalpriceDiscounted =
+        this.cartServerService.getTotalDiscountedPrice();
     } else {
       this.totalprice = this.cartService.getTotalPrice();
+      this.totalpriceDiscounted = this.cartService.getTotalDiscountedPrice();
     }
   }
 
@@ -164,10 +162,13 @@ onExpInput(event: any) {
     if (this.auth()) {
       this.cartServerService.increaseQuantity(itemId).subscribe(() => {
         this.loadCartItems(); // <---- ALWAYS refresh here
+        console.log('Increased item ID:', this.cartItems1);
       });
     } else {
       this.cartService.increaseQuantity(itemId);
-      this.cartService.getCart();
+      console.log('Increased item ID:', this.cartItems);
+      this.cartItems = this.cartService.getCart();
+      this.updateTotalPrice();
     }
   }
 
@@ -180,20 +181,21 @@ onExpInput(event: any) {
         });
     } else {
       this.cartService.decreaseQuantity(item);
-      this.cartService.getCart();
+      this.cartItems = this.cartService.getCart();
+      this.updateTotalPrice();
     }
   }
 
-  removeItemCart(itemID: any): void {
-    if (this.auth()) {
-      this.cartServerService.deleteItem(itemID);
+  removeItem(item: CartItem): void {
+    this.cartServerService.deleteItem(item.itemID).subscribe(() => {
       this.loadCartItems();
-    }
+    });
   }
 
   removeFromCart(product: any): void {
     this.cartService.removeFromCart(product);
     this.cartItems = this.cartService.getCart();
+    this.updateTotalPrice();
   }
 
   getCountOfItems() {

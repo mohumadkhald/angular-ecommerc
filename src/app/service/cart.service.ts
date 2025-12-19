@@ -11,6 +11,7 @@ export class CartService implements OnInit {
   private apiUrl: string;
   totalprice: number = 0;
   private cart: { product: any }[] = [];
+  totalpriceDiscount: number = 0;
 
   constructor(
     private http: HttpClient,
@@ -43,6 +44,19 @@ export class CartService implements OnInit {
     );
   }
 
+  private updateTotalDiscountedPrice(): void {
+    this.totalpriceDiscount = this.cart.reduce(
+      (total, item) =>
+        total + item.product.discountedPrice * item.product.quantity,
+      0
+    );
+  }
+
+  getTotalDiscountedPrice(): number {
+    this.updateTotalDiscountedPrice();
+    console.log('the total discounted price: ', this.totalpriceDiscount);
+    return this.totalpriceDiscount;
+  }
   addToCart(product: any): void {
     console.log('the produt try to add: ', product);
     const existingItem = this.cart.find(
@@ -71,7 +85,6 @@ export class CartService implements OnInit {
       } else {
         this.cart.splice(index, 1);
       }
-
       this.updateLocalStorage();
     }
   }
@@ -135,7 +148,7 @@ export class CartService implements OnInit {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       let cartItems = JSON.parse(storedCart);
-  
+
       // Map each item to include productId, color, size, quantity, and price
       cartItems = cartItems.map(
         (item: {
@@ -154,33 +167,34 @@ export class CartService implements OnInit {
           price: item.product.price,
         })
       );
-  
+
       // Check if the cart is not empty
       if (cartItems.length > 0) {
         // Get JWT token from AuthService
         const jwtToken = this.authService.getToken();
-  
+
         // Prepare headers with Authorization token
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
         });
-  
+
         // Make HTTP POST request to sync cart
-        this.http.post<void>(`${this.apiUrl}/cart/sync`, cartItems, { headers }).subscribe(
-          () => {
-            localStorage.removeItem('cart');
-            // Redirect to cart page after successful sync
-            this.router.navigate(['/cart']);
-          },
-          (error) => {
-            console.error('Error syncing cart:', error);
-          }
-        );
+        this.http
+          .post<void>(`${this.apiUrl}/cart/sync`, cartItems, { headers })
+          .subscribe(
+            () => {
+              localStorage.removeItem('cart');
+              // Redirect to cart page after successful sync
+              this.router.navigate(['/cart']);
+            },
+            (error) => {
+              console.error('Error syncing cart:', error);
+            }
+          );
       } else {
         console.warn('Cart is empty, not syncing.');
       }
     }
   }
-  
 }

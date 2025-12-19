@@ -24,7 +24,7 @@ import { CapitalizePipe } from '../../pipe/capitalize.pipe';
     StarRatingComponent,
     NgbRatingModule,
     FormsModule,
-    CapitalizePipe
+    CapitalizePipe,
   ],
 })
 export class ProductCardComponent implements OnInit {
@@ -34,7 +34,6 @@ export class ProductCardComponent implements OnInit {
   maxQuantity: any;
   quantity: number = 1;
   submitted: boolean = false;
-
 
   constructor(
     private router: Router,
@@ -62,13 +61,19 @@ export class ProductCardComponent implements OnInit {
       size: 'lg',
       centered: true,
       backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false,    // Prevent closing with the Esc key
+      keyboard: false, // Prevent closing with the Esc key
     });
     modalRef.componentInstance.product = product;
     modalRef.result.then(
       (result) => {
         if (result === 'added') {
-          this.toastService.add('Product added successfully to Cart', 'success');
+          // console.log('Product added to cart:', product);
+          this.toastService.add(
+            'Product ' +
+              product.productTitle.toUpperCase() +
+              ' added Successfully to Cart',
+            'success'
+          );
         }
       },
       (reason) => {}
@@ -94,17 +99,14 @@ export class ProductCardComponent implements OnInit {
 
   validateQuantity2(): boolean {
     const variation = this.product.productVariations.find(
-      (v: any) => v.color === "no_color" && v.size === "NO_SIZE"
+      (v: any) => v.color === 'no_color' && v.size === 'NO_SIZE'
     );
     this.maxQuantity = variation ? variation.quantity : 0;
     return this.quantity <= this.maxQuantity;
   }
   open2(product: any) {
     this.submitted = true;
-    if (
-      this.quantity <= 0 ||
-      !this.validateQuantity2()
-    ) {
+    if (this.quantity <= 0 || !this.validateQuantity2()) {
       return; // Validation failed
     }
 
@@ -114,18 +116,25 @@ export class ProductCardComponent implements OnInit {
       imageUrl: product.imageUrls[0],
       quantity: this.quantity,
       price: product.price,
-      color: "no_color",
-      size: "NO_SIZE"
+      color: 'no_color',
+      size: 'NO_SIZE',
+      discount: this.product.discountPercent,
+      discountedPrice: this.product.discountPrice,
     };
 
     if (!this.auth()) {
       this.cartService.addToCart(productToAdd);
-      this.toastService.add('Product '+ product.productTitle + ' added to Cart', 'success');
+      this.toastService.add(
+        'Product ' + product.productTitle.toUpperCase() + ' added to Cart',
+        'success'
+      );
     } else {
       this.cartServerService.addToCart(productToAdd);
-      this.toastService.add('Product '+ product.productTitle + ' added to Cart', 'success');
+      this.toastService.add(
+        'Product ' + product.productTitle.toUpperCase() + ' added to Cart',
+        'success'
+      );
     }
-
   }
 
   // Method to get the count of in-stock and out-of-stock products
@@ -145,9 +154,8 @@ export class ProductCardComponent implements OnInit {
 
     return { inStockCount, outOfStockCount };
   }
-  
+
   auth(): boolean {
     return this.authService.isLoggedIn();
   }
-
 }
