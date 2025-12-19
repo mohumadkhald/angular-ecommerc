@@ -13,110 +13,106 @@
                                         </a>
                                     </h5>
                                     <hr>
-                                    <div class="empty-item d-flex justify-content-between align-items-center mb-3">
-                                        <div class="col-7 btn btn-danger">
+                                    <div class="empty-item">
+                                        <div class="col-md-7 col-sm-12 btn btn-danger">
                                             <p style="margin: 0 0 2px;" class="mb item-count">You Have {{
                                                 getCountOfItems() }} Items in your cart
                                             </p>
                                         </div>
-                                        <button class="col-4 btn btn-danger" (click)="clearCart()">Clear Cart</button>
+                                        <button class="col-md-4 col-sm-12 btn btn-danger" (click)="clearCart()">Clear
+                                            Cart</button>
                                     </div>
 
                                     <ng-container *ngIf="auth(); else guestCart">
                                         <div class="card mb-3" *ngFor="let item of cartItems1">
-                                            <!-- Repeated Card Content -->
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between">
-                                                    <div class="d-flex flex-row align-items-center">
-                                                        <div class="div-img">
-                                                            <img [src]="item.imageUrl"
-                                                                class="product-img img-fluid rounded-3"
-                                                                alt="Shopping item">
+                                            <div class="card mb-3 cart-item">
+                                                <div class="card-body p-2">
+                                                    <div class="cart-mobile">
+
+                                                        <!-- LEFT: IMAGE (50%) -->
+                                                        <div class="cart-left">
+                                                            <img [src]="item.imageUrl" alt="product" class="cart-img" />
                                                         </div>
-                                                        <div class="ms-3 product-title">
-                                                            <h3>{{ item.productTitle }}</h3>
-                                                            <p *ngIf="!auth()" style="display: flex;"
-                                                                class="small mb-0 me-3">
-                                                                <button style="width: 30px; height: 30px; padding: 0;"
-                                                                    class="btn btn-primary me-3"
-                                                                    (click)="increaseQuantity(item.productId)">+</button>
-                                                                <span style="margin-left: -8px;margin-right: 5px;">{{
-                                                                    item.quantity }}</span>
-                                                                <button style="width: 30px; height: 30px; padding: 0;"
-                                                                    class="btn btn-primary"
-                                                                    (click)="decreaseQuantity(item.productId)">-</button>
+
+                                                        <!-- RIGHT: DETAILS (50%) -->
+                                                        <div class="cart-right">
+
+                                                            <h3 class="cart-title">{{ item.productTitle }}</h3>
+
+                                                            <p class="cart-spec" *ngIf="item.size != 'NO_SIZE'">
+                                                                Size: {{ item.size }} | Color: {{ item.color }}
                                                             </p>
-                                                            <p *ngIf="auth()" style="display: flex;"
-                                                                class="small mb-0 me-3">
-                                                                <button style="width: 30px; height: 30px; padding: 0;"
-                                                                    class="btn btn-primary me-3"
+
+                                                            <p class="cart-price">
+                                                                {{ item.totalPriceDiscounted | currency }}
+                                                            </p>
+
+                                                            <!-- QUANTITY -->
+                                                            <div class="cart-qty">
+                                                                <button class="btn btn-sm btn-primary"
                                                                     (click)="increaseQuantity(item.itemID)">+</button>
-                                                                <span style="margin-left: -8px;margin-right: 5px;">{{
-                                                                    item.quantity }}</span>
-                                                                <button style="width: 30px; height: 30px; padding: 0;"
-                                                                    class="btn btn-primary"
+
+                                                                <span>{{ item.quantity }}</span>
+
+                                                                <button class="btn btn-sm btn-primary"
                                                                     (click)="decreaseQuantity(item)">-</button>
-                                                            </p>
+                                                            </div>
+
+                                                            <!-- REMOVE -->
+                                                            <button class="btn btn-sm btn-danger w-100 mt-2"
+                                                                (click)="removeItemCart(item.itemID)">
+                                                                Remove
+                                                            </button>
+
                                                         </div>
-                                                    </div>
-                                                    <div class="ms-3 spec">
-                                                        <div>
-                                                            <h5 *ngIf="item.size != 'NO_SIZE'" class="fw-normal mb-0">
-                                                                Size: {{ item.size }} {{
-                                                                item.color }}</h5>
-                                                        </div>
-                                                        <div style="width: 120px;">
-                                                            <h5 class="mb-0 mt-2">Price: {{ item.price |
-                                                                currency }}</h5>
-                                                            <h5 class="mb-0 mt-2" *ngIf="item.discount > 0">Discount: {{
-                                                                item.discount }} %</h5>
-                                                            <h5 class="mb-0 mt-2">Total Price: {{
-                                                                item.totalPriceDiscounted |
-                                                                currency }}</h5>
-                                                        </div>
-                                                        <button class="mt-2 btn btn-danger"
-                                                            (click)="removeItemCart(item.itemID)">Remove</button>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </ng-container>
                                     <ng-template #guestCart>
                                         <div class="card mb-3" *ngFor="let item of cartItems">
-                                            <!-- Repeated Card Content -->
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between">
-                                                    <div class="d-flex flex-row align-items-center">
-                                                        <div>
-                                                            <img [src]="item.product.imageUrl"
-                                                                class="img-fluid rounded-3" alt="Shopping item"
-                                                                style="width: 90px;">
+                                            <div class="card mb-3 cart-item">
+                                                <div class="card-body p-2">
+                                                    <div class="cart-mobile">
+
+                                                        <!-- LEFT: IMAGE (50%) -->
+                                                        <div class="cart-left">
+                                                            <img [src]="item.product.imageUrl" alt="product" class="cart-img" />
                                                         </div>
-                                                        <div class="ms-3">
-                                                            <h3>{{ item.product.productTitle }}</h3>
-                                                            <p class="small mb-0 me-3">
-                                                                <button style="width: 30px; height: 30px; padding: 0;"
-                                                                    class="btn btn-primary me-3"
-                                                                    (click)="increaseQuantity(item.product)">+</button>
-                                                                <span style="margin-left: -8px;margin-right: 5px;">{{
-                                                                    item.product.quantity }}</span>
-                                                                <button style="width: 30px; height: 30px; padding: 0;"
-                                                                    class="btn btn-primary"
-                                                                    (click)="decreaseQuantity(item.product)">-</button>
+
+                                                        <!-- RIGHT: DETAILS (50%) -->
+                                                        <div class="cart-right">
+
+                                                            <h3 class="cart-title">{{ item.product.title }}</h3>
+
+                                                            <p class="cart-spec" *ngIf="item.product.size != 'NO_SIZE'">
+                                                                Size: {{ item.product.size }} | Color: {{ item.product.color }}
                                                             </p>
+
+                                                            <p class="cart-price">
+                                                                {{ item.product.price | currency }}
+                                                            </p>
+
+                                                            <!-- QUANTITY -->
+                                                            <div class="cart-qty">
+                                                                <button class="btn btn-sm btn-primary"
+                                                                    (click)="increaseQuantity(item.product.productId)">+</button>
+
+                                                                <span>{{ item.product.quantity }}</span>
+
+                                                                <button class="btn btn-sm btn-primary"
+                                                                    (click)="decreaseQuantity(item.product)">-</button>
+                                                            </div>
+
+                                                            <!-- REMOVE -->
+                                                            <button class="btn btn-sm btn-danger w-100 mt-2"
+                                                                (click)="clearCart()">
+                                                                Remove
+                                                            </button>
+
                                                         </div>
-                                                    </div>
-                                                    <div class="ms-3">
-                                                        <div>
-                                                            <h5 class="fw-normal mb-0">Size: {{ item.product.size }} {{
-                                                                item.product.color }}</h5>
-                                                        </div>
-                                                        <div style="width: 120px;">
-                                                            <h5 class="mb-0 mt-2">{{ item.product.price | currency }}
-                                                            </h5>
-                                                        </div>
-                                                        <button class="mt-2 btn btn-danger"
-                                                            (click)="removeFromCart(item.product)">Remove</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -215,7 +211,7 @@
                                                     </div>
                                                 </div>
 
-                                                <button type="button" class="btn btn-info btn-block btn-lg"
+                                                <button type="button" class="btn btn-info btn-block btn-lg mt-4"
                                                     [disabled]="!paymentForm.valid" (click)="handleCheckout()">
                                                     <div class="d-flex justify-content-between">
                                                         <span>Checkout<i class="fas fa-map-marker-alt ms-2"></i>

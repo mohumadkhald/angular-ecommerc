@@ -1,119 +1,121 @@
-<div *ngIf="productItem" class="container product-container">
-    <div class="product-details">
-        <section class="product-images">
-            <!-- Thumbnail images on the left -->
-            <div class="thumbnail-images">
-                <ng-container *ngFor="let variation of productItem?.imageUrls; let i = index">
-                    <img [src]="variation" alt="Product Variation Thumbnail" *ngIf="variation" class="thumbnail"
-                        (mouseover)="hoverImage(variation, i)" />
-                </ng-container>
+<div *ngIf="productItem" class="product-page">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <span routerLink="/">Home</span> ›
+        <span routerLink="/products">Products</span> ›
+        <span>{{ productItem.productTitle }}</span>
+    </nav>
+
+    <div class="product-main">
+
+        <!-- IMAGE SECTION -->
+        <section class="gallery">
+            <div class="thumbs">
+                <img *ngFor="let img of productItem.imageUrls" [src]="img" (mouseenter)="hoverImage(img, 0)"
+                    [class.active]="img === selectedImage">
             </div>
+            <div class="image-view" (mousemove)="onMouseMove($event)" (mouseenter)="toggleLens(true)"
+                (mouseleave)="toggleLens(false)">
 
-            <div class="main-image-container">
+                <img #mainImage [src]="selectedImage" alt="Product Image" />
 
-                <img (mousemove)="mouseMove($event)" (mouseenter)="toggleLens(true)" (mouseleave)="toggleLens(false)"
-                    [src]="selectedVariation?.img || productItem?.imageUrls[0]" class="main-image" />
-
-                <div class="lens" *ngIf="isHovering" [ngStyle]="{
-          'background-image': 'url(' + (selectedVariation?.img || productItem?.imageUrls[0]) + ')',
-          'background-size': '400%', 
-          'background-position': lensPosition
-       }">
+                <div #lens class="lens" *ngIf="isHovering" [style.backgroundImage]="'url(' + selectedImage + ')'"
+                    [style.backgroundPosition]="lensPosition">
                 </div>
+
             </div>
 
         </section>
-        <!-- Rest of the product info... -->
-        <section class="product-info">
-            <h1 class="product-title">{{ productItem?.productTitle }}</h1>
-            <ul class="product-features">
-                <li>100% Quality</li>
-                <li>Free Shipping</li>
-                <li>Easy Returns</li>
-                <li>12 Months Warranty</li>
-                <li>EMI Starting from (On Credit Cards)</li>
-                <li>Normal Delivery: 4-5 Days</li>
-                <li>Express Delivery: 2-3 Days</li>
-            </ul>
 
-            <div class="product-price">
-                <h5>Price</h5>
-                <h1>₹ {{ productItem?.price }}</h1>
+        <!-- INFO SECTION -->
+        <section class="info">
+
+            <h1>{{ productItem.productTitle }}</h1>
+
+            <!-- Rating -->
+            <div class="rating">
+                ⭐⭐⭐⭐☆ <span>(128 reviews)</span>
             </div>
 
-            <div class="product-availability" *ngIf="productItem.productVariations[0]?.color !== 'no_color'">
-                <h5>Available Variations:</h5>
-                <ul>
-                    <li *ngFor="let size of getGroupedVariationsBySize() | keyvalue">
-                        <strong>Size: {{ size.key | titlecase }}</strong>
-                        <ul>
-                            <li *ngFor="let variation of size.value">
-                                Color: {{ variation.color | titlecase }}, Quantity: {{ variation.quantity }}
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <!-- Price -->
+            <div class="price">
+                ₹ {{ productItem.price }}
+                <span *ngIf="productItem.discountPercent" class="discount">
+                    -{{ productItem.discountPercent }}%
+                </span>
             </div>
 
-            <div class="action-buttons">
-                <div class="quantity-input-wrapper" *ngIf="productItem.productVariations[0]?.color === 'no_color'">
-                    <label for="quantity">Qty:</label>
-                    <input value="0" class="quantity-input" type="number" id="quantity" [(ngModel)]="quantity" min="1"
-                        [max]="maxQuantity" />
-                </div>
-                <button *ngIf="productItem.productVariations[0]?.color !== 'no_color'" type="button"
-                    [disabled]="!hasAvailableVariations()" (click)="open(productItem)" class="btn btn-outline-primary">
-                    ADD TO CART
+            <!-- Stock -->
+            <div class="stock" [class.out]="!productItem.inStock">
+                {{ productItem.inStock ? 'In Stock' : 'Out of Stock' }}
+            </div>
+
+            <!-- Variations -->
+            <div *ngIf="productItem.productVariations[0]?.color !== 'no_color'" class="variants">
+                <h4>Select Variant</h4>
+                <button *ngFor="let v of productItem.productVariations" (click)="getSize(v.size, v.color)"
+                    [disabled]="v.quantity === 0" [class.selected]="
+     selectedSize=== v.size &&
+    selectedColor === v.color
+  ">
+                    {{ v.color | titlecase }} / {{ v.size }}
                 </button>
-                <button class="btn btn-outline-primary" *ngIf="productItem.productVariations[0]?.color === 'no_color'"
-                    (click)="open2(productItem)" [disabled]="!productItem.inStock">Add to Cart</button>
-                <button type="button" class="btn btn-warning">BUY NOW</button>
-                <div *ngIf="submitted && quantity <= 0" class="error text-danger">Quantity must be greater than 0.</div>
-                <div *ngIf="!productItem.inStock" class="error text-danger"> out of Stock </div>
-                <div *ngIf="submitted && !validateQuantity2()" class="error text-danger">
-                    Quantity exceeds available stock ({{ maxQuantity }} available).
-                </div>
+
             </div>
+            <!-- Quantity -->
+            <div class="qty">
+                <label>Qty</label>
+                <input type="number" min="1" [(ngModel)]="quantity">
+            </div>
+            <div *ngIf="!validateQuantity() && selectedColor" class="error text-danger">
+                Quantity exceeds available stock ({{ maxQuantity }} available).
+            </div>
+            <div *ngIf="!validateQuantity() && productItem.productVariations[0]?.color == 'no_color'" class="error text-danger">
+                Quantity exceeds available stock ({{ maxQuantity }} available).
+            </div>
+            <!-- Buttons -->
+            <div class="actions">
+                <!-- <button *ngIf="productItem.productVariations[0]?.color != 'no_color'" class="cart"
+                    (click)="open(productItem)">
+                    Add to Cart
+                </button> -->
+                <button class="btn btn-primary" [disabled]="!validateQuantity()" (click)="openSimple(productItem)">
+                    Add to Cart
+                </button>
+                <button class="buy">
+                    Buy Now
+                </button>
+            </div>
+
+            <!-- Delivery -->
+            <div class="delivery">
+                🚚 Free delivery in 3–5 days
+                🔄 Easy 7-day returns
+            </div>
+
         </section>
     </div>
-</div>
 
-<section *ngIf="productItem" class="recommended-products m-5">
-    <h2>Recommended for You</h2>
-    <div class="d-flex align-items-center position-relative">
+    <!-- DETAILS TABS -->
+    <section class="details">
+        <details open>
+            <summary>Description</summary>
+            <p>{{ productItem.description }}</p>
+        </details>
 
-        <!-- Left Button -->
-        <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="startIndex === 0">&#8249;</button>
+        <details>
+            <summary>Specifications</summary>
+            <ul>
+                <li>High Quality</li>
+                <li>12 Months Warranty</li>
+            </ul>
+        </details>
 
-        <div class="recommended-container no-scroll">
-            <ng-container *ngIf="recommendedProducts$ | async as recommendedProducts">
-                <ng-container
-                    *ngFor="let item of recommendedProducts.slice(startIndex, startIndex + itemsPerPage); let i = index">
-                    <div class="recommended-item">
-                        <div *ngIf="item.discountPercent > 0" class="offer-badge">Offer</div>
-                        <img [src]="item.imageUrls[0]" alt="{{ item.productTitle }}"
-                            (click)="redirectToDetails(item.productId)">
-                        <h5 [routerLink]="['/products', item.productId]">{{ item.productTitle }}</h5>
-                        <h6><span class="text-danger">₹{{ item.price }}</span></h6>
-                        <button (click)="open(item)" class="btn btn-outline-primary">Add to Cart</button>
-                    </div>
-                </ng-container>
-                <!-- Show All button after last visible item -->
-                <div *ngIf="maxReached" class="recommended-item show-all-btn">
-                    <button class="btn btn-primary" (click)="goToAllProducts()">Show All</button>
-                </div>
-            </ng-container>
-        </div>
+        <details>
+            <summary>Reviews</summary>
+            <p>No reviews yet</p>
+        </details>
+    </section>
 
-        <!-- Right Button -->
-        <button class="scroll-btn right" (click)="scrollRight()" [disabled]="maxReached">&#8250;</button>
-    </div>
-</section>
-
-
-
-<div *ngIf="showNotFound" class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
-    <div class="product-details">
-        <h1>Not Found This Product</h1>
-    </div>
 </div>

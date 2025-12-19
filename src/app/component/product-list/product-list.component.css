@@ -89,12 +89,14 @@ select {
 
 .title-wrapper img {
   width: 100%; /* Make the image take the full width */
-  height: 100%; /* Make the image take the full height */
+  height: 200%; /* Make the image take the full height */
   object-fit: cover; /* Cover ensures the image covers the entire area */
   object-position: center; /* Center the image within the area */
   position: absolute; /* Position it absolutely within the wrapper */
   top: 0; /* Align to the top */
   left: 0; /* Align to the left */
+  z-index: -1; /* Ensure the image is behind other content */
+
 }
 
 a {
@@ -203,6 +205,7 @@ button:hover {
 
 .shop-by-category {
   text-align: start;
+  margin-top: -25px;
 }
 
 .slider-container {

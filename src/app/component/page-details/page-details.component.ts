@@ -1,6 +1,13 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CartService } from '../../service/cart.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
@@ -10,7 +17,7 @@ import { CartServerService } from '../../service/cart-server.service';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../interface/product';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-page-details',
@@ -19,43 +26,28 @@ import { Observable } from 'rxjs';
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })
-export class PageDetailsComponent {
-  productItem: any = null; // Initialize to avoid null issues
-  counter: number = 0;
+export class PageDetailsComponent implements OnInit, OnDestroy {
   @Input() id!: number;
-  cartItems: { product: any }[] = [];
-  showNotFound: boolean = false;
-  maxQuantity: any;
-  quantity: number = 1;
-  submitted: boolean = false;
-  selectedVariation: any;
-  isHovering: boolean = false;
-  lensPosition = '0% 0%'; // Positioning for background zoom
-  recommendedProducts$!: Observable<Product[]>;
 
-  startIndex: number = 0;
-  itemsPerPage: number = 6;
-  maxReached: boolean = false;
+  productItem: any = null;
+  recommendedProducts$!: Observable<any[]>;
 
-  scrollLeft() {
-    this.startIndex = Math.max(0, this.startIndex - this.itemsPerPage);
-    this.updateMaxReached();
-  }
+  quantity = 1;
+  maxQuantity = 0;
+  submitted = false;
 
-  scrollRight() {
-    this.startIndex += 1;
-    this.updateMaxReached();
-  }
+  selectedImage!: string;
+  mainImageIndex = 0;
 
-  updateMaxReached() {
-    this.recommendedProducts$.subscribe((items) => {
-      this.maxReached = this.startIndex + this.itemsPerPage >= items.length + 1;
-    });
-  }
+  startIndex = 0;
+  itemsPerPage = 6;
+  maxReached = false;
+  selectedColor = '';
+  selectedSize = '';
 
-  goToAllProducts() {
-    this.router.navigate(['/categories', this.productItem.subCategory.categoryName, this.productItem.subCategory.name]); // Change to your desired route
-  }
+  showNotFound = false;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -63,185 +55,222 @@ export class PageDetailsComponent {
     private cartService: CartService,
     private modalService: NgbModal,
     private router: Router,
-    public toastService: ToastService,
+    private toastService: ToastService,
     private cartServerService: CartServerService,
     private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    this.cartItems = this.cartService.getCart();
+  /* -------------------- INIT -------------------- */
 
-    this.route.params.subscribe((params) => {
-      const id = +params['id']; // Convert to number if needed
-      this.id = id;
+  ngOnInit(): void {
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ id }) => this.loadProduct(+id));
+  }
 
-      this.productService.getProductById(id).subscribe(
-        (res) => {
-          if (res) {
-            this.productItem = res;
-            this.showNotFound = false;
-            this.recommendedProducts$ =
-              this.productService.getRecommendationsProducts(
-                this.productItem.subCategory.id
-              );
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-            const savedIndex = sessionStorage.getItem(
-              `mainImageIndex-${this.id}`
-            );
-            if (savedIndex !== null) {
-              this.mainImageIndex = parseInt(savedIndex, 10);
-              this.selectedVariation = {
-                img: this.productItem.imageUrls[this.mainImageIndex],
-              };
-            } else {
-              this.mainImageIndex = 0;
-              this.selectedVariation = { img: this.productItem.imageUrls[0] };
-            }
-          }
+  /* -------------------- PRODUCT -------------------- */
+
+  private loadProduct(id: number): void {
+    this.id = id;
+
+    this.productService
+      .getProductById(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (product) => {
+          this.productItem = product;
+          this.showNotFound = false;
+
+          this.initMainImage();
+          this.loadRecommendations();
         },
-        (error) => {
-          if (error.status === 404) {
-            this.showNotFound = true;
-          } else if (error.status === 403) {
-            this.router.navigate(['notfound']);
-          }
-        }
+        error: (err) => {
+          if (err.status === 404) this.showNotFound = true;
+          else this.router.navigate(['/notfound']);
+        },
+      });
+  }
+
+  private initMainImage(): void {
+    const savedIndex = sessionStorage.getItem(`mainImageIndex-${this.id}`);
+    this.mainImageIndex = savedIndex ? +savedIndex : 0;
+    this.selectedImage = this.productItem.imageUrls[this.mainImageIndex];
+  }
+
+  /* -------------------- RECOMMENDATIONS -------------------- */
+
+  private loadRecommendations(): void {
+    this.recommendedProducts$ = this.productService
+      .getRecommendationsProducts(this.productItem.subCategory.id)
+      .pipe(
+        tap((items) => {
+          this.maxReached = this.startIndex + this.itemsPerPage >= items.length;
+        })
       );
-    });
-  }
-  // Group variations by size
-  getGroupedVariationsBySize() {
-    const grouped: { [size: string]: { color: string; quantity: number }[] } =
-      {};
-
-    this.productItem?.productVariations?.forEach((variation: any) => {
-      const { color, size, quantity } = variation;
-      if (!grouped[size]) {
-        grouped[size] = [];
-      }
-      grouped[size].push({ color, quantity });
-    });
-
-    return grouped;
   }
 
-  hasAvailableVariations(): boolean {
-    const variations = this.getGroupedVariationsBySize();
-    return (
-      variations &&
-      Object.keys(variations).some(
-        (key) => variations[key].some((variation) => variation.quantity > 0) // Check if any variation has quantity > 0
-      )
-    );
+  scrollLeft(): void {
+    this.startIndex = Math.max(0, this.startIndex - this.itemsPerPage);
   }
 
-  addToCart(): void {
-    if (this.productItem) {
-      this.cartService.addToCart(this.productItem);
-      this.toastService.add('Product added successfully to Cart', 'success');
-    }
+  scrollRight(): void {
+    this.startIndex += this.itemsPerPage;
   }
 
-  open(product: any) {
+  goToAllProducts(): void {
+    this.router.navigate([
+      '/categories',
+      this.productItem.subCategory.categoryName,
+      this.productItem.subCategory.name,
+    ]);
+  }
+
+  /* -------------------- CART -------------------- */
+
+  open(product: any): void {
     const modalRef = this.modalService.open(AddToCartModalComponent, {
       size: 'lg',
       centered: true,
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false, // Prevent closing with the Esc key
+      backdrop: 'static',
+      keyboard: false,
     });
+
     modalRef.componentInstance.product = product;
-    modalRef.result.then(
-      (result) => {
-        if (result === 'added') {
-          this.toastService.add(
-            'Product added successfully to Cart',
-            'success'
-          );
+
+    modalRef.result
+      .then((res) => {
+        if (res === 'added') {
+          this.toastService.add('Product added to cart', 'success');
         }
-      },
-      () => {}
-    );
+      })
+      .catch(() => {});
   }
 
-  validateQuantity2(): boolean {
-    const variation = this.productItem.productVariations.find(
-      (v: any) => v.color === 'no_color' && v.size === 'NO_SIZE'
-    );
-    this.maxQuantity = variation ? variation.quantity : 0;
-    return this.quantity <= this.maxQuantity;
-  }
-  open2(product: any) {
+  openSimple(product: any): void {
     this.submitted = true;
-    if (this.quantity <= 0 || !this.validateQuantity2()) {
-      return; // Validation failed
-    }
+    if (!this.validateQuantity()) return;
 
-    const productToAdd = {
+    const payload = {
       productId: product.productId,
       title: product.productTitle,
-      imageUrl: product.imageUrl,
+      imageUrl: product.imageUrls[0],
       quantity: this.quantity,
       price: product.price,
-      color: 'no_color',
-      size: 'NO_SIZE',
+      color: this.selectedColor || 'no_color',
+      size: this.selectedSize || 'no_size',
     };
 
-    if (!this.auth()) {
-      this.cartService.addToCart(productToAdd);
-      this.toastService.add('Product added successfully to Cart', 'success');
+    this.authService.isLoggedIn()
+      ? this.cartServerService.addToCart(payload)
+      : this.cartService.addToCart(payload);
+
+    this.toastService.add('Product added to cart', 'success');
+  }
+
+  // validateQuantity(): boolean {
+  //   const variation = this.productItem.productVariations.find(
+  //     (v: any) => v.color === 'no_color'
+  //   );
+  //   this.maxQuantity = variation?.quantity || 0;
+  //   return this.quantity > 0 && this.quantity <= this.maxQuantity;
+  // }
+
+
+  validateQuantity(): boolean {
+    if (this.productItem.productVariations[0]?.color === 'no_color') {
+      const variation = this.productItem.productVariations.find(
+        (v: any) => v.color === 'no_color'
+      );
+      this.maxQuantity = variation?.quantity || 0;
     } else {
-      this.cartServerService.addToCart(productToAdd);
-      this.toastService.add('Product added successfully to Cart', 'success');
+      const variation = this.productItem.productVariations.find(
+        (v: any) =>
+          v.color === this.selectedColor && v.size === this.selectedSize
+      );
+      this.maxQuantity = variation?.quantity || 0;
     }
-  }
-  auth(): boolean {
-    return this.authService.isLoggedIn();
+    return this.quantity > 0 && this.quantity <= this.maxQuantity;
   }
 
-  selectVariation(variation: any) {
-    this.selectedVariation = variation; // Save the selected variation
-  }
-  mainImageIndex: number = 0;
+  /* -------------------- IMAGES -------------------- */
 
-  hoverImage(imageUrl: string, index: number) {
-    this.selectedVariation = { img: imageUrl };
+  hoverImage(image: string, index: number): void {
+    this.selectedImage = image;
     this.mainImageIndex = index;
     sessionStorage.setItem(`mainImageIndex-${this.id}`, index.toString());
   }
 
-  generateRecommendations() {
-    if (!this.productItem) return [];
-    return this.productService.getRecommendationsProducts(
-      this.productItem.subCat.id
-    );
+  mouseMove(event: MouseEvent): void {
+    if (!this.lensRef) return;
+
+    const lens = this.lensRef.nativeElement;
+    const img = event.target as HTMLElement;
+    const rect = img.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    lens.style.left = `${x - lens.offsetWidth / 2}px`;
+    lens.style.top = `${y - lens.offsetHeight / 2}px`;
+
+    const bgX = (x / rect.width) * 100;
+    const bgY = (y / rect.height) * 100;
+
+    this.lensPosition = `${bgX}% ${bgY}%`;
   }
 
-mouseMove(event: MouseEvent) {
-  const lens = document.querySelector('.lens') as HTMLElement;
-  const img = event.target as HTMLElement;
+  /* -------------------- NAV -------------------- */
 
-  const rect = img.getBoundingClientRect();
+  redirectToDetails(id: number): void {
+    this.router.navigate(['/products', id]);
+  }
 
-  // Cursor position inside the image
-  const x = event.clientX - rect.left;
-  const y = event.clientY*1.1 - rect.top;
+  @ViewChild('lens') lensRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('mainImage') imageRef!: ElementRef<HTMLImageElement>;
 
-  // Position the lens
-  lens.style.left = `${event.clientX - lens.offsetWidth*3.2}px`;
-  lens.style.top = `${event.clientY - lens.offsetHeight*1.1}px`;
-
-  // background position (%) — correct formula
-  const lensX = (x / rect.width) * 100;
-  const lensY = (y / rect.height) * 100;
-
-  this.lensPosition = `${lensX}% ${lensY}%`;
-}
+  isHovering = false;
+  lensPosition = '0% 0%';
 
   toggleLens(state: boolean) {
     this.isHovering = state;
   }
 
-  redirectToDetails(id: number) {
-    this.router.navigate([`products/${id}`]);
+  onMouseMove(event: MouseEvent) {
+    if (!this.lensRef || !this.imageRef) return;
+
+    const lens = this.lensRef.nativeElement;
+    const img = this.imageRef.nativeElement;
+    const rect = img.getBoundingClientRect();
+
+    const lensRadius = lens.offsetWidth / 2;
+
+    // Cursor relative to image
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+
+    // Clamp lens inside image
+    x = Math.max(lensRadius, Math.min(x, rect.width - lensRadius));
+    y = Math.max(lensRadius, Math.min(y, rect.height - lensRadius));
+
+    // Move lens
+    lens.style.left = `${x - lensRadius}px`;
+    lens.style.top = `${y - lensRadius}px`;
+
+    // 🔥 250% zoom mapping
+    const bgX = (x / rect.width) * 100;
+    const bgY = (y / rect.height) * 100;
+
+    this.lensPosition = `${bgX}% ${bgY}%`;
+  }
+
+  getSize(size: string, color: string) {
+    this.selectedSize = size;
+    this.selectedColor = color;
+    console.log(this.selectedSize, this.selectedColor);
   }
 }
