@@ -19,6 +19,7 @@ import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.
 import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
 import { UsersComponent } from './dashboard/users/users.component';
 import { authGuardGuard } from "./utils/auth-guard.guard";
+import { CatsComponent } from './cats/cats.component';
 
 
 
@@ -34,13 +35,12 @@ export const routes: Routes = [
     { path: "products/:id", component: ProductDetailsComponent, title: "product Details" }
   ]},
   { path: '', component: HomeComponent ,title: "Home"},
-  { path: 'products', component: ProductListComponent ,title: "Products"},
-  { path: 'categories/:categoryTitle/:subCategoryName', component: ProductListComponent,
-    data: {title: 'Sub_Category: :subCategoryName'}
-  },
-  { path: 'categories/:categoryTitle', component: ProductListComponent,
-    data: {title: 'Category: :categoryTitle'}
-  },
+  // { path: 'products', component: ProductListComponent ,title: "Products"},
+  { path: 'categories/:categoryTitle', component:CatsComponent},
+  { path: 'categories/:categoryTitle/:subCategoryName', component: ProductListComponent},
+  // { path: 'categories/:categoryTitle', component: ProductListComponent,
+  //   data: {title: 'Category: :categoryTitle'}
+  // },
   { path: 'search', component: ResultSearchComponent,
     data: {title: 'Sub_Category: :subCategoryName'}
   },

@@ -1,0 +1,27 @@
+<div class="slider fullscreen">
+    <div class="slide">
+        <img [src]="category.img">
+    </div>
+    <div class="slider-overlay " [class.animate]="animate">
+        <h1>Discover {{ category.name }}</h1>
+
+
+        <p>
+            {{ category.desc || 'Premium styles designed to elevate your everyday look.' }}
+        </p>
+
+
+        <h2>Browse Our Categories</h2>
+
+
+        <div class="subcat-cards">
+            <div class="subcat-card" [class.animate]="animate" *ngFor="let sub of category.subcategories"
+                [routerLink]="[sub.name]" [queryParams]="{ page: 1, inStock: true, notAvailable: true }"
+                queryParamsHandling="merge">
+                <img [src]="sub.img" alt="{{ sub.name }}" />
+                <h3>{{ sub.name | capitalize }}</h3>
+                <small class="subcat-hint">Shop Now →</small>
+            </div>
+        </div>
+    </div>
+</div>

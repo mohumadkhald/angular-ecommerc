@@ -1,0 +1,297 @@
+/* =========================
+   SLIDER BASE
+========================= */
+.slider.fullscreen {
+  position: relative;
+  width: 100%;
+  height: 88vh;
+  overflow: hidden;
+}
+
+/* =========================
+   SLIDES
+========================= */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity:1;
+  transition: opacity 1s ease-in-out, transform 1.2s ease;
+  transform: scale(1.05);
+}
+
+.slide {
+  background: #000;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #000; /* fills empty space */
+}
+
+/* =========================
+   SLIDER OVERLAY
+========================= */
+.slider-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+  background: linear-gradient(
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.45)
+  );
+  animation: fadeUp 1s ease forwards;
+}
+
+.slider-overlay h1 {
+  font-size: clamp(26px, 5vw, 60px);
+  margin-bottom: 10px;
+}
+
+.slider-overlay p {
+  font-size: clamp(14px, 2vw, 22px);
+  max-width: 700px;
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+
+.slider-overlay h2 {
+  font-size: clamp(16px, 2.5vw, 28px);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   SUBCATEGORY CARDS
+========================= */
+.subcat-cards {
+  display: flex;
+  gap: clamp(10px, 2vw, 18px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.subcat-card {
+  width: clamp(100px, 15vw, 180px);
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
+  transition: transform .4s ease, box-shadow .4s ease;
+  animation: fadeUp 1.2s ease forwards;
+}
+
+.subcat-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+.subcat-card img {
+  width: 100%;
+  height: clamp(80px, 12vw, 120px);
+  object-fit: cover;
+}
+
+.subcat-card h3 {
+    margin: 5px;
+  padding: 10px;
+  font-size: clamp(12px, 1.5vw, 16px);
+  color: #313030;
+  font-weight: 700;
+}
+
+/* =========================
+   NAV BUTTONS
+========================= */
+.slider button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 5;
+  transition: background .3s;
+}
+
+.slider button:hover {
+  background: rgba(0,0,0,0.8);
+}
+
+.slider .prev { left: 20px; }
+.slider .next { right: 20px; }
+
+/* =========================
+   DOTS
+========================= */
+.slider .dots {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.slider .dots span {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  opacity: .4;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 0 4px;
+  cursor: pointer;
+  transition: opacity .3s, transform .3s;
+}
+
+.slider .dots span.active {
+  opacity: 1;
+  transform: scale(1.2);
+  background: #dc8109;
+}
+
+.subcat-card {
+  animation: floatCard 2s ease-in-out infinite;
+}
+
+.subcat-card:nth-child(1) { animation-delay: 0s; }
+.subcat-card:nth-child(2) { animation-delay: .2s; }
+.subcat-card:nth-child(3) { animation-delay: .4s; }
+.subcat-card:nth-child(4) { animation-delay: .6s; }
+
+@keyframes floatCard {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.slider-overlay.animate h1 {
+  animation: slideDown 1s ease;
+}
+
+.slider-overlay.animate p {
+  animation: fadeUp 2s ease .2s both;
+}
+
+.slider-overlay.animate h2 {
+  animation: fadeUp 2s ease .4s both;
+}
+
+.subcat-card.animate {
+  animation: zoomIn 2s ease both;
+}
+
+/* Keyframes */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   MOBILE FIX
+========================= */
+@media (max-width: 480px) {
+  .slider-overlay {
+    padding: 10px;
+  }
+}
+
+/* =========================
+   CATEGORY TEXT FADE IN / OUT
+========================= */
+
+.slider-overlay.animate h1 {
+  animation: fadeInOut 2s ease-in-out forwards;
+}
+
+.slider-overlay.animate p {
+  animation: fadeInOut 3s ease-in-out .2s forwards;
+}
+
+.slider-overlay.animate h2 {
+  animation: fadeInOut 3s ease-in-out .4s forwards;
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* @keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+  }
+  20%, 70% {
+    opacity: 1;
+  }
+} */

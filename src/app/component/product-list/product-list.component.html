@@ -73,9 +73,6 @@
   </div>
 
   <div style="height: 600px; width: 85%;" class="content-wrapper" *ngIf="subCategories.length > 0">
-    <div *ngIf="categoryTitle && !subCategoryName" class="title-wrapper">
-      <img [src]="currentCategoryImage" alt="Category Image" />
-    </div>
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
       <button class="filter-options" (click)="openFilterModal(subCategoryName)">Filter</button>
     </div>
@@ -98,43 +95,4 @@
     <app-pagination *ngIf="subCategoryName && products.length > 0 && totalPages.length > 1" [currentPage]="currentPage"
       [totalPages]="totalPages" (pageChange)="onPageChange($event)">
     </app-pagination>
-
-    <div *ngIf="categoryTitle && !subCategoryName" class="shop-by-category">
-      <h2 style="margin-left: 8.5vw;">Shop by category</h2>
-      <div class="slider-container">
-        <button class="nav-button left" (click)="scrollLeft(slider)">&#10094;</button>
-        <div style="background-color: rgb(225, 230, 229); padding: 10px; margin: 5px;" class="slider-wrapper" #slider>
-          <div style="margin: 5px;" class="slider">
-            <div class="category-item" *ngFor="let subCategory of subCategories">
-              <img (click)="redirectToSubCategory(categoryTitle, subCategory.name)" style="cursor: pointer"
-                [src]="subCategory.img" [alt]="subCategory.name">
-              <a (click)="redirectToSubCategory(categoryTitle, subCategory.name)">{{ subCategory.name }}</a>
-            </div>
-          </div>
-        </div>
-        <button class="nav-button right" (click)="scrollRight(slider)">&#10095;</button>
-      </div>
-    </div>
   </div>
-</div>
-<div class="cont-notfound" [ngClass]="{'show-container': showNotFound}">
-  <div class="text-center">
-    <h1 class="not-found-title">Category
-      <span *ngIf="!subCategoryName" class="text-danger">{{categoryTitle}}
-      </span>
-      <span *ngIf="subCategoryName" class="text-danger">{{categoryTitle}}/{{subCategoryName}}
-      </span> Not
-      Found
-    </h1>
-  </div>
-</div>
-
-<div class="cont-empty" *ngIf="!showNotFound && subCategories.length == 0">
-  <div class="text-center">
-    <h1 class="not-found-title">Category
-      <span *ngIf="!subCategoryName" class="text-danger">{{categoryTitle}}
-      </span>
-      not have any Sub_Category
-    </h1>
-  </div>
-</div>

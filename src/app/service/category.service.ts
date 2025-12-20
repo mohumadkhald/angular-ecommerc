@@ -14,7 +14,7 @@ export class CategoryService {
     const encodedCategoryTitle = encodeURIComponent(categoryTitle);
     return this.http
       .get<any>(`${this.apiUrl}/sub-categories/find/${encodedCategoryTitle}`)
-      .pipe(map((response) => response.collection));
+      .pipe(map((response) => response));
   }
 
   constructor(

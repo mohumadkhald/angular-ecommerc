@@ -173,8 +173,9 @@ export class ProductListComponent implements OnInit {
       .getSubCategoriesByCategoryTitle(this.categoryTitle)
       .subscribe({
         next: (res) => {
-          this.subCategories = res;
+          this.subCategories = res.subCategoryDtos;
           this.loading = false;
+          console.log(res)
         },
         error: () => {
           this.showNotFound = true;
