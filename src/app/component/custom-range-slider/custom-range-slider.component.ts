@@ -40,10 +40,20 @@ export class CustomRangeSliderComponent {
     this.updateSliderBackground();
   }
 
-  updateSliderBackground(): void {
-    const minPercent = ((this.minValue - this.min) / (this.max - this.min)) * 100;
-    const maxPercent = ((this.maxValue - this.min) / (this.max - this.min)) * 100;
-    const background = `linear-gradient(to right, #ddd ${minPercent}%, #37475A ${minPercent}%, #007bff ${maxPercent}%, #ddd ${maxPercent}%)`;
-    document.querySelector('.slider-background')!.setAttribute('style', `background: ${background}`);
-  }
+updateSliderBackground(): string {
+  const minPercent =
+    ((this.minValue - this.min) / (this.max - this.min)) * 100;
+
+  const maxPercent =
+    ((this.maxValue - this.min) / (this.max - this.min)) * 100;
+
+  return `linear-gradient(
+    to right,
+    #ddd ${minPercent}%,
+    #37475A ${minPercent}%,
+    #007bff ${maxPercent}%,
+    #ddd ${maxPercent}%
+  )`;
+}
+
 }

@@ -10,7 +10,6 @@ import {
 } from '@angular/router';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { CustomRangeSliderComponent } from '../custom-range-slider/custom-range-slider.component';
-import { CdkAutofill } from '@angular/cdk/text-field';
 
 @Component({
   selector: 'app-model-filter',
@@ -21,8 +20,6 @@ import { CdkAutofill } from '@angular/cdk/text-field';
     CapitalizePipe,
     FormsModule,
     CustomRangeSliderComponent,
-    CdkAutofill,
-    RouterLinkActive,
   ],
   templateUrl: './model-filter.component.html',
   styleUrl: './model-filter.component.css',

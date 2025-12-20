@@ -30,6 +30,9 @@
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 4px;
+  margin-right: 25px;
+  /* cut large text */
+  overflow-wrap: anywhere;
 }
 
 .cart-spec {
@@ -209,6 +212,10 @@
 
 /* ## Media Queries for Page Details Component */
 @media (max-width: 400px) {
+  .cart-title {
+    font-size: 12px;
+    margin-right: 5px;
+  }
   .cart-spec-discount {
   font-size: 0.75rem;
   color: #666;
