@@ -18,11 +18,12 @@ import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../interface/product';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { StarRatingComponent } from "../star-rating/star-rating.component";
 
 @Component({
   selector: 'app-page-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, StarRatingComponent],
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })

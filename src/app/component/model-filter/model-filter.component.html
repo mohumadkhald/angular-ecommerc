@@ -7,19 +7,20 @@
 
     </div>
 </div> -->
-<h2>Category Name: {{ categoryTitle }}</h2>
+<h4>Category Name: {{ categoryTitle }}</h4>
 <div class="container">
-<ul>
-    <li *ngFor="let subCategory of subCategories">
-        <i class="fa-solid fa-angle-left"></i>
-        <a class="sub-links" routerLinkActive="active_link"
-            [routerLink]="['/categories', categoryTitle, subCategory.name]" [queryParams]="{ page: 1 }">
-            {{ subCategory.name | capitalize }}
-        </a>
-    </li>
-</ul>
+    <ul>
+        <li *ngFor="let subCategory of subCategories">
+            <i class="fa-solid fa-angle-left"></i>
 
-<div class="filters">
+            <a class="sub-links" [class.active_link]="activeSub === subCategory.name"
+                (click)="setActiveSub(subCategory.name)" [routerLink]="['/categories', categoryTitle, subCategory.name]"
+                [queryParams]="{ page: 1 }">
+                {{ subCategory.name | capitalize }}
+            </a>
+
+        </li>
+    </ul>
     <div class="availability">
         <h3 class="filter-title">Availability</h3>
         <label class="filter-label">
@@ -48,26 +49,46 @@
     </div>
 
     <div class="color-filter">
-        <h3 class="filter-title">Color</h3>
+        <h2 class="filter-title">Color <button class="btn btn-warning text-light m-2" (click)="applyColorFilter()">
+                GO
+            </button></h2>
         <div class="color-options">
-            <label *ngFor="let color of colorOptions" class="color-swatch">
+            <label class="color-swatch" *ngFor="let color of colorOptions">
                 <input type="checkbox" [checked]="filters.colors.includes(color)"
-                    (change)="onColorChange(color, $event)">
-                <div class="color-indicator" [style.background]="color"></div>
+                    (change)="onColorToggle(color, $event)">
+                <div class="color-indicator" [ngStyle]="{'background': color}">
+                </div>
             </label>
         </div>
     </div>
 
-    <div class="size-filter">
-        <h3 class="filter-title">Size</h3>
+    <h2 class="filter-title">Size <button class="btn btn-warning text-light m-2" (click)="applySizeFilter()">
+            GO
+        </button></h2>
+
+    <div class="size-options">
         <label class="filter-label">
-            <input type="checkbox" [checked]="filters.sizes.includes('small')" (change)="onSizeChange('small', $event)">
+            <input type="checkbox" value="small" [checked]="filters.sizes.includes('small')"
+                (change)="onSizeToggle($event)" />
             Small
         </label>
+
         <label class="filter-label">
-            <input type="checkbox" [checked]="filters.sizes.includes('medium')"
-                (change)="onSizeChange('medium', $event)"> Medium
+            <input type="checkbox" value="medium" [checked]="filters.sizes.includes('medium')"
+                (change)="onSizeToggle($event)" />
+            Medium
+        </label>
+
+        <label class="filter-label">
+            <input type="checkbox" value="large" [checked]="filters.sizes.includes('large')"
+                (change)="onSizeToggle($event)" />
+            Large
+        </label>
+        <label class="filter-label">
+            <input type="checkbox" value="extra_large" [checked]="filters.sizes.includes('extra_large')"
+                (change)="onSizeToggle($event)" />
+            Extra Large
         </label>
     </div>
-</div>
+
 </div>

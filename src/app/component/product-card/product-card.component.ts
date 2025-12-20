@@ -19,9 +19,7 @@ import { CapitalizePipe } from '../../pipe/capitalize.pipe';
   imports: [
     CommonModule,
     NgClass,
-    NgStyle,
     NgIf,
-    StarRatingComponent,
     NgbRatingModule,
     FormsModule,
     CapitalizePipe,

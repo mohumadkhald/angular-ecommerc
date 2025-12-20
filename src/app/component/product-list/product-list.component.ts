@@ -368,7 +368,7 @@ export class ProductListComponent implements OnInit {
       page: 1,
     });
   }
-  openFilterModal() {
+  openFilterModal(sub: any) {
     const dialogRef = this.dialog.open(ModelFilterComponent, {
       width: '400px',
       data: {
@@ -379,6 +379,7 @@ export class ProductListComponent implements OnInit {
         colorOptions: this.colorOptions,
         inStockCount: this.inStockCount,
         outOfStockCount: this.outOfStockCount,
+        sub: sub
       },
     });
 

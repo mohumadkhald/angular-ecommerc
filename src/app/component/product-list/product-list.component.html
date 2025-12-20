@@ -77,7 +77,7 @@
       <img [src]="currentCategoryImage" alt="Category Image" />
     </div>
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
-      <button class="filter-options" (click)="openFilterModal()">Filter</button>
+      <button class="filter-options" (click)="openFilterModal(subCategoryName)">Filter</button>
     </div>
     <app-sort-options *ngIf="subCategoryName" class="sort-options" [currentSortOption]="currentSortOption"
       [currentElementSizeOption]="currentElementSizeOption" [currentEmailSeller]="currentEmailSeller"
