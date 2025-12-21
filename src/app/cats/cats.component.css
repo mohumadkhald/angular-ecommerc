@@ -103,69 +103,27 @@
 
 .subcat-card h3 {
     margin: 5px;
-  padding: 10px;
+  padding: 5px;
   font-size: clamp(12px, 1.5vw, 16px);
   color: #313030;
   font-weight: 700;
 }
 
-/* =========================
-   NAV BUTTONS
-========================= */
-.slider button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  border: none;
-  color: #fff;
-  font-size: 26px;
-  padding: 12px;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 5;
-  transition: background .3s;
-}
+
 
 .slider button:hover {
   background: rgba(0,0,0,0.8);
 }
 
-.slider .prev { left: 20px; }
-.slider .next { right: 20px; }
-
-/* =========================
-   DOTS
-========================= */
-.slider .dots {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
-}
-
-.slider .dots span {
-  width: 12px;
-  height: 12px;
-  background: #fff;
-  opacity: .4;
-  display: inline-block;
-  border-radius: 50%;
-  margin: 0 4px;
-  cursor: pointer;
-  transition: opacity .3s, transform .3s;
-}
-
-.slider .dots span.active {
-  opacity: 1;
-  transform: scale(1.2);
-  background: #dc8109;
-}
-
 .subcat-card {
   animation: floatCard 2s ease-in-out infinite;
 }
-
+.subcat-hint {
+    background-color: #dc8109;
+    position: relative;
+    bottom: 10px;
+    font-weight: 400;
+}
 .subcat-card:nth-child(1) { animation-delay: 0s; }
 .subcat-card:nth-child(2) { animation-delay: .2s; }
 .subcat-card:nth-child(3) { animation-delay: .4s; }
