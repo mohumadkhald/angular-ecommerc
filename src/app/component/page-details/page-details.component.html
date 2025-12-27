@@ -3,7 +3,12 @@
     <!-- Breadcrumb -->
     <nav class="breadcrumb">
         <span routerLink="/">Home</span> ›
-        <span routerLink="../">{{productItem.subCategory.name}}</span> ›
+            <span routerLink="/categories/{{productItem.subCategory.categoryName}}">
+                {{productItem.subCategory.categoryName}}
+            </span> ›
+            <span routerLink="/categories/{{productItem.subCategory.categoryName}}/{{productItem.subCategory.name}}">
+                {{productItem.subCategory.name}}
+            </span> ›
         <span>{{ productItem.productTitle }}</span>
     </nav>
 

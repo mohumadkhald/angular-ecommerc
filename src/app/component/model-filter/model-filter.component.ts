@@ -54,6 +54,7 @@ export class ModelFilterComponent {
 
   setActiveSub(subName: string): void {
     this.activeSub = subName;
+    this.dialogRef.close();
   }
   onFilterChange(): void {
     // Update query params with availability filters

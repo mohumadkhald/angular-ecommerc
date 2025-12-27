@@ -53,7 +53,7 @@ export const routes: Routes = [
 
   { path: 'logout', component: AuthComponent, title: "Logout"},
   // { path: 'user/login', component: AuthComponent,title: "Authontication", canActivate: [noAuthGuard] },
-  { path: 'products/:id',component: PageDetailsComponent,title: "Product Details"},
+  { path: 'categories/:categoryTitle/:subCategoryName/products/:id',component: PageDetailsComponent,title: "Product Details"},
   { path: 'products/seller/:id',component: ProductDetailsComponent,title: "Product Details"},
   { path: 'cart',component: CartComponent,title: "Cart"},
   { path: 'orders',component: OrderComponent,title: "Orders"},

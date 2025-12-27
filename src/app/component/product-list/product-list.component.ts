@@ -135,7 +135,6 @@ export class ProductListComponent implements OnInit {
 
         this.loading = true;
         this.loadSubCategories();
-        this.currentCategoryImage = localStorage.getItem('imgCat');
         this.updatePageTitle();
         /* ---------- QUERY PARAMS ---------- */
         this.currentPage = +queryParams['page'] || 1;
