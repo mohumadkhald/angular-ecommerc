@@ -1,102 +1,116 @@
 <!-- -------------------------header--------------------------- -->
 <div class="nav">
   <div class="sticky">
+
+    <!-- LEFT -->
     <div class="nav-left">
       <div class="amazon hover">
-        <!-- <i class="fa-solid fa-bars menu"></i> -->
-        <a routerLink=""><img src="../../../assets/amz/amazoni1.png" alt="amazon.in"></a>
+        <a routerLink="">
+          <img src="../../../assets/amz/amazoni1.png" alt="amazon.in">
+        </a>
       </div>
+
       <div class="address hover">
         <div class="add">
           <i class="fa-solid fa-location-dot"></i>
-          <b>Select address</b>
+          <b data-label>Select address</b>
         </div>
       </div>
     </div>
 
+    <!-- SEARCH -->
     <div class="nav-search" #searchContainer>
-      <select #selectElement style="padding: 7px;" [(ngModel)]="selectedCategory">
+      <select id="cat" [(ngModel)]="selectedCategory">
         <option value="all">All</option>
-        <option *ngFor="let category of categories" [value]="category.categoryTitle">{{ category.categoryTitle }}
+        <option *ngFor="let category of categories" [value]="category.categoryTitle">
+          {{ category.categoryTitle }}
         </option>
       </select>
-      <input type="search" name="search" id="search" placeholder=" Search Amazon.in" [(ngModel)]="searchText"
-        (keydown.enter)="goToSearchResult()">
-      <label style="cursor: pointer;" for="search" class="sicon" (click)="goToSearchResult()">
+
+      <input type="search" placeholder="Search Amazon.in" [(ngModel)]="searchText" (keydown.enter)="goToSearchResult()">
+
+      <label class="sicon" (click)="goToSearchResult()">
         <i class="fa-solid fa-magnifying-glass"></i>
       </label>
     </div>
 
+    <!-- RIGHT -->
     <div class="nav-right">
+
+      <!-- LANGUAGE -->
       <div class="ind hover">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="india">
         <select class="add">
           <option value="EN">EN</option>
-          <option value="EN">AR</option>
+          <option value="AR">AR</option>
         </select>
       </div>
+
+      <!-- ACCOUNT -->
       <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
-        <div class="small" style="font-weight: bolder;">
-          <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" routerLink="/auth" [queryParams]="{ state: 'login' }" (mouseenter)="toggleMenu(true)"
-            (click)="toggleMenu(false)" class="signin no-login">
-            Sign in
+
+        <div class="account-box">
+
+          <div class="account-top">
+            <span class="hello">Hello,</span>
+
+            <span *ngIf="!auth()" class="signin no-login" routerLink="/auth" [queryParams]="{ state: 'login' }"
+              (click)="toggleMenu(false)">
+              Sign in
+            </span>
+
+            <span *ngIf="auth()" class="signin user">
+              {{ username }}
+            </span>
+
+            <i class="fa-regular fa-user user-icon"></i>
           </div>
-          <div class="signin user" (click)="toggleMenu(true)" (touchend)="toggleMenu(false)">
-            {{ username }}
+
+          <div class="account-bottom">
+            <b>Account & Lists</b>
+            <i class="fa-solid fa-caret-down"></i>
           </div>
-          <div style="display: block;">
-            <i class="fa-solid fa-angle-right arrow" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
-            <i class="fa-regular fa-user user" (mouseenter)="toggleMenu(false)" (click)="toggleMenu(false)"></i>
-          </div>
+
         </div>
-        <div class="add" (mouseenter)="toggleMenu(true)" (click)="toggleMenu(true)">
-          <b>Account & Lists</b>
-          <i class="fa-solid fa-caret-down"></i>
-        </div>
+
+        <!-- DROPDOWN -->
         <div class="dropdown-menu" *ngIf="menuVisible">
-          <div class="dropdown-content">
-            <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'login' }"
-              (click)="menuVisible = false">
-              <a>Login</a>
-            </div>
+          <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
+            (click)="menuVisible = false">
+            Login
+          </div>
 
-            <!-- <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'register' }" (click)="menuVisible = false"><a>Register</a></div> -->
+          <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard"
+            (click)="menuVisible = false">
+            Dashboard
+          </div>
 
-            <div class="dropdown-item" *ngIf="auth() && role=='ADMIN';" routerLink="/dashboard"
-              (click)="menuVisible = false">Dashboard</div>
+          <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="menuVisible = false">
+            Account
+          </div>
 
-            <div *ngIf="auth()" class="dropdown-item" (click)="menuVisible = false"><a
-                routerLink="/user/profile">Account</a></div>
-
-            <div *ngIf="auth();" class="dropdown-item" (click)="logout(); menuVisible = false"><a>Logout</a></div>
+          <div class="dropdown-item" *ngIf="auth()" (click)="logout(); menuVisible = false">
+            Logout
           </div>
         </div>
+      </div>
 
+      <!-- ORDERS -->
+      <div *ngIf="auth()" routerLink="orders" class="return hover">
+        <b data-label>Orders</b>
       </div>
-      <div *ngIf="auth();" routerLink="orders" class="return  hover">
-        <div class="add">
-          <b>Orders</b>
-        </div>
-      </div>
+
+      <!-- CART -->
       <div routerLink="cart" class="cart hover">
-        <span style="font-size: 2.5em;" class="material-symbols-rounded">
-          shopping_cart
-        </span>
-        <p class="cardCount">{{getCountOfItems()}}</p>
-        <div style="margin-top: 10px;" class="add cardName">
-          <b style="margin-left: -15px;">Cart</b>
-        </div>
+        <span class="material-symbols-rounded">shopping_cart</span>
+        <span class="cardCount">{{ getCountOfItems() }}</span>
       </div>
+
     </div>
   </div>
 
+  <!-- CATEGORIES -->
   <div class="nav-main">
     <div class="nav-main-menu">
-      <div class="nav-menu">
-        <!-- <i class="fa-solid fa-bars menubar"></i> -->
-        <!-- <div><b>All</b></div> -->
-      </div>
       <div class="xshop">
         <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
           *ngFor="let category of categories">
@@ -104,9 +118,5 @@
         </a>
       </div>
     </div>
-    <!-- <div class="slot">
-      <img class="last" alt="Amazon App"
-        src="https://m.media-amazon.com/images/G/31/IN-hq/2021/img/Mobile_Traffic_/XCM_Manual_1321458_1651511_IN_3781247_400x39_en_IN._CB655944656_.jpg">
-    </div> -->
   </div>
 </div>
