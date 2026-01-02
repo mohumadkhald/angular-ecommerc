@@ -1,6 +1,13 @@
 <app-header class="header"></app-header>
-<router-outlet class="content"></router-outlet>
-<app-footer class="footer"></app-footer>
+
+<div class="page-wrapper">
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer class="footer"></app-footer>
+</div>
+
+
 <div *ngIf="toastService.toastMessages.length > 0" class="toast-container">
   <div *ngFor="let messageObj of toastService.toastMessages" class="toast-message"
     [ngStyle]="{'background-color': toastService.getMessageColor(messageObj.type)}">

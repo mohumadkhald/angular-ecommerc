@@ -79,14 +79,6 @@ select {
 }
 
 
-.title-wrapper {
-  margin: 0;
-  position: relative;
-  height: 500px; /* Fixed height, adjust as needed */
-  width: 100%; /* Full width of the parent */
-  overflow: hidden; /* Hide any overflow content */
-}
-
 .title-wrapper img {
   width: 100%; /* Make the image take the full width */
   height: 200%; /* Make the image take the full height */
@@ -110,7 +102,7 @@ a {
 }
 
 .sidebar {
-  width: 250px;
+  width: fit-content;
   padding-bottom: 0;
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -146,6 +138,7 @@ input[type="range"] {
   background-color: #fff;
   padding: 5px;
   margin-top: 10px;
+  height: auto;
 }
 
 app-product-card {
@@ -269,6 +262,7 @@ button:hover {
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   height: fit-content;
+  width: fit-content;
 }
 
 .content-wrapper {
@@ -387,7 +381,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     width: calc(25%);
 }
   .sidebar {
-    width: 18.5%;
+    width: fit-content;
     padding: 10px;
     margin: 0;
   }
@@ -424,7 +418,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   width: 90%;
 }
   .sidebar {
-    width: 19%;
+    width: fit-content;
     margin: 0;
   }
   .slider-container {
@@ -449,7 +443,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
 }
 @media (max-width: 992px) {
   .sidebar {
-    width: 25%;
+    width: fit-content;
   }
 
   app-product-card {
@@ -462,7 +456,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     width: 50%;
   }
   .sidebar {
-    width: 180px; /* Adjust width as needed */
+    width: fit-content; /* Adjust width as needed */
     padding: 10px;
     background-color: white;
     margin:0;
@@ -502,7 +496,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     display: block; /* Default to none */
   }
   .sidebar {
-    width: 35%;
+    width: fit-content;
     display: none;
   }
 
@@ -510,7 +504,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     width: calc(33.3%);
 }
   .sidebar {
-    width: 150px; /* Adjust width as needed */
+    width: fit-content; /* Adjust width as needed */
     padding: 5px;
     background-color: white;
     margin:0;
@@ -543,7 +537,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
 }
 @media (max-width: 655px) {
   .sidebar {
-    width: 50%;
+    width: fit-content;
     display: none;
   }
   .store-container {
@@ -553,7 +547,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     width: calc(50%);
 }
   .sidebar {
-    width: 150px; /* Adjust width as needed */
+    width: fit-content; /* Adjust width as needed */
     padding: 5px;
     background-color: white;
     margin: 0;

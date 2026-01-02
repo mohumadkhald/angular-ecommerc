@@ -1,88 +1,122 @@
+/* =========================
+   1. Full page height & reset
+========================= */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================
+   2. Header fixed
+========================= */
 .header {
     width: 100%;
     height: 40px;
-    z-index: 1000;
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 1000;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.content {
-    display: block;
-    padding-top: 100px; /* adjust as needed */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Toast Container for General Messages */
+/* =========================
+   3. Page wrapper (content + footer)
+========================= */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* full viewport */
+    padding-top: 100px; /* space for fixed header */
+}
+
+/* =========================
+   4. Content area
+========================= */
+.content {
+    flex: 1; /* grow to fill space between header and footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* content at top */
+    padding: 0;
+    margin: 0;
+}
+
+/* =========================
+   5. Footer
+========================= */
+.footer {
+    height: 60px;
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    margin: 0; /* remove extra spacing */
+}
+
+/* =========================
+   6. Toast container
+========================= */
 .toast-container {
   position: fixed;
   top: 17%;
-  right: 1%; /* Adjusted to align better */
-  z-index: 999; /* Ensure it is above all other elements */
-  pointer-events: auto; /* Allow interaction with toasts */
+  right: 1%;
+  z-index: 999;
+  pointer-events: auto;
   color: white;
   padding: 5px;
-  max-width: 600px; /* Optional: limit width for better UI */
+  max-width: 600px;
 }
 
 .toast-message {
   background-color: rgb(61, 106, 29);
   color: white;
   padding: 15px;
-  margin: 5px 0; /* Add vertical margin between messages */
-  border-radius: 5px; /* Rounded corners for better visuals */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow */
+  margin: 5px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* Exit Button */
+/* Exit button for toast */
 .exit-toast {
   background-color: red;
   border: none;
   color: white;
   font-size: 12px;
   padding: 1px 6px;
-  margin-right: -15px;
   margin-left: 15px;
-  cursor: pointer;
   position: relative;
   top: -15px;
-  z-index: 999;
+  right: -15px;
   float: right;
   cursor: pointer;
 }
-.footer {
-    bottom: 0;
-    left: 0;
-    margin-bottom: 200px;
-    margin-top: 50px;
-    width: 100%;
-    height: 60px;
-    background-color: #f1f1f1;
-    text-align: center;
-}
-    @media (max-width: 1024px) {
-      .content {
-          display: block;
-          padding-top: 120px; /* adjust as needed */
-      }
-    }
-    /* Responsive Adjustments */
-    @media (max-width: 992px) {
-      .content {
-          display: block;
-          padding-top: 120px; /* adjust as needed */
-      }
 
-      .toast-container {
-        position: fixed;
+/* =========================
+   7. Responsive Adjustments
+========================= */
+
+/* Medium devices */
+@media (max-width: 1080px) {
+    .page-wrapper {
+        padding-top: 100px; /* same header offset */
+    }
+}
+
+/* Smaller tablets */
+@media (max-width: 992px) {
+    .page-wrapper {
+        padding-top: 100px;
+    }
+
+    .toast-container {
         top: 13%;
         right: 1%;
         z-index: 9999;
-        color: white;
-        opacity: 1;
         padding: 15px;
-      }
-      .toast-err {
+        opacity: 1;
+    }
+
+    .toast-err {
         position: fixed;
         top: 13.5%;
         right: .3%;
@@ -91,9 +125,9 @@
         background-color: rgb(202, 23, 11);
         opacity: 1;
         padding: 15px;
-      }
-    
-      .toast-warn {
+    }
+
+    .toast-warn {
         position: fixed;
         top: 13.5%;
         right: .3%;
@@ -102,78 +136,56 @@
         background-color: rgb(187, 117, 13);
         opacity: 1;
         padding: 15px;
-      }
-      
-      
-      .exit-toast {
-        background-color: red;
-        position: relative;
+    }
+
+    .exit-toast {
         padding: 3px 8px;
         top: -15px;
-        right: 0px;
-      }
+        right: -15px;
     }
-    
-    @media (max-width: 480px) {
-      .content {
-          display: block;
-          padding-top: 120px; /* adjust as needed */
-      }
 
+    .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* full viewport */
+    padding-top: 130px; /* space for fixed header */
+}
 
-      .toast-container {
-        position: fixed;
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+    .page-wrapper {
+        padding-top: 130px;
+    }
+
+    .toast-container {
         top: 13%;
         right: 1%;
         z-index: 9999;
-        color: white;
-        opacity: 1;
         padding: 2px;
         margin: 2px;
-      }
-      .toast-message {
-        background-color: rgb(61, 106, 29);
-        color: white;
+    }
+
+    .toast-message {
         padding: 5px;
-        margin: 5px 0; /* Add vertical margin between messages */
-        border-radius: 5px; /* Rounded corners for better visuals */
         font-size: 10px;
-      }
+    }
 
-      .toast-err {
-        position: fixed;
+    .toast-err, .toast-warn {
         top: 13.5%;
         right: .3%;
-        z-index: 9999;
-        color: white;
-        background-color: rgb(202, 23, 11);
-        opacity: 1;
         padding: 15px;
-      }
-    
-      .toast-warn {
-        position: fixed;
-        top: 13.5%;
-        right: .3%;
-        z-index: 9999;
-        color: white;
-        background-color: rgb(187, 117, 13);
-        opacity: 1;
-        padding: 15px;
-      }
-      
-      
-      .exit-toast {
-        background-color: red;
-        position: relative;
+    }
+
+    .exit-toast {
         padding: 0px 3px;
-        top: -7px;
-        right: 8px;
-      }
+        top: -6px;
+        right: -3px;
+    }
 
-      .toggle-btn {
+    .toggle-btn {
         padding: 8px 12px;
         font-size: 14px;
-      }
     }
-    
+}
