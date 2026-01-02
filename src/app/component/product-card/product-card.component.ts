@@ -51,7 +51,7 @@ export class ProductCardComponent implements OnInit {
   }
 
   redirectToDetails(id: number) {
-    console.log('Navigating to product details for ID:', this.product);
+    // console.log('Navigating to product details for ID:', this.product);
     this.router.navigate([`categories/${this.product.subCategory.categoryName}/${this.product.subCategory.name}/products/${id}`]);
   }
 

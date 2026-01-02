@@ -19,7 +19,7 @@ import { SubcategoriesComponent } from './dashboard/subcategories/subcategories.
 import { UsersDetailsComponent } from './dashboard/users-details/users-details.component';
 import { UsersComponent } from './dashboard/users/users.component';
 import { authGuardGuard } from "./utils/auth-guard.guard";
-import { CatsComponent } from './cats/cats.component';
+import { CatsComponent } from './component/cats/cats.component';
 
 
 

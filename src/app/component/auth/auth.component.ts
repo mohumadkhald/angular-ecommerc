@@ -23,6 +23,9 @@ import { OAuth2Service } from '../../service/oauth2.service';
 import { ErrorDialogComponent } from '../error-dialog/error-dialog.component';
 import { ModalSendResetPasswordComponent } from '../modal-send-reset-password/modal-send-reset-password.component';
 import { ToastService } from '../../service/toast.service';
+import { NotificationService } from '../../service/notification.service';
+import { UserService } from '../../service/user.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -58,7 +61,9 @@ export class AuthComponent implements OnInit {
     private route: ActivatedRoute,
     private oauth2Service: OAuth2Service,
     private cartService: CartService,
-    private toast: ToastService
+    private toast: ToastService,
+    private notificationService: NotificationService,
+    private userService: UserService
   ) {
     // Initialize forms with validation rules
     this.registerForm = this.fb.group({
@@ -195,12 +200,17 @@ export class AuthComponent implements OnInit {
   login() {
     if (this.loginForm.valid) {
       const { email, password, remember } = this.loginForm.value;
+
       this.authService.login(email.trim(), password.trim(), remember).subscribe(
         (response) => {
-          this.cartService.syncCartFromLocalStorage();
-          this.cartService.clearCart();
           this.authService.saveToken(response.token);
+
+          // ✅ Trigger notification FIRST
+          this.notify();
+
+          // then navigate
           this.router.navigate(['/']);
+
           this.toast.add('Your Login Success Have a Nice Time', 'success');
         },
         (error) => this.handleError(error)
@@ -293,5 +303,15 @@ export class AuthComponent implements OnInit {
 
   navigateToSignUp() {
     this.showSignUp();
+  }
+
+  notify() {
+    this.userService.username$.pipe(take(1)).subscribe((username) => {
+      this.notificationService.showNotification(
+        `Hello ${username} 👋`,
+        'This is your first desktop notification!'
+      );
+      console.log('Notification sent');
+    });
   }
 }

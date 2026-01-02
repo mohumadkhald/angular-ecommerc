@@ -11,3 +11,38 @@ footer {
     height: 40px;
     z-index: 1000; /* Ensure the footer is above other content */
 }
+
+.footer-content {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+.footer-content a {
+    color: #ffffff;
+    text-decoration: none;
+}
+.footer-content a:hover {
+    text-decoration: underline;
+}
+.footer-links {
+    margin-top: 5px;
+}   
+.footer-links a {
+    margin: 0 10px;
+}
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .footer-content {
+        font-size: 12px;
+    }
+    .footer-links a {
+        margin: 0 5px;
+    }
+    footer {
+        position: relative;
+    }
+}   

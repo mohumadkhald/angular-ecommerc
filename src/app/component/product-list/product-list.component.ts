@@ -233,7 +233,7 @@ export class ProductListComponent implements OnInit {
         next: (res) => {
           this.subCategories = res.subCategoryDtos;
           this.loading = false;
-          console.log(res);
+          // console.log(res);
         },
         error: () => {
           this.showNotFound = true;
@@ -297,7 +297,7 @@ export class ProductListComponent implements OnInit {
           this.display = products.length <= 1;
           this.isloading = false;
 
-          console.log(this.inStockCount, this.outOfStockCount);
+          // console.log(this.inStockCount, this.outOfStockCount);
         },
         error: () => {
           this.products = [];

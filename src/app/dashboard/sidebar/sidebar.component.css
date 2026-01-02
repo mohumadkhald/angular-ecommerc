@@ -402,7 +402,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
 
   .sidebar {
     width: 100%;
-    height: auto;
+    height: 50px;
     box-shadow: none;
   }
 
@@ -431,7 +431,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   
   .sidebar {
     width: 100%;
-    height: auto;
+    height: 50px;
     box-shadow: none;
     padding: 5px;
   }

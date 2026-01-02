@@ -1,14 +1,14 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CategoryService } from '../service/category.service';
+import { CategoryService } from '../../service/category.service';
 import { combineLatest } from 'rxjs';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { CustomRangeSliderComponent } from '../component/custom-range-slider/custom-range-slider.component';
-import { ModelFilterComponent } from '../component/model-filter/model-filter.component';
-import { PaginationComponent } from '../component/pagination/pagination.component';
-import { SortOptionsComponent } from '../component/sort-options/sort-options.component';
-import { CapitalizePipe } from '../pipe/capitalize.pipe';
+import { CustomRangeSliderComponent } from '../../component/custom-range-slider/custom-range-slider.component';
+import { ModelFilterComponent } from '../../component/model-filter/model-filter.component';
+import { PaginationComponent } from '../../component/pagination/pagination.component';
+import { SortOptionsComponent } from '../../component/sort-options/sort-options.component';
+import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { Title } from '@angular/platform-browser';
 
 interface Subcategory {
@@ -83,7 +83,7 @@ export class CatsComponent implements OnInit {
           this.category.img = res.img
           this.category.desc = res.description;
           this.category.subcategories = res.subCategoryDtos || [];
-          console.log(res);
+          // console.log(res);
         },
         error: (err) => {
           console.error('Failed to load category:', err);

@@ -49,16 +49,16 @@ export class AppComponent {
 
         const routeConfig = active.snapshot.routeConfig;
 
-        console.log('---------------------------');
-        console.log('📌 Executed Route Path:', routeConfig?.path);
-        console.log('📌 Component:', routeConfig?.component?.name);
-        console.log('---------------------------');
+        // console.log('---------------------------');
+        // console.log('📌 Executed Route Path:', routeConfig?.path);
+        // console.log('📌 Component:', routeConfig?.component?.name);
+        // console.log('---------------------------');
       });
 
   }
   notify() {
     this.notificationService.showNotification(
-      'Hello Mohamed 👋',
+      'Hello  👋',
       'This is your first desktop notification!'
     );
     console.log('Notification sent');

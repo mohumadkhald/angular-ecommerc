@@ -20,8 +20,9 @@ import { ToastService } from '../../service/toast.service';
 import { UserService } from '../../service/user.service';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { SetFirstPasswordComponent } from '../set-first-password/set-first-password.component';
-import { Subscription } from 'rxjs';
+import { combineLatest, filter, Subscription, take } from 'rxjs';
 import { CartService } from '../../service/cart.service';
+import { NotificationService } from '../../service/notification.service';
 @Component({
   standalone: true,
   selector: 'app-home',
@@ -45,6 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private closeTimeoutId?: number;
   private authSubscription!: Subscription;
   ps: any;
+  role: any;
 
   constructor(
     private router: Router,
@@ -56,38 +58,71 @@ export class HomeComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private renderer: Renderer2,
-    private cartService: CartService
+    private cartService: CartService,
+    private notificationService: NotificationService
   ) {}
 
+  private loadUserProfile(): void {
+    this.userService
+      .loadProfile()
+      .pipe(take(1))
+      .subscribe((user) => {
+        // Direct data (BEST)
+        this.username = user.username;
+        this.role = user.role;
+
+        this.authService.saveRole(user.role);
+        this.cd.detectChanges();
+      });
+  }
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.pipe(take(1)).subscribe((params) => {
       const token = params['token'];
       const role = params['role'];
-      const newUser = params['newUser'];
-      if (token) {
-        this.authService.saveToken(token);
-        this.authService.saveRole(role);
-        // Store the new user flag in cookies if present
-        if (newUser === 'true') {
-          this.setCookie('newUser', 'true', 1); // Expires in 1 day
-          this.router.navigate(['/']);
-          this.toastService.add('You Are Welcome to WebSite', 'success');
-        } else {
-          this.router.navigate(['/']);
-          this.deleteCookie('newUser');
-          this.toastService.add('Welcome Back to WebSite', 'success');
-        }
-      }
+      const newUser = params['newUser'] === 'true';
+
+      if (!token) return;
+
+      // Save auth data
+      this.authService.saveToken(token);
+      if (role) this.authService.saveRole(role);
+
+      newUser
+        ? this.setCookie('newUser', 'true', 1)
+        : this.deleteCookie('newUser');
+
+      // Navigate first
+      this.router.navigate(['/']);
+
+      // 🔴 LOAD PROFILE FIRST
+      this.loadUserProfile();
+
+      // ✅ Show welcome AFTER profile is loaded
+      this.userService.username$
+        .pipe(
+          filter((u): u is string => !!u),
+          take(1)
+        )
+        .subscribe((username) => {
+          this.username = username;
+          this.cd.detectChanges();
+
+          this.notify();
+          this.toastService.add(
+            newUser ? `Welcome ${username} 👋` : `Welcome back ${username} 👋`,
+            'success'
+          );
+        });
+
+      // Cart sync
       if (this.cartService.getCart().length > 0) {
         this.cartService.syncCartFromLocalStorage();
         this.cartService.clearCart();
       }
     });
 
-    // Check and open the password dialog after a 3-second delay
     setTimeout(() => this.checkFirstPwdSet(), 3000);
 
-    // Start auto-sliding the images every 2 seconds
     this.autoSlideInterval = setInterval(() => {
       this.nextImage();
     }, 2000);
@@ -312,20 +347,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   currentIndex1 = 0;
   visibleCount1 = 6; // Number of visible products at a time
 
   // Function to get the visible deals based on the current index
   getVisibleDeals1() {
-    return this.blockbusterDeals.slice(this.currentIndex1, this.currentIndex1 + this.visibleCount1);
+    return this.blockbusterDeals.slice(
+      this.currentIndex1,
+      this.currentIndex1 + this.visibleCount1
+    );
   }
 
   // Function to show the next set of products
   nextDeal1() {
     // If we are not at the end, move to the next set of products
-    if (this.currentIndex1 + this.visibleCount1 < this.blockbusterDeals.length) {
+    if (
+      this.currentIndex1 + this.visibleCount1 <
+      this.blockbusterDeals.length
+    ) {
       this.currentIndex1 += this.visibleCount1;
     } else {
       // If at the end, loop back to the start
@@ -344,4 +383,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  notify() {
+    this.notificationService.showNotification(
+      `Hello ${this.username} 👋`,
+      'Welcome to My Website E-commerce!'
+    );
+    console.log('Notification sent');
+  }
 }

@@ -49,7 +49,7 @@ export class OrdersComponent {
     });
   
     modalRef.componentInstance.order = order; // Pass the order data to the modal
-    console.log(order);
+    // console.log(order);
   
     modalRef.result.then(
       (result) => {},
@@ -63,7 +63,7 @@ export class OrdersComponent {
     order.status = status;
     this.orderService.updateOrder(order).subscribe(
       () => {
-        console.log('Order status updated');
+        // console.log('Order status updated');
       },
       (error) => {
         console.error('Error updating order status', error);

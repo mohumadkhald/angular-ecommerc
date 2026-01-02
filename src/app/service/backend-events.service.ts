@@ -18,7 +18,7 @@ export class BackendEventsService {
     const eventSource = new EventSource(`${this.apiUrl}/status-stream`, { withCredentials: true });
 
     eventSource.addEventListener('connected', () => {
-      console.log("Backend UP event");
+      // console.log("Backend UP event");
 
       if (this.wasBackendDown) {
         this.wasBackendDown = false; // reset
@@ -27,7 +27,7 @@ export class BackendEventsService {
     });
 
     eventSource.addEventListener('ping', () => {
-      console.log("Ping from backend");
+      // console.log("Ping from backend");
     });
 
     eventSource.onerror = () => {

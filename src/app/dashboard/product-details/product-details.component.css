@@ -196,6 +196,9 @@
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
+  * {
+    font-size: 0.75rem;
+  }
   .card-body {
     padding: 10px;
   }
