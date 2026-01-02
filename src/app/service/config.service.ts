@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ConfigService {
-
   // private apiUri = 'https://ec2-13-245-4-191.af-south-1.compute.amazonaws.com:8443/api';
   // private apiUri = 'http://localhost:8080/api';
   // private apiUrl = 'http://localhost:8080';
@@ -16,7 +15,7 @@ export class ConfigService {
   getApiUri(): string {
     return this.apiUri;
   }
-    getApiUrl(): string {
+  getApiUrl(): string {
     return this.apiUrl;
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-
+import { ConfigService } from '../service/config.service';
 export interface Counts {
   users: number;
   subCategories: number;
@@ -14,7 +14,7 @@ export interface Counts {
   providedIn: 'root',
 })
 export class DashboardService {
-  apiUrl: any = 'http://localhost:8080/api';
+  apiUrl: any = '';
 
   private countsSource = new BehaviorSubject<Counts>({
     categories: 0,
@@ -26,7 +26,9 @@ export class DashboardService {
 
   counts$ = this.countsSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.apiUrl = this.configService.getApiUri();
+  }
 
   // Load counts from backend
   loadCounts() {
