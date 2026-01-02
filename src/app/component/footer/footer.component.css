@@ -37,12 +37,13 @@ footer {
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .footer-content {
-        font-size: 12px;
+        font-size: 11px;
     }
     .footer-links a {
         margin: 0 5px;
     }
     footer {
+        font-size: 11px;
         position: relative;
     }
 }   
