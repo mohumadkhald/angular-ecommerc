@@ -56,14 +56,23 @@
         </div>
         <div class="dropdown-menu" *ngIf="menuVisible">
           <div class="dropdown-content">
-            <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'login' }">
-              <a>Login</a></div>
-            <!-- <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'register' }"><a>Register</a></div> -->
-            <div class="dropdown-item" *ngIf='auth() && role=="ADMIN";' routerLink="/dashboard">Dashboard</div>
-            <div *ngIf="auth()" class="dropdown-item"><a routerLink="/user/profile">Account</a></div>
-            <div *ngIf="auth();" class="dropdown-item"><a (click)="logout()">Logout</a></div>
+            <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'login' }"
+              (click)="menuVisible = false">
+              <a>Login</a>
+            </div>
+
+            <!-- <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'register' }" (click)="menuVisible = false"><a>Register</a></div> -->
+
+            <div class="dropdown-item" *ngIf="auth() && role=='ADMIN';" routerLink="/dashboard"
+              (click)="menuVisible = false">Dashboard</div>
+
+            <div *ngIf="auth()" class="dropdown-item" (click)="menuVisible = false"><a
+                routerLink="/user/profile">Account</a></div>
+
+            <div *ngIf="auth();" class="dropdown-item" (click)="logout(); menuVisible = false"><a>Logout</a></div>
           </div>
         </div>
+
       </div>
       <div *ngIf="auth();" routerLink="orders" class="return  hover">
         <div class="add">

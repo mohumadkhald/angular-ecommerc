@@ -2,7 +2,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../service/category.service';
 import { combineLatest } from 'rxjs';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CustomRangeSliderComponent } from '../../component/custom-range-slider/custom-range-slider.component';
 import { ModelFilterComponent } from '../../component/model-filter/model-filter.component';
@@ -38,59 +38,64 @@ export class CatsComponent implements OnInit {
     subcategories: [],
   };
 
-  currentSlide = 0;
-  autoSlideInterval: any;
   categoryTitle!: string | null;
-  title = this.categoryTitle;
   animate = false;
-
 
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
+    private router: Router,
     private titleService: Title
   ) {}
 
-  ngOnInit() {
-    // this.startAutoSlide();
+ngOnInit() {
+  combineLatest([this.route.paramMap, this.route.queryParams]).subscribe(
+    ([paramMap]) => {
+      this.categoryTitle = paramMap.get('categoryTitle');
+      this.updatePageTitle();
 
-    combineLatest([this.route.paramMap, this.route.queryParams]).subscribe(
-      ([paramMap]) => {
-        this.categoryTitle = paramMap.get('categoryTitle');
-        this.updatePageTitle();
-
-        if (this.categoryTitle) {
-          this.loadCategoryAndSubCategories(this.categoryTitle);
-        }
+      if (!this.categoryTitle) {
+        // Redirect to Not Found if categoryTitle is missing in the URL
+        this.router.navigate(['/not-found']);
+        return;
       }
-    );
-      setInterval(() => {
+
+      // Load category if categoryTitle exists
+      this.loadCategoryAndSubCategories(this.categoryTitle);
+    }
+  );
+
+  // Animate overlay
+  setInterval(() => {
     this.animate = false;
-    setTimeout(() => this.animate = true, 50);
+    setTimeout(() => (this.animate = true), 50);
   }, 2500);
-  }
+}
+
+
   private updatePageTitle(): void {
     this.titleService.setTitle(`${this.categoryTitle || ''}`);
   }
 
   loadCategoryAndSubCategories(categoryTitle: string) {
-    this.categoryService
-      .getSubCategoriesByCategoryTitle(categoryTitle)
-      .subscribe({
-        next: (res: any) => {
-          // Assuming res has { name, imageUrls, subcategories }
-          this.category.name = res.categoryTitle;
-          this.category.img = res.img
-          this.category.desc = res.description;
-          this.category.subcategories = res.subCategoryDtos || [];
-          // console.log(res);
-        },
-        error: (err) => {
-          console.error('Failed to load category:', err);
-          // Optionally handle 404 or show a not-found component
-        },
-      });
+    this.categoryService.getSubCategoriesByCategoryTitle(categoryTitle).subscribe({
+      next: (res: any) => {
+        if (!res) {
+          // If API returns null/undefined, redirect to Not Found
+          this.router.navigate(['/not-found']);
+          return;
+        }
+
+        // Assign category data
+        this.category.name = res.categoryTitle;
+        this.category.img = res.img;
+        this.category.desc = res.description;
+        this.category.subcategories = res.subCategoryDtos || [];
+      },
+      error: (err) => {
+        this.router.navigate(['/not-found']);
+        // console.error('Failed to load category:', err);
+      },
+    });
   }
-
-
 }
