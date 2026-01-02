@@ -23,11 +23,17 @@ import { ToastService } from '../../service/toast.service';
 import { AddressModalComponent } from '../address-modal/address-modal.component';
 import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
 import { ConfigService } from '../../service/config.service';
-import { CapitalizePipe } from "../../pipe/capitalize.pipe";
+import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 
 @Component({
   standalone: true,
-  imports: [NgFor, CommonModule, RouterLink, ReactiveFormsModule, CapitalizePipe],
+  imports: [
+    NgFor,
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    CapitalizePipe,
+  ],
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
@@ -44,6 +50,7 @@ export class CartComponent implements OnInit, OnDestroy {
   apiUrl: string;
   cardVendor!: string;
   totalpriceDiscounted: number = 0;
+  showCheckoutModal: boolean = false;
 
   constructor(
     private cartService: CartService,
@@ -389,6 +396,13 @@ export class CartComponent implements OnInit, OnDestroy {
     } else {
       return 'Invalid';
     }
+  }
+
+  openCheckoutModal() {
+    this.showCheckoutModal = true;
+  }
+  closeCheckoutModal() {
+    this.showCheckoutModal = false;
   }
 
   onCardNumberInput(event: Event): void {

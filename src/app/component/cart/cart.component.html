@@ -1,3 +1,4 @@
+<!-- cart.component.html -->
 <section class="h-100 h-custom mt-1" style="background-color: #eee;">
     <div class="container h-100">
         <div class="row d-flex h-100">
@@ -5,160 +6,133 @@
                 <div class="card">
                     <div class="card-body p-4">
                         <div class="row">
-                            <ng-container *ngIf="getCountOfItems() !== 0; else content">
+
+                            <!-- ================= CART ITEMS / CONTENT ================= -->
+                            <ng-container *ngIf="getCountOfItems() !== 0; else emptyCart">
+
+                                <!-- LEFT: CART ITEMS -->
                                 <div class="col-lg-7">
+
                                     <h5 class="mb-3">
                                         <a href="#!" class="text-body">
                                             <i class="fas fa-long-arrow-alt-left me-2"></i> Continue shopping
                                         </a>
                                     </h5>
                                     <hr>
+
+                                    <!-- EMPTY ITEM ACTIONS -->
                                     <div class="empty-item">
-                                        <div class="col-md-7 col-sm-12 btn btn-danger">
-                                            <p style="margin: 0 0 2px;" class="mb item-count">You Have {{
-                                                getCountOfItems() }} Items in your cart
+                                        <div class="btn btn-danger">
+                                            <p class="mb item-count" style="margin:0;">
+                                                You Have {{ getCountOfItems() }} Items
                                             </p>
                                         </div>
-                                        <button class="col-md-4 col-sm-12 btn btn-danger" (click)="clearCart()">Clear
+                                        <button class="btn btn-danger" (click)="clearCart()">Clear
                                             Cart</button>
                                     </div>
 
+                                    <!-- AUTH CART -->
                                     <ng-container *ngIf="auth(); else guestCart">
-                                        <div class="card mb-3" *ngFor="let item of cartItems1">
-                                            <div class="card mb-3 cart-item">
-                                                <div class="card-body p-2">
-                                                    <div class="cart-mobile">
+                                        <div class="card mb-3 cart-item" *ngFor="let item of cartItems1">
+                                            <div class="card-body p-2">
+                                                <div class="cart-mobile">
 
-                                                        <!-- LEFT: IMAGE (50%) -->
-                                                        <div class="cart-left">
-                                                            <img [src]="item.imageUrl" alt="product" class="cart-img" />
-                                                        </div>
-
-                                                        <!-- RIGHT: DETAILS (50%) -->
-                                                        <div class="cart-right">
-
-                                                            <h3 class="cart-title">{{ item.productTitle | capitalize }}
-                                                            </h3>
-
-                                                            <p class="cart-spec" *ngIf="item.size != 'NO_SIZE'">
-                                                                Size: {{ item.size }} | Color: {{ item.color }}
-                                                            </p>
-                                                            <p class="cart-spec-discount" *ngIf="item.discount > 0">
-                                                                {{ item.discount }}% OFF
-                                                            </p>
-
-                                                            <p class="cart-price">
-                                                                Price: {{ item.price | currency }}
-                                                            </p>
-                                                            <p class="cart-price">
-                                                                Total: {{ item.totalPriceDiscounted | currency }}
-                                                            </p>
-
-                                                            <!-- QUANTITY -->
-                                                            <div class="cart-qty">
-                                                                <button class="btn btn-sm btn-primary"
-                                                                    (click)="increaseQuantity(item.itemID)">+</button>
-
-                                                                <span>{{ item.quantity }}</span>
-
-                                                                <button class="btn btn-sm btn-primary"
-                                                                    (click)="decreaseQuantity(item)">-</button>
-                                                            </div>
-
-                                                            <!-- REMOVE -->
-                                                            <button class="btn btn-sm btn-danger w-100 mt-2"
-                                                                (click)="removeItem(item)">
-                                                                Remove
-                                                            </button>
-
-                                                        </div>
+                                                    <div class="cart-left">
+                                                        <img [src]="item.imageUrl" alt="product" class="cart-img" />
                                                     </div>
+
+                                                    <div class="cart-right">
+                                                        <h3 class="cart-title">{{ item.productTitle | capitalize }}</h3>
+                                                        <p class="cart-spec" *ngIf="item.size != 'NO_SIZE'">
+                                                            Size: {{ item.size }} | Color: {{ item.color }}
+                                                        </p>
+                                                        <p class="cart-spec-discount" *ngIf="item.discount > 0">
+                                                            {{ item.discount }}% OFF
+                                                        </p>
+                                                        <p class="cart-price">Price: {{ item.price | currency }}</p>
+                                                        <p class="cart-price">Total: {{ item.totalPriceDiscounted |
+                                                            currency }}</p>
+
+                                                        <div class="cart-qty">
+                                                            <button class="btn btn-sm btn-primary"
+                                                                (click)="increaseQuantity(item.itemID)">+</button>
+                                                            <span>{{ item.quantity }}</span>
+                                                            <button class="btn btn-sm btn-primary"
+                                                                (click)="decreaseQuantity(item)">-</button>
+                                                        </div>
+
+                                                        <button class="btn btn-sm btn-danger w-100 mt-2"
+                                                            (click)="removeItem(item)">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+
                                                 </div>
                                             </div>
-
                                         </div>
                                     </ng-container>
+
+                                    <!-- GUEST CART -->
                                     <ng-template #guestCart>
-                                        <div class="card mb-3" *ngFor="let item of cartItems">
-                                            <div class="card mb-3 cart-item">
-                                                <div class="card-body p-2">
-                                                    <div class="cart-mobile">
+                                        <div class="card mb-3 cart-item" *ngFor="let item of cartItems">
+                                            <div class="card-body p-2">
+                                                <div class="cart-mobile">
 
-                                                        <!-- LEFT: IMAGE (50%) -->
-                                                        <div class="cart-left">
-                                                            <img [src]="item.product.imageUrl" alt="product"
-                                                                class="cart-img" />
-                                                        </div>
-
-                                                        <!-- RIGHT: DETAILS (50%) -->
-                                                        <div class="cart-right">
-
-                                                            <h3 class="cart-title">{{ item.product.title | capitalize }}
-                                                            </h3>
-
-                                                            <p class="cart-spec" *ngIf="item.product.size != 'NO_SIZE'">
-                                                                Size: {{ item.product.size }} | Color: {{
-                                                                item.product.color }}
-                                                            </p>
-
-                                                            <p class="cart-spec-discount" *ngIf="item.product.discount > 0">
-                                                                {{ item.product.discount }}% OFF
-                                                            </p>
-
-
-                                                            <p class="cart-price">
-                                                                {{ item.product.price | currency }}
-                                                            </p>
-
-                                                            <p class="cart-price" *ngIf="item.product.discount > 0">
-                                                                Price After Discount:
-                                                                {{
-                                                                (item.product.price - (item.product.price *
-                                                                item.product.discount / 100))
-                                                                | currency }}
-                                                            </p>
-
-                                                            <!-- QUANTITY -->
-                                                            <div class="cart-qty">
-                                                                <button class="btn btn-sm btn-primary"
-                                                                    (click)="increaseQuantity(item.product.productId)">+</button>
-
-                                                                <span>{{ item.product.quantity }}</span>
-
-                                                                <button class="btn btn-sm btn-primary"
-                                                                    (click)="decreaseQuantity(item.product)">-</button>
-                                                            </div>
-
-                                                            <!-- REMOVE -->
-                                                            <button class="btn btn-sm btn-danger w-100 mt-2"
-                                                                (click)="removeFromCart(item.product)">
-                                                                Remove
-                                                            </button>
-
-                                                        </div>
+                                                    <div class="cart-left">
+                                                        <img [src]="item.product.imageUrl" alt="product"
+                                                            class="cart-img" />
                                                     </div>
+
+                                                    <div class="cart-right">
+                                                        <h3 class="cart-title">{{ item.product.title | capitalize }}
+                                                        </h3>
+                                                        <p class="cart-spec" *ngIf="item.product.size != 'NO_SIZE'">
+                                                            Size: {{ item.product.size }} | Color: {{ item.product.color
+                                                            }}
+                                                        </p>
+                                                        <p class="cart-spec-discount" *ngIf="item.product.discount > 0">
+                                                            {{ item.product.discount }}% OFF
+                                                        </p>
+                                                        <p class="cart-price">{{ item.product.price | currency }}</p>
+                                                        <p class="cart-price" *ngIf="item.product.discount > 0">
+                                                            Price After Discount: {{
+                                                            (item.product.price - (item.product.price *
+                                                            item.product.discount / 100))
+                                                            | currency
+                                                            }}
+                                                        </p>
+
+                                                        <div class="cart-qty">
+                                                            <button class="btn btn-sm btn-primary"
+                                                                (click)="increaseQuantity(item.product.productId)">+</button>
+                                                            <span>{{ item.product.quantity }}</span>
+                                                            <button class="btn btn-sm btn-primary"
+                                                                (click)="decreaseQuantity(item.product)">-</button>
+                                                        </div>
+
+                                                        <button class="btn btn-sm btn-danger w-100 mt-2"
+                                                            (click)="removeFromCart(item.product)">
+                                                            Remove
+                                                        </button>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </ng-template>
+
+                                    <!-- MOBILE CHECKOUT BUTTON -->
+                                    <button class="btn btn-success w-100 mt-3 d-lg-none" (click)="openCheckoutModal()">
+                                        Checkout
+                                    </button>
+
                                 </div>
 
-
-                                <div class="col-lg-5">
+                                <!-- RIGHT: DESKTOP CHECKOUT -->
+                                <div class="col-lg-5 d-none d-lg-block">
                                     <div class="card bg-primary text-white rounded-3">
                                         <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                                <h5 class="mb-0">Card details</h5>
-                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
-                                                    class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
-                                            </div>
-                                            <p class="small mb-2">Card type</p>
-                                            <a *ngIf="cardVendor === 'Mastercard'" class="text-white"><i
-                                                    class="fab fa-cc-mastercard fa-2x me-2"></i></a>
-                                            <a *ngIf="cardVendor === 'Visa'" class="text-white"><i
-                                                    class="fab fa-cc-visa fa-2x me-2"></i></a>
-                                            <!-- <a class="text-white"><i class="fab fa-cc-amex fa-2x me-2"></i></a>
-                                            <a class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a> -->
+                                            <h5 class="mb-3">Checkout</h5>
                                             <form [formGroup]="paymentForm" class="mt-4">
                                                 <div class="form-group">
                                                     <label class="form-label" for="cardHolderName">Card Holder
@@ -272,44 +246,152 @@
                                     </div>
                                 </div>
 
-
-
                             </ng-container>
-                            <ng-template #content>
+
+                            <!-- ================= EMPTY CART ================= -->
+                            <ng-template #emptyCart>
                                 <div class="loginReq">
                                     <div class="loginReqImg">
                                         <img src="https://m.media-amazon.com/images/G/01/cart/empty/kettle-desaturated._CB445243794_.svg"
-                                            alt="Nice Day">
+                                            alt="Empty Cart">
                                     </div>
                                     <div class="detailsReq">
                                         <h2 class="empty-cart">Your Cart is Empty</h2>
                                         <p class="product-today"><a routerLink="">Products Today</a></p>
                                         <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
-                                            class="btnLog"><a style="text-decoration: none; color: white"
-                                                routerLink="/auth" [queryParams]="{ state: 'login' }">Sign in
-                                                To Your Account</a></button>
+                                            class="btnLog">
+                                            Sign in To Your Account
+                                        </button>
                                         <button *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'register' }"
-                                            style="background-color: white;" class="btnLog"><a
-                                                style="text-decoration: none; color: black" routerLink="/auth"
-                                                [queryParams]="{ state: 'register' }">Sign
-                                                Up Now</a></button>
+                                            class="btnLog" style="background:white; color:black;">
+                                            Sign Up Now
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="loginRe">
-                                    <p>
-                                        The price and availability of items at MyShopinng.com are subject to change.
-                                        The Cart is a temporary place to store a list of your items and reflects each
-                                        item's most recent price.
-                                        Shopping Cart Learn more. Do you have a gift card or promotional code? We'll ask
-                                        you to enter your claim code
-                                        when it's time to pay.
-                                    </p>
-                                </div>
                             </ng-template>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- ================= MOBILE CHECKOUT MODAL ================= -->
+    <div class="checkout-modal" *ngIf="showCheckoutModal">
+        <div class="checkout-backdrop" (click)="closeCheckoutModal()"></div>
+        <div class="checkout-content">
+            <button class="btn-close float-end" (click)="closeCheckoutModal()"></button>
+            <h2 class="text-center mb-3">Checkout</h2>
+            <div class="card bg-primary text-white rounded-3">
+                <div class="card-body">
+                    <form [formGroup]="paymentForm">
+                        <form [formGroup]="paymentForm" class="mt-4">
+                            <div class="form-group">
+                                <label class="form-label" for="cardHolderName">Card Holder
+                                    Name</label>
+                                <input type="text" formControlName="cardHolderName" class="form-control"
+                                    placeholder="John Doe" required />
+                                <div class="text-light bg-danger m-2"
+                                    *ngIf="paymentForm.get('cardHolderName')?.invalid && (paymentForm.get('cardHolderName')?.touched || paymentForm.get('cardHolderName')?.dirty)">
+                                    Card Holder Name is required.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="cardNumber">Card Number</label>
+                                <input type="text" formControlName="cardNumber" class="form-control"
+                                    placeholder="1234-5678-9012-3456" (input)="onCardNumberInput($event)" maxlength="23"
+                                    required />
+
+                                <div class="text-light bg-danger m-2"
+                                    *ngIf="paymentForm.get('cardNumber')?.invalid && (paymentForm.get('cardNumber')?.touched || paymentForm.get('cardNumber')?.dirty)">
+                                    <ng-container *ngIf="paymentForm.get('cardNumber')?.errors?.['required']">
+                                        Card Number is required.
+                                    </ng-container>
+                                    <ng-container *ngIf="paymentForm.get('cardNumber')?.errors?.['pattern']">
+                                        Card Number must be 13-19 digits.
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="!paymentForm.get('cardNumber')?.errors?.['pattern'] && paymentForm.get('cardNumber')?.errors?.['invalidCard']">
+                                        Card Number is invalid. Please check and try again.
+                                    </ng-container>
+                                    <ng-container *ngIf="paymentForm.get('cardNumber')?.errors?.['invalidVendor']">
+                                        Card vendor not recognized. Please check the card number.
+                                    </ng-container>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label class="form-label" for="typeExp">Expiration</label>
+                                <input type="text" id="typeExp" formControlName="expirationDate" class="form-control"
+                                    placeholder="MM/YY" maxlength="5" (input)="onExpInput($event)" />
+
+
+                                <div *ngIf="paymentForm.get('expirationDate')?.touched && paymentForm.get('expirationDate')?.invalid"
+                                    class="text-light bg-danger m-2">
+                                    <div *ngIf="paymentForm.get('expirationDate')?.errors?.['required']">
+                                        Expiration Date is required.
+                                    </div>
+                                    <div *ngIf="paymentForm.get('expirationDate')?.errors?.['invalidFormat']">
+                                        Expiration Date must be in MM/YY format.
+                                    </div>
+                                    <div *ngIf="paymentForm.get('expirationDate')?.errors?.['expired']">
+                                        Expiration Date must be present or future month.
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="cvv">CVV</label>
+                                <input type="text" formControlName="cvv" class="form-control" placeholder="123"
+                                    required />
+                                <div class="text-light bg-danger m-2"
+                                    *ngIf="paymentForm.get('cvv')?.invalid && (paymentForm.get('cvv')?.touched || paymentForm.get('cvv')?.dirty)">
+                                    CVV is required and must be 3 digits.
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-info btn-block btn-lg mt-4"
+                                [disabled]="!paymentForm.valid" (click)="handleCheckout()">
+                                <div class="d-flex justify-content-between">
+                                    <span>Checkout<i class="fas fa-map-marker-alt ms-2"></i>
+                                        <i class="fas fa-long-arrow-alt-right ms-2"></i>
+                                    </span>
+                                </div>
+                            </button>
+                            <hr class="my-4">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Subtotal</p>
+                                <p *ngIf="totalpriceDiscounted != totalprice" style="text-decoration: line-through;"
+                                    class="mb-2">{{
+                                    totalprice
+                                    | currency }}</p>
+                                <p *ngIf="totalpriceDiscounted == totalprice" class="mb-2">{{
+                                    totalprice | currency }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Subtotal After Discount</p>
+                                <p class="mb-2">{{ totalpriceDiscounted | currency }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-2">Shipping</p>
+                                <p class="mb-2">{{ shipping | currency }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between mb-4">
+                                <p class="mb-2">Total (Incl. taxes)</p>
+                                <p *ngIf="totalpriceDiscounted != totalprice" class="mb-2">{{
+                                    totalpriceDiscounted + shipping | currency }}</p>
+                                <p *ngIf="totalpriceDiscounted == totalprice" class="mb-2">{{
+                                    totalprice + shipping | currency }}</p>
+                            </div>
+                        </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
