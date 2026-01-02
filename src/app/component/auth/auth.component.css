@@ -290,7 +290,97 @@ footer a {
 @media (max-width: 992px) {
   .container {
     width: 400px;
-    margin-top: 4vh;
+    margin-top: 2vh;
+  }
+  .form-container {
+    width: 100% !important;
+    position: relative !important;
+    opacity: 1 !important;
+    z-index: 5 !important;
+    transform: translateX(0) !important;
+    margin-top: 5vw;
+  }
+
+  .sign-up-container {
+    display: none;
+  }
+
+  .sign-in-container {
+    display: block;
+  }
+  .tggle {
+    display: block;
+  }
+
+  .container.right-panel-active .sign-up-container {
+    display: block;
+  }
+
+  .container.right-panel-active .sign-in-container {
+    display: none;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .toggle-button {
+    display: block;
+    margin-top: 20px;
+    background-color: #ff4b2b;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+}
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
+  border-color: red;
+}
+
+.social.facebook:hover {
+  background-color: #4a4acd;
+  color: white;
+}
+.social.google:hover {
+  background-color: #6c0909;
+  color: white;
+
+}
+.social.in:hover {
+  background-color: #4a4acd;
+  color: white;
+
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: To cover the whole screen with a translucent background */
+}
+
+.spinner-message {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: 400px;
+    margin-top: 10px;
   }
   .form-container {
     width: 100% !important;

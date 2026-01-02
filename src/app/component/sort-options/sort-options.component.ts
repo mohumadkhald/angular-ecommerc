@@ -34,7 +34,7 @@ export class SortOptionsComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getEmailsSellers();
-    this.getSubCats();
+    // this.getSubCats();
   }
 
   onSizeElementChange(event: Event): void {
@@ -81,6 +81,7 @@ export class SortOptionsComponent implements OnInit {
     this.subCateogyService.getAllSubCategories().subscribe(
       (response: any) => {
         this.subCats = response;
+        console.log('Subcategories:', this.subCats);
       },
       (error) => {
         console.error('Error getting emails of sellers:', error);

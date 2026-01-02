@@ -1,5 +1,5 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   NavigationEnd,
@@ -9,7 +9,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { Subscription } from 'rxjs';
+import { map, Observable, Subscription, tap } from 'rxjs';
 import { ExpiredSessionDialogComponent } from '../component/expired-session-dialog/expired-session-dialog.component';
 import { CategoriesService } from '../dashboard-service/categories.service';
 import { OrdersService } from '../dashboard-service/orders.service';
@@ -23,6 +23,7 @@ import {
   FontAwesomeModule,
 } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash, fas } from '@fortawesome/free-solid-svg-icons';
+import { Counts, DashboardService } from '../dashboard-service/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -63,7 +64,8 @@ export class DashboardComponent implements OnInit {
     private productService: ProductsService,
     private ordersService: OrdersService,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dashboardService: DashboardService,
   ) {
     library.addIcons(faEye, faEyeSlash);
   }
@@ -82,12 +84,20 @@ export class DashboardComponent implements OnInit {
                 event.urlAfterRedirects === '/';
             }
           });
+          this.dashboardService.loadCounts();
 
-          this.fetchUserCount();
-          this.fetchCategoryCount();
-          this.fetchSubCategoryCount();
-          this.fetchProductCount();
-          this.fetchOrdersCount();
+          // this.fetchUserCount();
+          // this.usersService.getUsersCount().subscribe((count) => {
+          //   this.userCount = count;
+          // });
+
+          this.dashboardService.counts$.subscribe((counts: Counts) => {
+            this.userCount = counts.users;
+            this.subCatsCount = counts.subCategories;
+            this.prodsCount = counts.products;
+            this.catsCount = counts.categories;
+            this.ordersCount = counts.orders;
+          });
         }
       }
     );
@@ -101,72 +111,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  fetchUserCount() {
-    this.usersService.getUsers(0, 5).subscribe(
-      (users) => {
-        this.userCount = users.totalElements;
-        this.totalUsers = users.content;
-      },
-      (error) => {}
-    );
-  }
-  fetchCategoryCount() {
-    const token = this.authService.getToken(); // Assuming you have a method to get the token
-    this.categoriesService.getAllCategories().subscribe(
-      (cats) => {
-        this.catsCount = cats.length;
-        this.categories = cats;
-      },
-      (error) => {}
-    );
-  }
-
-  fetchSubCategoryCount() {
-    const token = this.authService.getToken(); // Assuming you have a method to get the token
-    this.SubCategoriesService.getAllSubCategories().subscribe(
-      (subCats) => {
-        this.subCatsCount = subCats.length;
-        this.subCats = subCats;
-      },
-      (error) => {}
-    );
-  }
-
-  fetchProductCount() {
-    this.productService
-      .getAllProducts(
-        'createdAt',
-        'desc',
-        0,
-        999999,
-        [],
-        [],
-        0,
-        5,
-        '',
-        '',
-        '',
-        ''
-      )
-      .subscribe(
-        (products) => {
-          this.prodsCount = products.totalElements;
-          this.products = products.content;
-        },
-        (error) => {}
-      );
-  }
-
-  fetchOrdersCount() {
-    const token = this.authService.getToken(); // Assuming you have a method to get the token
-    this.ordersService.getAllOrders().subscribe(
-      (orders) => {
-        this.ordersCount = orders.length;
-        this.orders = orders;
-      },
-      (error) => {}
-    );
-  }
 
   auth(): boolean {
     return this.authService.isLoggedIn();

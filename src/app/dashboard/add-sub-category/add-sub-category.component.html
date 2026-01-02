@@ -22,7 +22,21 @@
                 </div>
             </div>
         </div>
+        <!-- SubCategory Description -->
+        <div class="row justify-content-center mt-2">
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <textarea placeholder="Enter SubCategory Description" id="description" formControlName="description"
+                        rows="3"
+                        [ngClass]="{'is-invalid': categoryForm.get('description')?.invalid && (categoryForm.get('description')?.touched || categoryForm.get('description')?.dirty)}"
+                        class="form-control"></textarea>
+                    <div *ngIf="formErrors['description']" class="text-danger">
+                        {{ formErrors['description'] }}
+                    </div>
 
+                </div>
+            </div>
+        </div>
         <!-- SubCategory Category -->
         <div class="row justify-content-center mt-2">
             <div class="col-12 col-md-6">
@@ -33,6 +47,9 @@
                             <option *ngFor="let category of categories" value="{{ category.categoryId }}">{{
                                 category.categoryTitle }}</option>
                         </select>
+                        <div *ngIf="formErrors['categoryId']" class="text-danger">
+                            {{ formErrors['categoryId'] }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -53,10 +70,12 @@
         <!-- Submit Button -->
         <div class="row justify-content-center">
             <div class="col-12 col-md-6">
-                <button *ngIf="!subCat" type="submit" [disabled]="categoryForm.invalid" class="btn btn1 btn-primary w-100">Add
+                <button *ngIf="!subCat" type="submit" [disabled]="categoryForm.invalid"
+                    class="btn btn1 btn-primary w-100">Add
                     Sub_Category
                 </button>
-                <button *ngIf="subCat" type="submit" [disabled]="categoryForm.invalid" class="btn btn1 btn-primary w-100">Update
+                <button *ngIf="subCat" type="submit" [disabled]="categoryForm.invalid"
+                    class="btn btn1 btn-primary w-100">Update
                     Sub_Category
                 </button>
             </div>

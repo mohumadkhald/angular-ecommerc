@@ -117,11 +117,11 @@ export class ProfileAdminComponent {
   }
 
   uploadImage(file: File) {
-    this.authService.changePhoto(file,this.user.imageUrl).subscribe(
+    this.authService.changePhoto(file, this.user.imageUrl).subscribe(
       (response) => {
         this.toastService.add('Image updated successfully', 'success');
         // this.user.imageUrl = response.message; // Update user image URL
-        console.log(this.user.imageUrl)
+        console.log(this.user.imageUrl);
 
         // REFRESH PROFILE HERE
         this.userService.refreshProfile().subscribe((updated) => {
@@ -188,9 +188,12 @@ export class ProfileAdminComponent {
       dialogContainer.style.display = 'block'; // Show after styling
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      // window.location.reload()
-      this.loadUserProfile();
+    dialogRef.afterClosed().subscribe((passwordSet: boolean) => {
+      if (passwordSet) {
+        this.user.needPassword = false; // 🔥 instant UI update
+      }
+
+      this.loadUserProfile(); // optional sync with backend
     });
   }
 

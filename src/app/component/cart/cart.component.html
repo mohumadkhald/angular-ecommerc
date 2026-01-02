@@ -1,4 +1,4 @@
-<section class="h-100 h-custom mt-4" style="background-color: #eee;">
+<section class="h-100 h-custom mt-1" style="background-color: #eee;">
     <div class="container h-100">
         <div class="row d-flex h-100">
             <div class="col">
@@ -37,13 +37,14 @@
                                                         <!-- RIGHT: DETAILS (50%) -->
                                                         <div class="cart-right">
 
-                                                            <h3 class="cart-title">{{ item.productTitle | capitalize }}</h3>
+                                                            <h3 class="cart-title">{{ item.productTitle | capitalize }}
+                                                            </h3>
 
                                                             <p class="cart-spec" *ngIf="item.size != 'NO_SIZE'">
                                                                 Size: {{ item.size }} | Color: {{ item.color }}
                                                             </p>
                                                             <p class="cart-spec-discount" *ngIf="item.discount > 0">
-                                                            {{ item.discount }}% OFF
+                                                                {{ item.discount }}% OFF
                                                             </p>
 
                                                             <p class="cart-price">
@@ -92,16 +93,18 @@
                                                         <!-- RIGHT: DETAILS (50%) -->
                                                         <div class="cart-right">
 
-                                                            <h3 class="cart-title">{{ item.product.title | capitalize }}</h3>
+                                                            <h3 class="cart-title">{{ item.product.title | capitalize }}
+                                                            </h3>
 
                                                             <p class="cart-spec" *ngIf="item.product.size != 'NO_SIZE'">
                                                                 Size: {{ item.product.size }} | Color: {{
                                                                 item.product.color }}
                                                             </p>
 
-                                                            <p class="cart-spec" *ngIf="item.product.discount > 0">
-                                                                Discount: {{ item.product.discount }}% OFF
+                                                            <p class="cart-spec-discount" *ngIf="item.product.discount > 0">
+                                                                {{ item.product.discount }}% OFF
                                                             </p>
+
 
                                                             <p class="cart-price">
                                                                 {{ item.product.price | currency }}
@@ -242,7 +245,8 @@
                                                 <hr class="my-4">
                                                 <div class="d-flex justify-content-between">
                                                     <p class="mb-2">Subtotal</p>
-                                                    <p style="text-decoration: line-through;" class="mb-2">{{
+                                                    <p *ngIf="totalpriceDiscounted != totalprice"
+                                                        style="text-decoration: line-through;" class="mb-2">{{
                                                         totalprice
                                                         | currency }}</p>
                                                     <p *ngIf="totalpriceDiscounted == totalprice" class="mb-2">{{

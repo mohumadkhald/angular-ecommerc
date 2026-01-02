@@ -18,7 +18,7 @@ import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../interface/product';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
-import { StarRatingComponent } from "../star-rating/star-rating.component";
+import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-page-details',
@@ -48,6 +48,14 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
 
   showNotFound = false;
 
+  @ViewChild('lens') lensRef!: ElementRef;
+  @ViewChild('mainImage') imageRef!: ElementRef;
+
+  isHovering = false;
+  isMobile = false;
+  lensPosition = '0% 0%';
+  zoomLevel = 2.5; // 250%
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -67,6 +75,7 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
     this.route.params
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ id }) => this.loadProduct(+id));
+    this.isMobile = window.innerWidth <= 768;
   }
 
   ngOnDestroy(): void {
@@ -146,7 +155,7 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
     modalRef.result
       .then((res) => {
         if (res === 'added') {
-          this.toastService.add('Product added to cart', 'success');
+          this.toastService.add(`Product ${product.productTitle} added to cart`, 'success');
         }
       })
       .catch(() => {});
@@ -163,14 +172,16 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
       quantity: this.quantity,
       price: product.price,
       color: this.selectedColor || 'no_color',
-      size: this.selectedSize || 'no_size',
+      size: this.selectedSize || 'NO_SIZE',
+      discount: product.discountPercent,
+      discountedPrice: product.discountPrice,
     };
 
     this.authService.isLoggedIn()
       ? this.cartServerService.addToCart(payload)
       : this.cartService.addToCart(payload);
 
-    this.toastService.add('Product added to cart', 'success');
+    this.toastService.add(`Product ${product.productTitle} added to cart`, 'success');
   }
 
   // validateQuantity(): boolean {
@@ -180,7 +191,6 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
   //   this.maxQuantity = variation?.quantity || 0;
   //   return this.quantity > 0 && this.quantity <= this.maxQuantity;
   // }
-
 
   validateQuantity(): boolean {
     if (this.productItem.productVariations[0]?.color === 'no_color') {
@@ -231,14 +241,10 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/products', id]);
   }
 
-  @ViewChild('lens') lensRef!: ElementRef<HTMLDivElement>;
-  @ViewChild('mainImage') imageRef!: ElementRef<HTMLImageElement>;
-
-  isHovering = false;
-  lensPosition = '0% 0%';
-
   toggleLens(state: boolean) {
-    this.isHovering = state;
+    if (!this.isMobile) {
+      this.isHovering = state;
+    }
   }
 
   onMouseMove(event: MouseEvent) {
@@ -250,25 +256,32 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
 
     const lensRadius = lens.offsetWidth / 2;
 
-    // Cursor relative to image
-    let x = event.clientX - rect.left;
-    let y = event.clientY - rect.top;
+    // 🔴 RAW cursor (for background)
+    let rawX = event.clientX - rect.left;
+    let rawY = event.clientY - rect.top;
 
-    // Clamp lens inside image
-    x = Math.max(lensRadius, Math.min(x, rect.width - lensRadius));
-    y = Math.max(lensRadius, Math.min(y, rect.height - lensRadius));
+    // 🟢 CLAMPED cursor (for lens movement)
+    let x = Math.max(lensRadius, Math.min(rawX, rect.width - lensRadius));
+    let y = Math.max(lensRadius, Math.min(rawY, rect.height - lensRadius));
 
     // Move lens
     lens.style.left = `${x - lensRadius}px`;
     lens.style.top = `${y - lensRadius}px`;
 
-    // 🔥 250% zoom mapping
-    const bgX = (x / rect.width) * 100;
-    const bgY = (y / rect.height) * 100;
+    // 🔥 Background uses RAW values
+    const bgX = Math.max(0, Math.min(100, (rawX / rect.width) * 100));
+    const bgY = Math.max(0, Math.min(100, (rawY / rect.height) * 100));
 
     this.lensPosition = `${bgX}% ${bgY}%`;
   }
 
+  mobileZoom = false;
+
+  toggleMobileZoom() {
+    if (this.isMobile) {
+      this.mobileZoom = !this.mobileZoom;
+    }
+  }
   getSize(size: string, color: string) {
     this.selectedSize = size;
     this.selectedColor = color;

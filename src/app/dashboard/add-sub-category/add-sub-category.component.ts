@@ -42,6 +42,10 @@ export class AddSubCategoryComponent {
         this.subCat?.name ?? '',  // Default to an empty string if subCat or subCat.name is missing
         [Validators.required, Validators.pattern(/^(?!\s).*$/)],
       ],
+      description: [
+        this.subCat?.description ?? '',  // Default to an empty string if subCat or subCat.description is missing
+        [Validators.required, Validators.pattern(/^(?!\s).*$/)],
+      ],
       categoryId: [
         this.subCat?.categoryId ?? '',  // Default to an empty string if subCat or subCat.categoryId is missing
         [Validators.required, Validators.pattern(/^(?!\s).*$/)],
@@ -76,6 +80,7 @@ export class AddSubCategoryComponent {
 
     const formData = new FormData();
     formData.append('name', this.categoryForm.get('name')?.value);
+    formData.append('description', this.categoryForm.get('description')?.value);
     formData.append('categoryId', this.categoryForm.get('categoryId')?.value);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -139,8 +144,10 @@ export class AddSubCategoryComponent {
     switch (field) {
       case 'categoryTitle':
         return 'This field cannot be empty or start with a space.';
-      case 'categoryDescription':
+      case 'description':
         return 'This field is required.';
+      case 'categoryId':
+        return 'Please select a category.';
       default:
         return 'This field is required.';
     }

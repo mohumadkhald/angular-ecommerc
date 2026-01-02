@@ -8,6 +8,7 @@ import { ConfigService } from './config.service';
   providedIn: 'root',
 })
 export class CategoryService {
+
   private apiUrl: string;
 
   getSubCategoriesByCategoryTitle(categoryTitle: string): Observable<any> {

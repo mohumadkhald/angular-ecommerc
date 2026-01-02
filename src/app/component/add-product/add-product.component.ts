@@ -106,10 +106,18 @@ export class AddProductComponent implements OnInit {
       this.productService.addProduct(formData).subscribe(
         () => {
           this.resetForm();
+
+          // notify parent FIRST
           this.productAdded.emit();
-          this.activeModal.close('added');
+
+          // close modal after short delay (UX smooth)
+          setTimeout(() => {
+            this.activeModal.close('added');
+          }, 300);
         },
-        (error) => console.log('Error adding product:', error)
+        (error) => {
+          console.log('Error adding product:', error);
+        }
       );
     }
   }

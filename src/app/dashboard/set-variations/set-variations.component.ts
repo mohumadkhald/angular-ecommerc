@@ -15,90 +15,82 @@ import { Variation } from '../../interface/variation';
 export class SetVariationsComponent {
   @Input() productId!: number;
   @Input() color!: string;
-  @Input() size!: string;
   @Input() lastQuantity!: number;
   @Output() variationAdded = new EventEmitter<void>();
 
-  sizes: string[] = ['SMALL', 'MEDIUM', 'LARGE', 'EXTRA_LARGE'];
-  colors: string[] = ['red', 'blue', 'green', 'black', 'white'];
+  sizes = ['SMALL', 'MEDIUM', 'LARGE', 'EXTRA_LARGE'];
+  colors = ['red', 'blue', 'green', 'black', 'white'];
 
-  variations: Variation[] = [{ size: '', color: '', quantity: 0 }];
+  variations: Variation[] = [];
   formSubmitted = false;
-  serverErrors: any = {}; // To store server-side error messages
+  serverErrors: Record<string, string> = {};
 
   constructor(
     private productService: ProductsService,
     public activeModal: NgbActiveModal
   ) {}
+
   ngOnInit() {
-    this.variations.forEach((v) => (v.quantity = this.lastQuantity));
-  }
-
-  addVariation() {
-    this.variations.push({ size: '', color: '', quantity: 0 });
-  }
-
-  removeVariation(index: number) {
-    if (this.variations.length > 1) {
-      this.variations.splice(index, 1);
+    if (this.color === 'no_color') {
+      this.variations = [
+        {
+          size: '',
+          color: '',
+          quantity: this.lastQuantity || 1,
+        },
+      ];
+    } else {
+      this.variations = [
+        {
+          size: '',
+          color: '',
+          quantity: 0,
+        },
+      ];
     }
   }
 
-  // onImageSelected(event: any, index: number) {
-  //   const file = event.target.files[0] as File;
-  //   if (file) {
-  //     this.variations[index].image = file;
-  //   }
-  // }
+  trackByIndex(index: number) {
+    return index;
+  }
+
+  addVariation() {
+    this.variations.push({ size: '', color: '', quantity: 1 });
+  }
+
+  removeVariation(index: number) {
+    this.variations.splice(index, 1);
+  }
 
   saveVariations(form: NgForm) {
     this.formSubmitted = true;
-    this.serverErrors = {}; // Clear previous errors
+    if (form.invalid) return;
 
-    // Check if all variations have an image
-    // if (this.variations.some(v => !v.image)) {
-    //   return; // Prevent form submission if any variation is missing an image
-    // }
+    const specs = this.variations.map((v) => ({
+      size: this.color === 'no_color' ? 'NO_SIZE' : v.size,
+      color: this.color === 'no_color' ? 'no_color' : v.color,
+      quantity: v.quantity,
+    }));
 
     const formData = new FormData();
-
-    // Append specs data as JSON
-    formData.append(
-      'specs',
-      JSON.stringify(
-        this.variations.map((v) => ({
-          size: v.size || 'NO_SIZE',
-          color: v.color || 'no_color',
-          quantity: v.quantity,
-        }))
-      )
-    );
-
-    // Append images data
-    // this.variations.forEach((variation, i) => {
-    //   if (variation.image) {
-    //     formData.append(`images[${i}]`, variation.image, variation.image.name);
-    //   }
-    // });
+    formData.append('specs', JSON.stringify(specs));
 
     this.productService
       .updateProductVariations(this.productId, formData)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: () => {
           this.variationAdded.emit();
           this.activeModal.close('added');
         },
-        (error) => {
-          if (error.status === 400 && error.error) {
-            this.serverErrors = error.error;
-          } else {
-            console.error('An unexpected error occurred:', error);
+        error: (err) => {
+          if (err.status === 400) {
+            this.serverErrors = err.error;
           }
-        }
-      );
+        },
+      });
   }
 
   onClose() {
-    this.activeModal.dismiss('cancel');
+    this.activeModal.dismiss();
   }
 }

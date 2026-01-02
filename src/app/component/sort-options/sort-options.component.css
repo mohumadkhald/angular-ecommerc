@@ -76,7 +76,7 @@ select {
   select {
     font-size: 10px;
     flex: 1; /* Make each select element take equal space */
-    max-width: 31%; /* Limit the width to fit two per row */
+    max-width: 49%; /* Limit the width to fit two per row */
     margin: 0; /* Remove extra margins */
     padding: 10px;
   }
@@ -95,7 +95,7 @@ select {
   select {
     font-size: 10px;
     flex: 1; /* Make each select element take equal space */
-    max-width: 80%; /* Limit the width to fit two per row */
+    max-width: 48%; /* Limit the width to fit two per row */
     margin: 0; /* Remove extra margins */
   }
 }
@@ -104,14 +104,14 @@ select {
 /* Media query for screens between 400px and 600px */
 @media screen and (min-width: 200px) and (max-width: 300px) {
   .dropdown-container {
-    flex-direction: column; /* Align elements in a row */
+    flex-direction: row; /* Align elements in a row */
     flex-wrap: wrap; /* Allow wrapping if needed */
     gap: 10px;
   }
 
   select {
     font-size: 10px;
-    max-width: 60%; /* Limit the width to fit two per row */
+    max-width: 48%; /* Limit the width to fit two per row */
     margin: 0; /* Remove extra margins */
   }
 }

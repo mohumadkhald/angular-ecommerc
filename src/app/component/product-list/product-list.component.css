@@ -263,11 +263,12 @@ button:hover {
 }
 
 .sidebar {
-  width: 240px; /* Adjust width as needed */
+  width: fit-content; /* Adjust width as needed */
   padding: 20px;
   /* margin: 10px; */
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 }
 
 .content-wrapper {
@@ -540,7 +541,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   }
 
 }
-@media (max-width: 600px) {
+@media (max-width: 655px) {
   .sidebar {
     width: 50%;
     display: none;

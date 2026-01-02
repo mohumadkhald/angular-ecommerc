@@ -54,7 +54,7 @@ export class ModelFilterComponent {
 
   setActiveSub(subName: string): void {
     this.activeSub = subName;
-    this.dialogRef.close();
+    this.dialogRef.close(this.activeSub);
   }
   onFilterChange(): void {
     // Update query params with availability filters
@@ -89,8 +89,9 @@ export class ModelFilterComponent {
   //   this.dialogRef.close({ filters: { colors: this.filters.colors } });
   // }
 
-  onColorToggle(color: string, event: Event): void {
+  onColorToggle(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const color = input.value;
 
     if (input.checked) {
       if (!this.filters.colors.includes(color)) {
@@ -109,7 +110,7 @@ export class ModelFilterComponent {
     });
 
     this.dialogRef.close({
-      filters: { sizes: this.filters.sizes },
+      filters: { colors: this.filters.colors },
     });
   }
 

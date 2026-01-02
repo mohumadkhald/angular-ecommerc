@@ -56,7 +56,7 @@
         <div class="color-options">
             <label class="color-swatch" *ngFor="let color of colorOptions">
                 <input type="checkbox" [checked]="filters.colors.includes(color)"
-                    (change)="onColorToggle(color, $event)">
+                    (change)="onColorToggle($event)" value="{{color}}">
                 <div class="color-indicator" [ngStyle]="{'background': color}">
                 </div>
             </label>

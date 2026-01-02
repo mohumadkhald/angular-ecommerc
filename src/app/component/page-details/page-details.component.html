@@ -3,35 +3,34 @@
     <!-- Breadcrumb -->
     <nav class="breadcrumb">
         <span routerLink="/">Home</span> ›
-            <span routerLink="/categories/{{productItem.subCategory.categoryName}}">
-                {{productItem.subCategory.categoryName}}
-            </span> ›
-            <span routerLink="/categories/{{productItem.subCategory.categoryName}}/{{productItem.subCategory.name}}">
-                {{productItem.subCategory.name}}
-            </span> ›
+        <span routerLink="/categories/{{productItem.subCategory.categoryName}}">
+            {{productItem.subCategory.categoryName}}
+        </span> ›
+        <span routerLink="/categories/{{productItem.subCategory.categoryName}}/{{productItem.subCategory.name}}">
+            {{productItem.subCategory.name}}
+        </span> ›
         <span>{{ productItem.productTitle }}</span>
     </nav>
 
     <div class="product-main">
 
-        <!-- IMAGE SECTION -->
         <section class="gallery">
             <div class="thumbs">
                 <img *ngFor="let img of productItem.imageUrls" [src]="img" (mouseenter)="hoverImage(img, 0)"
-                    [class.active]="img === selectedImage">
+                    [class.active]="img === selectedImage" />
             </div>
-            <div class="image-view" (mousemove)="onMouseMove($event)" (mouseenter)="toggleLens(true)"
-                (mouseleave)="toggleLens(false)">
 
-                <img #mainImage [src]="selectedImage" alt="Product Image" />
+            <div class="image-view" (mousemove)="!isMobile && onMouseMove($event)" (mouseenter)="toggleLens(true)"
+                (mouseleave)="toggleLens(false)" (click)="toggleMobileZoom()">
+                <img #mainImage [src]="selectedImage" [class.mobile-zoom]="mobileZoom && isMobile" />
 
-                <div #lens class="lens" *ngIf="isHovering" [style.backgroundImage]="'url(' + selectedImage + ')'"
-                    [style.backgroundPosition]="lensPosition">
+                <!-- 🔍 Desktop Lens -->
+                <div #lens class="lens" *ngIf="isHovering && !isMobile"
+                    [style.backgroundImage]="'url(' + selectedImage + ')'" [style.backgroundPosition]="lensPosition">
                 </div>
-
             </div>
-
         </section>
+
 
         <!-- INFO SECTION -->
         <section class="info">
@@ -59,7 +58,7 @@
 
             <!-- Variations -->
             <div *ngIf="productItem.productVariations[0]?.color !== 'no_color'" class="variants">
-                <h4>Select Variant</h4>
+                <h4 class="text-danger">Select Variant</h4>
                 <button *ngFor="let v of productItem.productVariations" (click)="getSize(v.size, v.color)"
                     [disabled]="v.quantity === 0" [class.selected]="
      selectedSize=== v.size &&
@@ -77,7 +76,8 @@
             <div *ngIf="!validateQuantity() && selectedColor" class="error text-danger">
                 Quantity exceeds available stock ({{ maxQuantity }} available).
             </div>
-            <div *ngIf="!validateQuantity() && productItem.productVariations[0]?.color == 'no_color'" class="error text-danger">
+            <div *ngIf="!validateQuantity() && productItem.productVariations[0]?.color == 'no_color'"
+                class="error text-danger">
                 Quantity exceeds available stock ({{ maxQuantity }} available).
             </div>
             <!-- Buttons -->

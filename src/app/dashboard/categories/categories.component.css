@@ -1,10 +1,166 @@
-.main-table th, .main-table td {
-    vertical-align: middle;
+/* =====================================================
+   BASE TABLE STYLE (ALL SCREENS)
+===================================================== */
+.main-table {
+  width: 100%;
+  border-collapse: collapse;
 }
-.btn-sm {
-    font-size: 0.875rem;
-    padding: 0.25rem 0.5rem;
+
+.main-table th,
+.main-table td {
+  vertical-align: middle;
+  text-align: center;
 }
+
+.main-table th {
+  background-color: #212529;
+  color: #fff;
+}
+
+.main-table td {
+  font-size: 0.95rem;
+}
+
 .table-responsive {
-    margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-sm {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.55rem;
+}
+
+/* =====================================================
+   IMAGE (CATEGORIES / SUBCATEGORIES)
+===================================================== */
+.image-wrapper {
+  display: inline-block;
+  text-align: center;
+}
+
+.image-wrapper img {
+  width: 120px;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.change-image-btn {
+  width: 100%;
+  margin-top: 6px;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.main-table tr:hover .change-image-btn {
+  visibility: visible;
+}
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+.pagination {
+  cursor: pointer;
+}
+
+.pagination .page-link {
+  font-size: 0.9rem;
+}
+
+/* =====================================================
+   FIX BOOTSTRAP RESPONSIVE TABLE
+===================================================== */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: visible !important;
+  }
+}
+
+/* =====================================================
+   SMALL SCREENS (2 ITEMS PER ROW)
+===================================================== */
+@media (max-width: 768px) {
+  .main-table thead {
+    display: none;
+  }
+
+  .main-table,
+  .main-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .main-table tbody {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 🔥 TWO PER ROW */
+    gap: 12px;
+  }
+
+  .main-table tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    transition: box-shadow 0.2s ease-in-out;
+  }
+
+  .main-table tr:hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .main-table td {
+    display: block;
+    border: none;
+    padding: 4px 0;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .main-table td:last-child {
+    margin-top: 8px;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+
+  .change-image-btn {
+    visibility: visible;
+  }
+}
+
+/* =====================================================
+   VERY SMALL PHONES (1 ITEM PER ROW)
+===================================================== */
+@media (max-width: 400px) {
+  .main-table tbody {
+    grid-template-columns: 1fr;
+  }
+
+  .image-wrapper img {
+    width: 90px;
+  }
+}
+
+/* =====================================================
+   EXTRA SMALL PAGINATION
+===================================================== */
+@media (max-width: 576px) {
+  .pagination {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pagination .page-link {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
 }

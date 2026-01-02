@@ -10,7 +10,8 @@
             <!-- Category Title -->
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <input placeholder="Enter Category Title" id="categoryTitle" formControlName="categoryTitle" type="text"
+                    <input placeholder="Enter Category Title" id="categoryTitle" formControlName="categoryTitle"
+                        type="text"
                         [ngClass]="{'is-invalid': categoryForm.get('categoryTitle')?.invalid && (categoryForm.get('categoryTitle')?.touched || categoryForm.get('categoryTitle')?.dirty)}"
                         class="form-control" />
                     <div *ngIf="formErrors['categoryTitle']" class="text-danger">
@@ -22,8 +23,22 @@
                 </div>
             </div>
         </div>
-        <!-- Category Image -->
+        <!-- Category Description -->
         <div class="row justify-content-center mt-2">
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <textarea placeholder="Enter Category Description" id="description" formControlName="description"
+                        rows="3"
+                        [ngClass]="{'is-invalid': categoryForm.get('description')?.invalid && (categoryForm.get('description')?.touched || categoryForm.get('description')?.dirty)}"
+                        class="form-control"></textarea>
+                    <div *ngIf="formErrors['description']" class="text-danger">
+                        {{ formErrors['description'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Category Image -->
+        <div *ngIf="!cat" class="row justify-content-center mt-2">
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     <input id="image" type="file" (change)="onFileChange($event)" class="form-control-file" />
@@ -37,8 +52,10 @@
         <!-- Submit Button -->
         <div class="row justify-content-center">
             <div class="col-12 col-md-6">
-                <button *ngIf="!cat" type="submit" [disabled]="categoryForm.invalid" class="btn btn1 btn-primary w-100">Add Category</button>
-                <button *ngIf="cat" type="submit" [disabled]="categoryForm.invalid" class="btn btn1 btn-primary w-100">Update Category</button>
+                <button *ngIf="!cat" type="submit" [disabled]="categoryForm.invalid"
+                    class="btn btn1 btn-primary w-100">Add Category</button>
+                <button *ngIf="cat" type="submit" [disabled]="categoryForm.invalid"
+                    class="btn btn1 btn-primary w-100">Update Category</button>
             </div>
         </div>
     </form>

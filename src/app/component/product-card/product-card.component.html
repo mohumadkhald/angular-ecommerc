@@ -9,7 +9,7 @@
       {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
     </div>
   </div>
-  <h2 style="cursor: pointer;" (click)="redirectToDetails(product.productId)" class="product-title text-start m-2">
+  <h2 style="cursor: pointer;" (click)="redirectToDetails(product.productId)" class="product-title text-start">
     {{ product.productTitle | capitalize }}
   </h2>
   <div *ngIf="submitted && quantity <= 0" class="err-q text-danger">

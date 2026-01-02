@@ -45,8 +45,6 @@
 
 .image-view {
   position: relative;
-  overflow: hidden;
-  background: #fafafa;
 }
 
 .image-view img {
@@ -55,7 +53,7 @@
   object-fit: contain;
 }
 
-/* 🔍 250% ZOOM LENS */
+/* 🔍 Lens */
 .lens {
   position: absolute;
   width: 160px;
@@ -65,9 +63,8 @@
   pointer-events: none;
 
   background-repeat: no-repeat;
-  background-size: 300% 300%; /* ✅ FIXED ZOOM */
+  background-size: 300% 300%; /* matches zoomLevel */
 }
-
 
 
 /* ============ INFO SECTION ============ */
@@ -245,6 +242,14 @@
 
   .actions {
     flex-direction: column;
+  }
+    .image-view img {
+    transition: transform 0.3s ease;
+  }
+
+  .image-view img.mobile-zoom {
+    transform: scale(4);
+    cursor: zoom-out;
   }
 }
 /* ===============================

@@ -10,7 +10,6 @@ import { ConfigService } from '../service/config.service';
   providedIn: 'root',
 })
 export class ProductsService {
-
   private apiUrl: string;
   private token = this.authService.getToken();
 
@@ -96,13 +95,13 @@ export class ProductsService {
     });
   }
 
-  addProduct(product: any, token: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
+  addProduct(product: FormData): Observable<any> {
 
-    return this.http.post(`${this.apiUrl}/products`, product, { headers });
+    return this.http.post(`${this.apiUrl}/products`, product,);
+  }
+
+  editProduct(product: FormData, prodId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/products/${prodId}`, product, {});
   }
 
   updateProductVariations(
@@ -133,11 +132,7 @@ export class ProductsService {
     return this.http.get<any>(`${this.apiUrl}/products/${_catId}/emails`);
   }
 
-
   private productCache$?: Observable<any>;
-
-
-
 
   changePhoto(title: string, image: File, url: string): Observable<any> {
     const formData = new FormData();

@@ -38,8 +38,8 @@
       <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
         <div class="small" style="font-weight: bolder;">
           <div class="hello">Hello, </div>
-          <div *ngIf="!auth();" routerLink="/auth" [queryParams]="{ state: 'login' }" (mouseenter)="toggleMenu(true)" (click)="toggleMenu(false)"
-            class="signin no-login">
+          <div *ngIf="!auth();" routerLink="/auth" [queryParams]="{ state: 'login' }" (mouseenter)="toggleMenu(true)"
+            (click)="toggleMenu(false)" class="signin no-login">
             Sign in
           </div>
           <div class="signin user" (click)="toggleMenu(true)" (touchend)="toggleMenu(false)">
@@ -56,7 +56,8 @@
         </div>
         <div class="dropdown-menu" *ngIf="menuVisible">
           <div class="dropdown-content">
-            <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'login' }"><a>Login</a></div>
+            <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'login' }">
+              <a>Login</a></div>
             <!-- <div *ngIf="!auth();" class="dropdown-item" routerLink="/auth" [queryParams]="{ state: 'register' }"><a>Register</a></div> -->
             <div class="dropdown-item" *ngIf='auth() && role=="ADMIN";' routerLink="/dashboard">Dashboard</div>
             <div *ngIf="auth()" class="dropdown-item"><a routerLink="/user/profile">Account</a></div>
@@ -89,7 +90,7 @@
       </div>
       <div class="xshop">
         <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
-          (click)="saveImg(category.img)" *ngFor="let category of categories">
+          *ngFor="let category of categories">
           {{ category.categoryTitle | capitalize }}
         </a>
       </div>

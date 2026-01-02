@@ -103,7 +103,7 @@ export class SetFirstPasswordComponent {
           );
           this.successMessage = response.message;
           localStorage.setItem('newUser', 'false');
-          this.dialogRef.close(); // Close the dialog only on success
+          this.dialogRef.close(true); // Close the dialog only on success
         },
         (error) => {
           console.error('Error setting password:', error);

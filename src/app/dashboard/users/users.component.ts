@@ -19,6 +19,10 @@ import { Subscription } from 'rxjs';
   styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit, OnDestroy {
+  edit(user: any) {
+    // Implement edit functionality here
+    console.log('Edit user:', user);
+  }
   users: any[] = [];
   token: any = '';
   currentPage = 1;
@@ -50,27 +54,17 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   fetchUsers(page: number = 0, pageSize: number = 10): void {
-    this.usersService.getUsers(page, pageSize).subscribe(
-      (data) => {
-        this.dashboardComponent.fetchUserCount(); // Update the user count
-        this.users = data.content;
-        this.currentPage = data.pageable.pageNumber + 1;
-        this.totalPages = Array.from(
-          { length: data.totalPages },
-          (_, i) => i + 1
-        );
-      },
-      (error) => {
-      }
-    );
+    this.usersService.getUsers(page, pageSize).subscribe((res) => {
+      this.users = res.content;
+    });
   }
-  deleteUser(userId: number): void {
+  deleteUser(userId: number): void {  
     if (confirm('Are you sure you want to delete this user?')) {
       this.usersService.deleteUser(userId).subscribe(
         () => {
           // Filter out the deleted user from the array
           this.users = this.users.filter((user) => user.id !== userId);
-          this.dashboardComponent.fetchUserCount(); // Update the user count
+          // this.dashboardComponent.fetchUserCount(); // Update the user count
           this.toastService.add('User Deleted successfully', 'success');
         },
         (error) => {}
@@ -90,7 +84,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     modalRef.componentInstance.userAdded.subscribe(() => {
       this.fetchUsers(this.currentPage - 1); // Refresh the users list
-      this.dashboardComponent.fetchUserCount(); // Update the user count
+      // this.dashboardComponent.fetchUserCount(); // Update the user count
     });
 
     modalRef.result.then(

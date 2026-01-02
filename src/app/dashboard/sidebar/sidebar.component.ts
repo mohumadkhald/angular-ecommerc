@@ -1,5 +1,17 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  RouterLink,
+  RouterLinkActive,
+  Router,
+  ActivatedRoute,
+  NavigationEnd,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,19 +23,26 @@ import { ProductCardComponent } from '../../component/product-card/product-card.
 import { PaginatedResponse, Product } from '../../interface/product';
 import { CategoryService } from '../../service/category.service';
 import { ToastService } from '../../service/toast.service';
-import { CustomRangeSliderComponent } from "../../component/custom-range-slider/custom-range-slider.component";
+import { CustomRangeSliderComponent } from '../../component/custom-range-slider/custom-range-slider.component';
 import { ProductsService } from '../../dashboard-service/products.service';
 import { filter } from 'rxjs/operators';
+import { UsersService } from '../../dashboard-service/users.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule, FormsModule, CustomRangeSliderComponent],
-templateUrl: './sidebar.component.html',
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    CommonModule,
+    FormsModule,
+    CustomRangeSliderComponent,
+  ],
+  templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
-  showFilter:boolean = false
+  showFilter: boolean = false;
   currentSubCategoryImage: any;
   openSubLists: { [key: string]: boolean } = {};
   // @ViewChild('slider') slider!: ElementRef;
@@ -61,17 +80,19 @@ export class SidebarComponent implements OnInit {
   emailQuery: string = '';
   subCategory: string = '';
   nameQuery: string = '';
-screenWidth: any;
+  screenWidth: any;
+  userCount: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private categoryService: CategoryService,
     private productService: ProductsService,
+    private userService: UsersService,
     private modalService: NgbModal,
     private titleService: Title,
     public toastService: ToastService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {}
 
   getPageTitle(): string {
@@ -80,7 +101,7 @@ screenWidth: any;
 
   ngOnInit(): void {
 
-    this.getPageTitle()
+    this.getPageTitle();
     // Handle paramMap changes
     this.route.paramMap.subscribe(
       (paramMap) => {
@@ -110,7 +131,9 @@ screenWidth: any;
 
         this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
         this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
-        this.filters.colors = params['colors'] ? params['colors'].split(',') : [];
+        this.filters.colors = params['colors']
+          ? params['colors'].split(',')
+          : [];
         this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
         this.sortBy = params['sortBy'] || 'createdAt';
         this.sortDirection = params['sortDirection'] || 'desc';
@@ -120,7 +143,9 @@ screenWidth: any;
         this.filters.notAvailable = params['notAvailable'] === 'true';
 
         // Construct currentSortOption from sortBy and sortDirection
-        this.currentSortOption = `${this.sortBy}${this.sortDirection.charAt(0).toUpperCase()}${this.sortDirection.slice(1)}`;
+        this.currentSortOption = `${this.sortBy}${this.sortDirection
+          .charAt(0)
+          .toUpperCase()}${this.sortDirection.slice(1)}`;
 
         // Load products based on query params
         if (this.hasQueryParams) {
@@ -135,7 +160,7 @@ screenWidth: any;
     // Initialize sortedProducts
     this.sortedProducts = [...this.products];
   }
-  
+
   showErrorDialog(message: string): void {
     this.dialog.open(ErrorDialogComponent, {
       width: '350px',
@@ -161,8 +186,8 @@ screenWidth: any;
             this.showNotFound = false;
           },
           (error) => {
-            if(error.status === 404) {
-                this.showNotFound = true;
+            if (error.status === 404) {
+              this.showNotFound = true;
             }
             if (error.status === 401) {
               this.showExpiredSessionDialog(
@@ -176,7 +201,6 @@ screenWidth: any;
     }
   }
   showNotFound: boolean = false;
-
 
   loadProducts(): void {
     if (this.subCategoryName) {
@@ -221,8 +245,8 @@ screenWidth: any;
           },
           (error) => {
             if (error.status === 404) {
-                this.loading = false;
-                this.showNotFound = true;
+              this.loading = false;
+              this.showNotFound = true;
             }
             if (error.status === 401) {
               this.showExpiredSessionDialog(
@@ -241,7 +265,6 @@ screenWidth: any;
       this.outOfStockCount = 0;
     }
   }
-
 
   private updateQueryParams(params: any): void {
     this.router.navigate([], {
@@ -338,13 +361,12 @@ screenWidth: any;
     this.loadProducts();
   }
   scrollLeft(slider: HTMLElement) {
-    const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
+    const scrollAmount = slider.offsetWidth - slider.offsetWidth * 0.01;
     slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
   }
-  
+
   scrollRight(slider: HTMLElement) {
-    const scrollAmount = (slider.offsetWidth)-(slider.offsetWidth * 0.01);
+    const scrollAmount = slider.offsetWidth - slider.offsetWidth * 0.01;
     slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
-  
 }

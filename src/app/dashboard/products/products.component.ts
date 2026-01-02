@@ -20,6 +20,7 @@ import { Title } from '@angular/platform-browser';
 import { CategoryService } from '../../service/category.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProductComponent } from '../../component/edit-product /edit-product.component';
+import { forkJoin, map, Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -36,7 +37,6 @@ import { EditProductComponent } from '../../component/edit-product /edit-product
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
-
 export class ProductsComponent implements OnInit {
   currentSubCategoryImage: any;
   openSubLists: { [key: string]: boolean } = {};
@@ -67,20 +67,20 @@ export class ProductsComponent implements OnInit {
   nameQuery: string = '';
   sortBy = 'createdAt';
   sortDirection = 'desc';
-  selectedSort: string = 'createdAtDesc';
-  sortedProducts: Array<{ name: any; price: any }> = [];
   currentSortOption!: string;
+  selectedSort: string = 'createdAtDesc';
+
+  sortedProducts: Array<{ name: any; price: any }> = [];
   private hasQueryParams = false;
   currentPage = 1;
   totalPages: number[] = [];
   selectedProductIds: number[] = [];
   countProducts: number = 0;
   discount!: number;
-  currentEmailSeller: string = ''
+  currentEmailSeller: string = '';
   emailSellers: string[] = [];
   currentSubCat: string = '';
   currentElementSizeOption!: string;
-
 
   constructor(
     private router: Router,
@@ -94,68 +94,40 @@ export class ProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Handle paramMap changes
-    this.route.paramMap.subscribe(
-      (paramMap) => {
-        this.hasQueryParams = false;
+    this.route.queryParams.subscribe((params) => {
+      this.currentPage = +params['page'] || 1;
+      this.currentElementSizeOption = params['pageSize'] || '20';
+      this.sortBy = params['sortBy'] || 'createdAt';
+      this.sortDirection = params['sortDirection'] || 'desc';
 
-        // Load products if no query params present
-        if (!this.hasQueryParams) {
-          setTimeout(() => {
-            this.loadProducts();
-          }, 200);
-        }
-      },
-      (error) => {}
-    );
+      this.filters.minPrice = +params['minPrice'] || 0;
+      this.filters.maxPrice = +params['maxPrice'] || 25000;
+      this.filters.colors = params['colors']?.split(',') || [];
+      this.filters.sizes = params['sizes']?.split(',') || [];
+      this.filters.inStock = params['inStock'] === 'true';
+      this.filters.notAvailable = params['notAvailable'] === 'true';
 
-    // Handle queryParams changes
-    this.route.queryParams.subscribe(
-      (params) => {
-        this.hasQueryParams = Object.keys(params).length > 0;
-        this.currentPage = params['page'] ? +params['page'] : 1;
+      this.currentSortOption = `${this.sortBy}${this.sortDirection
+        .charAt(0)
+        .toUpperCase()}${this.sortDirection.slice(1)}`;
 
-        this.filters.minPrice = +params['minPrice'] || this.filters.minPrice;
-        this.filters.maxPrice = +params['maxPrice'] || this.filters.maxPrice;
-        this.filters.colors = params['colors']
-          ? params['colors'].split(',')
-          : [];
-        this.filters.sizes = params['sizes'] ? params['sizes'].split(',') : [];
-        this.sortBy = params['sortBy'] || 'createdAt';
-        this.sortDirection = params['sortDirection'] || 'desc';
-        this.currentPage = +params['page'] || 1;
-        this.currentElementSizeOption = params['pageSize'] || 20;
-
-        // Initialize inStock and notAvailable filters
-        this.filters.inStock = params['inStock'] === 'true';
-        this.filters.notAvailable = params['notAvailable'] === 'true';
-
-        // Construct currentSortOption from sortBy and sortDirection
-        this.currentSortOption = `${this.sortBy}${this.sortDirection
-          .charAt(0)
-          .toUpperCase()}${this.sortDirection.slice(1)}`;
-
-        // Load products based on query params
-        if (this.hasQueryParams) {
-          this.loadProducts();
-        }
-      },
-      (error) => {}
-    );
-
-    // Initialize sortedProducts
-    this.sortedProducts = [...this.products];
+      // ✅ ONLY HERE loading happens
+      this.reloadProducts();
+    });
   }
 
-  loadProducts(): void {
-    let available: boolean | null = null;
-    if (this.filters.inStock && !this.filters.notAvailable) {
-      available = true;
-    } else if (!this.filters.inStock && this.filters.notAvailable) {
-      available = false;
-    }
+  /* ================================================= */
+  /* ================= API LOGIC ===================== */
+  /* ================================================= */
 
-    this.productsService
+  private loadProducts$(): Observable<void> {
+    let available: boolean | null = null;
+
+    if (this.filters.inStock && !this.filters.notAvailable) available = true;
+    else if (!this.filters.inStock && this.filters.notAvailable)
+      available = false;
+
+    return this.productsService
       .getAllProducts(
         this.sortBy,
         this.sortDirection,
@@ -163,36 +135,45 @@ export class ProductsComponent implements OnInit {
         this.filters.maxPrice,
         this.filters.colors,
         this.filters.sizes,
-        this.currentPage - 1, // Adjust page number for API
+        this.currentPage - 1,
         this.currentElementSizeOption,
         this.currentEmailSeller,
         this.currentSubCat,
         this.nameQuery,
         available
       )
-      .subscribe(
-        (response: PaginatedResponse<Product[]>) => {
-          this.loading = false;
-          this.products = response.content;
-          this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
+      .pipe(
+        tap((res: PaginatedResponse<Product[]>) => {
+          this.products = res.content;
+          this.currentPage = res.pageable.pageNumber + 1;
           this.totalPages = Array.from(
-            { length: response.totalPages },
+            { length: res.totalPages },
             (_, i) => i + 1
           );
-          this.countProducts = response.totalElements;
-          // this.updatePageTitle(); this is solve issue
-        },
-        (error) => {
-          this.loading = false;
-        }
+          this.countProducts = res.totalElements;
+        }),
+        map(() => void 0)
       );
   }
 
-  onSearch(): void {
-    this.loadProducts();
+  reloadProducts(): void {
+    this.loading = true;
+
+    this.loadProducts$().subscribe({
+      next: () => (this.loading = false),
+      error: () => (this.loading = false),
+    });
   }
 
-  onSortChange(value: string): void { // Change parameter type to string directly
+  /* ================================================= */
+  /* =================== ACTIONS ===================== */
+  /* ================================================= */
+  onSearch(): void {
+    this.updateQueryParams({ page: 1 });
+  }
+
+  onSortChange(value: string): void {
+    // Change parameter type to string directly
     let sortBy = 'createdAt';
     let sortDirection = 'desc';
 
@@ -217,28 +198,140 @@ export class ProductsComponent implements OnInit {
 
     this.currentSortOption = value; // Update the current sort option
     this.updateQueryParams({ sortBy, sortDirection }); // Update the query parameters
-    this.loadProducts(); // Reload products based on the new sort option
-}
+  }
+  onPageChange(page: number): void {
+    this.updateQueryParams({ page });
+  }
+
+  onSizeElementChange(event: String): void {
+    this.updateQueryParams({ pageSize: event, page: 1 });
+  }
 
   onEmailChange(email: string): void {
     this.currentEmailSeller = email;
-    this.updateQueryParams({ email });
-    this.loadProducts();
+    this.updateQueryParams({ page: 1 });
   }
 
-  onSubCatChange(subCategory: string): void {
-    this.currentSubCat = subCategory;
-    this.updateQueryParams({ subCategory });
-    this.loadProducts();
+  onSubCatChange(subCat: string): void {
+    this.currentSubCat = subCat;
+    this.updateQueryParams({ page: 1 });
   }
+
+  /* ================================================= */
+  /* ===================== MODALS ==================== */
+  /* ================================================= */
+
+  open(): void {
+    this.loading = false; // default
+
+    const modalRef = this.modalService.open(AddProductComponent, {
+      size: 'lg',
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    let added = false; // ⭐ track real add
+
+    // ✅ Fired ONLY when product is successfully added
+    modalRef.componentInstance.productAdded.subscribe(() => {
+      added = true;
+      this.loading = true; // 🔥 start loading AFTER modal closes
+    });
+
+    modalRef.result.then(
+      (result) => {
+        // ✅ Modal closed AFTER add
+        if (result === 'added' && added) {
+          forkJoin([
+            this.reloadProducts(),
+            // this.dashboardComponent.fetchProductCount$(),
+          ]).subscribe({
+            next: () => {
+              // ⏱ delay toast after UI updates
+              this.toastService.add('Product added successfully', 'success');
+              this.loading = false;
+            },
+            error: () => (this.loading = false),
+          });
+        } else {
+          // ❌ closed without add
+          this.loading = false;
+        }
+      },
+      () => {
+        // ❌ dismissed (ESC / backdrop)
+        this.loading = false;
+      }
+    );
+  }
+
+  edit(product: Product): void {
+    const modalRef = this.modalService.open(EditProductComponent, {
+      size: 'lg',
+      centered: true,
+    });
+
+    modalRef.componentInstance.product = product;
+
+    modalRef.componentInstance.productAdded.subscribe(() => {
+      this.reloadProducts();
+      // this.dashboardComponent.fetchProductCount$().subscribe();
+    });
+  }
+
+  /* ================================================= */
+  /* =================== HELPERS ===================== */
+  /* ================================================= */
 
   private updateQueryParams(params: any): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { ...this.route.snapshot.queryParams, ...params },
-      queryParamsHandling: 'merge', // Merge with existing query params
+      queryParams: params,
+      queryParamsHandling: 'merge',
     });
   }
+
+  // loadProducts(): void {
+  //   let available: boolean | null = null;
+  //   if (this.filters.inStock && !this.filters.notAvailable) {
+  //     available = true;
+  //   } else if (!this.filters.inStock && this.filters.notAvailable) {
+  //     available = false;
+  //   }
+
+  //   this.productsService
+  //     .getAllProducts(
+  //       this.sortBy,
+  //       this.sortDirection,
+  //       this.filters.minPrice,
+  //       this.filters.maxPrice,
+  //       this.filters.colors,
+  //       this.filters.sizes,
+  //       this.currentPage - 1, // Adjust page number for API
+  //       this.currentElementSizeOption,
+  //       this.currentEmailSeller,
+  //       this.currentSubCat,
+  //       this.nameQuery,
+  //       available
+  //     )
+  //     .subscribe(
+  //       (response: PaginatedResponse<Product[]>) => {
+  //         this.loading = false;
+  //         this.products = response.content;
+  //         this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
+  //         this.totalPages = Array.from(
+  //           { length: response.totalPages },
+  //           (_, i) => i + 1
+  //         );
+  //         this.countProducts = response.totalElements;
+  //         // this.updatePageTitle(); this is solve issue
+  //       },
+  //       (error) => {
+  //         this.loading = false;
+  //       }
+  //     );
+  // }
 
   deleteProduct(prodId: number): void {
     if (confirm('Are you sure you want to delete this Product?')) {
@@ -247,7 +340,7 @@ export class ProductsComponent implements OnInit {
           this.products = this.products.filter(
             (product: { productId: number }) => product.productId !== prodId
           );
-          this.dashboardComponent.fetchProductCount();
+          // this.dashboardComponent.fetchProductCount$().subscribe();
         },
         (error) => {}
       );
@@ -255,9 +348,10 @@ export class ProductsComponent implements OnInit {
   }
   deleteProducts(): void {
     if (this.selectedProductIds.length === 0) {
-      this.toastService.add('Not Selected any Products', "warning");
+      this.toastService.add('Not Selected any Products', 'warning');
     } else {
       if (confirm('Are you sure you want to delete this products?')) {
+        this.loading = true;
         this.productsService.deleteProducts(this.selectedProductIds).subscribe(
           () => {
             this.products = this.products.filter(
@@ -265,11 +359,11 @@ export class ProductsComponent implements OnInit {
                 !this.selectedProductIds.includes(product.productId)
             );
             this.selectedProductIds = []; // Clear the selection
-            this.dashboardComponent.fetchProductCount();
+            // this.dashboardComponent.fetchProductCount$().subscribe();
+            this.loading = false;
             this.toastService.add('Products deleted successfully', 'success');
           },
-          (error) => {
-          }
+          (error) => {}
         );
       }
     }
@@ -277,52 +371,6 @@ export class ProductsComponent implements OnInit {
 
   detailsProduct(prodId: number): void {
     this.router.navigate([`dashboard/products/${prodId}`]);
-  }
-
-  open() {
-    const modalRef = this.modalService.open(AddProductComponent, {
-      size: 'lg',
-      centered: true,
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false,    // Prevent closing with the Esc key
-    });
-
-    modalRef.componentInstance.productAdded.subscribe(() => {
-      this.loadProducts(); // Refresh the product list
-      this.dashboardComponent.fetchProductCount();
-    });
-
-    modalRef.result.then(
-      (result) => {
-        if (result === 'added') {
-          this.toastService.add('Product added successfully', 'success');
-        }
-      },
-      (reason) => {}
-    );
-  }
-
-  edit(product: any) {
-    const modalRef = this.modalService.open(EditProductComponent, {
-      size: 'lg',
-      centered: true,
-    });
-    modalRef.componentInstance.product = product;
-    modalRef.result
-
-    modalRef.componentInstance.productAdded.subscribe(() => {
-      this.loadProducts(); // Refresh the product list
-      this.dashboardComponent.fetchProductCount();
-    });
-
-    modalRef.result.then(
-      (result) => {
-        if (result === 'updated') {
-          this.toastService.add('Product Updated successfully', 'success');
-        }
-      },
-      (reason) => {}
-    );
   }
 
   onDiscountChange(newValue: number): void {
@@ -336,7 +384,10 @@ export class ProductsComponent implements OnInit {
       return;
     }
     if (discountValue < 0 || discountValue > 100) {
-      this.toastService.add('Invalid discount value. It should be between 0 and 100.', 'warning');
+      this.toastService.add(
+        'Invalid discount value. It should be between 0 and 100.',
+        'warning'
+      );
       return;
     }
     if (this.selectedProductIds.length === 0) {
@@ -347,19 +398,15 @@ export class ProductsComponent implements OnInit {
       .setDiscount(this.selectedProductIds, discountValue)
       .subscribe(
         () => {
-          this.loadProducts(); // Refresh the product list
+          this.reloadProducts(); // Refresh the product list
           this.toastService.add('Discount applied successfully', 'success');
         },
         (error) => {
-          this.toastService.add(error.message, "error");
+          this.toastService.add(error.message, 'error');
         }
       );
   }
 
-  onPageChange(page: number): void {
-    this.updateQueryParams({ page });
-    this.loadProducts();
-  }
   auth(): boolean {
     return this.authService.isLoggedIn();
   }
@@ -411,17 +458,8 @@ export class ProductsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.filters = { ...this.filters, ...result.filters };
-        this.loadProducts(); // Re-load products with updated filters
+        this.reloadProducts(); // Re-load products with updated filters
       }
     });
   }
-
-  onSizeElementChange(value: string) {
-    const pageSize = value
-    const page = 1;
-    this.updateQueryParams({ pageSize, page }); // Update the query parameters
-    this.loadProducts(); // Reload products based on the new sort option
-  }
-
-
 }

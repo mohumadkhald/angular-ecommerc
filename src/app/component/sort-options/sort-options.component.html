@@ -1,6 +1,6 @@
 <div class="dropdown-container">
   <select (change)="onSizeElementChange($event)" [(ngModel)]="currentElementSizeOption">
-    <option value="20" selected>Numbers of Products in page</option>
+    <option value="20">Numbers of Products in page</option>
     <option value="5">5 Products In page</option>
     <option value="10">10 Products In page</option>
     <option value="30">30 Products In page</option>
@@ -11,7 +11,7 @@
   </select>
 
   <select (change)="onSortChange($event)" [(ngModel)]="currentSortOption">
-    <option value="createdAtDesc">Sort By: Featured Products</option>
+    <option value="createdAtDesc" selected>Sort By: Featured Products</option>
     <option value="createdAtAsc">Sort By: Old Products</option>
     <option value="priceAsc">Price (Low to High)</option>
     <option value="priceDesc">Price (High to Low)</option>

@@ -284,31 +284,43 @@ export class ResultSearchComponent implements OnInit {
 
   onColorChange(color: string, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
+
     if (checkbox.checked) {
-      this.filters.colors.push(color);
-    } else {
-      const index = this.filters.colors.indexOf(color);
-      if (index > -1) {
-        this.filters.colors.splice(index, 1);
+      if (!this.filters.colors.includes(color)) {
+        this.filters.colors.push(color);
       }
+    } else {
+      this.filters.colors = this.filters.colors.filter((c) => c !== color);
     }
+
     const page = 1;
-    this.updateQueryParams({ colors: this.filters.colors.join(','), page });
+
+    this.updateQueryParams({
+      colors: this.filters.colors.length ? this.filters.colors.join(',') : null,
+      page,
+    });
+
     this.loadProducts();
   }
 
   onSizeChange(size: string, event: Event): void {
     const checkbox = event.target as HTMLInputElement;
+
     if (checkbox.checked) {
-      this.filters.sizes.push(size);
-    } else {
-      const index = this.filters.sizes.indexOf(size);
-      if (index > -1) {
-        this.filters.sizes.splice(index, 1);
+      if (!this.filters.sizes.includes(size)) {
+        this.filters.sizes.push(size);
       }
+    } else {
+      this.filters.sizes = this.filters.sizes.filter((s) => s !== size);
     }
+
     const page = 1;
-    this.updateQueryParams({ sizes: this.filters.sizes.join(','), page });
+
+    this.updateQueryParams({
+      sizes: this.filters.sizes.length ? this.filters.sizes.join(',') : null,
+      page,
+    });
+
     this.loadProducts();
   }
 
@@ -365,6 +377,4 @@ export class ResultSearchComponent implements OnInit {
       queryParamsHandling: 'merge', // Merge with existing query params
     });
   }
-
-
 }

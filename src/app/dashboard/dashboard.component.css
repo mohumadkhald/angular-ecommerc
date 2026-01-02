@@ -272,6 +272,15 @@
     color: #6c757d;
   }
   
+    @media (max-width: 1024px) {
+    .last-elements-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .header h2 {
+      font-size: 20px;
+    }
+  }
   
   /* Responsive Adjustments */
   @media (max-width: 768px) {

@@ -21,6 +21,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Title } from '@angular/platform-browser';
 import {
   ActivatedRoute,
+  ParamMap,
   Router,
   RouterLink,
   RouterLinkActive,
@@ -40,7 +41,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 import { SortOptionsComponent } from '../sort-options/sort-options.component';
 import { AuthService } from '../../service/auth.service';
 import { keyframes } from '@angular/animations';
-import { combineLatest } from 'rxjs';
+import { combineLatest, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -126,41 +127,99 @@ export class ProductListComponent implements OnInit {
   /* ========================================================= */
 
   ngOnInit(): void {
-    combineLatest([this.route.paramMap, this.route.queryParams]).subscribe(
-      ([paramMap, queryParams]) => {
-        /* ---------- ROUTE PARAMS ---------- */
-        this.categoryTitle = paramMap.get('categoryTitle');
-
-        this.subCategoryName = paramMap.get('subCategoryName');
-
-        this.loading = true;
-        this.loadSubCategories();
-        this.updatePageTitle();
-        /* ---------- QUERY PARAMS ---------- */
-        this.currentPage = +queryParams['page'] || 1;
-
-        this.filters.minPrice = +queryParams['minPrice'] || 0;
-        this.filters.maxPrice = +queryParams['maxPrice'] || 250000;
-        this.filters.colors = queryParams['colors']?.split(',') || [];
-        this.filters.sizes = queryParams['sizes']?.split(',') || [];
-
-        this.filters.inStock = queryParams['inStock'] !== 'false';
-        this.filters.notAvailable = queryParams['notAvailable'] !== 'false';
-
-        this.sortBy = queryParams['sortBy'] || 'createdAt';
-        this.sortDirection = queryParams['sortDirection'] || 'desc';
-
-        this.currentSortOption = `${
-          this.sortBy
-        }${this.sortDirection[0].toUpperCase()}${this.sortDirection.slice(1)}`;
-
-        this.currentElementSizeOption = queryParams['pageSize'] || 20;
-
-        /* ---------- NOW IT IS SAFE ---------- */
-        if (this.subCategoryName) this.loadProducts();
-      }
+    this.route.paramMap.subscribe((params) => this.handleRouteParams(params));
+    this.route.queryParamMap.subscribe((params) =>
+      this.handleQueryParams(params)
     );
   }
+
+  private initialized = false;
+  // ------------------- ROUTE PARAM HANDLING -------------------
+  private handleRouteParams(params: ParamMap): void {
+    const newCategory = params.get('categoryTitle');
+    const newSubCategory = params.get('subCategoryName');
+
+    const categoryChanged = newCategory !== this.categoryTitle;
+    const subCategoryChanged = newSubCategory !== this.subCategoryName;
+
+    this.categoryTitle = newCategory;
+    this.subCategoryName = newSubCategory;
+
+    this.updatePageTitle();
+
+    if (categoryChanged && this.categoryTitle) {
+      this.loadSubCategories();
+    }
+
+    // ✅ load products ONLY when subcategory changes AFTER init
+    if (this.initialized) {
+      this.currentPage = 1;
+      this.loadProducts();
+    }
+  }
+
+  // ------------------- QUERY PARAM HANDLING -------------------
+  private handleQueryParams(params: ParamMap): void {
+    this.parseFilters(params);
+    this.parseSorting(params);
+    this.parsePagination(params);
+
+    if (!this.initialized) {
+      this.initialized = true;
+    }
+
+    if (this.subCategoryName) {
+      this.loadProducts();
+    }
+  }
+
+  // ------------------- FILTERS -------------------
+  private parseFilters(params: ParamMap): void {
+    this.filters.inStock = params.get('inStock') === 'true';
+    this.filters.notAvailable = params.get('notAvailable') === 'true';
+    this.filters.minPrice = Number(params.get('minPrice')) || 0;
+    this.filters.maxPrice = Number(params.get('maxPrice')) || 250000;
+
+    this.filters.colors = this.parseCommaSeparated(params.get('colors'));
+    this.filters.sizes = this.parseCommaSeparated(params.get('sizes'));
+  }
+
+  // ------------------- SORTING -------------------
+  private parseSorting(params: ParamMap): void {
+    const sortBy = params.get('sortBy');
+    const sortDirection = params.get('sortDirection') as 'asc' | 'desc' | null;
+
+    if (sortBy) this.sortBy = sortBy;
+    if (sortDirection) this.sortDirection = sortDirection;
+
+    this.currentSortOption =
+      this.getSortOption(this.sortBy, this.sortDirection) || 'createdAtDesc';
+  }
+  private getSortOption(
+    sortBy: string,
+    sortDirection: 'asc' | 'desc' | null
+  ): string | null {
+    if (sortBy === 'createdAt')
+      return sortDirection === 'asc' ? 'createdAtAsc' : 'createdAtDesc';
+    if (sortBy === 'price')
+      return sortDirection === 'asc' ? 'priceAsc' : 'priceDesc';
+    return null;
+  }
+
+  // ------------------- PAGINATION -------------------
+  private parsePagination(params: ParamMap): void {
+    const page = Number(params.get('page'));
+    this.currentPage = page && page > 0 ? page : 1;
+
+    const pageSize = Number(params.get('pageSize'));
+    this.currentElementSizeOption = pageSize || 20;
+  }
+
+  // ------------------- UTIL -------------------
+  private parseCommaSeparated(value: string | null): string[] {
+    return value ? value.split(',') : [];
+  }
+
   /* ========================================================= */
   /* ===================== API CALLS ========================== */
   /* ========================================================= */
@@ -174,7 +233,7 @@ export class ProductListComponent implements OnInit {
         next: (res) => {
           this.subCategories = res.subCategoryDtos;
           this.loading = false;
-          console.log(res)
+          console.log(res);
         },
         error: () => {
           this.showNotFound = true;
@@ -186,17 +245,23 @@ export class ProductListComponent implements OnInit {
   loadProducts(): void {
     this.isloading = true;
 
+    // Determine availability filter
     let available: boolean | null = null;
-    if (this.filters.inStock && !this.filters.notAvailable) available = true;
-    if (!this.filters.inStock && this.filters.notAvailable) available = false;
 
-    if (!this.filters.inStock && !this.filters.notAvailable) {
-      this.products = [];
-      this.inStockCount = 0;
-      this.outOfStockCount = 0;
-      this.isloading = false;
-      return;
+    if (this.filters.inStock && !this.filters.notAvailable) {
+      available = true;
+    } else if (!this.filters.inStock && this.filters.notAvailable) {
+      available = false;
     }
+
+    // // If neither checkbox is selected → reset
+    // if (!this.filters.inStock && !this.filters.notAvailable) {
+    //   this.products = [];
+    //   this.inStockCount = 0;
+    //   this.outOfStockCount = 0;
+    //   this.isloading = false;
+    //   return;
+    // }
 
     this.productService
       .getProducts(
@@ -212,40 +277,34 @@ export class ProductListComponent implements OnInit {
         this.filters.sizes,
         available
       )
-      .subscribe((response: any) => {
-        this.products = response.content || [];
-        this.currentPage = response.pageable.pageNumber + 1;
-        this.totalPages = Array.from(
-          { length: response.totalPages },
-          (_, i) => i + 1
-        );
+      .subscribe({
+        next: (response: any) => {
+          const products = response?.content || [];
 
-        this.display = this.products.length <= 1;
-        this.loadStockCounts();
+          this.products = products;
+          this.currentPage = response.pageable.pageNumber + 1;
+          this.totalPages = Array.from(
+            { length: response.totalPages },
+            (_, i) => i + 1
+          );
 
-        this.isloading = false;
-      });
-  }
+          // Stock counts
+          this.inStockCount = products.filter(
+            (p: { inStock: any }) => p.inStock
+          ).length;
+          this.outOfStockCount = products.length - this.inStockCount;
 
-  loadStockCounts(): void {
-    this.productService
-      .getProducts(
-        this.subCategoryName || '',
-        '',
-        'createdAt',
-        'desc',
-        0,
-        999999,
-        0,
-        9999,
-        [],
-        [],
-        null
-      )
-      .subscribe((res: any) => {
-        const counts = ProductCardComponent.getStockCounts(res.content);
-        this.inStockCount = counts.inStockCount;
-        this.outOfStockCount = counts.outOfStockCount;
+          this.display = products.length <= 1;
+          this.isloading = false;
+
+          console.log(this.inStockCount, this.outOfStockCount);
+        },
+        error: () => {
+          this.products = [];
+          this.inStockCount = 0;
+          this.outOfStockCount = 0;
+          this.isloading = false;
+        },
       });
   }
 
@@ -267,10 +326,12 @@ export class ProductListComponent implements OnInit {
       sortDirection = 'desc';
     }
 
+    this.isloading = true;
     this.updateQueryParams({ sortBy, sortDirection, page: 1 });
   }
 
   onSizeElementChange(value: string) {
+    this.isloading = true;
     this.updateQueryParams({ pageSize: value, page: 1 });
   }
 
@@ -379,22 +440,34 @@ export class ProductListComponent implements OnInit {
         colorOptions: this.colorOptions,
         inStockCount: this.inStockCount,
         outOfStockCount: this.outOfStockCount,
-        sub: sub
+        sub: sub,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.filters = { ...this.filters, ...result.filters };
-        this.loadProducts(); // Re-load products with updated filters
+        if (result.filters) {
+          // Update filters
+          this.filters = { ...this.filters, ...result.filters };
+          this.updateQueryParams({
+            inStock: this.filters.inStock,
+            notAvailable: this.filters.notAvailable,
+            minPrice: this.filters.minPrice,
+            maxPrice: this.filters.maxPrice,
+            colors: this.filters.colors.length
+              ? this.filters.colors.join(',')
+              : null,
+            sizes: this.filters.sizes.length
+              ? this.filters.sizes.join(',')
+              : null,
+            page: 1,
+          });
+        } else if (result) {
+          // Update subcategory
+          this.redirectToSubCategory(this.categoryTitle, result);
+        }
       }
     });
-  }
-
-  onCategoryChange(catId: any): void {
-    const page = 1;
-    this.updateQueryParams({ page });
-    this.loadProducts();
   }
 
   onEmailChange(email: string): void {
@@ -432,5 +505,11 @@ export class ProductListComponent implements OnInit {
       console.error('isActive error', e);
       return false;
     }
+  }
+
+    onCategoryChange(catId: any): void {
+    const page = 1;
+    this.updateQueryParams({ page });
+    this.loadProducts();
   }
 }

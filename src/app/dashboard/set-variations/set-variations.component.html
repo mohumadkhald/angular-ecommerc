@@ -2,70 +2,77 @@
     <h2 class="modal-title">Add New Product Variation</h2>
     <button class="btn btn-close bg-danger text-light" (click)="onClose()"></button>
 </div>
+
 <div class="modal-body">
-    <div class="row">
-        <div class="variation-container">
-            <form (ngSubmit)="saveVariations(variationForm)" #variationForm="ngForm">
-                <div *ngFor="let variation of variations; let i = index" class="variation-item"
-                    style="display: flex; flex-direction: row; margin: 5px; gap: 20px;">
-                    <div *ngIf="color != 'no_color' ">
-                        <label>
-                            Size:
-                            <select [(ngModel)]="variation.size" name="size{{i}}" required #size="ngModel">
-                                <option value="" disabled>Select Size</option>
-                                <option *ngFor="let size of sizes" [value]="size">{{size}}</option>
-                            </select>
-                            <div *ngIf="formSubmitted && size.invalid" class="text-danger">
-                                Size is required.
-                            </div>
-                            <div *ngIf="serverErrors['spec[' + i + '].size']" class="text-danger">
-                                {{ serverErrors['spec[' + i + '].size'] }}
-                            </div>
-                        </label>
-                    </div>
-                    <div *ngIf="color != 'no_color' ">
-                        <label>
-                            Color:
-                            <select [(ngModel)]="variation.color" name="color{{i}}" required #color="ngModel">
-                                <option value="" disabled>Select Color</option>
-                                <option *ngFor="let color of colors" [value]="color">{{color}}</option>
-                            </select>
-                            <div *ngIf="formSubmitted && color.invalid" class="text-danger">
-                                Color is required.
-                            </div>
-                            <div *ngIf="serverErrors['spec[' + i + '].color']" class="text-danger">
-                                {{ serverErrors['spec[' + i + '].color'] }}
-                            </div>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            Total Quantity before Update is : <strong>{{lastQuantity}}</strong>
-                            <input type="number" [(ngModel)]="variation.quantity" name="quantity{{i}}" required min="1"
-                                #quantity="ngModel" />
-                            <div *ngIf="formSubmitted && quantity.invalid" class="text-danger">
-                                Quantity must be greater than 0.
-                            </div>
-                            <div *ngIf="serverErrors['spec[' + i + '].quantity']" class="text-danger">
-                                {{ serverErrors['spec[' + i + '].quantity'] }}
-                            </div>
-                        </label>
-                    </div>
-                    <!-- <div>
-                        <label>
-                            Image:
-                            <input type="file" (change)="onImageSelected($event, i)" />
-                            <div *ngIf="formSubmitted && !variation.image" class="text-danger">
-                                Image is required.
-                            </div>
-                        </label>
-                    </div> -->
-                    <button type="button" class="mt-4" style="height: 30px;" (click)="removeVariation(i)"
-                        *ngIf="variations.length > 1">Remove</button>
+    <form #variationForm="ngForm" (ngSubmit)="saveVariations(variationForm)">
+
+        <div *ngFor="let variation of variations; let i = index; trackBy: trackByIndex"
+            class="variation-item d-flex gap-3 mb-2">
+
+            <!-- SIZE -->
+            <div *ngIf="color !== 'no_color'">
+                <label>Size</label>
+                <select [(ngModel)]="variation.size" name="size{{ i }}" required #sizeCtrl="ngModel">
+                    <option value="" disabled>Select Size</option>
+                    <option *ngFor="let s of sizes" [value]="s">{{ s }}</option>
+                </select>
+
+                <small *ngIf="formSubmitted && sizeCtrl.invalid" class="text-danger">
+                    Size is required
+                </small>
+                <small *ngIf="serverErrors['spec[' + i + '].size']" class="text-danger">
+                    {{ serverErrors['spec[' + i + '].size'] }}
+                </small>
+            </div>
+
+            <!-- COLOR -->
+            <div *ngIf="color !== 'no_color'">
+                <label>Color</label>
+                <select [(ngModel)]="variation.color" name="color{{ i }}" required #colorCtrl="ngModel">
+                    <option value="" disabled>Select Color</option>
+                    <option *ngFor="let c of colors" [value]="c">{{ c }}</option>
+                </select>
+
+                <small *ngIf="formSubmitted && colorCtrl.invalid" class="text-danger">
+                    Color is required
+                </small>
+                <small *ngIf="serverErrors['spec[' + i + '].color']" class="text-danger">
+                    {{ serverErrors['spec[' + i + '].color'] }}
+                </small>
+            </div>
+
+            <!-- QUANTITY -->
+            <div>
+                <div *ngIf="color === 'no_color'">
+                    Total Quantity Before Update:
+                    <strong>{{ lastQuantity }}</strong>
                 </div>
-                <button *ngIf="color != 'no_color'" type="button" (click)="addVariation()">Add Another Variation</button>
-                <button type="submit">Save Variations</button>
-            </form>
+
+                <input class="mt-4" type="number" [(ngModel)]="variation.quantity" name="quantity{{ i }}" required
+                    min="1" #qtyCtrl="ngModel" />
+
+                <small *ngIf="formSubmitted && qtyCtrl.invalid" class="text-danger">
+                    Quantity must be greater than 0
+                </small>
+                <small *ngIf="serverErrors['spec[' + i + '].quantity']" class="text-danger">
+                    {{ serverErrors['spec[' + i + '].quantity'] }}
+                </small>
+            </div>
+
+            <!-- REMOVE -->
+            <button type="button" class="btn btn-sm btn-danger mt-4" (click)="removeVariation(i)"
+                *ngIf="variations.length > 1">
+                Remove
+            </button>
         </div>
-    </div>
+
+        <button *ngIf="color !== 'no_color'" type="button" class="btn btn-secondary" (click)="addVariation()">
+            Add Variation
+        </button>
+
+        <button type="submit" class="btn btn-primary ms-2" >
+            Save Variations
+        </button>
+
+    </form>
 </div>

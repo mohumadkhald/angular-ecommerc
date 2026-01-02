@@ -88,7 +88,6 @@ export class ProductDetailsComponent implements OnInit {
       );
     }
   }
-  showChangeImageButton = false;
   @ViewChild('fileInput')
   fileInput!: ElementRef;
   triggerFileInput() {

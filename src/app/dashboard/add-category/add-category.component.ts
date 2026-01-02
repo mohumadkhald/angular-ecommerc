@@ -1,7 +1,11 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CategoriesService } from '../../dashboard-service/categories.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,7 +15,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './add-category.component.html',
-  styleUrl: './add-category.component.css'
+  styleUrl: './add-category.component.css',
 })
 export class AddCategoryComponent implements OnInit {
   @Output() categoryAdded = new EventEmitter<void>();
@@ -25,14 +29,16 @@ export class AddCategoryComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private categoriesService: CategoriesService,
-    public activeModal: NgbActiveModal,
+    public activeModal: NgbActiveModal
   ) {}
 
   ngOnInit(): void {
     this.categoryForm = this.fb.group({
-      categoryTitle: [this.cat?.categoryTitle ?? '', [Validators.required, Validators.pattern(/^(?!\s).*$/)]],
-      // categoryDescription: [this.cat?.categoryDescription ?? '', Validators.required],
-
+      categoryTitle: [
+        this.cat?.categoryTitle ?? '',
+        [Validators.required, Validators.pattern(/^(?!\s).*$/)],
+      ],
+      description: [this.cat?.description ?? '', Validators.required],
     });
 
     // Initialize formErrors based on the form controls
@@ -54,28 +60,34 @@ export class AddCategoryComponent implements OnInit {
     }
 
     const formData = new FormData();
-    formData.append('categoryTitle', this.categoryForm.get('categoryTitle')?.value);
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
+    formData.append(
+      'categoryTitle',
+      this.categoryForm.get('categoryTitle')?.value
+    );
+    formData.append('description', this.categoryForm.get('description')?.value);
 
-    if(this.cat){
-      this.categoriesService.editCategory(formData, this.cat.categoryId).subscribe(
-        (response) => {
-          // Handle successful response
-          this.categoryAdded.emit(); // Emit the event when a user is added
-          this.activeModal.close('success');
-        },
-        (error) => {
-          // Handle error response
-          if (error.status === 400 && error.error.violations) {
-            this.displayServerErrors(error.error.violations);
-          } else {
-            this.errMsg=error.error.errors.Category;
+    if (this.cat) {
+      this.categoriesService
+        .editCategory(formData, this.cat.categoryId)
+        .subscribe(
+          (response) => {
+            // Handle successful response
+            this.categoryAdded.emit(); // Emit the event when a user is added
+            this.activeModal.close('success');
+          },
+          (error) => {
+            // Handle error response
+            if (error.status === 400 && error.error.violations) {
+              this.displayServerErrors(error.error.violations);
+            } else {
+              this.errMsg = error.error.errors.Category;
+            }
           }
-              }
-      );
+        );
     } else {
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
       this.categoriesService.addCategory(formData).subscribe(
         (response) => {
           // Handle successful response
@@ -87,12 +99,11 @@ export class AddCategoryComponent implements OnInit {
           if (error.status === 400 && error.error.violations) {
             this.displayServerErrors(error.error.violations);
           } else {
-            this.errMsg=error.error.errors.Category;
+            this.errMsg = error.error.errors.Category;
           }
-              }
+        }
       );
     }
-
   }
 
   displayValidationErrors() {
@@ -116,7 +127,7 @@ export class AddCategoryComponent implements OnInit {
     switch (field) {
       case 'categoryTitle':
         return 'This field cannot be empty or start with a space.';
-      case 'categoryDescription':
+      case 'description':
         return 'This field is required.';
       default:
         return 'This field is required.';

@@ -1,48 +1,50 @@
 <div style="margin-bottom: 50px;" *ngIf="auth()">
     <h1 class="text-center my-2">Manage Members</h1>
-    <div class="container">
-        <div class="table-responsive">
-            <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Member</a>
-            <table *ngIf="users.length > 0; else noUsers"
-                class="main-table table table-striped table-bordered table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>#ID</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Email Verified</th>
-                        <th>Registered Date</th>
-                        <th>Role</th>
-                        <th>Control</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let user of users">
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.verify }}</td>
-                        <td>{{ user.date }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>
-                            <a class="btn btn-primary btn-sm mr-1" (click)="detailsUser(user.id)"
-                                style="margin-right: 10px;"><i class="fa fa-circle-info"></i>
-                                Details</a>
-                            <a class="btn btn-success btn-sm mr-1" style="margin-right: 10px;"><i
-                                    class="fa fa-edit"></i>
-                                Edit</a>
-                            <a class="btn btn-danger btn-sm confirm" (click)="deleteUser(user.id)"><i
-                                    class="fas fa-trash-alt"></i> Delete</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- Pagination Component -->
-        <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
-            (pageChange)="onPageChange($event)"></app-pagination>
-        <ng-template #noUsers>
-            <p>No users found.</p>
-        </ng-template>
+    <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New Member</a>
+
+    <div class="table-responsive">
+        <table *ngIf="users.length > 0; else noUsers" class="main-table table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Email Verified</th>
+                    <th>Registered Date</th>
+                    <th>Role</th>
+                    <th>Control</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td data-label="ID">{{ user.id }}</td>
+                    <td data-label="Username">{{ user.username }}</td>
+                    <td data-label="Email">{{ user.email }}</td>
+                    <td data-label="Verified">{{ user.verify }}</td>
+                    <td data-label="Created">{{ user.date }}</td>
+                    <td data-label="Role">{{ user.role }}</td>
+
+                    <td>
+                        <a class="btn btn-primary btn-sm mr-1" (click)="detailsUser(user.id)"
+                            style="margin-right: 10px;">
+                            <i class="fa fa-circle-info"></i> Details
+                        </a>
+                        <a (click)="edit(user)" class="btn btn-success btn-sm mr-1" style="margin-right: 10px;">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <a class="btn btn-danger btn-sm confirm" (click)="deleteUser(user.id)">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
     </div>
+    <!-- Pagination Component -->
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+        (pageChange)="onPageChange($event)"></app-pagination>
+    <ng-template #noUsers>
+        <p>No users found.</p>
+    </ng-template>
 </div>

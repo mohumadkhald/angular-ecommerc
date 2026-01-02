@@ -45,11 +45,13 @@ export class CartService implements OnInit {
   }
 
   private updateTotalDiscountedPrice(): void {
+    console.log('updating total discounted price');
     this.totalpriceDiscount = this.cart.reduce(
       (total, item) =>
         total + item.product.discountedPrice * item.product.quantity,
       0
     );
+    console.log('the total discounted price after calculation: ', this.totalpriceDiscount, this.cart);
   }
 
   getTotalDiscountedPrice(): number {
