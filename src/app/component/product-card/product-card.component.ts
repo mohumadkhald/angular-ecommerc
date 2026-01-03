@@ -11,6 +11,8 @@ import { CartServerService } from '../../service/cart-server.service';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-product-card',
   standalone: true,
@@ -23,6 +25,8 @@ import { CapitalizePipe } from '../../pipe/capitalize.pipe';
     NgbRatingModule,
     FormsModule,
     CapitalizePipe,
+    MatButtonModule,
+     MatIconModule
   ],
 })
 export class ProductCardComponent implements OnInit {
@@ -52,7 +56,9 @@ export class ProductCardComponent implements OnInit {
 
   redirectToDetails(id: number) {
     // console.log('Navigating to product details for ID:', this.product);
-    this.router.navigate([`categories/${this.product.subCategory.categoryName}/${this.product.subCategory.name}/products/${id}`]);
+    this.router.navigate([
+      `categories/${this.product.subCategory.categoryName}/${this.product.subCategory.name}/products/${id}`,
+    ]);
   }
 
   open(product: any) {

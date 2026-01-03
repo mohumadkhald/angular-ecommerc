@@ -1,41 +1,51 @@
-<div class="product" style="position: relative;">
-  <div class="image-container" style="position: relative;">
-    <img style="cursor: pointer;" [src]="product.imageUrls[0]" (click)="redirectToDetails(product.productId)"
-      [alt]="product.productTitle">
-    <div class="discount-badge" *ngIf="product.discountPercent">
+<div class="product">
+
+  <!-- Image -->
+  <div class="image-container">
+    <img [src]="product.imageUrls[0]" [alt]="product.productTitle" (click)="redirectToDetails(product.productId)" />
+    <div class="discount-badge" *ngIf="product.discountPercent > 0">
       {{ product.discountPercent }}% OFF
     </div>
-    <div class="stock-status" [ngClass]="{'in-stock': product.inStock, 'out-of-stock': !product.inStock}">
+    <div class="stock-status" [ngClass]="{ 'in-stock': product.inStock, 'out-of-stock': !product.inStock }">
       {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
     </div>
   </div>
-  <h2 style="cursor: pointer;" (click)="redirectToDetails(product.productId)" class="product-title text-start">
+
+  <!-- Title -->
+  <h2 class="product-title" (click)="redirectToDetails(product.productId)">
     {{ product.productTitle | capitalize }}
   </h2>
-  <div *ngIf="submitted && quantity <= 0" class="err-q text-danger">
-    Quantity must be greater than 0.</div>
-  <div *ngIf="submitted && !validateQuantity2()" class="err-q text-danger mt-1">
-    available stock ({{ maxQuantity }})
-  </div>
-  <div class="form-group quantity-row mt-1" style="position: absolute; bottom: 72px; right: 15px;"
-    *ngIf="product.productVariations[0]?.color === 'no_color'">
-    <label for="quantity" class="quantity-label">Qty:</label>
-    <input value="0" class="form-control quantity-input" type="number" id="quantity" [(ngModel)]="quantity" min="1"
-      [max]="maxQuantity" />
-  </div>
-  <div class="product-info">
-    <p *ngIf="product.discountPercent==0">{{ product.price | currency }}</p>
-    <div *ngIf="product.discountPercent!=0" class="price-info">
-      <p class="original-price">
-        {{ product.price | currency }}
-      </p>
-      <p class="discounted-price">
-        {{ product.discountPrice | currency }}
-      </p>
+
+  <!-- Bottom row: Prices + Cart + Quantity -->
+  <div class="bottom-row">
+
+    <!-- Prices -->
+    <div class="price-info">
+      <span *ngIf="product.discountPercent>0" class="original-price">{{ product.price | currency }}</span>
+      <span class="discounted-price">
+        {{ product.discountPercent>0 ? product.discountPrice : product.price | currency }}
+      </span>
     </div>
-    <button *ngIf="product.productVariations[0]?.color !== 'no_color'" class="btn-add" (click)="open(product)"
-      [disabled]="!product.inStock">Add to Cart</button>
-    <button *ngIf="product.productVariations[0]?.color === 'no_color'" class="btn-add" (click)="open2(product)"
-      [disabled]="!product.inStock">Add to Cart</button>
+    <!-- Cart button -->
+    <button mat-icon-button class="btn-cart-icon" *ngIf="product.productVariations[0]?.color !== 'no_color'"
+      (click)="open(product)" [disabled]="!product.inStock">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+
+    <button mat-icon-button class="btn-cart-icon" *ngIf="product.productVariations[0]?.color === 'no_color'"
+      (click)="open2(product)" [disabled]="!product.inStock">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+
+    <!-- Quantity input -->
+    <div class="quantity-row" *ngIf="product.productVariations[0]?.color === 'no_color'">
+      <label class="quantity-label" for="quantity">Qty:</label>
+      <input id="quantity" class="quantity-input" type="number" min="1" [max]="maxQuantity" [(ngModel)]="quantity" />
+    </div>
+  </div>
+  <div *ngIf="submitted && quantity <= 0" class="error-message text-danger">
+    Quantity must be greater than 0.</div>
+  <div *ngIf="submitted && !validateQuantity2()" class="error-message text-danger mt-1">
+    available stock ({{ maxQuantity }})
   </div>
 </div>
