@@ -3,7 +3,7 @@
   position: relative;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 330px;
   display: flex;
@@ -11,10 +11,11 @@
   transition: box-shadow 0.3s ease, transform 0.2s ease;
   padding: 5px;
   margin: 15px;
+  box-sizing: border-box;
 }
 
 .product:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   transform: translateY(-4px);
 }
 
@@ -65,8 +66,13 @@
   color: #fff;
 }
 
-.stock-status.in-stock { background-color: #388e3c; }
-.stock-status.out-of-stock { background-color: #9e9e9e; }
+.stock-status.in-stock {
+  background-color: #388e3c;
+}
+
+.stock-status.out-of-stock {
+  background-color: #9e9e9e;
+}
 
 /* --- Title --- */
 .product-title {
@@ -96,7 +102,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  flex: 1; /* take available space */
+  flex: 1;
+  /* take available space */
 }
 
 .original-price {
@@ -118,18 +125,20 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(255,111,0,0.5);
+  box-shadow: 0 4px 10px rgba(255, 111, 0, 0.5);
   transition: background-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
-  opacity: 0; /* hidden initially */
+  opacity: 0;
+  /* hidden initially */
 }
 
 .product:hover .btn-cart-icon.mat-mdc-icon-button {
-  opacity: 1; /* show on hover */
+  opacity: 1;
+  /* show on hover */
 }
 
 .btn-cart-icon.mat-mdc-icon-button:hover:not(:disabled) {
   background-color: #e65c00;
-  box-shadow: 0 6px 14px rgba(230,92,0,0.6);
+  box-shadow: 0 6px 14px rgba(230, 92, 0, 0.6);
 }
 
 .btn-cart-icon.mat-mdc-icon-button:disabled {
@@ -160,14 +169,15 @@
   text-align: center;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
   margin-right: 10px;
-} 
+}
 
 
 .quantity-input:focus {
   border-color: #ff6f00;
   outline: none;
-  box-shadow: 0 0 4px rgba(255,111,0,0.5);
+  box-shadow: 0 0 4px rgba(255, 111, 0, 0.5);
 }
+
 .error-message {
   color: #e53935;
   font-size: 14px;
@@ -190,62 +200,212 @@
     margin-top: 4px;
     text-align: center;
   }
+
   .product {
-    max-width: 94%;
-    margin: 10px 2%;
+    max-width: 100%;
+    margin: 0;
 
   }
-  .product-title { font-size: 12px; }
-  .discounted-price { font-size: 14px; }
-  .original-price { font-size: 11px; }
-  .btn-cart-icon.mat-mdc-icon-button { width: 36px; height: 36px; }
-  .quantity-input { width: 40px; }
+
+  .product-title {
+    font-size: 12px;
+  }
+
+  .discounted-price {
+    font-size: 14px;
+  }
+
+  .original-price {
+    font-size: 11px;
+  }
+
+  .btn-cart-icon.mat-mdc-icon-button {
+    width: 30px;
+    height: 30px;
+  }
+
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 7px;
+    position: relative;
+    right: 8px;
+}
+  .quantity-input {
+    width: 40px;
+  }
+
+  .btn-cart-icon.mat-mdc-icon-button {
+    opacity: 1;
+  }
 }
 
 
 @media (min-width: 401px) and (max-width: 600px) {
-  .product { max-width: 90%; margin: 10px auto; }
-  .product-title { font-size: 13px; }
-  .discounted-price { font-size: 15px; }
+  .product {
+    max-width: 90%;
+    margin: 10px auto;
+  }
+
+  .product-title {
+    font-size: 13px;
+  }
+
+  .discounted-price {
+    font-size: 15px;
+  }
+
+  .btn-cart-icon.mat-mdc-icon-button {
+    opacity: 1;
+  }
+
+    .btn-cart-icon.mat-mdc-icon-button {
+    width: 30px;
+    height: 30px;
+  }
+
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 7px;
+    position: relative;
+    right: 8px;
+}
 }
 
 /* 768px - tablet */
 @media (min-width: 601px) and (max-width: 768px) {
-  .product { max-width: 90%; }
-  .product-title { font-size: 14px; }
-  .discounted-price { font-size: 16px; }
+  .product {
+    max-width: 90%;
+  }
+
+  .product-title {
+    font-size: 14px;
+  }
+
+  .discounted-price {
+    font-size: 16px;
+  }
+
+  .btn-cart-icon.mat-mdc-icon-button {
+    opacity: 1;
+  }
+
+    .btn-cart-icon.mat-mdc-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 7px;
+    position: relative;
+    right: 5px;
+}
 }
 
 /* 992px - small desktop */
 @media (min-width: 769px) and (max-width: 992px) {
-  .product { max-width: 90%; }
-  .product-title { font-size: 15px; }
+  .product {
+    max-width: 90%;
+  }
+
+  .product-title {
+    font-size: 15px;
+  }
+
   .error-message {
     color: #e53935;
     font-size: 12px;
     margin-top: 4px;
     text-align: center;
   }
+
+  .btn-cart-icon.mat-mdc-icon-button {
+    opacity: 1;
+  }
+      .btn-cart-icon.mat-mdc-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 7px;
+    position: relative;
+    right: 5px;
+}
 }
 
 /* 1092px - medium desktop */
 @media (min-width: 993px) and (max-width: 1092px) {
-  .product { max-width: 90%;}
+  .product {
+    max-width: 90%;
+  }
+
+      .btn-cart-icon.mat-mdc-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+  .btn-cart-icon.mat-mdc-icon-button {
+    opacity: 1;
+  }
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 7px;
+    position: relative;
+    right: 5px;
+}
 }
 
 /* 1280px - large desktop */
 @media (min-width: 1093px) and (max-width: 1280px) {
-  .product { max-width: 92%; }
+  .product {
+    max-width: 96%;
+  }
+
+        .btn-cart-icon.mat-mdc-icon-button {
+    width: 40px;
+    height: 40px;
+  }
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 5px;
+    position: relative;
+    right: 5px;
+}
 }
 
 /* 1980px - extra large desktop */
 @media (min-width: 1281px) {
-  .product { max-width: 92%; }
-  .product-title { font-size: 16px; }
+  .product {
+    max-width: 92%;
+  }
+
+          .btn-cart-icon.mat-mdc-icon-button {
+    width: 46px;
+    height: 46px;
+  }
+.mat-mdc-icon-button .mdc-button__label, .mat-mdc-icon-button .mat-icon
+ {
+    z-index: 1;
+    bottom: 1px;
+    position: relative;
+    right: 1px;
+    font-size: 22px;
 }
+
+  .product-title {
+    font-size: 16px;
+  }
+}
+
 /* --- Features: --- */
 /* - Hover Effects for interactivity */
 /* - Responsive Design for various screen sizes */
 /* - Clean and Modern Aesthetic */
 /* - Clear Visual Hierarchy for easy information access */
-
