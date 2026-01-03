@@ -204,6 +204,7 @@
   .product {
     max-width: 100%;
     margin: 0;
+    padding: 0;
 
   }
 
@@ -212,11 +213,11 @@
   }
 
   .discounted-price {
-    font-size: 14px;
+    font-size: 11px;
   }
 
   .original-price {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .btn-cart-icon.mat-mdc-icon-button {
@@ -243,7 +244,7 @@
 
 @media (min-width: 401px) and (max-width: 600px) {
   .product {
-    max-width: 90%;
+    max-width: 100%;
     margin: 10px auto;
   }
 
@@ -276,7 +277,7 @@
 /* 768px - tablet */
 @media (min-width: 601px) and (max-width: 768px) {
   .product {
-    max-width: 90%;
+    max-width: 100%;
   }
 
   .product-title {
@@ -308,7 +309,7 @@
 /* 992px - small desktop */
 @media (min-width: 769px) and (max-width: 992px) {
   .product {
-    max-width: 90%;
+    max-width: 100%;
   }
 
   .product-title {
@@ -342,7 +343,7 @@
 /* 1092px - medium desktop */
 @media (min-width: 993px) and (max-width: 1092px) {
   .product {
-    max-width: 90%;
+    max-width: 100%;
   }
 
       .btn-cart-icon.mat-mdc-icon-button {
@@ -364,7 +365,7 @@
 /* 1280px - large desktop */
 @media (min-width: 1093px) and (max-width: 1280px) {
   .product {
-    max-width: 96%;
+    max-width: 100%;
   }
 
         .btn-cart-icon.mat-mdc-icon-button {
@@ -383,7 +384,7 @@
 /* 1980px - extra large desktop */
 @media (min-width: 1281px) {
   .product {
-    max-width: 92%;
+    max-width: 100%;
   }
 
           .btn-cart-icon.mat-mdc-icon-button {

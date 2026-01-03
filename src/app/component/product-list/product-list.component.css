@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
 }
-.subCategory .sub-links.active_link {
+.active_link {
   font-size: 18px;
   padding: 0px 10px;
   color: #dc8109 !important; /* Use only if necessary */
@@ -107,6 +107,7 @@ a {
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   min-height: 100vh;
+  min-width: 15vw;
 }
 
 .categories h2, .filters h2 {

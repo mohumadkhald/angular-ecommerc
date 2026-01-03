@@ -5,7 +5,7 @@
 <div *ngIf="!loading && !showNotFound && subCategories.length > 0" class="main-container">
   <div class="sidebar">
     <div class="subCategory">
-      <h3>{{ categoryTitle }}</h3>
+      <h3 class="active_link">{{ (categoryTitle ?? 'Default Category') | capitalize }}</h3>
       <ul>
         <li *ngFor="let subCategory of subCategories">
           <i class="fa-solid fa-angle-left"></i>
