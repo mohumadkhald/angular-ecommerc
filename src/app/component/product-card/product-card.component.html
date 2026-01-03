@@ -18,13 +18,9 @@
 
   <!-- Bottom row: Prices + Cart + Quantity -->
   <div class="bottom-row">
-
-    <!-- Prices -->
     <div class="price-info">
-      <span *ngIf="product.discountPercent>0" class="original-price">{{ product.price | currency }}</span>
-      <span class="discounted-price">
-        {{ product.discountPercent>0 ? product.discountPrice : product.price | currency }}
-      </span>
+      <span class="original-price" *ngIf="product.discountPercent > 0">{{ product.price | currency }}</span>
+      <span class="discounted-price">{{ product.discountPrice || product.price | currency }}</span>
     </div>
     <!-- Cart button -->
     <button mat-icon-button class="btn-cart-icon" *ngIf="product.productVariations[0]?.color !== 'no_color'"
@@ -43,7 +39,7 @@
       <input id="quantity" class="quantity-input" type="number" min="1" [max]="maxQuantity" [(ngModel)]="quantity" />
     </div>
   </div>
-  <div *ngIf="submitted && quantity <= 0" class="error-message text-danger">
+  <div *ngIf="quantity <= 0" class="error-message text-danger">
     Quantity must be greater than 0.</div>
   <div *ngIf="submitted && !validateQuantity2()" class="error-message text-danger mt-1">
     available stock ({{ maxQuantity }})
