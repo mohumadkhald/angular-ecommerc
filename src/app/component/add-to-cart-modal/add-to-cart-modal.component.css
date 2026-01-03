@@ -1,63 +1,313 @@
-.model-header {
-  margin-top: 10vh;
-  background-color: #007bff;
-  padding: 5px;
-}
-.modal-title {
-  font-size: 2rem; /* Responsive font size */
-  padding: 5px; color: white; margin-left: 40%; margin-top: 10px
-}
-.custom-image-zoom .lib-ngx-image-zoom-container {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  overflow: hidden;
+.close-button {
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-img {
-    width: 300px;
-    height: 300px;
-}
 
-.custom-image-zoom .lib-ngx-image-zoom-container .zoom-box {
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-.error-message {
+/* =========================
+   Dialog Container
+========================= */
+.cart-dialog {
+  width: 100%;
+  max-width: 880px;
+  margin: auto;
+  padding: 0;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  font-family: "Inter", "Roboto", system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
   display: flex;
-  justify-content: end;
-  margin-top: 5px;
+  flex-direction: column;
+  max-height: 90vh;
+  /* limits dialog height */
 }
 
-@media (min-width: 992px) {
-  .modal-body {
-    padding: 20px; /* Adjust padding for smaller screens */
-  }
-  img {
-      width: 300px;
-      height: 300px;
-  }
+mat-dialog-content.cart-dialog {
+  overflow-y: auto;
+  /* allows scroll if content too tall */
+  display: flex;
+  flex-direction: column;
 }
-@media (  max-width: 992px) {
-  .modal-body {
-    padding: 10px; /* Adjust padding for smaller screens */
+
+/* =========================
+   Close Button Red
+========================= */
+.close-btn {
+  color: #f2eeee !important;
+  background-color: #d32f2f;
+}
+
+.close-btn:hover {
+  background-color: #fd0e0e;
+}
+
+/* =========================
+   Header
+========================= */
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background-color: #e27f34;
+  color: #fff;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* =========================
+   Body Layout
+========================= */
+.dialog-body {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 16px;
+  padding: 20px;
+  background: #fafafa;
+}
+
+/* =========================
+   Image Section
+========================= */
+.image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* pushes FAB to bottom on large screens */
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  min-height: 100px;
+}
+
+.image-section img {
+  max-width: 100%;
+  height: 300px;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.image-section img:hover {
+  transform: scale(1.03);
+}
+
+/* FAB under image on large screens */
+.image-section button[mat-fab] {
+  display: block;
+  margin-top: 20px;
+}
+
+/* =========================
+   Info Section
+========================= */
+.info-section {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.info-section h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 18px;
+}
+
+.original {
+  color: #9aa0a6;
+  text-decoration: line-through;
+  font-size: 0.95rem;
+}
+
+.discount {
+  color: #d32f2f;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+/* =========================
+   Form Fields
+========================= */
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 12px;
+}
+
+mat-error {
+  font-size: 1rem;
+  position: relative;
+  bottom: 20px;
+}
+
+/* =========================
+   Footer
+========================= */
+.dialog-footer {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-top: 1px solid #e9ecef;
+}
+
+/* =========================
+   Material Button Tweaks
+========================= */
+button[mat-fab] {
+  background-color: #ff6f00;
+  color: white;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(255, 111, 0, 0.5);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+  flex-shrink: 0;
+  margin: 0 auto;
+  position: relative;
+  top: 0px;
+}
+
+/* Cart button for mobile screens */
+.cart-btn-mobile {
+  display: none;
+  /* hidden on large screens */
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* =========================
+   Responsive: Medium Screens ≤ 1024px
+========================= */
+@media (max-width: 1024px) {
+  .dialog-body {
+    grid-template-columns: 1fr;
+    /* stack columns */
+    padding: 16px;
   }
-  img {
-      width: 240px;
-      height: 200px;
+
+  .image-section {
+    min-height: auto;
+  }
+
+  .image-section img {
+    max-height: 220px;
+  }
+
+  /* Hide image FAB and show mobile FAB */
+  .image-section button[mat-fab] {
+    display: none;
+  }
+
+  .cart-btn-mobile {
+    display: flex;
   }
 }
 
-@media (  max-width: 400px) {
-  .modal-body {
-    padding: 10px; /* Adjust padding for smaller screens */
+/* =========================
+   Responsive: Small Screens ≤ 768px
+========================= */
+@media (max-width: 768px) {
+  .dialog-header {
+    padding: 14px 16px;
   }
-  img {
-      width: 240px;
-      height: 240;
+
+  .dialog-header h2 {
+    font-size: 1.1rem;
   }
-  .modal-title {
-    font-size: 2rem; /* Responsive font size */
-    padding: 5px; color: white; margin-left: 10%; margin-top: 10px
+
+  .dialog-footer {
+    padding: 14px 16px;
+  }
+
+  .dialog-body {
+    gap: 16px;
+  }
+}
+
+/* =========================
+   Responsive: Extra Small Screens ≤ 500px
+========================= */
+@media (max-width: 500px) {
+
+  .dialog-body {
+    grid-template-columns: 1fr;
+    padding: 8px;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .dialog-header {
+    padding: 6px 8px;
+  }
+
+  .dialog-header h2 {
+    font-size: 1rem;
+  }
+
+  .image-section {
+    padding: 10px;
+    min-height: auto;
+  }
+
+  .image-section img {
+    max-height: 160px;
+  }
+
+  .image-section button[mat-fab] {
+    width: 45px;
+    height: 45px;
+    top: 20px;
+    margin-top: 10px;
+  }
+
+  .info-section {
+    padding: 10px;
+  }
+
+  mat-form-field {
+    margin-bottom: 8px;
+  }
+
+  mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  mat-form-field .mat-form-field-infix {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+  }
+
+  mat-label {
+    font-size: 0.8rem;
+  }
+
+  mat-error {
+    font-size: 0.85rem;
+    bottom: 16px;
+    display: flex;
+    justify-content: end;
   }
 }

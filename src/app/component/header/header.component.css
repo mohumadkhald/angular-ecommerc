@@ -216,6 +216,46 @@
   cursor: pointer;
 }
 
+.xshop-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.xshop-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.xshop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.xshop a {
+  white-space: nowrap;
+  padding: 4px 6px;
+}
+
+.ellipsis {
+  font-weight: bold;
+  padding: 0 4px;
+}
+
+.slider-btn {
+  background: #1f2833;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.slider-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 @media (max-width: 992px) {
 
   .nav-search input {
@@ -393,5 +433,45 @@
   }
   .material-symbols-rounded {
   font-size: 30px;
+}
+
+.xshop-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.xshop-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.xshop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.xshop a {
+  white-space: nowrap;
+  padding: 2px 3px;
+}
+
+.ellipsis {
+  font-weight: bold;
+  padding: 0 4px;
+}
+
+.slider-btn {
+  background: #1f2833;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 3px 5px;
+}
+
+.slider-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 }

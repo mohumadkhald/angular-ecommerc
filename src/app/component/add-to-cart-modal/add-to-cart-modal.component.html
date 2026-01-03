@@ -1,51 +1,70 @@
-<div *ngIf="haveSpec">
-  <div class="modal-header" style="background-color: #007bff; padding: 5px; color: white;">
-    <h6 class="modal-title">Add To Cart</h6>
-  </div>
+<button class="close-button text-bg-danger p-1 text-white" [@buttonAnim]="isClosing ? 'leave' : 'enter'"
+  (click)="close('')" aria-label="Close">
+  X
+</button>
 
-  <div class="modal-body">
-    <div class="row">
-      <div class="col-md-6">
-        <img [src]="product.imageUrls[0]" [alt]="product.productTitle" class="img-fluid">
+
+<mat-dialog-content class="cart-dialog" [@dialogOpen]="isClosing ? 'leave' : 'enter'">
+  <mat-divider></mat-divider>
+
+  <!-- Body -->
+  <div class="dialog-body" [@fadeSlide]>
+    <!-- Image -->
+    <div class="image-section" [@fadeSlide]>
+      <img [src]="product.imageUrls[0]" [alt]="product.productTitle" />
+      <button mat-fab color="primary" (click)="addToCart()" matTooltip="Add to Cart">
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+    </div>
+
+    <!-- Info -->
+    <div class="info-section" [@fadeSlide]>
+      <h2>{{ product.productTitle }}</h2>
+
+      <div class="price">
+        <span class="original">{{ product.price | currency }}</span>
+        <span class="discount">{{ product.discountPrice | currency }}</span>
       </div>
-      <div class="col-md-6">
-        <h1>{{ product.productTitle }}</h1>
-        <p>{{ product.description }}</p>
-        <p><strong>Price: </strong>{{ product.price | currency }}</p>
-        <p *ngIf="product.price != product.discountPrice" style="color: red;"><strong>Price After Discount: </strong>{{ product.discountPrice | currency }}</p>
-        <div class="form-group">
-          <label for="colorSelect">Color</label>
-          <select id="colorSelect" class="form-control mt-2" [(ngModel)]="selectedColor"
-            (change)="onColorChange($event)">
-            <option value="" disabled selected>Select Color</option>
-            <option *ngFor="let color of availableColors" [value]="color">{{ color | titlecase }}</option>
-          </select>
-          <div *ngIf="submitted && !selectedColor" class="text-danger mt-1">Color is required.</div>
-        </div>
 
-        <div class="form-group">
-          <label for="sizeSelect" class="mt-2">Size</label>
-          <select id="sizeSelect" class="form-control mt-2" [(ngModel)]="selectedSize" [disabled]="!sizes.length"
-            (change)="onSizeChange()">
-            <option value="" disabled selected>Select Size</option>
-            <option *ngFor="let size of sizes" [value]="size">{{ size | titlecase }}</option>
-          </select>
-          <div *ngIf="submitted && !selectedSize" class="text-danger mt-1">Size is required.</div>
-        </div>
+      <!-- Size -->
+      <mat-form-field appearance="outline" class="full-width" [@fadeSlide]>
+        <mat-label>Size</mat-label>
+        <mat-select [(ngModel)]="selectedSize" (selectionChange)="onSizeChange($event.value)">
+          <mat-option *ngFor="let size of availableSizes" [value]="size">
+            {{ size | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-error *ngIf="submitted && !selectedSize">Size is required</mat-error>
 
-        <div class="form-group">
-          <label class="mt-2" for="quantity">Quantity</label>
-          <input type="number" id="quantity" class="form-control" [(ngModel)]="quantity" min="1" [max]="maxQuantity">
-          <div *ngIf="submitted && quantity <= 0" class="text-danger mt-1">Quantity must be greater than 0.</div>
-          <div *ngIf="submitted && !validateQuantity()" class="text-danger mt-1">
-            Quantity exceeds available stock ({{ maxQuantity }} available).
-          </div>
-        </div>
+      <!-- Color -->
+      <mat-form-field appearance="outline" class="full-width" [@fadeSlide]>
+        <mat-label>Color</mat-label>
+        <mat-select [(ngModel)]="selectedColor" [disabled]="!selectedSize || !availableColors.length"
+          (selectionChange)="onColorChange()">
+          <mat-option *ngFor="let color of availableColors" [value]="color">
+            {{ color | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-error *ngIf="submitted && !selectedColor">Color is required</mat-error>
+
+      <!-- Quantity -->
+      <mat-form-field appearance="outline" class="full-width" [@fadeSlide]>
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" [(ngModel)]="quantity" min="1" [max]="maxQuantity" />
+      </mat-form-field>
+      <mat-error *ngIf="submitted && quantity < 1">Quantity is required</mat-error>
+      <mat-error *ngIf="selectedColor && selectedSize && quantity > maxQuantity">
+        Only {{ maxQuantity }} items available
+      </mat-error>
+
+      <!-- Mobile Cart Button -->
+      <div class="cart-btn-mobile" [@fadeSlide]>
+        <button mat-fab color="primary" (click)="addToCart()" matTooltip="Add to Cart">
+          <mat-icon>shopping_cart</mat-icon>
+        </button>
       </div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-    <button type="button" class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
-  </div>
-</div>
+</mat-dialog-content>

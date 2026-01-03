@@ -1,18 +1,18 @@
-import { CommonModule, NgClass, NgIf, NgStyle } from '@angular/common';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { CartService } from '../../service/cart.service';
-import { StarRatingComponent } from '../star-rating/star-rating.component';
 
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { CapitalizePipe } from '../../pipe/capitalize.pipe';
+import { AuthService } from '../../service/auth.service';
+import { CartServerService } from '../../service/cart-server.service';
 import { ToastService } from '../../service/toast.service';
 import { AddToCartModalComponent } from '../add-to-cart-modal/add-to-cart-modal.component';
-import { CartServerService } from '../../service/cart-server.service';
-import { AuthService } from '../../service/auth.service';
-import { FormsModule } from '@angular/forms';
-import { CapitalizePipe } from '../../pipe/capitalize.pipe';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-product-card',
   standalone: true,
@@ -40,7 +40,7 @@ export class ProductCardComponent implements OnInit {
   constructor(
     private router: Router,
     private cartService: CartService,
-    private modalService: NgbModal,
+    private modalService: MatDialog,
     public toastService: ToastService,
     private cartServerService: CartServerService,
     private authService: AuthService
@@ -63,26 +63,22 @@ export class ProductCardComponent implements OnInit {
 
   open(product: any) {
     const modalRef = this.modalService.open(AddToCartModalComponent, {
-      size: 'lg',
-      centered: true,
-      backdrop: 'static', // Prevent closing when clicking outside
-      keyboard: false, // Prevent closing with the Esc key
+      width: '600px', // Adjust width as needed
+      panelClass: 'dialog-centered', // Add custom class for centering
+      disableClose: true, // Prevent closing when clicking outside
     });
     modalRef.componentInstance.product = product;
-    modalRef.result.then(
-      (result) => {
-        if (result === 'added') {
-          // console.log('Product added to cart:', product);
-          this.toastService.add(
-            'Product ' +
-              product.productTitle.toUpperCase() +
-              ' added Successfully to Cart',
-            'success'
-          );
-        }
-      },
-      (reason) => {}
-    );
+    modalRef.afterClosed().subscribe((result) => {
+      if (result === 'added') {
+        // console.log('Product added to cart:', product);
+        this.toastService.add(
+          'Product ' +
+            product.productTitle.toUpperCase() +
+            ' added Successfully to Cart',
+          'success'
+        );
+      }
+    });
   }
 
   // open2(product: any) {

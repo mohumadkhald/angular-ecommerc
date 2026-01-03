@@ -1,68 +1,132 @@
-import { CommonModule, NgForOf, NgStyle } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, NgZone } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
 import { CartService } from '../../service/cart.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-add-to-cart-modal',
   standalone: true,
-  imports: [FormsModule, NgbModule, NgForOf, NgStyle, CommonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDividerModule,
+  ],
   templateUrl: './add-to-cart-modal.component.html',
   styleUrl: './add-to-cart-modal.component.css',
+  animations: [
+    trigger('dialogOpen', [
+      transition('enter => leave', [
+        animate(
+          '1000ms ease-in',
+          style({ opacity: 0, transform: 'scale(0.8)' })
+        ),
+      ]),
+      transition('void => enter', [
+        style({ opacity: 0, transform: 'scale(0.8)' }),
+        animate(
+          '1500ms ease-out',
+          style({ opacity: 1, transform: 'scale(1)' })
+        ),
+      ]),
+    ]),
+
+    trigger('fadeSlide', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate(
+          '1500ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('buttonAnim', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.5)' }),
+        animate(
+          '1000ms ease-out',
+          style({ opacity: 1, transform: 'scale(1)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '200ms ease-in',
+          style({ opacity: 0, transform: 'scale(0.5)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class AddToCartModalComponent {
   @Input() product: any;
-  @Input() haveSpec: boolean = true;
 
-  selectedSize: string = '';
-  selectedColor: string = '';
-  quantity: number = 1;
-  submitted: boolean = false;
+  selectedSize = '';
+  selectedColor = '';
+  quantity = 1;
+  submitted = false;
 
-  availableColors: any;
+  availableColors: string[] = [];
   sizes: string[] = [];
-  maxQuantity: number = 0; // Holds the max available quantity for the selected variation
+  colors: string[] = [];
+  maxQuantity = 0;
+  availableSizes: string[] = [];
 
   constructor(
-    public activeModal: NgbActiveModal,
-    private cdr: ChangeDetectorRef,
+    private dialogRef: MatDialogRef<AddToCartModalComponent>,
     private cartService: CartService,
     private authService: AuthService,
     private cartServerService: CartServerService
   ) {}
 
   ngOnInit(): void {
-    this.cdr.detectChanges();
-    // Extract available colors from productVariations with quantity > 0
-    this.availableColors = [
-      ...new Set(
-        this.product.productVariations
-          .filter((v: any) => v.quantity > 0)
-          .map((v: any) => v.color)
+    this.availableSizes = [
+      ...Array.from(
+        new Set(
+          this.product.productVariations
+            .filter((v: any) => v.quantity > 0)
+            .map((v: any) => v.size as string)
+        )
       ),
-    ];
+    ] as string[];
   }
 
-  onColorChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const color = selectElement.value;
+  onSizeChange(selectedSize: string): void {
+    this.selectedSize = selectedSize;
 
-    // Extract available sizes for the selected color with quantity > 0
-    this.sizes = this.product.productVariations
-      .filter((v: any) => v.color === color && v.quantity > 0)
-      .map((v: any) => v.size);
+    // Filter colors based on selected size and stock
+    this.availableColors = this.product.productVariations
+      .filter(
+        (v: { size: string; quantity: number }) =>
+          v.size === selectedSize && v.quantity > 0
+      )
+      .map((v: { color: any }) => v.color);
 
-    this.selectedSize = ''; // Reset size when color changes
+    // Reset color and quantity
+    this.selectedColor = '';
+    this.maxQuantity = 0;
   }
 
-  onSizeChange(): void {
-    // Get the max quantity for the selected color and size
+  onColorChange(): void {
     const variation = this.product.productVariations.find(
-      (v: any) => v.color === this.selectedColor && v.size === this.selectedSize
+      (v: { color: string; size: string }) =>
+        v.color === this.selectedColor && v.size === this.selectedSize
     );
+
     this.maxQuantity = variation ? variation.quantity : 0;
   }
 
@@ -74,8 +138,16 @@ export class AddToCartModalComponent {
     return this.authService.isLoggedIn();
   }
 
-  close() {
-    this.activeModal.close();
+  isClosing = false;
+
+  close(x: string) {
+    // Start animation
+    this.isClosing = true;
+
+    // Wait 1 second (animation duration) then close
+    setTimeout(() => {
+      this.dialogRef.close(x);
+    }, 1000); // match your leave animation duration
   }
 
   addToCart() {
@@ -110,6 +182,6 @@ export class AddToCartModalComponent {
       this.cartServerService.addToCart(productToAdd);
     }
 
-    this.activeModal.close('added');
+    this.close('added');
   }
 }
