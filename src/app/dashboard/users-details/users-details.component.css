@@ -1,40 +1,152 @@
-/* user-status.component.css */
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in */
+.image-container:hover .change-image-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.image-container img {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.fade-in {
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+/* Spinner */
+.spinner-container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-message {
+  margin-top: 20px;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+/* Card */
+.user-card {
+  border-radius: 16px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-top: 25px;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  background: linear-gradient(135deg, rgb(43, 138, 150), rgb(19, 72, 77));
+  color: white;
+  border-radius: 16px 16px 0 0;
+}
+
+/* Image */
+.img-wrapper {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.user-img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.4s ease;
+}
+
+.user-img:hover {
+  transform: scale(1.08);
+}
+
+/* Info List */
+.info-list .list-group-item {
+  border: none;
+  padding: 12px 0;
+  font-size: 0.95rem;
+}
+
+/* Section Title */
+.section-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Toggle */
 .btn-toggle {
-    width: 60px;
-    height: 30px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-    margin-left: 15px;
-  }
-  
-  .btn-toggle.active {
-    background-color: #28a745;
-    border-color: #28a745;
-  }
-  
-  .btn-toggle::before {
-    content: '';
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    background-color: #fff;
-    border-radius: 50%;
-    top: 50%;
-    left: 1px;
-    transform: translateY(-50%);
-    transition: left 0.3s;
+  width: 60px;
+  height: 30px;
+  background: #ccc;
+  border-radius: 20px;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-toggle::before {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+.btn-toggle.active {
+  background: #198754;
+}
+
+.btn-toggle.active::before {
+  transform: translateX(30px);
+}
+
+/* Not Found */
+.not-found-title {
+  font-size: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .not-found-title {
+    font-size: 1.4rem;
   }
 
-  img {
-    width: 380px;
-    height: 360px;
+  .section-title {
+    text-align: center;
   }
-  
-  .btn-toggle.active::before {
-    left: calc(100% - 29px);
-  }
-  
+}

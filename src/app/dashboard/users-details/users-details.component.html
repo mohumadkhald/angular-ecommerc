@@ -1,75 +1,75 @@
-<!-- users-details.component.html -->
-<div *ngIf="loading" style="margin: 30vh 40vw" class="spinner-container">
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="spinner-container">
     <mat-spinner></mat-spinner>
-    <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading, please wait...</div>
+    <div class="spinner-message pulse">Loading, please wait...</div>
 </div>
-<div *ngIf="!loading" class="container mt-2">
-    <div *ngIf="user" class="card">
-        <div class="card-header">
-            <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+
+<!-- User Details -->
+<div *ngIf="!loading" class="container mt-4 fade-in">
+    <div *ngIf="user" class="card user-card">
+        <div class="card-header text-center">
+            <h2>{{ user.firstName }} {{ user.lastName }}</h2>
         </div>
+
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <img *ngIf="user.imageUrl" [src]="user.imageUrl" class="img-fluid rounded" alt="User Image">
-                    <img *ngIf="!user.imageUrl" src='../../../assets/no-user.jpg' class="img-fluid rounded"
-                        alt="User Image">
+            <div class="row align-items-center">
+                <!-- User Image -->
+                <div class="col-12 col-md-4 mb-3 text-center">
+                    <div class="img-wrapper">
+                        <img *ngIf="user.imageUrl" [src]="user.imageUrl" class="user-img" alt="User Image" />
+                        <img *ngIf="!user.imageUrl" src="../../../assets/no-user.jpg" class="user-img"
+                            alt="User Image" />
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <strong>Email:</strong> {{ user.email }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Phone:</strong> {{ user.phone || 'N/A' }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Role:</strong> {{ user.role }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email Verified:</strong> {{ user.emailVerified }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Gender:</strong> {{ user.gender }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>User ID:</strong> {{ user.userId }}
-                        </li>
+
+                <!-- User Info -->
+                <div class="col-12 col-md-8">
+                    <ul class="list-group info-list">
+                        <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+                        <li class="list-group-item"><strong>Phone:</strong> {{ user.phone || 'N/A' }}</li>
+                        <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
+                        <li class="list-group-item"><strong>Email Verified:</strong> {{ user.emailVerified }}</li>
+                        <li class="list-group-item"><strong>Gender:</strong> {{ user.gender }}</li>
+                        <li class="list-group-item"><strong>User ID:</strong> {{ user.userId }}</li>
                     </ul>
                 </div>
             </div>
-            <!-- user-status.component.html -->
+
+            <!-- Credentials -->
             <div class="mt-4">
-                <h4>Credentials</h4>
+                <h4 class="section-title">Credentials</h4>
                 <ul class="list-group">
-                    <li class="list-group-item">
-                        <strong>Account Expired:</strong>
-                        <button type="button" class="btn btn-toggle" [class.active]="!user.credential.accountNonExpired"
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Account Expired</strong>
+                        <button class="btn-toggle" [class.active]="!user.credential.accountNonExpired"
                             (click)="toggleAccountNonExpired()">
                         </button>
                     </li>
-                    <li class="list-group-item">
-                        <strong>Account Locked:</strong>
-                        <button type="button" class="btn btn-toggle" [class.active]="!user.credential.accountNonLocked"
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Account Locked</strong>
+                        <button class="btn-toggle" [class.active]="!user.credential.accountNonLocked"
                             (click)="toggleAccountNonLocked()">
                         </button>
                     </li>
-                    <li class="list-group-item mb-2">
-                        <strong>Credentials Expired:</strong>
-                        <button type="button" class="btn btn-toggle"
-                            [class.active]="!user.credential.credentialsNonExpired"
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Credentials Expired</strong>
+                        <button class="btn-toggle" [class.active]="!user.credential.credentialsNonExpired"
                             (click)="toggleCredentialsNonExpired()">
                         </button>
                     </li>
                 </ul>
             </div>
-
         </div>
     </div>
 </div>
 
-<div class="cont-notfound" *ngIf="!user && !loading">
+<!-- User Not Found -->
+<div class="cont-notfound fade-in" *ngIf="!user && !loading">
     <div class="text-center">
-        <h1 class="not-found-title"><span class="text-danger">This User With ID {{id}} Not Found</span></h1>
+        <h1 class="not-found-title text-danger">
+            This User With ID {{ id }} Not Found
+        </h1>
     </div>
 </div>

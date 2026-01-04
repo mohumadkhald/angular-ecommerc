@@ -110,3 +110,55 @@
   .empty-item div, .empty-item button {font-size:10px;}
 
 }
+
+/* FIXED CHECKOUT – DESKTOP ONLY */
+@media (min-width: 992px) {
+
+  .checkout-fixed-wrapper {
+    position: relative;
+  }
+
+  .checkout-fixed-card {
+    position: fixed;
+    top: 170px;
+    min-width: 350px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    z-index: 100;
+    margin-left: 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .checkout-fixed-wrapper {
+    position: relative;
+  }
+
+  .checkout-fixed-card {
+    position: fixed;
+    top: 170px;
+    min-width: 400px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    z-index: 100;
+    margin-left: 35px;
+  }
+}
+
+@media (min-width: 1400px) {
+
+  .checkout-fixed-wrapper {
+    position: relative;
+  }
+
+  .checkout-fixed-card {
+    position: fixed;
+    top: 170px;
+    min-width: 450px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    z-index: 100;
+    margin-left: 50px;
+  }
+}

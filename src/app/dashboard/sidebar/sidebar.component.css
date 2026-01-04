@@ -455,15 +455,16 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     padding: 0;
   }
   .nav-link {
-    margin: 5px;
-    padding: 3px;
+    margin: 0px 5px;
+    padding: 0px;
   }
 
   .sidebar {
-    width: 100%;
-    height: 50px;
+    width: 330px;
+    min-width: fit-content;
+    height: 35px;
     box-shadow: none;
-    padding: 5px;
+    padding: 0px;
   }
 
   .content {

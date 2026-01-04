@@ -1,6 +1,13 @@
 /* =========================
    BASE (DESKTOP)
 ========================= */
+
+/* Ensure consistent box model behavior */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 .main-table {
   width: 100%;
   border-collapse: collapse;
@@ -20,8 +27,8 @@
 .btn-sm {
   font-size: 13px;
   padding: 4px 8px;
+  margin-right: 8px; /* Add space between buttons */
 }
-
 
 /* =========================
    RESPONSIVE MODE
@@ -92,10 +99,6 @@
     display: none;
   }
 
-  .btn {
-    width: 100%;
-    margin-bottom: 6px;
-  }
   
 }
 

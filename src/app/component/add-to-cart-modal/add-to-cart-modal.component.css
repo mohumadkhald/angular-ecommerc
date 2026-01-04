@@ -18,7 +18,7 @@
   margin: auto;
   padding: 0;
   background: #ffffff;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 24px 60px orange;
   font-family: "Inter", "Roboto", system-ui, -apple-system, sans-serif;
   box-sizing: border-box;
   display: flex;
@@ -71,9 +71,9 @@ mat-dialog-content.cart-dialog {
 .dialog-body {
   display: grid;
   grid-template-columns: 1fr 1.15fr;
-  gap: 16px;
-  padding: 20px;
-  background: #fafafa;
+  gap: 3px;
+  padding: 5px;
+  background: #dbddde;
 }
 
 /* =========================
@@ -86,7 +86,6 @@ mat-dialog-content.cart-dialog {
   justify-content: space-between;
   /* pushes FAB to bottom on large screens */
   background: #ffffff;
-  border-radius: 14px;
   padding: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   min-height: 100px;
@@ -114,7 +113,6 @@ mat-dialog-content.cart-dialog {
 ========================= */
 .info-section {
   background: #ffffff;
-  border-radius: 14px;
   padding: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
@@ -198,6 +196,7 @@ button[mat-fab] {
   margin-top: 16px;
 }
 
+
 /* =========================
    Responsive: Medium Screens ≤ 1024px
 ========================= */
@@ -205,7 +204,7 @@ button[mat-fab] {
   .dialog-body {
     grid-template-columns: 1fr;
     /* stack columns */
-    padding: 16px;
+    padding: 10px;
   }
 
   .image-section {
@@ -243,8 +242,32 @@ button[mat-fab] {
   }
 
   .dialog-body {
-    gap: 16px;
+    gap: 5px;
   }
+
+    /* Reduce height of mat-form-field */
+::ng-deep .compact-field .mat-mdc-form-field-flex {
+  height: 40px;
+}
+
+/* Reduce input/select internal padding */
+::ng-deep .compact-field .mat-mdc-form-field-infix {
+  padding: 8px 12px !important;
+  min-height: 40px;
+  font-size: 0.9rem;
+}
+
+/* Reduce label size */
+
+/* Reduce arrow size in mat-select */
+::ng-deep .compact-field .mat-mdc-select-arrow {
+  transform: scale(0.85);
+}
+
+/* Outline border height fix */
+::ng-deep .compact-field .mdc-notched-outline {
+  height: 45px;
+}
 }
 
 /* =========================
@@ -254,7 +277,6 @@ button[mat-fab] {
 
   .dialog-body {
     grid-template-columns: 1fr;
-    padding: 8px;
     gap: 8px;
     width: 100%;
   }
@@ -268,7 +290,7 @@ button[mat-fab] {
   }
 
   .image-section {
-    padding: 10px;
+    padding: 5px;
     min-height: auto;
   }
 
@@ -284,16 +306,13 @@ button[mat-fab] {
   }
 
   .info-section {
-    padding: 10px;
+    padding: 5px;
   }
 
   mat-form-field {
-    margin-bottom: 8px;
+    margin-bottom: 3px;
   }
 
-  mat-form-field .mat-form-field-wrapper {
-    padding-bottom: 0;
-  }
 
   mat-form-field .mat-form-field-infix {
     font-size: 0.85rem;
@@ -310,4 +329,28 @@ button[mat-fab] {
     display: flex;
     justify-content: end;
   }
+
+  /* Reduce height of mat-form-field */
+::ng-deep .compact-field .mat-mdc-form-field-flex {
+  height: 40px;
+}
+
+/* Reduce input/select internal padding */
+::ng-deep .compact-field .mat-mdc-form-field-infix {
+  padding: 4px 6px !important;
+  min-height: 40px;
+  font-size: 0.9rem;
+}
+
+/* Reduce label size */
+
+/* Reduce arrow size in mat-select */
+::ng-deep .compact-field .mat-mdc-select-arrow {
+  transform: scale(0.85);
+}
+
+/* Outline border height fix */
+::ng-deep .compact-field .mdc-notched-outline {
+  height: 45px;
+}
 }

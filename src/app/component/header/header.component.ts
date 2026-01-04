@@ -267,9 +267,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setVisibleCount(width: number) {
-    if (width >= 500) {
+    if (width >= 600) {
       this.visibleCount = 6;
-    } else if (width >= 450) {
+    } else if (width >= 500) {
       this.visibleCount = 5;
     } else if (width >= 300) {
       this.visibleCount = 4;

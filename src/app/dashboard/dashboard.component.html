@@ -1,138 +1,137 @@
 <!-- app.component.html or main layout file -->
 <div class="layout" *ngIf="auth()">
-    <app-sidebar *ngIf="!showStats"></app-sidebar>
-    <div class="content">
-        <div class="container home-stats text-center" *ngIf="showStats">
-            <h1 class="text-center">Dashboard</h1>
-            <div class="row">
-                <div routerLink="users" class="col-md-4 col-xs-6">
-                    <div class="stat st-me changeing">
-                        <i class="fa fa-users"></i>
-                        <div class="inf">Total Members</div>
-                        <span><a routerLink="users">{{ userCount }}</a></span>
-                    </div>
-                </div>
-                <div routerLink="categories" class="col-md-4 col-xs-6">
-                    <div class="stat st-it changeing">
-                        <i class="fa fa-tag"></i>
-                        <div class="inf">Total Categories</div>
-                        <span><a routerLink="categories">{{ catsCount }}</a></span>
-                    </div>
-                </div>
-                <div routerLink="subcategories" class="col-md-4 col-xs-6">
-                    <div class="stat st-it changeing">
-                        <i class="fa fa-tag"></i>
-                        <div class="inf">Total SubCategories</div>
-                        <span><a routerLink="subcategories">{{ subCatsCount }}</a></span>
-                    </div>
-                </div>
-                <div routerLink="products" class="col-md-4 col-xs-6">
-                    <div class="stat st-co changeing">
-                        <i class="fa fa-comment"></i>
-                        <div class="inf">Total Products</div>
-                        <span><a routerLink="products">{{ prodsCount }}</a></span>
-                    </div>
-                </div>
-                <div routerLink="orders" class="col-md-4 col-xs-6">
-                    <div class="stat st-it changeing">
-                        <i class="fa fa-tag"></i>
-                        <div class="inf">Total Orders</div>
-                        <span><a routerLink="orders">{{ ordersCount }}</a></span>
-                    </div>
-                </div>
-            </div>
-
+  <app-sidebar *ngIf="!showStats"></app-sidebar>
+  <div class="content">
+    <div class="container home-stats text-center" *ngIf="showStats">
+      <h1 class="text-center">Dashboard</h1>
+      <div class="row">
+        <div routerLink="users" class="col-md-4 col-xs-6">
+          <div class="stat st-me changeing">
+            <i class="fa fa-users"></i>
+            <div class="inf">Total Members</div>
+            <span><a routerLink="users">{{ userCount }}</a></span>
+          </div>
         </div>
-        <router-outlet *ngIf="!showStats"></router-outlet>
+        <div routerLink="categories" class="col-md-4 col-xs-6">
+          <div class="stat st-it changeing">
+            <i class="fa fa-tag"></i>
+            <div class="inf">Total Categories</div>
+            <span><a routerLink="categories">{{ catsCount }}</a></span>
+          </div>
+        </div>
+        <div routerLink="subcategories" class="col-md-4 col-xs-6">
+          <div class="stat st-it changeing">
+            <i class="fa fa-tag"></i>
+            <div class="inf">Total SubCategories</div>
+            <span><a routerLink="subcategories">{{ subCatsCount }}</a></span>
+          </div>
+        </div>
+        <div routerLink="products" class="col-md-4 col-xs-6">
+          <div class="stat st-co changeing">
+            <i class="fa fa-comment"></i>
+            <div class="inf">Total Products</div>
+            <span><a routerLink="products">{{ prodsCount }}</a></span>
+          </div>
+        </div>
+        <div routerLink="orders" class="col-md-4 col-xs-6">
+          <div class="stat st-it changeing">
+            <i class="fa fa-tag"></i>
+            <div class="inf">Total Orders</div>
+            <span><a routerLink="orders">{{ ordersCount }}</a></span>
+          </div>
+        </div>
+      </div>
+
     </div>
+    <router-outlet *ngIf="!showStats"></router-outlet>
+  </div>
 </div>
 
-<div *ngIf="auth() && showStats" class="container last-elements-container mb-5">
-    <div class="header">
-      <h2>Last 5 Elements from every Service</h2>
-      <button (click)="toggle('all')" class="toggle-btn">
-        {{ showLastElements ? 'Hide' : 'Show' }} Last 5
-      </button>
-    </div>
-  
-    <div *ngIf="showLastElements" class="last-elements-grid">
-      <div class="last-element">
+<div *ngIf="!auth() && showStats" class="container last-elements-container mb-5">
+  <div class="header">
+    <h2>Last 5 Elements from every Service</h2>
+    <button (click)="toggle('all')" class="toggle-btn">
+      {{ showLastElements ? 'Hide' : 'Show' }} Last 5
+    </button>
+  </div>
+
+  <div *ngIf="showLastElements" class="last-elements-grid">
+    <div class="last-element">
       <div class="row">
         <h3 class="col-6">Last 5 Users</h3>
         <button (click)="toggle('user')" class="toggle-btn offset-3 col-3">
           {{ showLastUsers ? 'Hide' : 'Show' }} Last 5
         </button>
       </div>
-        <ul *ngIf="showLastUsers">
-          <li *ngFor="let user of totalUsers">
-            <span>{{ user.username }}</span>
-            <span class="date">{{ user.createdAt | date: 'short' }}</span>
-          </li>
-        </ul>
-      </div>
-  
-      <div class="last-element">
-        <div class="row">
-          <h3 class="col-6">Last 5 Cats</h3>
-          <button (click)="toggle('cat')" class="toggle-btn offset-3 col-3">
-            {{ showLastCats ? 'Hide' : 'Show' }} Last 5
-          </button>
-        </div>
-        <ul *ngIf="showLastCats">
-          <li *ngFor="let category of categories">
-            <span>{{ category.categoryTitle }}</span>
-            <span class="date">{{ category.createdAt | date: 'short' }}</span>
-          </li>
-        </ul>
-      </div>
-  
-      <div class="last-element">
-        <div class="row">
-          <h3 class="col-6">Last 5 SubCats</h3>
-          <button (click)="toggle('sub')" class="toggle-btn offset-3 col-3">
-            <fa-icon [icon]="showLastSubCats ? 'eye-slash' : 'eye'"></fa-icon>
-            <!-- <fa-icon [icon]="['fas', 'coffee']"></fa-icon> -->
+      <ul *ngIf="showLastUsers">
+        <li *ngFor="let user of totalUsers">
+          <span>{{ user.username }}</span>
+          <span class="date">{{ user.createdAt | date: 'short' }}</span>
+        </li>
+      </ul>
+    </div>
 
-            {{ showLastSubCats ? 'Hide' : 'Show' }} Last 5
-          </button>          
-        </div>
-        <ul *ngIf="showLastSubCats">
-          <li *ngFor="let subcategory of subCats">
-            <span>{{ subcategory.name }}</span>
-            <span class="date">{{ subcategory.createdAt | date: 'short' }}</span>
-          </li>
-        </ul>
+    <div class="last-element">
+      <div class="row">
+        <h3 class="col-6">Last 5 Cats</h3>
+        <button (click)="toggle('cat')" class="toggle-btn offset-3 col-3">
+          {{ showLastCats ? 'Hide' : 'Show' }} Last 5
+        </button>
       </div>
-  
-      <div class="last-element">
-        <div class="row">
-          <h3 class="col-6">Last 5 Products</h3>
-          <button (click)="toggle('product')" class="toggle-btn offset-3 col-3">
-            {{ showLastProducts ? 'Hide' : 'Show' }} Last 5
-          </button>
-        </div>
-        <ul *ngIf="showLastProducts">
-          <li *ngFor="let product of products">
-            <span>{{ product.productTitle }}</span>
-            <span class="date">{{ product.createdAt | date: 'short' }}</span>
-          </li>
-        </ul>
+      <ul *ngIf="showLastCats">
+        <li *ngFor="let category of categories">
+          <span>{{ category.categoryTitle }}</span>
+          <span class="date">{{ category.createdAt | date: 'short' }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="last-element">
+      <div class="row">
+        <h3 class="col-6">Last 5 SubCats</h3>
+        <button (click)="toggle('sub')" class="toggle-btn offset-3 col-3">
+          <fa-icon [icon]="showLastSubCats ? 'eye-slash' : 'eye'"></fa-icon>
+          <!-- <fa-icon [icon]="['fas', 'coffee']"></fa-icon> -->
+
+          {{ showLastSubCats ? 'Hide' : 'Show' }} Last 5
+        </button>
       </div>
-      <div class="last-element">
-          <div class="row">
-            <h3 class="col-6">Last 5 Orders</h3>
-          <span class="header-info col-3 mt-2">Delivery Date</span>
-          <button (click)="toggle('order')" class="toggle-btn col-3">
-            {{ showLastOrders ? 'Hide' : 'Show' }} Last 5
-          </button>
-          </div>
-        <ul *ngIf="showLastOrders">
-          <li *ngFor="let order of orders">
-            <span>{{ order.id }}</span>
-            <span class="date">{{ order.deliveryDate | date: 'short' }}</span>
-          </li>
-        </ul>
+      <ul *ngIf="showLastSubCats">
+        <li *ngFor="let subcategory of subCats">
+          <span>{{ subcategory.name }}</span>
+          <span class="date">{{ subcategory.createdAt | date: 'short' }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="last-element">
+      <div class="row">
+        <h3 class="col-6">Last 5 Products</h3>
+        <button (click)="toggle('product')" class="toggle-btn offset-3 col-3">
+          {{ showLastProducts ? 'Hide' : 'Show' }} Last 5
+        </button>
       </div>
+      <ul *ngIf="showLastProducts">
+        <li *ngFor="let product of products">
+          <span>{{ product.productTitle }}</span>
+          <span class="date">{{ product.createdAt | date: 'short' }}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="last-element">
+      <div class="row">
+        <h3 class="col-6">Last 5 Orders</h3>
+        <span class="header-info col-3 mt-2">Delivery Date</span>
+        <button (click)="toggle('order')" class="toggle-btn col-3">
+          {{ showLastOrders ? 'Hide' : 'Show' }} Last 5
+        </button>
+      </div>
+      <ul *ngIf="showLastOrders">
+        <li *ngFor="let order of orders">
+          <span>{{ order.id }}</span>
+          <span class="date">{{ order.deliveryDate | date: 'short' }}</span>
+        </li>
+      </ul>
     </div>
   </div>
-  
+</div>

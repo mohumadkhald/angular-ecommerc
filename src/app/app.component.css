@@ -1,7 +1,8 @@
 /* =========================
    1. Full page height & reset
 ========================= */
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
@@ -18,7 +19,7 @@ html, body {
     left: 0;
     z-index: 1000;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* =========================
@@ -27,18 +28,22 @@ html, body {
 .page-wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* full viewport */
-    padding-top: 100px; /* space for fixed header */
+    min-height: 100vh;
+    /* full viewport */
+    padding-top: 105px;
+    /* space for fixed header */
 }
 
 /* =========================
    4. Content area
 ========================= */
 .content {
-    flex: 1; /* grow to fill space between header and footer */
+    flex: 1;
+    /* grow to fill space between header and footer */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* content at top */
+    justify-content: flex-start;
+    /* content at top */
     padding: 0;
     margin: 0;
 }
@@ -51,44 +56,45 @@ html, body {
     width: 100%;
     background-color: #f1f1f1;
     text-align: center;
-    margin: 0; /* remove extra spacing */
+    margin: 0;
+    /* remove extra spacing */
 }
 
 /* =========================
    6. Toast container
 ========================= */
 .toast-container {
-  position: fixed;
-  top: 17%;
-  right: 1%;
-  z-index: 999;
-  pointer-events: auto;
-  color: white;
-  padding: 5px;
-  max-width: 600px;
+    position: fixed;
+    top: 17%;
+    right: 1%;
+    z-index: 999;
+    pointer-events: auto;
+    color: white;
+    padding: 5px;
+    max-width: 600px;
 }
 
 .toast-message {
-  background-color: rgb(61, 106, 29);
-  color: white;
-  padding: 15px;
-  margin: 5px 0;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background-color: rgb(61, 106, 29);
+    color: white;
+    padding: 15px;
+    margin: 5px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Exit button for toast */
 .exit-toast {
-  background-color: red;
-  border: none;
-  color: white;
-  font-size: 12px;
-  padding: 1px 6px;
-  margin-left: 15px;
-  position: relative;
-  top: -15px;
-  right: -15px;
-  float: right;
-  cursor: pointer;
+    background-color: red;
+    border: none;
+    color: white;
+    font-size: 12px;
+    padding: 1px 6px;
+    margin-left: 15px;
+    position: relative;
+    top: -15px;
+    right: -15px;
+    float: right;
+    cursor: pointer;
 }
 
 /* =========================
@@ -98,7 +104,8 @@ html, body {
 /* Medium devices */
 @media (max-width: 1080px) {
     .page-wrapper {
-        padding-top: 100px; /* same header offset */
+        padding-top: 100px;
+        /* same header offset */
     }
 }
 
@@ -145,13 +152,16 @@ html, body {
     }
 
     .page-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* full viewport */
-    padding-top: 80px; /* space for fixed header */
-}
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        /* full viewport */
+        padding-top: 90px;
+        /* space for fixed header */
+    }
 
 }
+
 /* Smaller tablets */
 @media (max-width: 768px) {
     .page-wrapper {
@@ -159,11 +169,14 @@ html, body {
     }
 
     .toast-container {
-        top: 13%;
+        top: 15%;
         right: 1%;
         z-index: 9999;
-        padding: 15px;
+        padding: 12px;
         opacity: 1;
+    }
+    .toast-message {
+        padding: 10px;
     }
 
     .toast-err {
@@ -189,26 +202,29 @@ html, body {
     }
 
     .exit-toast {
-        padding: 3px 8px;
-        top: -15px;
-        right: -15px;
+        padding: 0px 4px;
+        top: -10px;
+        right: -10px;
     }
 
     .page-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* full viewport */
-    padding-top: 130px; /* space for fixed header */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        /* full viewport */
+        padding-top: 130px;
+        /* space for fixed header */
+    }
 }
-}
+
 /* Mobile phones */
 @media (max-width: 480px) {
     .page-wrapper {
-        padding-top: 130px;
+        padding-top: 126px;
     }
 
     .toast-container {
-        top: 13%;
+        top: 16.5%;
         right: 1%;
         z-index: 9999;
         padding: 2px;
@@ -220,8 +236,9 @@ html, body {
         font-size: 10px;
     }
 
-    .toast-err, .toast-warn {
-        top: 13.5%;
+    .toast-err,
+    .toast-warn {
+        top: 16.5%;
         right: .3%;
         padding: 15px;
     }
@@ -229,7 +246,7 @@ html, body {
     .exit-toast {
         padding: 0px 3px;
         top: -6px;
-        right: -3px;
+        right: -5px;
     }
 
     .toggle-btn {
