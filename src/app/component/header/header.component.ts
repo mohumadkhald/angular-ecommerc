@@ -117,7 +117,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
     this.updatePagedCategories();
-    this.setVisibleCount(window.innerWidth);
+    this.calculateVisibleCount()
   }
 
   ngAfterViewInit(): void {
@@ -257,50 +257,42 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     selectElement.style.width = `${width + 40}px`;
   }
 
-  currentPage = 0;
-  visibleCount = 5;
-  pagedCategories: any[] = [];
+currentPage = 0;
+visibleCount = 0;
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.setVisibleCount(event.target.innerWidth);
-  }
+pagedCategories: any[] = [];
+hiddenCategories: any[] = [];
+showDropdown = false;
 
-  setVisibleCount(width: number) {
-    if (width >= 600) {
-      this.visibleCount = 6;
-    } else if (width >= 500) {
-      this.visibleCount = 5;
-    } else if (width >= 300) {
-      this.visibleCount = 4;
-    } else if (width >= 250) {
-      this.visibleCount = 3;
-    } else {
-      this.visibleCount = 1;
-    }
-  }
+readonly ITEM_WIDTH = 70; // px per category (adjust to your UI)
+readonly SIDE_PADDING = 12; // nav padding/margins
 
-  get totalPages() {
-    return Math.ceil(this.categories.length / this.visibleCount);
-  }
 
-  updatePagedCategories() {
-    const start = this.currentPage * this.visibleCount;
-    const end = start + this.visibleCount;
-    this.pagedCategories = this.categories.slice(start, end);
-  }
+@HostListener('window:resize')
+onResize() {
+  this.calculateVisibleCount();
+  this.updatePagedCategories();
+}
 
-  nextCategories() {
-    if (this.currentPage < this.totalPages - 1) {
-      this.currentPage++;
-      this.updatePagedCategories();
-    }
-  }
+calculateVisibleCount() {
+  const screenWidth = window.innerWidth - this.SIDE_PADDING;
 
-  prevCategories() {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.updatePagedCategories();
-    }
-  }
+  this.visibleCount = Math.max(
+    1,
+    Math.floor(screenWidth / this.ITEM_WIDTH)
+  );
+}
+
+updatePagedCategories() {
+  const start = this.currentPage * this.visibleCount;
+  const end = start + this.visibleCount;
+
+  this.pagedCategories = this.categories.slice(start, end);
+  this.hiddenCategories = this.categories.slice(end);
+}
+
+displayHiddenCategory() {
+  this.showDropdown = !this.showDropdown;
+}
+
 }

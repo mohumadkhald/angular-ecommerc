@@ -160,11 +160,6 @@
   padding: 4px 8px;
 }
 
-.xshop {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-}
 
 .xshop a {
   white-space: nowrap;
@@ -198,9 +193,11 @@
 .user-icon {
   font-size: 14px;
 }
+
 .material-symbols-rounded {
   font-size: 40px;
 }
+
 .hello {
   font-weight: bold;
 }
@@ -227,12 +224,6 @@
   overflow: hidden;
 }
 
-.xshop {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .xshop a {
   white-space: nowrap;
   padding: 4px 6px;
@@ -255,6 +246,48 @@
   opacity: 0.3;
   cursor: not-allowed;
 }
+
+.xshop {
+  position: relative;
+  padding: 6px;
+  width: 100vw;
+}
+
+.ellipsis {
+  cursor: pointer;
+  padding: 0 8px;
+  font-weight: bold;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100px;
+  left: 150px;
+  background: #232f3e;
+  border: 1px solid #ddd;
+  color: white;
+  min-width: 140px;
+  z-index: 1000;
+  padding: 4px;
+}
+
+.dropdown a {
+  display: block;
+  text-decoration: none;
+  color: white;
+  padding: 8px;
+  background: #37475a;
+  margin: 6px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  width: 120px;
+}
+
+.dropdown a:hover {
+  background: #485769;
+}
+
 
 @media (max-width: 992px) {
 
@@ -279,7 +312,7 @@
     min-width: 130px;
   }
 
-    .amazon img {
+  .amazon img {
     width: 4em;
   }
 
@@ -292,6 +325,7 @@
   }
 
 }
+
 /* ================= MOBILE FIX ================= */
 @media (max-width: 768px) {
 
@@ -335,7 +369,7 @@
     display: flex;
   }
 
-    .account-top {
+  .account-top {
     font-size: 11px;
   }
 
@@ -343,6 +377,7 @@
     font-size: 12px;
   }
 }
+
 /* ================= MOBILE FIX ================= */
 @media (max-width: 500px) {
 
@@ -387,7 +422,7 @@
     font-size: 11px;
   }
 
-    .account-top {
+  .account-top {
     font-size: 11px;
   }
 
@@ -405,6 +440,7 @@
     gap: 4px;
     font-size: 11px;
   }
+
   .amazon img {
     width: 5em;
   }
@@ -417,7 +453,7 @@
     font-size: 11px;
   }
 
-    .account-top {
+  .account-top {
     font-size: 11px;
   }
 
@@ -431,47 +467,48 @@
   .cardName {
     display: none;
   }
+
   .material-symbols-rounded {
-  font-size: 30px;
-}
+    font-size: 30px;
+  }
 
-.xshop-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+  .xshop-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
 
-.xshop-container {
-  flex: 1;
-  overflow: hidden;
-}
+  .xshop-container {
+    flex: 1;
+    overflow: hidden;
+  }
 
-.xshop {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  .xshop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-.xshop a {
-  white-space: nowrap;
-  padding: 2px 3px;
-}
+  .xshop a {
+    white-space: nowrap;
+    padding: 2px 3px;
+  }
 
-.ellipsis {
-  font-weight: bold;
-  padding: 0 4px;
-}
+  .ellipsis {
+    font-weight: bold;
+    padding: 0 4px;
+  }
 
-.slider-btn {
-  background: #1f2833;
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 3px 5px;
-}
+  .slider-btn {
+    background: #1f2833;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 3px 5px;
+  }
 
-.slider-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
+  .slider-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
 }
