@@ -264,8 +264,8 @@ pagedCategories: any[] = [];
 hiddenCategories: any[] = [];
 showDropdown = false;
 
-readonly ITEM_WIDTH = 70; // px per category (adjust to your UI)
-readonly SIDE_PADDING = 12; // nav padding/margins
+readonly ITEM_WIDTH = 84; // px per category (adjust to your UI)
+readonly SIDE_PADDING = 8; // nav padding/margins
 
 
 @HostListener('window:resize')

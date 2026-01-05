@@ -451,6 +451,7 @@
 
   .xshop a {
     font-size: 11px;
+    width: 80px;
   }
 
   .account-top {
@@ -458,7 +459,7 @@
   }
 
   .account-bottom {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .address,
