@@ -157,16 +157,10 @@
 /* ================= NAV MAIN ================= */
 .nav-main {
   background: #222f3d;
-  padding: 4px 8px;
+  padding: 4px 0px;
 }
 
 
-.xshop a {
-  white-space: nowrap;
-  color: white;
-  text-decoration: none;
-  padding: 4px 6px;
-}
 
 /* ACCOUNT BOX */
 .account-box {
@@ -221,12 +215,12 @@
 
 .xshop-container {
   flex: 1;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .xshop a {
   white-space: nowrap;
-  padding: 4px 6px;
+  padding: 2px 5px;
 }
 
 .ellipsis {
@@ -239,7 +233,7 @@
   color: white;
   border: none;
   cursor: pointer;
-  padding: 6px 10px;
+  padding: 3px 5px 6px 4px;
 }
 
 .slider-btn:disabled {
@@ -249,14 +243,17 @@
 
 .xshop {
   position: relative;
-  padding: 6px;
+  padding: 5px 15px 30px 4px;
   width: 100vw;
+  height: 30px;
+  overflow: scroll;
 }
 
 .ellipsis {
   cursor: pointer;
   padding: 0 8px;
   font-weight: bold;
+  visibility: hidden;
 }
 
 .dropdown {
@@ -449,10 +446,6 @@
     font-size: 11px;
   }
 
-  .xshop a {
-    font-size: 11px;
-    width: 80px;
-  }
 
   .account-top {
     font-size: 11px;
@@ -487,7 +480,8 @@
   .xshop {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    padding: 4px;
   }
 
   .xshop a {
@@ -497,7 +491,7 @@
 
   .ellipsis {
     font-weight: bold;
-    padding: 0 4px;
+    visibility: visible;
   }
 
   .slider-btn {

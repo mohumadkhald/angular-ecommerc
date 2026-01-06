@@ -110,34 +110,12 @@
   </div>
 
   <div class="nav-main">
-    <div class="xshop-wrapper">
-      <div class="xshop-container">
-        <div class="xshop">
+    <div #navContainer class="xshop">
 
-          <!-- Visible categories -->
-          <ng-container *ngFor="let category of pagedCategories; let index = index">
-            <a routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]">
-              {{ category.categoryTitle.length > 14
-              ? (category.categoryTitle | slice: 0 : 14) + '...'
-              : category.categoryTitle }}
-            </a>
-
-            <!-- Ellipsis -->
-            <span *ngIf="index === visibleCount - 1 && hiddenCategories.length" class="ellipsis"
-              (click)="displayHiddenCategory()">
-              ...
-            </span>
-          </ng-container>
-        </div>
-      </div>
+      <a *ngFor="let category of categories" routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
+        >
+        {{ category.categoryTitle }}
+      </a>
     </div>
   </div>
-  <!-- Dropdown -->
-  <div class="dropdown" *ngIf="showDropdown">
-    <a *ngFor="let category of hiddenCategories" [routerLink]="['/categories', category.categoryTitle]"
-      (click)="showDropdown = false">
-      {{ category.categoryTitle }}
-    </a>
-  </div>
-
 </div>

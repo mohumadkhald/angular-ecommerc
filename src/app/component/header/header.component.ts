@@ -116,13 +116,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     );
-    this.updatePagedCategories();
-    this.calculateVisibleCount()
   }
 
   ngAfterViewInit(): void {
-    this.adjustSelectWidth(); // Adjust initially
-
     // Listen for changes to adjust the width whenever an option is selected
     this.selectElement.nativeElement.addEventListener('change', () => {
       this.adjustSelectWidth();
@@ -187,14 +183,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe(
-      (categories) => {
-        this.categories = categories;
-        this.updatePagedCategories(); // Adjust paged categories after categories are loaded
-        this.adjustSelectWidth(); // Adjust width after categories are loaded
-      },
-      (error) => {}
-    );
+    this.categoryService.getAllCategories().subscribe((categories) => {
+      this.categories = categories;
+    });
   }
 
   toggleMenu(visible: boolean): void {
@@ -256,43 +247,4 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
 
     selectElement.style.width = `${width + 40}px`;
   }
-
-currentPage = 0;
-visibleCount = 0;
-
-pagedCategories: any[] = [];
-hiddenCategories: any[] = [];
-showDropdown = false;
-
-readonly ITEM_WIDTH = 84; // px per category (adjust to your UI)
-readonly SIDE_PADDING = 8; // nav padding/margins
-
-
-@HostListener('window:resize')
-onResize() {
-  this.calculateVisibleCount();
-  this.updatePagedCategories();
-}
-
-calculateVisibleCount() {
-  const screenWidth = window.innerWidth - this.SIDE_PADDING;
-
-  this.visibleCount = Math.max(
-    1,
-    Math.floor(screenWidth / this.ITEM_WIDTH)
-  );
-}
-
-updatePagedCategories() {
-  const start = this.currentPage * this.visibleCount;
-  const end = start + this.visibleCount;
-
-  this.pagedCategories = this.categories.slice(start, end);
-  this.hiddenCategories = this.categories.slice(end);
-}
-
-displayHiddenCategory() {
-  this.showDropdown = !this.showDropdown;
-}
-
 }
