@@ -215,12 +215,11 @@
 
 .xshop-container {
   flex: 1;
-  overflow: scroll;
 }
 
 .xshop a {
   white-space: nowrap;
-  padding: 2px 5px;
+  padding: 5px 10px;
 }
 
 .ellipsis {
@@ -246,7 +245,6 @@
   padding: 5px 15px 30px 4px;
   width: 100vw;
   height: 30px;
-  overflow: scroll;
 }
 
 .ellipsis {
@@ -373,6 +371,10 @@
   .account-bottom {
     font-size: 12px;
   }
+
+  .xshop {
+    overflow: scroll;
+  }
 }
 
 /* ================= MOBILE FIX ================= */
@@ -425,6 +427,15 @@
 
   .account-bottom {
     font-size: 11px;
+  }
+
+  .xshop-container {
+    flex: 1;
+    overflow: scroll;
+  }
+
+  .xshop {
+    overflow: scroll;
   }
 }
 
@@ -482,6 +493,8 @@
     align-items: center;
     gap: 8px;
     padding: 4px;
+    overflow: scroll;
+
   }
 
   .xshop a {
