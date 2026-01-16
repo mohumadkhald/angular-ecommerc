@@ -15,8 +15,7 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   // List of public URL patterns (static and dynamic)
   const publicUrlPatterns = [
     new RegExp('/api/sub-categories/find'),
-    // new RegExp('/api/sub-categories'),
-     new RegExp('/api/sub-categories$'),
+    //  new RegExp('/api/sub-categories$'),
     new RegExp('/api/products/product-category/($|\\?)'),
     new RegExp('/api/products/\\d+/emails'), // Matches /api/products/{id}/emails
   ];
