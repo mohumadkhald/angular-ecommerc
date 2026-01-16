@@ -1,8 +1,8 @@
 <div *ngIf="auth()">
-    <h1 class="text-center my-2">Manage SubCategories</h1>
+    <h1 class="text-center my-2">Manage Users</h1>
     <div class="container">
         <div class="table-responsive">
-            <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New SubCategory</a>
+            <a class="btn btn-primary mb-3" (click)="open()"><i class="fa fa-plus"></i> Add New User</a>
             <table *ngIf="users.length > 0; else noUsers"
                 class="main-table table table-striped table-bordered table-hover">
                 <thead class="thead-dark">

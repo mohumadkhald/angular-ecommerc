@@ -8,94 +8,74 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService implements OnInit {
-  private usernameSubject: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null
-  >(null);
-  private imgSubject: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null
-  >(null);
-  private roleSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+export class UserService {
 
-  public username$: Observable<string | null> =
-    this.usernameSubject.asObservable();
-  public img$: Observable<string | null> = this.imgSubject.asObservable();
-  public role$: Observable<any> = this.roleSubject.asObservable();
+  private usernameSubject = new BehaviorSubject<string | null>(null);
+  private imgSubject = new BehaviorSubject<string | null>(null);
+  private roleSubject = new BehaviorSubject<any>(null);
 
-  private profileLoaded: boolean = false;
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private cookieService: CookieService
-  ) {}
-
-  ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.loadProfile().subscribe();
-    }
-  }
-
-  setUsername(username: string): void {
-    this.usernameSubject.next(username);
-  }
-
-  clearUsername(): void {
-    this.usernameSubject.next(null);
-  }
-
-  setImg(imgUrl: any): void {
-    this.imgSubject.next(imgUrl);
-  }
-
-  setRole(role: any): void {
-    this.roleSubject.next(role);
-  }
+  username$ = this.usernameSubject.asObservable();
+  img$ = this.imgSubject.asObservable();
+  role$ = this.roleSubject.asObservable();
 
   private profileCache$?: Observable<any>;
 
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  // 🔥 MAIN method (used by Header)
   loadProfile(): Observable<any> {
     if (!this.profileCache$) {
       this.profileCache$ = this.authService.loadProfile().pipe(
-        tap((response) => {
-          if (response) {
-            this.setUsername(`${response.firstName} ${response.lastName}`);
-            this.setImg(response.imageUrl);
-            this.setRole(response.role);
-            this.authService.saveRole(response.role);
-            this.profileLoaded = true;
+        tap(profile => {
+          if (profile) {
+            this.usernameSubject.next(
+              `${profile.firstName} ${profile.lastName}`
+            );
+            this.imgSubject.next(profile.imageUrl);
+            this.roleSubject.next(profile.role);
+            this.authService.saveRole(profile.role);
           }
         }),
-        catchError((error) => {
-          console.log(error);
-          this.clearUsername();
+        catchError(error => {
+          this.clear();
           return of(null);
         }),
-        shareReplay(1) // <<=== cache result for all future subscribers
+        shareReplay({ bufferSize: 1, refCount: true })
       );
     }
 
     return this.profileCache$;
   }
 
+  // 🔄 Call on login / OAuth success
   refreshProfile(): Observable<any> {
     this.profileCache$ = undefined;
     return this.loadProfile();
   }
 
+  // 🔐 Call on logout
+  clear(): void {
+    this.profileCache$ = undefined;
+    this.usernameSubject.next(null);
+    this.imgSubject.next(null);
+    this.roleSubject.next(null);
+  }
 
   updateProfile(user: any): Observable<any> {
     return this.authService.updateProfile(user).pipe(
-      tap((response) => {
-        if (response) {
-          this.setUsername(`${response.firstName} ${response.lastName}`);
-          this.setImg(response.imageUrl);
-          this.setRole(response.role);
+      tap(profile => {
+        if (profile) {
+          this.usernameSubject.next(
+            `${profile.firstName} ${profile.lastName}`
+          );
+          this.imgSubject.next(profile.imageUrl);
+          this.roleSubject.next(profile.role);
         }
       }),
-      catchError((error) => {
-        return of(null);
-      })
+      catchError(() => of(null))
     );
   }
 }

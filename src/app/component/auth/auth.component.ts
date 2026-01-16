@@ -206,7 +206,7 @@ export class AuthComponent implements OnInit {
           this.authService.saveToken(response.token);
 
           // ✅ Trigger notification FIRST
-          this.notify();
+          // this.notify();
 
           // then navigate
           this.router.navigate(['/']);

@@ -49,10 +49,10 @@ export class AppComponent {
 
         const routeConfig = active.snapshot.routeConfig;
 
-        // console.log('---------------------------');
-        // console.log('📌 Executed Route Path:', routeConfig?.path);
-        // console.log('📌 Component:', routeConfig?.component?.name);
-        // console.log('---------------------------');
+        console.log('---------------------------');
+        console.log('📌 Executed Route Path:', routeConfig?.path);
+        console.log('📌 Component:', routeConfig?.component?.name);
+        console.log('---------------------------');
       });
 
   }

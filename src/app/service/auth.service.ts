@@ -203,7 +203,6 @@ export class AuthService {
         tap((response: any) => {
           if (response && response.token) {
             this.saveToken(response.token);
-            this.loadProfile().subscribe();
           }
         })
       );
@@ -230,7 +229,7 @@ export class AuthService {
         tap((response: any) => {
           if (response && response.token) {
             this.saveToken(response.token);
-            this.loadProfile().subscribe();
+            // this.loadProfile().subscribe();
           }
         })
       );

@@ -62,19 +62,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService
   ) {}
 
-  private loadUserProfile(): void {
-    this.userService
-      .loadProfile()
-      .pipe(take(1))
-      .subscribe((user) => {
-        // Direct data (BEST)
-        this.username = user.username;
-        this.role = user.role;
-
-        this.authService.saveRole(user.role);
-        this.cd.detectChanges();
-      });
-  }
   ngOnInit(): void {
     this.route.queryParams.pipe(take(1)).subscribe((params) => {
       const token = params['token'];
@@ -94,25 +81,23 @@ export class HomeComponent implements OnInit, OnDestroy {
       // Navigate first
       this.router.navigate(['/']);
 
-      // 🔴 LOAD PROFILE FIRST
-      this.loadUserProfile();
 
       // ✅ Show welcome AFTER profile is loaded
-      this.userService.username$
-        .pipe(
-          filter((u): u is string => !!u),
-          take(1)
-        )
-        .subscribe((username) => {
-          this.username = username;
-          this.cd.detectChanges();
+      // this.userService.username$
+      //   .pipe(
+      //     filter((u): u is string => !!u),
+      //     take(1)
+      //   )
+      //   .subscribe((username) => {
+      //     this.username = username;
+      //     this.cd.detectChanges();
 
-          this.notify();
-          this.toastService.add(
-            newUser ? `Welcome ${username} 👋` : `Welcome back ${username} 👋`,
-            'success'
-          );
-        });
+      //     this.notify();
+      //     this.toastService.add(
+      //       newUser ? `Welcome ${username} 👋` : `Welcome back ${username} 👋`,
+      //       'success'
+      //     );
+      //   });
 
       // Cart sync
       if (this.cartService.getCart().length > 0) {

@@ -163,6 +163,10 @@
 
 
 /* ACCOUNT BOX */
+.signin.no-login {
+  font-weight: 900;
+  font-size: 13px;
+}
 .account-box {
   display: flex;
   flex-direction: column;
