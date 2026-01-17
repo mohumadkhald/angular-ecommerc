@@ -14,7 +14,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { defer, map, Observable, of, Subscription, switchMap } from 'rxjs';
 import { CartItem } from '../../interface/cat';
 import { AuthService } from '../../service/auth.service';
 import { CartServerService } from '../../service/cart-server.service';
@@ -51,6 +51,8 @@ export class CartComponent implements OnInit, OnDestroy {
   cardVendor!: string;
   totalpriceDiscounted: number = 0;
   showCheckoutModal: boolean = false;
+  count$!: Observable<number>;
+  count: number = 0;
 
   constructor(
     private cartService: CartService,
@@ -62,22 +64,14 @@ export class CartComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private fb: FormBuilder,
     private http: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {
     this.apiUrl = configService.getApiUri();
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.isLoggedIn$.subscribe(
-      (isLoggedIn) => {
-        if (isLoggedIn) {
-          this.loadCartItems();
-        } else {
-          this.cartItems = this.cartService.getCart();
-          this.updateTotalPrice();
-        }
-      }
-    );
+    this.count$ = this.getCountOfItems();
+    this.count$.subscribe((value) => (this.count = value ?? 0));
 
     this.addressForm = this.fb.group({
       street: ['', Validators.required],
@@ -205,13 +199,20 @@ export class CartComponent implements OnInit, OnDestroy {
     this.updateTotalPrice();
   }
 
-  getCountOfItems() {
-    if (this.auth()) {
-      return this.cartServerService.getCountOfItems();
+  getCountOfItems(): Observable<number> {
+    if (this.authService.isLoggedIn()) {
+      this.loadCartItems();
+      return this.cartServerService.getCart().pipe(
+        switchMap(() => this.cartServerService.getCountOfItems()),
+        map((c) => c ?? 0),
+      );
     }
-    return this.cartService.getCountOfItems();
-  }
 
+    // LOCAL CART
+    this.cartItems = this.cartService.getCart(); // ensure cart is loaded
+    this.updateTotalPrice();
+    return this.cartService.count$;
+  }
   clearCart(): void {
     if (this.auth()) {
       this.cartServerService.clearCart();
@@ -247,7 +248,7 @@ export class CartComponent implements OnInit, OnDestroy {
       },
       (reason) => {
         console.log('Modal dismissed:', reason);
-      }
+      },
     );
   }
 
@@ -279,7 +280,7 @@ export class CartComponent implements OnInit, OnDestroy {
         (error) => {
           console.log('Error submitting order', error);
           this.handleOrderError(error.error.errors);
-        }
+        },
       );
     }
   }
@@ -295,7 +296,7 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log('Product Issues:', productIssues);
 
     const cartItemsWithIssues = this.cartItems1.filter((item) =>
-      productIssues.some((issue) => issue.title === item.productTitle)
+      productIssues.some((issue) => issue.title === item.productTitle),
     );
 
     console.log('Cart Items with Issues:', cartItemsWithIssues);
@@ -304,7 +305,7 @@ export class CartComponent implements OnInit, OnDestroy {
       cartItemsWithIssues,
       productIssues,
       this.paymentForm.value,
-      this.addressForm.value
+      this.addressForm.value,
     );
   }
 
@@ -312,7 +313,7 @@ export class CartComponent implements OnInit, OnDestroy {
     cartItemsWithIssues: any[],
     productIssues: any[],
     paymentInfo: any,
-    address: any
+    address: any,
   ) {
     const modalRef = this.modalService.open(
       RemoveNotFoundItemStockModalComponent,
@@ -321,7 +322,7 @@ export class CartComponent implements OnInit, OnDestroy {
         centered: true,
         backdrop: 'static', // Prevent closing when clicking outside
         keyboard: false, // Prevent closing with the Esc key
-      }
+      },
     );
 
     modalRef.componentInstance.productIssues = productIssues;
@@ -337,7 +338,7 @@ export class CartComponent implements OnInit, OnDestroy {
       },
       (reason) => {
         console.log('Modal dismissed:', reason);
-      }
+      },
     );
   }
 
@@ -426,7 +427,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   cardValidator(
     luhnFunc: (input: string) => boolean,
-    cardNameFunc: (cardNum: string) => string
+    cardNameFunc: (cardNum: string) => string,
   ): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const cardNumber = control.value;

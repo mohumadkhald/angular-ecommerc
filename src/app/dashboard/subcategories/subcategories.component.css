@@ -74,6 +74,10 @@
   font-size: 0.9rem;
 }
 
+.span-name {
+  visibility: hidden;
+}
+
 /* =====================================================
    FIX BOOTSTRAP RESPONSIVE TABLE
 ===================================================== */
@@ -134,6 +138,9 @@
   }
 
   .change-image-btn {
+    visibility: visible;
+  }
+  .span-name {
     visibility: visible;
   }
 }

@@ -20,7 +20,18 @@ import { AuthService } from '../../service/auth.service';
 
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { distinctUntilChanged, filter, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
+import {
+  defer,
+  distinctUntilChanged,
+  filter,
+  map,
+  Observable,
+  of,
+  Subject,
+  Subscription,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { CategoryUpdateService } from '../../dashboard-service/category-update.service';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
 import { CartServerService } from '../../service/cart-server.service';
@@ -77,8 +88,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     private cartService: CartService,
     public toastService: ToastService,
     private renderer: Renderer2,
-    private categoryUpdateService: CategoryUpdateService
+    private categoryUpdateService: CategoryUpdateService,
   ) {}
+  count$!: Observable<number>;
 
   // =============================
   // LIFECYCLE
@@ -88,11 +100,13 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscribeToCategoryUpdates();
     this.subscribeToUserState();
     this.loadCategories();
+    this.count$ = this.getCountOfItems();
   }
 
   ngAfterViewInit(): void {
     this.initSearchFocus();
     this.initSelectWidth();
+    this.getCountOfItems();
   }
 
   ngOnDestroy(): void {
@@ -111,35 +125,31 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroy$),
         distinctUntilChanged(),
         filter(Boolean),
-        switchMap(() => this.userService.loadProfile())
+        switchMap(() => this.userService.loadProfile()),
       )
       .subscribe();
 
     // Username
     this.userService.username$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(username => {
+      .subscribe((username) => {
         this.username = username ?? '';
         this.loading = false;
         this.cd.markForCheck();
       });
 
     // Image
-    this.userService.img$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(img => {
-        this.img = img ?? '';
-      });
+    this.userService.img$.pipe(takeUntil(this.destroy$)).subscribe((img) => {
+      this.img = img ?? '';
+    });
 
     // Role
-    this.userService.role$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(role => {
-        if (role) {
-          this.role = role;
-          this.authService.saveRole(role);
-        }
-      });
+    this.userService.role$.pipe(takeUntil(this.destroy$)).subscribe((role) => {
+      if (role) {
+        this.role = role;
+        this.authService.saveRole(role);
+      }
+    });
   }
 
   private subscribeToCategoryUpdates(): void {
@@ -153,21 +163,15 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   // =============================
 
   private initSearchFocus(): void {
-    this.renderer.listen(
-      this.searchContainer.nativeElement,
-      'mousedown',
-      () =>
-        this.renderer.addClass(
-          this.searchContainer.nativeElement,
-          'focused'
-        )
+    this.renderer.listen(this.searchContainer.nativeElement, 'mousedown', () =>
+      this.renderer.addClass(this.searchContainer.nativeElement, 'focused'),
     );
 
     this.renderer.listen('document', 'mousedown', (event: MouseEvent) => {
       if (!this.searchContainer.nativeElement.contains(event.target as Node)) {
         this.renderer.removeClass(
           this.searchContainer.nativeElement,
-          'focused'
+          'focused',
         );
       }
     });
@@ -175,7 +179,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private initSelectWidth(): void {
     this.selectElement.nativeElement.addEventListener('change', () =>
-      this.adjustSelectWidth()
+      this.adjustSelectWidth(),
     );
   }
 
@@ -204,7 +208,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   // =============================
 
   loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe(categories => {
+    this.categoryService.getAllCategories().subscribe((categories) => {
       this.categories = categories;
     });
   }
@@ -222,12 +226,18 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  getCountOfItems(): number {
-    return this.authService.isLoggedIn()
-      ? this.cartServerService.getCountOfItems()
-      : this.cartService.getCountOfItems();
-  }
+  getCountOfItems(): Observable<number> {
+    if (this.authService.isLoggedIn()) {
+      return this.cartServerService.getCart().pipe(
+        switchMap(() => this.cartServerService.getCountOfItems()),
+        map((c) => c ?? 0),
+      );
+    }
 
+    // LOCAL CART
+    this.cartService.getCart(); // ensure cart is loaded
+    return this.cartService.count$;
+  }
   goToSearchResult(): void {
     if (!this.searchText) return;
 
@@ -249,5 +259,4 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   auth(): boolean {
     return this.authService.isLoggedIn();
   }
-
 }

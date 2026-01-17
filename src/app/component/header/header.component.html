@@ -103,7 +103,8 @@
       <!-- CART -->
       <div routerLink="cart" class="cart hover">
         <span class="material-symbols-rounded">shopping_cart</span>
-        <span class="cardCount">{{ getCountOfItems() }}</span>
+        <span class="cardCount">{{ count$ | async }}</span>
+
       </div>
 
     </div>

@@ -8,26 +8,22 @@ import { ConfigService } from './config.service';
 @Injectable({
   providedIn: 'root',
 })
-export class CartServerService implements OnInit {
+export class CartServerService {
   apiUrl: string;
   cartItems: CartItem[] = [];
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {
     this.apiUrl = configService.getApiUri();
   }
 
-  ngOnInit(): void {
-    this.getCart().subscribe();
-  }
-
-  private countSubject: BehaviorSubject<number | null> = new BehaviorSubject<
-    number | null
-  >(null);
-  public count$: Observable<number | null> = this.countSubject.asObservable();
+  private countSubject: BehaviorSubject<number> = new BehaviorSubject<number>(
+    0,
+  );
+  public count$: Observable<number> = this.countSubject.asObservable();
 
   setCount(count: number): void {
     this.countSubject.next(count);
@@ -38,46 +34,49 @@ export class CartServerService implements OnInit {
       tap((res) => {
         this.cartItems = res;
         this.setCount(this.cartItems.length);
-      })
+      }),
     );
   }
 
   getTotalPrice(): number {
-    return this.cartItems.reduce(
-      (total, item) => total + item.totalPrice,
-      0
-    );
+    return this.cartItems.reduce((total, item) => total + item.totalPrice, 0);
   }
 
   getTotalDiscountedPrice(): number {
     return this.cartItems.reduce(
       (total, item) => total + item.totalPriceDiscounted,
-      0
+      0,
     );
   }
 
   addToCart(product: any): void {
-    // Get JWT token from AuthService
-    const jwtToken = this.authService.getToken();
+    this.http.post<void>(`${this.apiUrl}/cart`, product).subscribe(
+      () => {
+        // Find if the product already exists in cart
+        const existingItem = this.cartItems.find(
+          (item) => item.productId === product.productId && item.size === product.size && item.color === product.color,
+        );
 
-    // Prepare headers with Authorization token
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwtToken}`,
-    });
-
-    // Make HTTP POST request to add product to cart
-    this.http.post<void>(`${this.apiUrl}/cart`, product, { headers }).subscribe(
-      (res) => {
-        this.cartItems.length++;
+        if (existingItem) {
+          console.log(existingItem)
+          // Already in cart → increase quantity
+          existingItem.quantity = (existingItem.quantity || 1) + 1;
+        } else {
+          // Not in cart → add new item with quantity 1
+          this.cartItems.push({ ...product, quantity: 1 });
+          this.countSubject.next(this.countSubject.value + 1);
+        }
       },
-      (error) => {}
+      (error) => {
+        console.error('Error adding to cart', error);
+      },
     );
   }
 
-deleteItem(itemId: number): Observable<void> {
-  return this.http.delete<void>(`${this.apiUrl}/cart/${itemId}`);
-}
+  deleteItem(itemId: number): Observable<void> {
+    this.countSubject.next(this.countSubject.value - 1);
+    return this.http.delete<void>(`${this.apiUrl}/cart/${itemId}`);
+  }
 
   increaseQuantity(itemId: number) {
     const params = new HttpParams().set('state', 'INCREASE');
@@ -85,7 +84,7 @@ deleteItem(itemId: number): Observable<void> {
     return this.http.patch(
       `${this.apiUrl}/cart/${itemId}`,
       {},
-      { params, responseType: 'text' }
+      { params, responseType: 'text' },
     );
   }
 
@@ -98,7 +97,7 @@ deleteItem(itemId: number): Observable<void> {
     return this.http.patch(
       `${this.apiUrl}/cart/${itemId}`,
       {},
-      { params, responseType: 'text' }
+      { params, responseType: 'text' },
     );
   }
 
@@ -107,13 +106,14 @@ deleteItem(itemId: number): Observable<void> {
     this.http.delete<void>(`${this.apiUrl}/cart`).subscribe(
       (res) => {
         // Clear the local cartItems array using splice
+        this.countSubject.next(0);
         this.cartItems.splice(0, this.cartItems.length);
       },
-      (error) => {}
+      (error) => {},
     );
   }
 
-  getCountOfItems(): number {
-    return this.cartItems.length;
+  getCountOfItems(): Observable<number> {
+    return this.count$;
   }
 }

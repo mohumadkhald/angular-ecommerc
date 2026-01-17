@@ -19,7 +19,7 @@
         </li>
       </ul>
     </div>
-    <div *ngIf="subCategoryName && products.length > 0" class="filters">
+    <div *ngIf="subCategoryName" class="filters">
       <div class="availability">
         <h3 style="margin: 5px 0;">Availability</h3>
         <label>
@@ -74,7 +74,7 @@
 
   <div  class="content-wrapper" *ngIf="subCategories.length > 0">
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
-      <button *ngIf="products.length>0" class="filter-options" (click)="openFilterModal(subCategoryName)">Filter</button>
+      <button class="filter-options" (click)="openFilterModal(subCategoryName)">Filter</button>
     </div>
     <app-sort-options *ngIf="subCategoryName && products.length > 0" class="sort-options" [currentSortOption]="currentSortOption"
       [currentElementSizeOption]="currentElementSizeOption" [currentEmailSeller]="currentEmailSeller"

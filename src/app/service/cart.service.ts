@@ -3,34 +3,41 @@ import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CartService implements OnInit {
+export class CartService {
   private apiUrl: string;
   totalprice: number = 0;
   private cart: { product: any }[] = [];
   totalpriceDiscount: number = 0;
-
+  private countSubject: BehaviorSubject<number> = new BehaviorSubject<number>(
+    0,
+  );
+  public count$: Observable<number> = this.countSubject.asObservable();
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private configService: ConfigService,
-    private router: Router
+    private router: Router,
   ) {
     this.apiUrl = configService.getApiUri();
   }
-  ngOnInit(): void {
-    this.getCart();
-  }
+
   getCart(): { product: any }[] {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       this.cart = JSON.parse(storedCart);
       this.updateTotalPrice();
+      this.updateCount(); // 🔹 notify subscribers
     }
     return this.cart;
+  }
+
+  private updateCount(): void {
+    this.countSubject.next(this.cart.length);
   }
 
   getTotalPrice(): number {
@@ -40,7 +47,7 @@ export class CartService implements OnInit {
   private updateTotalPrice(): void {
     this.totalprice = this.cart.reduce(
       (total, item) => total + item.product.price * item.product.quantity,
-      0
+      0,
     );
   }
 
@@ -49,9 +56,13 @@ export class CartService implements OnInit {
     this.totalpriceDiscount = this.cart.reduce(
       (total, item) =>
         total + item.product.discountedPrice * item.product.quantity,
-      0
+      0,
     );
-    console.log('the total discounted price after calculation: ', this.totalpriceDiscount, this.cart);
+    console.log(
+      'the total discounted price after calculation: ',
+      this.totalpriceDiscount,
+      this.cart,
+    );
   }
 
   getTotalDiscountedPrice(): number {
@@ -59,24 +70,29 @@ export class CartService implements OnInit {
     console.log('the total discounted price: ', this.totalpriceDiscount);
     return this.totalpriceDiscount;
   }
-  addToCart(product: any): void {
-    console.log('the produt try to add: ', product);
-    const existingItem = this.cart.find(
-      (item) =>
-        item.product.productId === product.productId &&
-        item.product.size === product.size &&
-        item.product.color === product.color
-    );
-    console.log('the exist product: ', existingItem);
-    if (existingItem) {
-      existingItem.product.quantity =
-        existingItem.product.quantity + product.quantity;
-    } else {
-      this.cart.push({ product });
-    }
-    this.updateTotalPriceAndQuantity();
-    this.updateLocalStorage();
+addToCart(product: any): void {
+  console.log('The product trying to add:', product);
+
+  const existingItem = this.cart.find(
+    (item) =>
+      item.product.productId === product.productId &&
+      item.product.size === product.size &&
+      item.product.color === product.color,
+  );
+
+  console.log('Existing product in cart:', existingItem);
+
+  if (existingItem) {
+    existingItem.product.quantity += product.quantity;
+  } else {
+    this.cart.push({ product });
   }
+
+  this.updateTotalPriceAndQuantity();
+  this.updateLocalStorage();
+  this.updateCount(); // 🔹 Notify subscribers about count change
+}
+
 
   removeFromCart(product: any): void {
     const index = this.cart.findIndex((item) => item.product.id === product.id);
@@ -92,7 +108,7 @@ export class CartService implements OnInit {
   }
   increaseQuantity(product: any): void {
     const existingItem = this.cart.find(
-      (item) => item.product.id === product.id
+      (item) => item.product.id === product.id,
     );
 
     if (existingItem) {
@@ -104,7 +120,7 @@ export class CartService implements OnInit {
 
   decreaseQuantity(product: any): void {
     const existingItem = this.cart.find(
-      (item) => item.product.id === product.id
+      (item) => item.product.id === product.id,
     );
 
     if (existingItem && existingItem.product.quantity > 0) {
@@ -112,7 +128,7 @@ export class CartService implements OnInit {
       this.updateTotalPriceAndQuantity();
       this.updateLocalStorage();
       const index = this.cart.findIndex(
-        (item) => item.product.id === product.id
+        (item) => item.product.id === product.id,
       );
       if (index !== -1) {
         const item = this.cart[index];
@@ -131,14 +147,14 @@ export class CartService implements OnInit {
     this.updateLocalStorage();
   }
 
-  getCountOfItems(): number {
+  getLocalItemCount(): number {
     return this.cart.length;
   }
 
   private updateTotalPriceAndQuantity(): void {
     this.totalprice = this.cart.reduce(
       (total, item) => total + item.product.price * item.product.quantity,
-      0
+      0,
     );
   }
 
@@ -167,7 +183,7 @@ export class CartService implements OnInit {
           size: item.product.size,
           quantity: item.product.quantity,
           price: item.product.price,
-        })
+        }),
       );
 
       // Check if the cart is not empty
@@ -192,7 +208,7 @@ export class CartService implements OnInit {
             },
             (error) => {
               console.error('Error syncing cart:', error);
-            }
+            },
           );
       } else {
         console.warn('Cart is empty, not syncing.');

@@ -8,7 +8,7 @@
                         <div class="row">
 
                             <!-- ================= CART ITEMS / CONTENT ================= -->
-                            <ng-container *ngIf="getCountOfItems() !== 0; else emptyCart">
+                            <ng-container *ngIf="count > 0; else emptyCart">
 
                                 <!-- LEFT: CART ITEMS -->
                                 <div class="col-lg-7">
@@ -24,7 +24,7 @@
                                     <div class="empty-item">
                                         <div class="btn btn-danger">
                                             <p class="mb item-count" style="margin:0;">
-                                                You Have {{ getCountOfItems() }} Items
+                                                You Have {{ count$ | async }} Items
                                             </p>
                                         </div>
                                         <button class="btn btn-danger" (click)="clearCart()">Clear
