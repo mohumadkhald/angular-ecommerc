@@ -199,7 +199,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.updateTotalPrice();
   }
 
-    getCountOfItems(): any {
+  getCountOfItems(): any {
     if (this.authService.isLoggedIn()) {
       this.loadCartItems();
       return this.cartServerService.count$;

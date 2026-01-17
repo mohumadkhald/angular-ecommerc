@@ -204,9 +204,7 @@ export class AuthComponent implements OnInit {
       this.authService.login(email.trim(), password.trim(), remember).subscribe(
         (response) => {
           this.cartService.syncCartFromLocalStorage();
-          this.cartService.clearCart();
           this.authService.saveToken(response.token);
-
           // ✅ Trigger notification FIRST
           // this.notify();
 
