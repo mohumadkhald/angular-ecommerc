@@ -34,7 +34,7 @@ export class SortOptionsComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.getEmailsSellers();
-    // this.getSubCats();
+    this.getSubCats();
   }
 
   onSizeElementChange(event: Event): void {

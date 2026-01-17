@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CustomRangeSliderComponent } from "../component/custom-range-slider/custom-range-slider.component";
-import { CapitalizePipe } from "../pipe/capitalize.pipe";
+import { CapitalizePipe } from '../../pipe/capitalize.pipe';
+import { CustomRangeSliderComponent } from '../custom-range-slider/custom-range-slider.component';
+
 
 @Component({
   selector: 'app-sidebar',

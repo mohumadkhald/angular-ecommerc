@@ -1,3 +1,6 @@
+.container {
+  margin-top: 15px;
+}
 .card img {
   transition: transform 0.3s ease;
   width: 150px; /* Set fixed width */
@@ -44,8 +47,11 @@
 
 
 @media (max-width: 991.98px) {
+  * {
+    font-size: 12px;
+  }
   .card {
-    margin-top: 30px;
+    margin-top: 5px;
   }
   .offset-lg-1 {
     margin-left: 0;

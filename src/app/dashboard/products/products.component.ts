@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddProductComponent } from '../../component/add-product/add-product.component';
@@ -44,8 +44,8 @@ export class ProductsComponent implements OnInit {
   colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
 
   filters = {
-    inStock: false,
-    notAvailable: false,
+    inStock: true,
+    notAvailable: true,
     priceRange: 250,
     minPrice: 0,
     maxPrice: 25000,
@@ -90,7 +90,7 @@ export class ProductsComponent implements OnInit {
     public toastService: ToastService,
     private authService: AuthService,
     private dashboardComponent: DashboardComponent,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +99,8 @@ export class ProductsComponent implements OnInit {
       this.currentElementSizeOption = params['pageSize'] || '20';
       this.sortBy = params['sortBy'] || 'createdAt';
       this.sortDirection = params['sortDirection'] || 'desc';
+      this.currentSubCat = params['categoryTitle'] || '';
+      this.nameQuery = params['search'] || '';
 
       this.filters.minPrice = +params['minPrice'] || 0;
       this.filters.maxPrice = +params['maxPrice'] || 25000;
@@ -140,7 +142,7 @@ export class ProductsComponent implements OnInit {
         this.currentEmailSeller,
         this.currentSubCat,
         this.nameQuery,
-        available
+        available,
       )
       .pipe(
         tap((res: PaginatedResponse<Product[]>) => {
@@ -148,11 +150,11 @@ export class ProductsComponent implements OnInit {
           this.currentPage = res.pageable.pageNumber + 1;
           this.totalPages = Array.from(
             { length: res.totalPages },
-            (_, i) => i + 1
+            (_, i) => i + 1,
           );
           this.countProducts = res.totalElements;
         }),
-        map(() => void 0)
+        map(() => void 0),
       );
   }
 
@@ -169,7 +171,7 @@ export class ProductsComponent implements OnInit {
   /* =================== ACTIONS ===================== */
   /* ================================================= */
   onSearch(): void {
-    this.updateQueryParams({ page: 1 });
+    this.updateQueryParams({ page: 1, search: this.nameQuery });
   }
 
   onSortChange(value: string): void {
@@ -214,7 +216,7 @@ export class ProductsComponent implements OnInit {
 
   onSubCatChange(subCat: string): void {
     this.currentSubCat = subCat;
-    this.updateQueryParams({ page: 1 });
+    this.updateQueryParams({ page: 1, categoryTitle: subCat });
   }
 
   /* ================================================= */
@@ -262,7 +264,7 @@ export class ProductsComponent implements OnInit {
       () => {
         // ❌ dismissed (ESC / backdrop)
         this.loading = false;
-      }
+      },
     );
   }
 
@@ -285,64 +287,34 @@ export class ProductsComponent implements OnInit {
   /* ================================================= */
 
   private updateQueryParams(params: any): void {
+    const cleanedParams = Object.keys(params).reduce((acc, key) => {
+      const value = params[key];
+
+      acc[key] =
+        value === undefined || value === null || value === ''
+          ? null // this REMOVES the param from the URL
+          : value;
+
+      return acc;
+    }, {} as any);
+
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: params,
+      queryParams: cleanedParams,
       queryParamsHandling: 'merge',
     });
   }
-
-  // loadProducts(): void {
-  //   let available: boolean | null = null;
-  //   if (this.filters.inStock && !this.filters.notAvailable) {
-  //     available = true;
-  //   } else if (!this.filters.inStock && this.filters.notAvailable) {
-  //     available = false;
-  //   }
-
-  //   this.productsService
-  //     .getAllProducts(
-  //       this.sortBy,
-  //       this.sortDirection,
-  //       this.filters.minPrice,
-  //       this.filters.maxPrice,
-  //       this.filters.colors,
-  //       this.filters.sizes,
-  //       this.currentPage - 1, // Adjust page number for API
-  //       this.currentElementSizeOption,
-  //       this.currentEmailSeller,
-  //       this.currentSubCat,
-  //       this.nameQuery,
-  //       available
-  //     )
-  //     .subscribe(
-  //       (response: PaginatedResponse<Product[]>) => {
-  //         this.loading = false;
-  //         this.products = response.content;
-  //         this.currentPage = response.pageable.pageNumber + 1; // Update currentPage
-  //         this.totalPages = Array.from(
-  //           { length: response.totalPages },
-  //           (_, i) => i + 1
-  //         );
-  //         this.countProducts = response.totalElements;
-  //         // this.updatePageTitle(); this is solve issue
-  //       },
-  //       (error) => {
-  //         this.loading = false;
-  //       }
-  //     );
-  // }
 
   deleteProduct(prodId: number): void {
     if (confirm('Are you sure you want to delete this Product?')) {
       this.productsService.deleteProduct(prodId).subscribe(
         () => {
           this.products = this.products.filter(
-            (product: { productId: number }) => product.productId !== prodId
+            (product: { productId: number }) => product.productId !== prodId,
           );
           // this.dashboardComponent.fetchProductCount$().subscribe();
         },
-        (error) => {}
+        (error) => {},
       );
     }
   }
@@ -356,14 +328,14 @@ export class ProductsComponent implements OnInit {
           () => {
             this.products = this.products.filter(
               (product: { productId: number }) =>
-                !this.selectedProductIds.includes(product.productId)
+                !this.selectedProductIds.includes(product.productId),
             );
             this.selectedProductIds = []; // Clear the selection
             // this.dashboardComponent.fetchProductCount$().subscribe();
             this.loading = false;
             this.toastService.add('Products deleted successfully', 'success');
           },
-          (error) => {}
+          (error) => {},
         );
       }
     }
@@ -386,7 +358,7 @@ export class ProductsComponent implements OnInit {
     if (discountValue < 0 || discountValue > 100) {
       this.toastService.add(
         'Invalid discount value. It should be between 0 and 100.',
-        'warning'
+        'warning',
       );
       return;
     }
@@ -403,7 +375,7 @@ export class ProductsComponent implements OnInit {
         },
         (error) => {
           this.toastService.add(error.message, 'error');
-        }
+        },
       );
   }
 
@@ -422,7 +394,7 @@ export class ProductsComponent implements OnInit {
     if (isChecked) {
       // Select all product IDs
       this.selectedProductIds = this.products.map(
-        (product: { productId: number }) => product.productId
+        (product: { productId: number }) => product.productId,
       );
     } else {
       // Deselect all
@@ -435,7 +407,7 @@ export class ProductsComponent implements OnInit {
     if (this.selectedProductIds.includes(productId)) {
       // Remove productId if already selected
       this.selectedProductIds = this.selectedProductIds.filter(
-        (id) => id !== productId
+        (id) => id !== productId,
       );
     } else {
       // Add productId to the selected list

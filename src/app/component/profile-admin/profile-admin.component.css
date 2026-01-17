@@ -88,6 +88,9 @@
 }
 
 @media (max-width: 576px) {
+  * {
+    font-size: 11px;
+  }
   .change-image-btn {
     visibility: visible;
   }

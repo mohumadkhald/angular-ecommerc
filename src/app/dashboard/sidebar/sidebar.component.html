@@ -30,14 +30,13 @@
         <div class="availability">
             <h3 style="margin: 5px 0;">Availability</h3>
             <label>
-                <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock <span
-                    *ngIf="inStockCount">({{inStockCount}})</span>
+                <input type="checkbox" [(ngModel)]="filters.inStock" (change)="onFilterChange()"> In Stock
             </label>
             <label>
                 <input type="checkbox" [(ngModel)]="filters.notAvailable" (change)="onFilterChange()"> Not Available
-                <span *ngIf="outOfStockCount">({{outOfStockCount}})</span>
             </label>
         </div>
+
         <div class="price-range mb-3 mt-5">
             <span class="range" style="color: red; font-weight: bold; width: 100px; font-size: 12px;">Price Range:
             </span>

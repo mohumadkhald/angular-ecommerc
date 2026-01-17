@@ -6,6 +6,7 @@ import {
   NavigationStart,
   Router,
   RouterLink,
+  RouterModule,
   RouterOutlet,
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -35,6 +36,7 @@ import { Counts, DashboardService } from '../dashboard-service/dashboard.service
     NgIf,
     SidebarComponent,
     CommonModule,
+    RouterModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -58,11 +60,6 @@ export class DashboardComponent implements OnInit {
   constructor(
     library: FaIconLibrary,
     private router: Router,
-    private usersService: UsersService,
-    private categoriesService: CategoriesService,
-    private SubCategoriesService: SubCategoriesService,
-    private productService: ProductsService,
-    private ordersService: OrdersService,
     private authService: AuthService,
     private dialog: MatDialog,
     private dashboardService: DashboardService,

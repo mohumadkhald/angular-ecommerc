@@ -5,32 +5,32 @@
     <div class="container home-stats text-center" *ngIf="showStats">
       <h1 class="text-center">Dashboard</h1>
       <div class="row">
-        <div routerLink="users" class="col-md-4 col-xs-6">
+        <div routerLink="users" class="col-md-4 col-sm-6 col-xs-6">
           <div class="stat st-me changeing">
             <i class="fa fa-users"></i>
             <div class="inf">Total Members</div>
             <span><a routerLink="users">{{ userCount }}</a></span>
           </div>
         </div>
-        <div routerLink="categories" class="col-md-4 col-xs-6">
+        <div routerLink="categories" class="col-md-4 col-sm-6 col-xs-6">
           <div class="stat st-it changeing">
             <i class="fa fa-tag"></i>
             <div class="inf">Total Categories</div>
             <span><a routerLink="categories">{{ catsCount }}</a></span>
           </div>
         </div>
-        <div routerLink="subcategories" class="col-md-4 col-xs-6">
+        <div routerLink="subcategories" class="col-md-4 col-sm-6 col-xs-6">
           <div class="stat st-it changeing">
             <i class="fa fa-tag"></i>
             <div class="inf">Total SubCategories</div>
             <span><a routerLink="subcategories">{{ subCatsCount }}</a></span>
           </div>
         </div>
-        <div routerLink="products" class="col-md-4 col-xs-6">
+        <div routerLink="products" class="col-md-4 col-sm-6 col-xs-6">
           <div class="stat st-co changeing">
             <i class="fa fa-comment"></i>
             <div class="inf">Total Products</div>
-            <span><a routerLink="products">{{ prodsCount }}</a></span>
+            <span><a routerLink="products" >{{ prodsCount }}</a></span>
           </div>
         </div>
         <div routerLink="orders" class="col-md-4 col-xs-6">

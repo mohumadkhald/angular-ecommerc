@@ -1,302 +1,296 @@
 /* General Container Styles */
 .container.home-stats {
-    margin-top: 15px;
-    padding: 20px;
+  margin-top: 15px;
+  padding: 20px;
 }
 
 .row div {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Stats Box Styles */
 .stat {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    text-align: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  text-align: center;
 }
 
 .stat:hover {
-    background-color: #f0f5ff;
-    transform: scale(1.05);
+  background-color: #f0f5ff;
+  transform: scale(1.05);
 }
 
 /* Icon Styling */
 .stat i {
-    font-size: 60px;
-    color: #0d6efd;
-    margin-bottom: 15px;
+  font-size: 60px;
+  color: #0d6efd;
+  margin-bottom: 15px;
 }
 
 /* Info Text Styling */
 .stat .inf {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #333;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
 }
 
 /* Stat Value Link */
 .stat span a {
-    font-size: 32px;
-    color: #0d6efd;
-    text-decoration: none;
-    font-weight: 700;
+  font-size: 32px;
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 .stat span a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Panel Styling */
 .panel {
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .panel-heading {
-    background-color: #0d6efd;
-    color: #fff;
-    padding: 15px;
-    font-size: 20px;
-    font-weight: 600;
+  background-color: #0d6efd;
+  color: #fff;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .panel-heading .toggle_info {
-    cursor: pointer;
-    float: right;
-    font-size: 20px;
-    color: #fff;
+  cursor: pointer;
+  float: right;
+  font-size: 20px;
+  color: #fff;
 }
 
 .panel-heading .toggle_info:hover {
-    color: #ccc;
+  color: #ccc;
 }
 
 .panel-body {
-    padding: 20px;
-    background-color: #f8f9fa;
+  padding: 20px;
+  background-color: #f8f9fa;
 }
 
 .panel-body h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
+  font-size: 18px;
+  margin-bottom: 12px;
 }
 
-.panel-body .col-sm-8, .panel-body .col-sm-4 {
-    padding: 15px;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    background-color: #ffffff;
-    margin-bottom: 15px;
+.panel-body .col-sm-8,
+.panel-body .col-sm-4 {
+  padding: 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #ffffff;
+  margin-bottom: 15px;
 }
 
 .panel-body .col-sm-8 {
-    border-right: none;
+  border-right: none;
 }
 
 .text-center {
-    text-align: center;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .stat, .panel-body .col-sm-8, .panel-body .col-sm-4 {
-        margin-bottom: 15px;
-    }
-
-    .panel-body .col-sm-8, .panel-body .col-sm-4 {
-        border-right: 1px solid #dee2e6;
-    }
+  text-align: center;
 }
 
 
 /* Last Elements Container */
 .container.last-elements-container {
-    margin-top: 30px;
-    margin-bottom: 0px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Header with Button */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header h2 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .toggle-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .toggle-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Grid Layout for Last Elements */
-  .last-elements-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  
-  /* List Styling */
-  .last-element {
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .last-element h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .last-element ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .last-element ul li {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 10px;
-    margin-bottom: 8px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .last-element ul li:hover {
-    background-color: #e9ecef;
-  }
-  
-  .last-element span {
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .last-element .date {
-    font-size: 14px;
-    color: #6c757d;
-  }
+  margin-top: 30px;
+  margin-bottom: 0px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
+/* Header with Button */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-  /* Last Element Container */
+.header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.toggle-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Grid Layout for Last Elements */
+.last-elements-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* List Styling */
 .last-element {
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  /* Flexbox Header Row */
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  /* Heading Styling */
-  .header-row h3 {
-    font-size: 20px;
-    margin: 0;
-    font-weight: 600;
-  }
-  
-  /* Header Info Styling */
-  .header-info {
-    font-size: 14px;
-    color: #6c757d;
-    margin-left: auto; /* Pushes it to the far right */
-  }
-  
-  /* List Styling */
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  ul li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 10px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
-    margin-bottom: 8px;
-    transition: background-color 0.2s ease;
-  }
-  
-  /* Hover Effect for List Items */
-  ul li:hover {
-    background-color: #e9ecef;
-  }
-  
-  /* Order ID Styling */
-  ul li span {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.last-element h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.last-element ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.last-element ul li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.last-element ul li:hover {
+  background-color: #e9ecef;
+}
+
+.last-element span {
+  font-weight: 500;
+  color: #333;
+}
+
+.last-element .date {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+
+/* Last Element Container */
+.last-element {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Flexbox Header Row */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Heading Styling */
+.header-row h3 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Header Info Styling */
+.header-info {
+  font-size: 14px;
+  color: #6c757d;
+  margin-left: auto;
+  /* Pushes it to the far right */
+}
+
+/* List Styling */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover Effect for List Items */
+ul li:hover {
+  background-color: #e9ecef;
+}
+
+/* Order ID Styling */
+ul li span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Delivery Date Styling */
+ul li .date {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+@media (max-width: 1024px) {
+  .stat .inf {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
+    margin-bottom: 8px;
     color: #333;
   }
-  
-  /* Delivery Date Styling */
-  ul li .date {
+
+  .last-elements-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .last-elements-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toggle-btn {
+    padding: 8px 12px;
     font-size: 14px;
-    color: #6c757d;
   }
-  
-    @media (max-width: 1024px) {
-    .last-elements-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .header h2 {
-      font-size: 20px;
-    }
-  }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .last-elements-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .header h2 {
-      font-size: 20px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .toggle-btn {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-  }
-  
+}

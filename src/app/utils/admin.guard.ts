@@ -1,29 +1,30 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 
-import { Observable, of } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 import { UserService } from '../service/user.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminGuard implements CanActivate {
-
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
-  private role :any = this.authService.getRole();
+  canActivate(): boolean {
+    const loggedIn = this.authService.isLoggedIn();
+    const role = this.authService.getRole();
 
-  canActivate(): Observable<boolean> {
+    // console.log('Guard check:', loggedIn, role);
 
-        if (this.authService.isLoggedIn() && this.role === "ADMIN") {
-          return of(true); // Using 'of' from RxJS
-        } else {
-          this.router.navigate(['/']);
-          return of(false); // Using 'of' from RxJS
-        }
+    if (loggedIn && role === 'ADMIN') {
+      return true;
+    }
+
+    this.router.navigate(['/']);
+    return false;
   }
 }

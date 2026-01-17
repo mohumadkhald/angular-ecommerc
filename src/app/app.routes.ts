@@ -20,11 +20,12 @@ import { UsersDetailsComponent } from './dashboard/users-details/users-details.c
 import { UsersComponent } from './dashboard/users/users.component';
 import { authGuardGuard } from "./utils/auth-guard.guard";
 import { CatsComponent } from './component/cats/cats.component';
+import { AdminGuard } from './utils/admin.guard';
 
 
 
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", canActivate: [authGuardGuard], children: [
+  { path: 'dashboard', component: DashboardComponent, title: "Dashboard", canActivate: [AdminGuard], children: [
     { path: 'users', component: UsersComponent, title: "Users" },
     { path: 'categories', component: CategoriesComponent, title: "Categories" },
     { path: 'subcategories', component: SubcategoriesComponent, title: "Subcategories" },
