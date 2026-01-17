@@ -227,17 +227,22 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCountOfItems(): Observable<number> {
-    if (this.authService.isLoggedIn()) {
-      return this.cartServerService.getCart().pipe(
-        switchMap(() => this.cartServerService.getCountOfItems()),
-        map((c) => c ?? 0),
-      );
-    }
+  return this.authService.isLoggedIn$.pipe(  // no parentheses here
+    switchMap((loggedIn) => {
+      if (loggedIn) {
+        return this.cartServerService.getCart().pipe(
+          switchMap(() => this.cartServerService.getCountOfItems()),
+          map((count) => count ?? 0),
+        );
+      } else {
+        this.cartService.getCart(); // ensure local cart is loaded
+        return this.cartService.count$;
+      }
+    })
+  );
+}
 
-    // LOCAL CART
-    this.cartService.getCart(); // ensure cart is loaded
-    return this.cartService.count$;
-  }
+
   goToSearchResult(): void {
     if (!this.searchText) return;
 

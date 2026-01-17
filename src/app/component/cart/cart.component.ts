@@ -199,13 +199,10 @@ export class CartComponent implements OnInit, OnDestroy {
     this.updateTotalPrice();
   }
 
-  getCountOfItems(): Observable<number> {
+    getCountOfItems(): any {
     if (this.authService.isLoggedIn()) {
       this.loadCartItems();
-      return this.cartServerService.getCart().pipe(
-        switchMap(() => this.cartServerService.getCountOfItems()),
-        map((c) => c ?? 0),
-      );
+      return this.cartServerService.count$;
     }
 
     // LOCAL CART

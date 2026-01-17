@@ -9,6 +9,7 @@ import { ExpiredSessionDialogComponent } from '../component/expired-session-dial
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from './user.service';
 import { ConfigService } from './config.service';
+import { CartService } from './cart.service';
 
 @Injectable({
   providedIn: 'root',
@@ -183,7 +184,7 @@ export class AuthService {
     private router: Router,
     private cookieService: CookieService,
     private dialog: MatDialog,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {
     this.baseUrl = configService.getApiUri();
   }
@@ -204,7 +205,7 @@ export class AuthService {
           if (response && response.token) {
             this.saveToken(response.token);
           }
-        })
+        }),
       );
   }
 
@@ -214,7 +215,7 @@ export class AuthService {
     email: string,
     password: string,
     gender: string,
-    role: string
+    role: string,
   ): Observable<any> {
     return this.http
       .post(`${this.baseUrl}/auth/register`, {
@@ -231,7 +232,7 @@ export class AuthService {
             this.saveToken(response.token);
             // this.loadProfile().subscribe();
           }
-        })
+        }),
       );
   }
 
@@ -263,16 +264,14 @@ export class AuthService {
     });
 
     return this.http
-      .patch<any>(
-        `${this.baseUrl}/auth/photo?url=${url}`,
-        formData,
-        { headers }
-      )
+      .patch<any>(`${this.baseUrl}/auth/photo?url=${url}`, formData, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.error('Change photo error:', error);
           return of(null);
-        })
+        }),
       );
   }
 
@@ -287,7 +286,7 @@ export class AuthService {
             Authorization: `Bearer ${token}`,
           }),
           observe: 'response', // Observe the full HTTP response
-        }
+        },
       )
       .pipe(
         tap((response) => {
@@ -301,7 +300,7 @@ export class AuthService {
           this.clearAuthState();
           this.loggedIn.next(false);
           return of(new HttpResponse<any>({ status: 500 })); // Return an empty HttpResponse with a 500 status
-        })
+        }),
       );
   }
 
@@ -350,7 +349,7 @@ export class AuthService {
   }
 
   showExpiredSessionDialog(
-    message: string
+    message: string,
   ): MatDialogRef<ExpiredSessionDialogComponent> {
     const dialogRef = this.dialog.open(ExpiredSessionDialogComponent, {
       width: '350px',

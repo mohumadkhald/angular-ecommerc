@@ -63,7 +63,7 @@ export class AuthComponent implements OnInit {
     private cartService: CartService,
     private toast: ToastService,
     private notificationService: NotificationService,
-    private userService: UserService
+    private userService: UserService,
   ) {
     // Initialize forms with validation rules
     this.registerForm = this.fb.group({
@@ -172,7 +172,7 @@ export class AuthComponent implements OnInit {
     if (this.container) {
       this.renderer.removeClass(
         this.container.nativeElement,
-        'right-panel-active'
+        'right-panel-active',
       );
     }
     this.router.navigate([], {
@@ -186,7 +186,7 @@ export class AuthComponent implements OnInit {
     if (this.container) {
       this.renderer.addClass(
         this.container.nativeElement,
-        'right-panel-active'
+        'right-panel-active',
       );
     }
     this.router.navigate([], {
@@ -203,6 +203,8 @@ export class AuthComponent implements OnInit {
 
       this.authService.login(email.trim(), password.trim(), remember).subscribe(
         (response) => {
+          this.cartService.syncCartFromLocalStorage();
+          this.cartService.clearCart();
           this.authService.saveToken(response.token);
 
           // ✅ Trigger notification FIRST
@@ -213,7 +215,7 @@ export class AuthComponent implements OnInit {
 
           this.toast.add('Your Login Success Have a Nice Time', 'success');
         },
-        (error) => this.handleError(error)
+        (error) => this.handleError(error),
       );
     }
   }
@@ -230,7 +232,7 @@ export class AuthComponent implements OnInit {
           email.trim(),
           password.trim(),
           gender,
-          role
+          role,
         )
         .subscribe(
           (response) => {
@@ -240,10 +242,10 @@ export class AuthComponent implements OnInit {
             this.cartService.clearCart();
             this.toast.add(
               'You Are Register Welcome To Commerce WebSite',
-              'success'
+              'success',
             );
           },
-          (error) => this.handleError(error)
+          (error) => this.handleError(error),
         );
     }
   }
@@ -309,7 +311,7 @@ export class AuthComponent implements OnInit {
     this.userService.username$.pipe(take(1)).subscribe((username) => {
       this.notificationService.showNotification(
         `Hello ${username} 👋`,
-        'This is your first desktop notification!'
+        'This is your first desktop notification!',
       );
       console.log('Notification sent');
     });

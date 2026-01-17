@@ -145,6 +145,7 @@ addToCart(product: any): void {
     this.cart = [];
     this.updateTotalPriceAndQuantity();
     this.updateLocalStorage();
+    this.updateCount()
   }
 
   getLocalItemCount(): number {
