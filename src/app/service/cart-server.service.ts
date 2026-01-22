@@ -29,11 +29,17 @@ export class CartServerService {
     this.countSubject.next(count);
   }
 
+  // ✅ RETURN observable — do NOT subscribe here
+  fetchCount(): Observable<number> {
+    return this.http
+      .get<number>(`${this.apiUrl}/cart/count`)
+      .pipe(tap((count) => this.setCount(count ?? 0)));
+  }
+
   getCart(): Observable<CartItem[]> {
     return this.http.get<CartItem[]>(`${this.apiUrl}/cart`).pipe(
       tap((res) => {
         this.cartItems = res;
-        this.setCount(this.cartItems.length);
       }),
     );
   }
@@ -54,11 +60,14 @@ export class CartServerService {
       () => {
         // Find if the product already exists in cart
         const existingItem = this.cartItems.find(
-          (item) => item.productId === product.productId && item.size === product.size && item.color === product.color,
+          (item) =>
+            item.productId === product.productId &&
+            item.size === product.size &&
+            item.color === product.color,
         );
 
         if (existingItem) {
-          console.log(existingItem)
+          console.log(existingItem);
           // Already in cart → increase quantity
           existingItem.quantity = (existingItem.quantity || 1) + 1;
         } else {

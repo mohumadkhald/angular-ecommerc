@@ -106,7 +106,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.initSearchFocus();
     this.initSelectWidth();
-    this.getCountOfItems();
   }
 
   ngOnDestroy(): void {
@@ -227,18 +226,19 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCountOfItems(): Observable<number> {
-  return this.authService.isLoggedIn$.pipe(  // no parentheses here
+  return this.authService.isLoggedIn$.pipe(
+    distinctUntilChanged(),
     switchMap((loggedIn) => {
       if (loggedIn) {
-        return this.cartServerService.getCart().pipe(
-          switchMap(() => this.cartServerService.getCountOfItems()),
-          map((count) => count ?? 0),
+        // 🔥 ONE backend request
+        return this.cartServerService.fetchCount().pipe(
+          switchMap(() => this.cartServerService.count$)
         );
       } else {
-        this.cartService.getCart(); // ensure local cart is loaded
+        this.cartService.getCart();
         return this.cartService.count$;
       }
-    })
+    }),
   );
 }
 
