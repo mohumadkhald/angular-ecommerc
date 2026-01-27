@@ -39,8 +39,7 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error) => {
       if (error.status === 401 || error.status === 403) {
         authService.clearAuthState();
-        userService.clearUsername();
-
+        userService.clear();
         router
           .navigate(['/auth'], { queryParams: { state: 'login' } })
           .then(() => {
