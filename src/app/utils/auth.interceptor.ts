@@ -37,38 +37,27 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(clonedRequest).pipe(
     catchError((error) => {
-      // if (error.status === 401 || error.status === 403) {
-      //   authService.clearAuthState();
-      //   userService.clearUsername();
+      if (error.status === 401 || error.status === 403) {
+        authService.clearAuthState();
+        userService.clearUsername();
 
-      //   router
-      //     .navigate(['/auth'], { queryParams: { state: 'login' } })
-      //     .then(() => {
-      //       setTimeout(() => {
-      //         const dialogRef = authService.showExpiredSessionDialog(
-      //           'Your Session Expired'
-      //         );
+        router
+          .navigate(['/auth'], { queryParams: { state: 'login' } })
+          .then(() => {
+            setTimeout(() => {
+              const dialogRef = authService.showExpiredSessionDialog(
+                'Your Session Expired'
+              );
 
-      //         // Wait until the dialog closes, then reload
-      //         dialogRef.afterClosed().subscribe(() => {
-      //           window.location.reload();
-      //         });
-      //       }, 300); // let routing settle first
-      //     });
-      // }
+              // Wait until the dialog closes, then reload
+              dialogRef.afterClosed().subscribe(() => {
+                window.location.reload();
+              });
+            }, 300); // let routing settle first
+          });
+      }
       return throwError(() => error);
     })
   );
 };
 
-// if (router.url !== '/auth') {
-//   // router.navigate(['/login']).then(() => {
-//     setTimeout(() => {
-//       // window.location.reload();
-//       router.navigate(['/auth'], { queryParams:{ state: 'login' } })
-//     }, 1500);
-//     setTimeout(() => {
-//       window.location.reload();
-//     },1800);
-//   // });
-// }

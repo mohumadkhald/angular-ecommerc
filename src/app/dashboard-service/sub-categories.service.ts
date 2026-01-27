@@ -10,12 +10,11 @@ import { DashboardService } from './dashboard.service';
 export class SubCategoriesService {
   private apiUrl: string;
 
-
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private configService: ConfigService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
   ) {
     this.apiUrl = configService.getApiUri();
   }
@@ -47,18 +46,18 @@ export class SubCategoriesService {
       .pipe(tap(() => this.dashboardService.refreshCounts()));
   }
 
-    changePhoto(title: string, image: File, url: string): Observable<any> {
-      const formData = new FormData();
-      formData.append('image', image);
-  
-      const apiUrlWithParams = `${this.apiUrl}/categories/photo?title=${title}&url=${url}`;
-  
-      return this.http.patch<any>(apiUrlWithParams, formData).pipe(
-        tap(() => this.dashboardService.refreshCounts()), // optional, if photo counts affect dashboard
-        catchError((error) => {
-          console.error('Change photo error:', error);
-          return of(null);
-        })
-      );
-    }
+  changePhoto(title: string, image: File, url: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const apiUrlWithParams = `${this.apiUrl}/sub-categories/photo?title=${title}&url=${url}`;
+
+    return this.http.patch<any>(apiUrlWithParams, formData).pipe(
+      tap(() => this.dashboardService.refreshCounts()), // optional, if photo counts affect dashboard
+      catchError((error) => {
+        console.error('Change photo error:', error);
+        return of(null);
+      }),
+    );
+  }
 }

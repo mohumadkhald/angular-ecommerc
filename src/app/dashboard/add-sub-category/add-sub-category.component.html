@@ -56,7 +56,7 @@
         </div>
 
         <!-- SubCategory Image -->
-        <div class="row justify-content-center mt-2">
+        <div *ngIf="!subCat" class="row justify-content-center mt-2">
             <div class="col-12 col-md-6">
                 <div class="form-group">
                     <input id="image" type="file" (change)="onFileChange($event)" class="form-control-file" />

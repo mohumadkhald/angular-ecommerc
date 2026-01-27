@@ -123,7 +123,7 @@ export class SubcategoriesComponent {
     }
     uploadImage(file: File, category: any) {
       this.subCategoryService
-        .changePhoto(category.categoryTitle, file, category.img)
+        .changePhoto(category.name, file, category.img)
         .subscribe(
           (response) => {
             this.toastService.add(
