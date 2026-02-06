@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import {
   ActivatedRoute,
-  NavigationEnd,
   Router,
   RouterLink,
   RouterLinkActive,
@@ -48,8 +47,10 @@ import { CommonModule } from '@angular/common';
   imports: [
     RouterLink,
     RouterLinkActive,
+    MatProgressSpinner,
     FormsModule,
     CommonModule,
+    CapitalizePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -88,14 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     public toastService: ToastService,
     private renderer: Renderer2,
     private categoryUpdateService: CategoryUpdateService,
-  ) {
-
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.closeMenu();
-      });
-  }
+  ) {}
   count$!: Observable<number>;
 
   // =============================
@@ -107,12 +101,6 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscribeToUserState();
     this.loadCategories();
     this.count$ = this.getCountOfItems();
-
-     this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      this.closeMenu();
-    });
   }
 
   ngAfterViewInit(): void {
@@ -238,21 +226,21 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getCountOfItems(): Observable<number> {
-    return this.authService.isLoggedIn$.pipe(
-      distinctUntilChanged(),
-      switchMap((loggedIn) => {
-        if (loggedIn) {
-          // 🔥 ONE backend request
-          return this.cartServerService.fetchCount().pipe(
-            switchMap(() => this.cartServerService.count$)
-          );
-        } else {
-          this.cartService.getCart();
-          return this.cartService.count$;
-        }
-      }),
-    );
-  }
+  return this.authService.isLoggedIn$.pipe(
+    distinctUntilChanged(),
+    switchMap((loggedIn) => {
+      if (loggedIn) {
+        // 🔥 ONE backend request
+        return this.cartServerService.fetchCount().pipe(
+          switchMap(() => this.cartServerService.count$)
+        );
+      } else {
+        this.cartService.getCart();
+        return this.cartService.count$;
+      }
+    }),
+  );
+}
 
 
   goToSearchResult(): void {
@@ -269,37 +257,11 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  toggleMenu(visible: boolean): void {
+    this.menuVisible = visible;
+  }
 
   auth(): boolean {
     return this.authService.isLoggedIn();
   }
-
-
-  @ViewChild('dropdownMenu') dropdown!: ElementRef;
-
-
-  openMenu() {
-    this.menuVisible = true;
-  }
-
-  closeMenu() {
-    this.menuVisible = false;
-  }
-
-  toggleMenu() {
-    this.menuVisible = !this.menuVisible;
-  }
-
-  @HostListener('document:click', ['$event'])
-  clickOutside(event: Event) {
-    if (
-      this.menuVisible &&
-      this.dropdown &&
-      !this.dropdown.nativeElement.contains(event.target)
-    ) {
-      this.closeMenu();
-    }
-  }
-
-
 }

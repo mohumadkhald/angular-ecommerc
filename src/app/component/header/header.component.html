@@ -47,7 +47,7 @@
       </div>
 
       <!-- ACCOUNT -->
-      <div class="sign hover" (mouseenter)="openMenu()" (mouseleave)="closeMenu()">
+      <div class="sign hover" (click)="toggleMenu(true)" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
 
         <div class="account-box">
 
@@ -55,7 +55,7 @@
             <span class="hello">Hello,</span>
 
             <span *ngIf="!auth()" class="signin no-login" routerLink="/auth" [queryParams]="{ state: 'login' }"
-              (click)="toggleMenu()">
+              (click)="toggleMenu(false)">
               Sign in
             </span>
 
@@ -74,21 +74,22 @@
         </div>
 
         <!-- DROPDOWN -->
-        <div class="dropdown-menu" #dropdownMenu (mouseenter)="openMenu()" (mouseleave)="closeMenu()">
+        <div class="dropdown-menu" *ngIf="menuVisible">
           <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
-            (click)="closeMenu()">
+            (click)="menuVisible = false">
             Login
           </div>
 
-          <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard" (click)="closeMenu()">
+          <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard"
+            (click)="menuVisible = false">
             Dashboard
           </div>
 
-          <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="closeMenu()">
+          <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="menuVisible = false">
             Account
           </div>
 
-          <div class="dropdown-item" *ngIf="auth()" (click)="logout(); closeMenu()">
+          <div class="dropdown-item" *ngIf="auth()" (click)="logout(); menuVisible = false">
             Logout
           </div>
         </div>
@@ -112,8 +113,8 @@
   <div class="nav-main">
     <div #navContainer class="xshop">
 
-      <a *ngFor="let category of categories" routerLinkActive="active_link"
-        [routerLink]="['/categories', category.categoryTitle]">
+      <a *ngFor="let category of categories" routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
+        >
         {{ category.categoryTitle }}
       </a>
     </div>
