@@ -143,6 +143,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   private loadCartItems(): void {
     this.cartServerService.getCart().subscribe((items) => {
+      this.cartServerService.count$.subscribe((count) => (this.count = count ?? 0));
       this.cartItems1 = items;
       this.updateTotalPrice(); // recalculates without extra requests
     });
