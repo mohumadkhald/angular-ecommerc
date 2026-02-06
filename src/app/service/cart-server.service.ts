@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, finalize, Observable, of, tap } from 'rxjs';
 import { CartItem } from '../interface/cat';
 import { AuthService } from './auth.service';
 import { ConfigService } from './config.service';
@@ -97,18 +97,33 @@ export class CartServerService {
     );
   }
 
+
+  isUpdating: boolean = false;
+
   decreaseQuantity(itemId: number, qty: number): any {
+    if (this.isUpdating) {
+      // Return a harmless observable instead of undefined
+      return of(null);
+    }
+
+    this.isUpdating = true;
+
     if (qty <= 1) {
-      return this.deleteItem(itemId);
+      return this.deleteItem(itemId).pipe(
+        finalize(() => this.isUpdating = false)
+      );
     }
 
     const params = new HttpParams().set('state', 'DECREASE');
     return this.http.patch(
       `${this.apiUrl}/cart/${itemId}`,
       {},
-      { params, responseType: 'text' },
+      { params, responseType: 'text' }
+    ).pipe(
+      finalize(() => this.isUpdating = false)
     );
   }
+
 
   clearCart() {
     // Make HTTP DELETE request to clear the cart
@@ -118,7 +133,7 @@ export class CartServerService {
         this.countSubject.next(0);
         this.cartItems.splice(0, this.cartItems.length);
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
