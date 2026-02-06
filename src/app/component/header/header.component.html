@@ -47,7 +47,7 @@
       </div>
 
       <!-- ACCOUNT -->
-      <div class="sign hover" (mouseenter)="toggleMenu()" (mouseleave)="toggleMenu()">
+      <div class="sign hover" (mouseenter)="openMenu()" (mouseleave)="closeMenu()">
 
         <div class="account-box">
 
@@ -74,29 +74,24 @@
         </div>
 
         <!-- DROPDOWN -->
-        <div class="dropdown" #dropdown>
-          <button (click)="toggleMenu()">Menu</button>
+        <div class="dropdown-menu" #dropdownMenu (mouseenter)="openMenu()" (mouseleave)="closeMenu()">
+          <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
+            (click)="closeMenu()">
+            Login
+          </div>
 
-          <div class="dropdown-menu" *ngIf="menuVisible">
-            <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
-              (click)="closeMenu()">
-              Login
-            </div>
+          <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard" (click)="closeMenu()">
+            Dashboard
+          </div>
 
-            <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard" (click)="closeMenu()">
-              Dashboard
-            </div>
+          <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="closeMenu()">
+            Account
+          </div>
 
-            <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="closeMenu()">
-              Account
-            </div>
-
-            <div class="dropdown-item" *ngIf="auth()" (click)="logout(); closeMenu()">
-              Logout
-            </div>
+          <div class="dropdown-item" *ngIf="auth()" (click)="logout(); closeMenu()">
+            Logout
           </div>
         </div>
-
       </div>
 
       <!-- ORDERS -->
