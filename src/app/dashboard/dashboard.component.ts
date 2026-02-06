@@ -25,6 +25,7 @@ import {
 } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash, fas } from '@fortawesome/free-solid-svg-icons';
 import { Counts, DashboardService } from '../dashboard-service/dashboard.service';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-dashboard',
@@ -36,8 +37,9 @@ import { Counts, DashboardService } from '../dashboard-service/dashboard.service
     NgIf,
     SidebarComponent,
     CommonModule,
-    RouterModule
-  ],
+    RouterModule,
+    MatProgressSpinner
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -56,6 +58,7 @@ export class DashboardComponent implements OnInit {
   subCats: any;
   products: any;
   orders: any;
+  loading: boolean = true;
 
   constructor(
     library: FaIconLibrary,
@@ -94,6 +97,7 @@ export class DashboardComponent implements OnInit {
             this.prodsCount = counts.products;
             this.catsCount = counts.categories;
             this.ordersCount = counts.orders;
+            this.loading = false;
           });
         }
       }

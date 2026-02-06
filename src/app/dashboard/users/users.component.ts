@@ -10,11 +10,12 @@ import { AddUserComponent } from '../add-user/add-user.component';
 import { DashboardComponent } from '../dashboard.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Subscription } from 'rxjs';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [NgFor, NgIf, PaginationComponent, SidebarComponent],
+  imports: [NgFor, NgIf, PaginationComponent, SidebarComponent, MatProgressSpinner],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
@@ -28,6 +29,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   currentPage = 1;
   totalPages: number[] = [];
   private authSubscription!: Subscription;
+  loading: boolean = true;
 
   constructor(
     private router: Router,
@@ -36,7 +38,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     public toastService: ToastService,
     private dashboardComponent: DashboardComponent // Inject DashboardComponent
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
@@ -56,9 +58,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   fetchUsers(page: number = 0, pageSize: number = 10): void {
     this.usersService.getUsers(page, pageSize).subscribe((res) => {
       this.users = res.content;
+      this.loading = false;
     });
   }
-  deleteUser(userId: number): void {  
+  deleteUser(userId: number): void {
     if (confirm('Are you sure you want to delete this user?')) {
       this.usersService.deleteUser(userId).subscribe(
         () => {
@@ -67,7 +70,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           // this.dashboardComponent.fetchUserCount(); // Update the user count
           this.toastService.add('User Deleted successfully', 'success');
         },
-        (error) => {}
+        (error) => { }
       );
     }
   }
@@ -93,7 +96,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.toastService.add('User added successfully', 'success');
         }
       },
-      (reason) => {}
+      (reason) => { }
     );
   }
 

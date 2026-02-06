@@ -11,11 +11,12 @@ import { DashboardComponent } from '../dashboard.component';
 import { CommonModule } from '@angular/common';
 import { SubCategoriesService } from '../../dashboard-service/sub-categories.service';
 import { AddSubCategoryComponent } from '../add-sub-category/add-sub-category.component';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-subcategories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinner],
   templateUrl: './subcategories.component.html',
   styleUrl: './subcategories.component.css',
 })
@@ -27,7 +28,7 @@ export class SubcategoriesComponent {
   currentPage = 1;
   pageSize = 6; // rows per page
   totalPages = 0;
-
+  loading: boolean = true;
   constructor(
     private router: Router,
     private subCategoryService: SubCategoriesService,
@@ -48,6 +49,7 @@ export class SubcategoriesComponent {
       this.subCategories = data;
       this.totalPages = Math.ceil(this.subCategories.length / this.pageSize);
       this.currentPage = 1;
+      this.loading = false;
     });
   }
 

@@ -11,11 +11,12 @@ import { CategoryUpdateService } from '../../dashboard-service/category-update.s
 import { ProductListComponent } from '../../component/product-list/product-list.component';
 import { CategoryService } from '../../service/category.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule, SidebarComponent, MatProgressSpinner],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css',
 })
@@ -27,6 +28,7 @@ export class CategoriesComponent implements OnInit {
   currentPage = 1;
   pageSize = 5; // rows per page
   totalPages = 0;
+  loading: boolean = true;
 
   constructor(
     private router: Router,
@@ -49,6 +51,7 @@ export class CategoriesComponent implements OnInit {
       this.categories = data;
       this.totalPages = Math.ceil(this.categories.length / this.pageSize);
       this.currentPage = 1;
+      this.loading = false;
     });
   }
 
