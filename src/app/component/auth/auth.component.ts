@@ -133,6 +133,7 @@ export class AuthComponent implements OnInit {
         localStorage.setItem('firstPwdSet', 'true');
       }
 
+      this.cartService.syncCartFromLocalStorage();
       this.router.navigateByUrl('/');
       return;
     }

@@ -1,5 +1,9 @@
+<div *ngIf="loading" style="margin: 30vh 50vw" class="spinner-container">
+  <mat-spinner></mat-spinner>
+  <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading, please wait...</div>
+</div>
 <!-- cart.component.html -->
-<section class="h-100 h-custom mt-1" style="background-color: #eee;">
+<section *ngIf="!loading" class="h-100 h-custom mt-1" style="background-color: #eee;">
     <div class="container h-100">
         <div class="row d-flex h-100">
             <div class="col">

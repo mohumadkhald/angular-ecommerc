@@ -24,6 +24,7 @@ import { AddressModalComponent } from '../address-modal/address-modal.component'
 import { RemoveNotFoundItemStockModalComponent } from '../remove-not-found-item-stock-modal/remove-not-found-item-stock-modal.component';
 import { ConfigService } from '../../service/config.service';
 import { CapitalizePipe } from '../../pipe/capitalize.pipe';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   standalone: true,
@@ -33,7 +34,8 @@ import { CapitalizePipe } from '../../pipe/capitalize.pipe';
     RouterLink,
     ReactiveFormsModule,
     CapitalizePipe,
-  ],
+    MatProgressSpinner
+],
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
@@ -53,6 +55,7 @@ export class CartComponent implements OnInit, OnDestroy {
   showCheckoutModal: boolean = false;
   count$!: Observable<number>;
   count: number = 0;
+  loading: boolean = true;
 
   constructor(
     private cartService: CartService,
@@ -146,6 +149,7 @@ export class CartComponent implements OnInit, OnDestroy {
       this.cartServerService.count$.subscribe((count) => (this.count = count ?? 0));
       this.cartItems1 = items;
       this.updateTotalPrice(); // recalculates without extra requests
+      this.loading = false;
     });
   }
 
@@ -209,6 +213,7 @@ export class CartComponent implements OnInit, OnDestroy {
     // LOCAL CART
     this.cartItems = this.cartService.getCart(); // ensure cart is loaded
     this.updateTotalPrice();
+    this.loading = false;
     return this.cartService.count$;
   }
   clearCart(): void {
