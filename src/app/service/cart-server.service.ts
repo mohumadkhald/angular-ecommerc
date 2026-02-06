@@ -99,13 +99,7 @@ export class CartServerService {
 
   decreaseQuantity(itemId: number, qty: number): any {
     if (qty <= 1) {
-      // Delete the item and update countSubject
-      return this.deleteItem(itemId).pipe(
-        tap(() => {
-          const currentCount = this.countSubject.value;
-          this.countSubject.next(Math.max(currentCount - 1, 0));
-        })
-      );
+      return this.deleteItem(itemId);
     }
 
     const params = new HttpParams().set('state', 'DECREASE');
@@ -113,14 +107,8 @@ export class CartServerService {
       `${this.apiUrl}/cart/${itemId}`,
       {},
       { params, responseType: 'text' },
-    ).pipe(
-      tap(() => {
-        const currentCount = this.countSubject.value;
-        this.countSubject.next(Math.max(currentCount - 1, 0));
-      })
     );
   }
-
 
   clearCart() {
     // Make HTTP DELETE request to clear the cart
@@ -130,7 +118,7 @@ export class CartServerService {
         this.countSubject.next(0);
         this.cartItems.splice(0, this.cartItems.length);
       },
-      (error) => { },
+      (error) => {},
     );
   }
 
