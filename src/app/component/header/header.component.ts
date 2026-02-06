@@ -47,10 +47,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     RouterLink,
     RouterLinkActive,
-    MatProgressSpinner,
     FormsModule,
     CommonModule,
-    CapitalizePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
