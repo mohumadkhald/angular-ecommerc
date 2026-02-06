@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, finalize, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { CartItem } from '../interface/cat';
 import { AuthService } from './auth.service';
 import { ConfigService } from './config.service';
@@ -41,8 +41,15 @@ export class CartServerService {
       tap((res) => {
         this.cartItems = res;
       }),
+      // After fetching cart, also fetch count
+      switchMap((cart) =>
+        this.fetchCount().pipe(
+          map(() => cart) // return the original cart array
+        )
+      )
     );
   }
+
 
   getTotalPrice(): number {
     return this.cartItems.reduce((total, item) => total + item.totalPrice, 0);
