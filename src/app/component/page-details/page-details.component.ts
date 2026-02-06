@@ -19,17 +19,18 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../interface/product';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-page-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, StarRatingComponent],
+  imports: [CommonModule, FormsModule, RouterLink, StarRatingComponent, MatProgressSpinner],
   templateUrl: './page-details.component.html',
   styleUrl: './page-details.component.css',
 })
 export class PageDetailsComponent implements OnInit, OnDestroy {
   @Input() id!: number;
-
+  loading: boolean = true;
   productItem: any = null;
   recommendedProducts$!: Observable<any[]>;
 
@@ -98,6 +99,7 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
 
           this.initMainImage();
           this.loadRecommendations();
+          this.loading = false;
         },
         error: (err) => {
           if (err.status === 404) this.showNotFound = true;
