@@ -128,36 +128,6 @@
         </details>
     </section>
 
-    <section *ngIf="productItem" class="recommended-products m-5">
-        <h2>Recommended for You</h2>
-        <div class="d-flex align-items-center position-relative">
 
-            <!-- Left Button -->
-            <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="startIndex === 0">&#8249;</button>
-
-            <div class="recommended-container no-scroll">
-                <ng-container *ngIf="recommendedProducts$ | async as recommendedProducts">
-                    <ng-container
-                        *ngFor="let item of recommendedProducts.slice(startIndex, startIndex + itemsPerPage); let i = index">
-                        <div class="recommended-item">
-                            <div *ngIf="item.discountPercent > 0" class="offer-badge">Offer</div>
-                            <img [src]="item.imageUrls[0]" alt="{{ item.productTitle }}"
-                                (click)="redirectToDetails(item.productId)">
-                            <h5 [routerLink]="['/products', item.productId]">{{ item.productTitle }}</h5>
-                            <h6><span class="text-danger">₹{{ item.price }}</span></h6>
-                            <button [disabled]="!validateQuantity()" (click)="openSimple(productItem)" class="btn btn-outline-primary">Add to Cart</button>
-                        </div>
-                    </ng-container>
-                    <!-- Show All button after last visible item -->
-                    <div *ngIf="maxReached" class="recommended-item show-all-btn">
-                        <button class="btn btn-primary" (click)="goToAllProducts()">Show All</button>
-                    </div>
-                </ng-container>
-            </div>
-
-            <!-- Right Button -->
-            <button class="scroll-btn right" (click)="scrollRight()" [disabled]="maxReached">&#8250;</button>
-        </div>
-    </section>
 
 </div>
