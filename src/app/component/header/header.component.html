@@ -47,7 +47,7 @@
       </div>
 
       <!-- ACCOUNT -->
-      <div class="sign hover" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
+      <div class="sign hover" (mouseenter)="toggleMenu()" (mouseleave)="toggleMenu()">
 
         <div class="account-box">
 
@@ -55,7 +55,7 @@
             <span class="hello">Hello,</span>
 
             <span *ngIf="!auth()" class="signin no-login" routerLink="/auth" [queryParams]="{ state: 'login' }"
-              (click)="toggleMenu(false)">
+              (click)="toggleMenu()">
               Sign in
             </span>
 
@@ -74,25 +74,29 @@
         </div>
 
         <!-- DROPDOWN -->
-        <div class="dropdown-menu" *ngIf="menuVisible">
-          <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
-            (click)="menuVisible = false">
-            Login
-          </div>
+        <div class="dropdown" #dropdown>
+          <button (click)="toggleMenu()">Menu</button>
 
-          <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard"
-            (click)="menuVisible = false">
-            Dashboard
-          </div>
+          <div class="dropdown-menu" *ngIf="menuVisible">
+            <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
+              (click)="closeMenu()">
+              Login
+            </div>
 
-          <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="menuVisible = false">
-            Account
-          </div>
+            <div class="dropdown-item" *ngIf="auth() && role === 'ADMIN'" routerLink="/dashboard" (click)="closeMenu()">
+              Dashboard
+            </div>
 
-          <div class="dropdown-item" *ngIf="auth()" (click)="logout(); menuVisible = false">
-            Logout
+            <div class="dropdown-item" *ngIf="auth()" routerLink="/user/profile" (click)="closeMenu()">
+              Account
+            </div>
+
+            <div class="dropdown-item" *ngIf="auth()" (click)="logout(); closeMenu()">
+              Logout
+            </div>
           </div>
         </div>
+
       </div>
 
       <!-- ORDERS -->
@@ -113,8 +117,8 @@
   <div class="nav-main">
     <div #navContainer class="xshop">
 
-      <a *ngFor="let category of categories" routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
-        >
+      <a *ngFor="let category of categories" routerLinkActive="active_link"
+        [routerLink]="['/categories', category.categoryTitle]">
         {{ category.categoryTitle }}
       </a>
     </div>

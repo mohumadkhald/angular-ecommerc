@@ -47,10 +47,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     RouterLink,
     RouterLinkActive,
-    MatProgressSpinner,
     FormsModule,
     CommonModule,
-    CapitalizePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -257,11 +255,26 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  toggleMenu(visible: boolean): void {
-    this.menuVisible = visible;
-  }
 
   auth(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+
+  @ViewChild('dropdown') dropdown!: ElementRef;
+
+  toggleMenu() {
+    this.menuVisible = !this.menuVisible;
+  }
+
+  closeMenu() {
+    this.menuVisible = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    if (!this.dropdown.nativeElement.contains(event.target)) {
+      this.menuVisible = false;
+    }
   }
 }
