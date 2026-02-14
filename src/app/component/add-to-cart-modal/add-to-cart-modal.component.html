@@ -21,7 +21,7 @@
 
       <!-- Price -->
       <div class="price">
-        <span *ngIf="product.price != product.discountePrice" class="original">{{ product.price | currency }}</span>
+        <span *ngIf="product.discountPercent > 0" class="original">{{ product.price | currency }}</span>
         <span class="discount">{{ product.discountPrice | currency }}</span>
       </div>
       <!-- Size -->
