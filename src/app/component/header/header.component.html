@@ -50,7 +50,8 @@
       <div class="sign hover" (click)="toggleMenu(true)" (mouseenter)="toggleMenu(true)"
         (mouseleave)="toggleMenu(false)">
 
-        <div class="signin no-login" routerLink="/auth" [queryParams]="{ state: 'login' }" class="account-box">
+        <div class="signin no-login account-box" [routerLink]="!auth() ? ['/auth'] : null"
+          [queryParams]="!auth() ? { state: 'login' } : null">
 
           <div class="account-top">
             <span class="hello">Hello,</span>
