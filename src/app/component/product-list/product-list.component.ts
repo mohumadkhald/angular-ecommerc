@@ -52,15 +52,12 @@ import { combineLatest, distinctUntilChanged } from 'rxjs';
     ProductCardComponent,
     FormsModule,
     CommonModule,
-    CurrencyPipe,
     RouterLink,
-    RouterLinkActive,
     MatProgressSpinner,
     CapitalizePipe,
     CustomRangeSliderComponent,
     PaginationComponent,
     SortOptionsComponent,
-    ModelFilterComponent,
   ],
 })
 export class ProductListComponent implements OnInit {
@@ -84,9 +81,10 @@ export class ProductListComponent implements OnInit {
   display = false;
 
   /* -------------------- FILTERS -------------------- */
-  colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
+  colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green', 'purple', 'orange', 'gray', 'pink', 'brown'];
 
   filters = {
+    subCategoryName: null,
     inStock: true,
     notAvailable: true,
     minPrice: 0,
@@ -120,7 +118,7 @@ export class ProductListComponent implements OnInit {
     private dialog: MatDialog,
     public toastService: ToastService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   /* ========================================================= */
   /* ======================== INIT ============================ */
@@ -151,12 +149,13 @@ export class ProductListComponent implements OnInit {
       this.loadSubCategories();
     }
 
-    // ✅ load products ONLY when subcategory changes AFTER init
-    if (this.initialized) {
+    // Always reload products if either category or subcategory changes
+    if (categoryChanged || subCategoryChanged) {
       this.currentPage = 1;
       this.loadProducts();
     }
   }
+
 
   // ------------------- QUERY PARAM HANDLING -------------------
   private handleQueryParams(params: ParamMap): void {
@@ -420,7 +419,7 @@ export class ProductListComponent implements OnInit {
   }
 
   @HostListener('window:resize')
-  onResize() {}
+  onResize() { }
 
   onPriceRangeChange() {
     this.updateQueryParams({
@@ -440,34 +439,25 @@ export class ProductListComponent implements OnInit {
         colorOptions: this.colorOptions,
         inStockCount: this.inStockCount,
         outOfStockCount: this.outOfStockCount,
-        sub: sub,
+        subca: this.subCategoryName,
+        instock: this.filters.inStock,
+        notavailable: this.filters.notAvailable
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         if (result.filters) {
-          // Update filters
           this.filters = { ...this.filters, ...result.filters };
-          this.updateQueryParams({
-            inStock: this.filters.inStock,
-            notAvailable: this.filters.notAvailable,
-            minPrice: this.filters.minPrice,
-            maxPrice: this.filters.maxPrice,
-            colors: this.filters.colors.length
-              ? this.filters.colors.join(',')
-              : null,
-            sizes: this.filters.sizes.length
-              ? this.filters.sizes.join(',')
-              : null,
-            page: 1,
-          });
-        } else if (result) {
-          // Update subcategory
-          this.redirectToSubCategory(this.categoryTitle, result);
+        }
+
+        if (result.subCategoryName && this.categoryTitle) {
+          // Include all filters in queryParams
+          this.redirectToSubCategory(this.categoryTitle, result.subCategoryName, this.filters);
         }
       }
     });
+
   }
 
   onEmailChange(email: string): void {
@@ -478,11 +468,20 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
-  redirectToSubCategory(categoryTitle: any, name: string) {
-    this.router.navigate([`categories/${categoryTitle}/${name}`], {
-      queryParams: { page: 1, inStock: true, notAvailable: true },
+  redirectToSubCategory(categoryTitle: string, subName: string, filters?: any) {
+    this.router.navigate([`categories/${categoryTitle}/${subName}`], {
+      queryParams: {
+        page: 1,
+        inStock: filters?.inStock ?? true,
+        notAvailable: filters?.notAvailable ?? true,
+        minPrice: filters?.minPrice ?? 0,
+        maxPrice: filters?.maxPrice ?? 250000,
+        colors: filters?.colors?.length ? filters.colors.join(',') : null,
+        sizes: filters?.sizes?.length ? filters.sizes.join(',') : null,
+      },
     });
   }
+
 
   isActive(subCategory: any): boolean {
     try {
@@ -507,7 +506,7 @@ export class ProductListComponent implements OnInit {
     }
   }
 
-    onCategoryChange(catId: any): void {
+  onCategoryChange(catId: any): void {
     const page = 1;
     this.updateQueryParams({ page });
     this.loadProducts();

@@ -239,9 +239,13 @@ export class PageDetailsComponent implements OnInit, OnDestroy {
 
   /* -------------------- NAV -------------------- */
 
-  redirectToDetails(id: number): void {
-    this.router.navigate(['/products', id]);
-  }
+redirectToDetails(item: any): void {
+  this.loading = true;
+
+  this.router.navigate([
+    `categories/${item.subCategory.categoryName}/${item.subCategory.name}/products/${item.productId}`,
+  ]);
+}
 
   toggleLens(state: boolean) {
     if (!this.isMobile) {

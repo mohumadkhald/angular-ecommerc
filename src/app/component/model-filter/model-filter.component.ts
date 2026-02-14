@@ -25,6 +25,12 @@ import { CustomRangeSliderComponent } from '../custom-range-slider/custom-range-
   styleUrl: './model-filter.component.css',
 })
 export class ModelFilterComponent {
+  sizeDisplayMap: { [key: string]: string } = {
+    small: 'S',
+    medium: 'M',
+    large: 'L',
+    extra_large: 'XL'
+  };
   categoryTitle: string | null;
   subCategories: any[];
   filters: any;
@@ -36,58 +42,32 @@ export class ModelFilterComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<ModelFilterComponent>,
-    private router: Router,
-    private route: ActivatedRoute
+    public dialogRef: MatDialogRef<ModelFilterComponent>
   ) {
     this.categoryTitle = data.categoryTitle;
     this.subCategories = data.subCategories;
-    this.filters = data.filters;
+    this.filters = { ...data.filters }; // clone to avoid mutating parent directly
     this.subCategoryName = data.subCategoryName;
     this.colorOptions = data.colorOptions;
     this.inStockCount = data.inStockCount;
     this.outOfStockCount = data.outOfStockCount;
-    this.activeSub = data.sub;
+    this.activeSub = data.subCategoryName;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
+  // Just set the active subcategory; don't close yet
   setActiveSub(subName: string): void {
     this.activeSub = subName;
-    this.dialogRef.close(this.activeSub);
-  }
-  onFilterChange(): void {
-    // Update query params with availability filters
-    this.dialogRef.close({
-      filters: {
-        inStock: this.filters.inStock,
-        notAvailable: this.filters.notAvailable,
-      },
-    });
   }
 
-  onPriceRangeChange(): void {
+  // Apply all changes at once
+  applyFilters(): void {
     this.dialogRef.close({
-      filters: {
-        minPrice: this.filters.minPrice,
-        maxPrice: this.filters.maxPrice,
-      },
+      subCategoryName: this.activeSub,
+      filters: this.filters,
     });
   }
-
-  // onColorChange(color: string, event: Event): void {
-  //   const checkbox = event.target as HTMLInputElement;
-  //   if (checkbox.checked) {
-  //     this.filters.colors.push(color);
-  //   } else {
-  //     const index = this.filters.colors.indexOf(color);
-  //     if (index > -1) {
-  //       this.filters.colors.splice(index, 1);
-  //     }
-  //   }
-  //   this.updateQueryParams({ color: this.filters.colors.join(',') });
-  //   this.dialogRef.close({ filters: { colors: this.filters.colors } });
-  // }
 
   onColorToggle(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -98,20 +78,8 @@ export class ModelFilterComponent {
         this.filters.colors.push(color);
       }
     } else {
-      this.filters.colors = this.filters.colors.filter(
-        (c: string) => c !== color
-      );
+      this.filters.colors = this.filters.colors.filter((c: string) => c !== color);
     }
-  }
-
-  applyColorFilter(): void {
-    this.updateQueryParams({
-      colors: this.filters.colors.join(','),
-    });
-
-    this.dialogRef.close({
-      filters: { colors: this.filters.colors },
-    });
   }
 
   onSizeToggle(event: Event): void {
@@ -126,33 +94,5 @@ export class ModelFilterComponent {
       this.filters.sizes = this.filters.sizes.filter((s: string) => s !== size);
     }
   }
-
-  applySizeFilter(): void {
-    this.updateQueryParams({
-      sizes: this.filters.sizes.join(','),
-    });
-
-    this.dialogRef.close({
-      filters: { sizes: this.filters.sizes },
-    });
-  }
-
-  updateQueryParams(params: any): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: params,
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.handleScreenResize(event.target.innerWidth);
-  }
-
-  private handleScreenResize(width: number): void {
-    if (width >= 767) {
-      this.dialogRef.close();
-    }
-  }
 }
+
