@@ -47,15 +47,15 @@
       </div>
 
       <!-- ACCOUNT -->
-      <div class="sign hover" (click)="toggleMenu(true)" (mouseenter)="toggleMenu(true)" (mouseleave)="toggleMenu(false)">
+      <div class="sign hover" (click)="toggleMenu(true)" (mouseenter)="toggleMenu(true)"
+        (mouseleave)="toggleMenu(false)">
 
-        <div class="account-box">
+        <div class="signin no-login" routerLink="/auth" [queryParams]="{ state: 'login' }" class="account-box">
 
           <div class="account-top">
             <span class="hello">Hello,</span>
 
-            <span *ngIf="!auth()" class="signin no-login" routerLink="/auth" [queryParams]="{ state: 'login' }"
-              (click)="toggleMenu(false)">
+            <span style="font-weight: bold;" *ngIf="!auth()" (click)="toggleMenu(false)">
               Sign in
             </span>
 
@@ -74,7 +74,7 @@
         </div>
 
         <!-- DROPDOWN -->
-        <div class="dropdown-menu" *ngIf="menuVisible">
+        <div class="dropdown-menu" *ngIf="menuVisible && auth()">
           <div class="dropdown-item" *ngIf="!auth()" routerLink="/auth" [queryParams]="{ state: 'login' }"
             (click)="menuVisible = false">
             Login
@@ -113,8 +113,8 @@
   <div class="nav-main">
     <div #navContainer class="xshop">
 
-      <a *ngFor="let category of categories" routerLinkActive="active_link" [routerLink]="['/categories', category.categoryTitle]"
-        >
+      <a *ngFor="let category of categories" routerLinkActive="active_link"
+        [routerLink]="['/categories', category.categoryTitle]">
         {{ category.categoryTitle }}
       </a>
     </div>
