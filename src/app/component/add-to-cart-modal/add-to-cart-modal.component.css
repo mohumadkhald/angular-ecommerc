@@ -94,8 +94,9 @@ mat-dialog-content.cart-dialog {
 .image-section img {
   max-width: 100%;
   height: 300px;
-  object-fit: contain;
   transition: transform 0.25s ease;
+  object-fit: cover;
+  width: 100%;
 }
 
 .image-section img:hover {

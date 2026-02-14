@@ -3,12 +3,10 @@
   X
 </button>
 
-
-<mat-dialog-content class="cart-dialog" [@dialogOpen]="isClosing ? 'leave' : 'enter'">
   <mat-divider></mat-divider>
 
   <!-- Body -->
-  <div class="dialog-body" [@fadeSlide]>
+  <div class="dialog-body" [@fadeSlide] [@dialogOpen]="isClosing ? 'leave' : 'enter'">
     <!-- Image -->
     <div class="image-section" [@fadeSlide]>
       <img [src]="product.imageUrls[0]" [alt]="product.productTitle" />
@@ -67,4 +65,3 @@
       </div>
     </div>
   </div>
-</mat-dialog-content>
