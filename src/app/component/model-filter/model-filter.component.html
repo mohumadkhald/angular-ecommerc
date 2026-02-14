@@ -10,13 +10,13 @@
 <!-- <i class="fa-solid fa-angle-left"></i> -->
 
 
-<h4 class="category-title">{{ categoryTitle }}</h4>
+<h4 class="category-title">Category {{ categoryTitle }}</h4>
 
 <div class="filters-container">
 
     <!-- Subcategories -->
     <div class="subcategories">
-        <h2 class="filter-title">Select Sub Categories</h2>
+        <h2 class="filter-title">Sub Categories</h2>
         <ul>
             <li *ngFor="let subCategory of subCategories">
                 <a class="sub-link" [class.active]="activeSub === subCategory.name"
