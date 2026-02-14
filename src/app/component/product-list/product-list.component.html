@@ -51,13 +51,17 @@
       <div class="color-filter">
         <h3 style="margin: 0 5px;">Color</h3>
         <div class="color-options">
-          <label *ngFor="let color of colorOptions" class="color-swatch">
-            <input type="checkbox" [checked]="filters.colors.includes(color)" (change)="onColorChange(color, $event)">
-            <div class="color-indicator" [ngStyle]="{'background': color}">
-            </div>
+          <label class="color-swatch" *ngFor="let color of colorOptions">
+            <input type="checkbox" [checked]="filters.colors.includes(color)" (change)="onColorChange(color, $event)"
+              [value]="color">
+            <span class="color-indicator" [ngStyle]="{'background-color': color}">
+              <span class="color-overlay"></span>
+              <span class="checkmark">&#10003;</span>
+            </span>
           </label>
         </div>
       </div>
+
       <div class="size-filter">
         <h3 style="margin: 5px 0 5px;">Size</h3>
         <label><input type="checkbox" [checked]="filters.sizes.includes('small')"
@@ -72,19 +76,19 @@
     </div>
   </div>
 
-  <div  class="content-wrapper" *ngIf="subCategories.length > 0">
+  <div class="content-wrapper" *ngIf="subCategories.length > 0">
     <div *ngIf="subCategoryName" style="display: flex; justify-content: space-between; align-items: flex-end;">
       <button class="filter-options" (click)="openFilterModal(subCategoryName)">Filter</button>
     </div>
-    <app-sort-options *ngIf="subCategoryName && products.length > 0" class="sort-options" [currentSortOption]="currentSortOption"
-      [currentElementSizeOption]="currentElementSizeOption" [currentEmailSeller]="currentEmailSeller"
-      [currentCategory]="currentCategoryId" (elementChange)="onSizeElementChange($event)"
-      (sortChange)="onSortChange($event)" (emailChange)="onEmailChange($event)"
-      (categoryChange)="onCategoryChange($event)">
+    <app-sort-options *ngIf="subCategoryName && products.length > 0" class="sort-options"
+      [currentSortOption]="currentSortOption" [currentElementSizeOption]="currentElementSizeOption"
+      [currentEmailSeller]="currentEmailSeller" [currentCategory]="currentCategoryId"
+      (elementChange)="onSizeElementChange($event)" (sortChange)="onSortChange($event)"
+      (emailChange)="onEmailChange($event)" (categoryChange)="onCategoryChange($event)">
     </app-sort-options>
-    <div *ngIf="loading || isloading" style="margin: 30vh 50vw" class="spinner-container">
+    <div *ngIf="loading || isloading" style="display: flex; justify-content: center; align-items: center; height: 50vh;" class="spinner-container">
       <mat-spinner></mat-spinner>
-      <div style="width: 200px; margin-top: 20px;" class="spinner-message">Loading</div>
+      <div style="margin-top: 50px;" class="spinner-message">Loading</div>
     </div>
     <main *ngIf="!isloading" class="product-list"
       [ngStyle]="{'padding': subCategoryName && products.length > 0 ? '5px 5px 50px 5px' : '0px'}">

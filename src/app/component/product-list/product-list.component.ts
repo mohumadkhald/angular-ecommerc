@@ -81,7 +81,7 @@ export class ProductListComponent implements OnInit {
   display = false;
 
   /* -------------------- FILTERS -------------------- */
-  colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green', 'purple', 'orange', 'gray', 'pink', 'brown'];
+  colorOptions: string[] = ['white', 'black', 'red', 'yellow', 'blue', 'green'];
 
   filters = {
     subCategoryName: null,

@@ -1,10 +1,12 @@
 body {
   font-family: Arial, sans-serif;
 }
+
 .active_link {
   font-size: 18px;
   padding: 0px 10px;
-  color: #dc8109 !important; /* Use only if necessary */
+  color: #dc8109 !important;
+  /* Use only if necessary */
 }
 
 /* General styling for select elements */
@@ -14,7 +16,8 @@ select {
   border-radius: 4px;
   background-color: #fff;
   font-size: 13px;
-  width: 100%; /* Full width on small screens */
+  width: 100%;
+  /* Full width on small screens */
   box-sizing: border-box;
   margin: 5px 0;
   width: 200px;
@@ -23,13 +26,16 @@ select {
 /* Container for select elements */
 .dropdown-container {
   display: flex;
-  flex-direction: row; /* Stack elements by default */
-  gap: 10px; /* Space between elements */
+  flex-direction: row;
+  /* Stack elements by default */
+  gap: 10px;
+  /* Space between elements */
 }
 
 .sort-options {
   margin: 0 0 5px 0;
-  margin-left: auto; /* This pushes the sort options to the right */
+  margin-left: auto;
+  /* This pushes the sort options to the right */
   align-self: flex-end;
 }
 
@@ -46,13 +52,13 @@ select {
 .color-options {
   display: flex;
   flex-wrap: wrap;
+  gap: 3px; /* spacing between swatches */
 }
 
 .color-swatch {
   position: relative;
   width: 30px;
   height: 30px;
-  margin: 5px;
   cursor: pointer;
 }
 
@@ -67,27 +73,84 @@ select {
 .color-indicator {
   width: 100%;
   height: 100%;
-  border: 3px solid transparent;
   border-radius: 5px;
-  border: 7px solid rgb(233, 231, 231);
+  border: 3px solid rgb(233, 231, 231); /* thinner border so inner color shows */
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Inner color block */
+.color-indicator::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background-color: inherit; /* take the ngStyle color */
+}
+
+/* Overlay for selection */
+.color-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 123, 255, 0.25); /* semi-transparent blue */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 5px;
+}
+
+/* Checkmark */
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  font-weight: bold;
+  color: #007bff;
+  display: none;
+}
+
+/* When input is checked */
+.color-swatch input:checked + .color-indicator .color-overlay {
+  opacity: 1;
+}
+
+.color-swatch input:checked + .color-indicator .checkmark {
+  display: block;
+}
+
+/* Optional: smaller inner border when selected */
 .color-swatch input:checked + .color-indicator {
-  padding: 5px;
-  border: 4px solid rgb(233, 231, 231);
-
+  border: 2px solid #007bff;
 }
+
 
 
 .title-wrapper img {
-  width: 100%; /* Make the image take the full width */
-  height: 200%; /* Make the image take the full height */
-  object-fit: cover; /* Cover ensures the image covers the entire area */
-  object-position: center; /* Center the image within the area */
-  position: absolute; /* Position it absolutely within the wrapper */
-  top: 0; /* Align to the top */
-  left: 0; /* Align to the left */
-  z-index: -1; /* Ensure the image is behind other content */
+  width: 100%;
+  /* Make the image take the full width */
+  height: 200%;
+  /* Make the image take the full height */
+  object-fit: cover;
+  /* Cover ensures the image covers the entire area */
+  object-position: center;
+  /* Center the image within the area */
+  position: absolute;
+  /* Position it absolutely within the wrapper */
+  top: 0;
+  /* Align to the top */
+  left: 0;
+  /* Align to the left */
+  z-index: -1;
+  /* Ensure the image is behind other content */
 
 }
 
@@ -111,7 +174,8 @@ a {
   min-width: 15vw;
 }
 
-.categories h2, .filters h2 {
+.categories h2,
+.filters h2 {
   margin-top: 0;
 }
 
@@ -147,6 +211,7 @@ input[type="range"] {
 app-product-card {
   width: calc(20%);
 }
+
 .product {
   width: calc(20% - 10px);
   background: #fff;
@@ -156,14 +221,16 @@ app-product-card {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  height: 405px; /* Adjust the height as needed */
+  height: 405px;
+  /* Adjust the height as needed */
   margin: 10px;
 }
 
 .product img {
   max-width: 100%;
   height: 100%;
-  max-height: 310px; /* Adjust the image height as needed */
+  max-height: 310px;
+  /* Adjust the image height as needed */
 }
 
 .product-info {
@@ -195,6 +262,7 @@ button:hover {
   color: black;
   text-decoration: none;
 }
+
 .sub-links:hover {
   color: #febd69;
 }
@@ -220,7 +288,8 @@ button:hover {
 
 .slider {
   display: flex;
-  gap: 10px; /* Adjust spacing between categories */
+  gap: 10px;
+  /* Adjust spacing between categories */
 }
 
 .category-item {
@@ -259,7 +328,8 @@ button:hover {
 }
 
 .sidebar {
-  width: fit-content; /* Adjust width as needed */
+  width: fit-content;
+  /* Adjust width as needed */
   padding: 20px;
   /* margin: 10px; */
   background-color: white;
@@ -277,8 +347,10 @@ button:hover {
 .product-slider {
   display: flex;
   overflow-x: auto;
-  gap: 20px; /* Adjust spacing between products */
+  gap: 20px;
+  /* Adjust spacing between products */
 }
+
 app-pagination {
   position: relative;
   bottom: 60px;
@@ -289,7 +361,8 @@ app-pagination {
 }
 
 .cont-notfound {
-  display: none; /* Default to none */
+  display: none;
+  /* Default to none */
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -309,6 +382,7 @@ app-pagination {
   align-items: center;
   height: 50vh;
 }
+
 .slider-container {
   position: relative;
   display: flex;
@@ -323,13 +397,18 @@ app-pagination {
   text-align: center;
   width: 225px;
 }
+
 .category-item img {
-  width: 100%; /* Adjust width as needed */
+  width: 100%;
+  /* Adjust width as needed */
   height: 200px;
 }
 
-div.filters > div.price-range.mb-3.mt-5 > div > input {
-  width: 70px; margin-right: 8px; font-size: 12px; padding: 5px 5px;
+div.filters>div.price-range.mb-3.mt-5>div>input {
+  width: 70px;
+  margin-right: 8px;
+  font-size: 12px;
+  padding: 5px 5px;
 }
 
 /* Responsive Styles */
@@ -337,6 +416,7 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
   app-product-card {
     width: calc(25.00%);
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -345,21 +425,26 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 205px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 200px;
   }
 
 }
+
 @media (max-width: 1480px) {
   app-product-card {
     width: calc(25.00%);
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -368,26 +453,32 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 205px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 200px;
   }
 
 }
+
 @media screen and (max-width: 1280px) {
   app-product-card {
     width: calc(33.3%);
-}
+  }
+
   .sidebar {
     width: fit-content;
     padding: 10px;
     margin: 0;
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -396,34 +487,42 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 200px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 200px;
   }
+
   .range {
     font-size: 10px;
   }
 
 }
+
 @media screen and (max-width: 1024px) {
   app-product-card {
     width: calc(33.3%);
-}
-.slider-wrapper {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  width: 90%;
-}
+  }
+
+  .slider-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    width: 90%;
+  }
+
   .sidebar {
     width: fit-content;
     margin: 0;
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -432,18 +531,22 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 200px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 200px;
   }
 
-  
+
 }
+
 @media (max-width: 992px) {
   .sidebar {
     width: fit-content;
@@ -451,25 +554,30 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
 
   app-product-card {
     width: calc(50%);
-}
+  }
+
   .slider-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
     width: 50%;
   }
+
   .sidebar {
-    width: fit-content; /* Adjust width as needed */
+    width: fit-content;
+    /* Adjust width as needed */
     padding: 10px;
     background-color: white;
-    margin:0;
+    margin: 0;
   }
+
   .slider-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
     width: 85%;
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -484,20 +592,28 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     text-align: center;
     width: 210px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 200px;
   }
 
-  div.filters > div.price-range.mb-3.mt-5 > div > input {
-    width: 55px; margin-right: 5px; font-size: 12px; padding: 3px 5px;
+  div.filters>div.price-range.mb-3.mt-5>div>input {
+    width: 55px;
+    margin-right: 5px;
+    font-size: 12px;
+    padding: 3px 5px;
   }
 }
+
 @media (max-width: 768px) {
   .filter-options {
 
-    display: block; /* Default to none */
+    display: block;
+    /* Default to none */
   }
+
   .sidebar {
     width: fit-content;
     display: none;
@@ -505,20 +621,24 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
 
   app-product-card {
     width: calc(33.3%);
-}
+  }
+
   .sidebar {
-    width: fit-content; /* Adjust width as needed */
+    width: fit-content;
+    /* Adjust width as needed */
     padding: 5px;
     background-color: white;
-    margin:0;
+    margin: 0;
     display: none;
   }
+
   .slider-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
     width: 80%;
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -527,41 +647,51 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 180px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 140px;
   }
 
 }
+
 @media (max-width: 655px) {
   .sidebar {
     width: fit-content;
     display: none;
   }
+
   .store-container {
     flex-direction: column;
   }
+
   app-product-card {
     width: calc(50%);
-}
+  }
+
   .sidebar {
-    width: fit-content; /* Adjust width as needed */
+    width: fit-content;
+    /* Adjust width as needed */
     padding: 5px;
     background-color: white;
     margin: 0;
     display: none;
   }
+
   .slider-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
     width: 100%;
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -570,16 +700,19 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 150px;
   }
+
   .category-item img {
-    width: 140px; /* Adjust width as needed */
+    width: 140px;
+    /* Adjust width as needed */
     height: 140px;
   }
-  
+
 }
 
 @media (max-width: 380px) {
@@ -587,25 +720,31 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     width: 50%;
     display: none;
   }
+
   .store-container {
     flex-direction: column;
   }
+
   app-product-card {
     width: calc(100%);
-}
+  }
+
   .sidebar {
-    width: 150px; /* Adjust width as needed */
+    width: 150px;
+    /* Adjust width as needed */
     padding: 5px;
     background-color: white;
     margin: 0;
     display: none;
   }
+
   .slider-wrapper {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
     width: 100%;
   }
+
   .slider-container {
     position: relative;
     display: flex;
@@ -614,15 +753,17 @@ div.filters > div.price-range.mb-3.mt-5 > div > input {
     overflow: hidden;
     max-width: 100%;
   }
+
   .category-item {
     flex: 0 0 auto;
     text-align: center;
     width: 120px;
   }
+
   .category-item img {
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
+    /* Adjust width as needed */
     height: 80px;
   }
-  
-}
 
+}
